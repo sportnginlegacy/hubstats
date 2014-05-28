@@ -11,11 +11,16 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140527164956) do
+ActiveRecord::Schema.define(:version => 20140528154326) do
 
   create_table "hubification_articles", :force => true do |t|
     t.string   "title"
     t.text     "text"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "hubification_github_apis", :force => true do |t|
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
