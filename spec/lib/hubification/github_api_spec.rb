@@ -1,5 +1,4 @@
 require 'spec_helper'
-require_relative "../../../lib/hubification/github_api"
 
 module Hubification
   describe GithubAPI, :type => :model do

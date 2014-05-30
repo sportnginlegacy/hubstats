@@ -1,8 +1,8 @@
 module Hubification
   class GithubAPI
-    
+
     def self.client
-      @client ||= Octokit::Client.new(:login => ENV['GITHUB_USER'], :password => ENV['GITHUB_PASS'])
+      @client ||= Octokit::Client.new(:login => OCTOKIT_CONFIG['login'], :password => OCTOKIT_CONFIG['password'])
     end
 
     def self.since(time)

@@ -1,6 +1,3 @@
-require_relative "../hubification/github_api"
-
-
 namespace :hubification do
   desc "Queries a list of users"
   task :signin => :environment do
