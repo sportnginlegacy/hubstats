@@ -15,12 +15,22 @@ html, body {
 
 }
 
-.title {
-	font-size: 60px ;
+
+#splash > .row > .col > {
+	min-height: inherit;
+	padding: 0px 15px 15px 15px;
 }
 
-#splash > .row > .col {
-	min-height: 100%;
-	padding: 0px 15px 15px 15px;
+#splash > .row > .col > .row  {
+	margin-bottom: 25px;
 	background: #FFFFFF;
+	min-height: inherit;
+	padding: 0px 15px 15px 15px;
+}
+
+
+.title {
+	margin: 0px;
+	margin-top: 10px;
+	font-size: 60px ;
 }

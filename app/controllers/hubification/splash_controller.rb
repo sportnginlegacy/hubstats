@@ -5,7 +5,7 @@ module Hubification
     def index
       client = Hubification::GithubAPI.client
 
-      @pull_requests = Hubification::GithubAPI.since(DateTime.now - 7)
+      @pull_requests = Hubification::GithubAPI.since(2.weeks.ago, :sort => "created")
     end
   end
 end
