@@ -2,3 +2,35 @@
   Place all the styles related to the matching controller here.
   They will automatically be included in application.css.
 */
+
+html, body {
+	height: calc(100% - 10px);
+	background: url(green.png);
+}
+
+#splash {
+	min-height: 100%;
+	width: auto;
+	margin: 100px;
+
+}
+
+
+#splash > .row > .col > {
+	min-height: inherit;
+	padding: 0px 15px 15px 15px;
+}
+
+#splash > .row > .col > .row  {
+	margin-bottom: 25px;
+	background: #FFFFFF;
+	min-height: inherit;
+	padding: 0px 15px 15px 15px;
+}
+
+
+.title {
+	margin: 0px;
+	margin-top: 10px;
+	font-size: 60px ;
+}

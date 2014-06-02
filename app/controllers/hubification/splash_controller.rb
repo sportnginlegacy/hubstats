@@ -3,9 +3,9 @@ require_dependency "hubification/application_controller"
 module Hubification
   class SplashController < ApplicationController
     def index
-      client = Octokit::Client.new(:login => 'elliothursh', :password => ENV['GITHUB_PASS'])
-      @user = Octokit.user 'anfleene'
+      client = Hubification::GithubAPI.client
 
+      @pull_requests = Hubification::GithubAPI.since(2.weeks.ago, :sort => "created")
     end
   end
 end
