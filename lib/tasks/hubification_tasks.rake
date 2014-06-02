@@ -27,8 +27,9 @@ namespace :hubification do
   end
 
   desc "Outputs pull requests from ngin until time"
-  task :since => :environment do
-    pulls = Hubification::GithubAPI.since("2014-05-20T19:01:12Z".to_datetime, :state => "closed")
+  task :since, [:time] => :environment do |t, args|
+    time = args.time ? Time.parse(args.time).to_datetime :  "2014-04-26T19:01:12Z".to_datetime
+    pulls = Hubification::GithubAPI.since(time, :state => "closed")
 
     pulls.each do |pull|
       puts pull.title.to_s + ": " + pull.closed_at.to_s

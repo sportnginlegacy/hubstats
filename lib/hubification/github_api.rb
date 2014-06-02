@@ -2,7 +2,15 @@ module Hubification
   class GithubAPI
 
     def self.configure(options={})
-      @client = Octokit::Client.new(:access_token => options[:access_token])
+      begin
+        if options["access_token"]
+          @client ||= Octokit::Client.new(:access_token => options["access_token"])
+        elsif options["login"] && options["password"]
+          @client ||= Octokit::Client.new(:login => options["login"], :password => options["password"])
+        end
+      rescue
+        raise "You must have a .octokit.yml file in your app's config folder"
+      end
     end
 
     def self.client

@@ -35,17 +35,11 @@ module Hubification
       end
 
       context "multiple pages" do
-        let(:client) { double }
-        let(:pull1) { double }
-        let(:pull2) { double }
         let(:pr_num1) { Array.new(30, pull1) }
         let(:pr_num2) { Array.new(10, pull2) }
 
         before do
-          allow(GithubAPI).to receive(:client).and_return(client)
           allow(client).to receive(:paginate).and_return(pr_num1, pr_num2)
-          allow(pull1).to receive(:closed_at).and_return(Time.new(2014,05,25).to_datetime)
-          allow(pull2).to receive(:closed_at).and_return(Time.new(2014,05,20).to_datetime)
         end
 
         it 'should get 40 pulls' do 

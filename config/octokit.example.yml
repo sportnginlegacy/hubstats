@@ -1,1 +1,6 @@
-ACCESS_TOKEN: <40 CHAR ACCESS TOKEN> 
+# Put this in your app's config folder
+# Must have either this:
+access_token: <40 CHAR ACCESS TOKEN>
+# Or this:
+login: <GITHUB LOGIN>
+password: <GITHUB PASSWORD
