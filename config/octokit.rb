@@ -1,1 +1,0 @@
-ENV.update YAML.load(File.read(File.expand_path('../test/dummy/config/octokit.yml', __FILE__)))

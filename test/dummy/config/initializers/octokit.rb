@@ -1,0 +1,1 @@
+Hubification::GithubAPI.configure(YAML.load_file('test/dummy/config/octokit.yml'))

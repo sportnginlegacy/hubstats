@@ -1,8 +1,12 @@
 module Hubification
   class GithubAPI
 
+    def self.configure(options={})
+      @client = Octokit::Client.new(:access_token => options[:access_token])
+    end
+
     def self.client
-      @client ||= Octokit::Client.new(:access_token => "6aa2dead157c3682834b610e3f6ac1823c83d75b" )
+      @client
     end
 
     def self.since(time, options = {})
@@ -24,10 +28,10 @@ module Hubification
             break
           end
         end
-      end 
+      end
 
       return pulls
-    end 
+    end
 
   end
 end
