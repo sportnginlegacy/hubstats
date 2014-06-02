@@ -28,7 +28,11 @@ namespace :hubification do
 
   desc "Outputs pull requests from ngin until time"
   task :since, [:time] => :environment do |t, args|
-    time = args.time ? Time.parse(args.time).to_datetime :  "2014-04-26T19:01:12Z".to_datetime
+    begin
+      time = Time.parse(args.time).to_datetime
+    rescue
+      raise ArgumentError, "Must be called with time argument, e.g. since[:time] where :time = 'YYYY-MM-DD' "
+    end
     pulls = Hubification::GithubAPI.since(time, :state => "closed")
 
     pulls.each do |pull|
