@@ -2,28 +2,17 @@ module Hubification
   class GithubAPI
 
     def self.configure(options={})
-      if options
-        if options.has_key?('access_token')
-          @client ||= Octokit::Client.new(:access_token => options["access_token"])
-        elsif option.has_key?('login') && option.has_key?('password')
-          @client ||= Octokit::Client.new(:login => option['login'], :password => option['password'])
-        else
-          puts "options must include either access_token or login and password"
-          exit
-        end
-      elsif !ENV['GITHUB_API_TOKEN'].nil? || !(ENV['GITHUB_LOGIN'].nil? && ENV['GITHUB_PASSWORD'].nil?)
-        if !ENV['GITHUB_API_TOKEN'].nil?
-          @client ||= Octokit::Client.new(:access_token => ENV['GITHUB_API_TOKEN'])
-        elsif !(ENV['GITHUB_LOGIN'].nil? && ENV['GITHUB_PASSWORD'].nil?)
-           @client ||= Octokit::Client.new(:login => ENV['GITHUB_LOGIN'], :password => ENV['GITHUB_PASSWORD'])
-        else 
-          puts "Environment variables must include either GITHUB_API_TOKEN or LOGIN and PASSWORD"
-          exit
-        end
+      if access_token = ENV['GITHUB_API_TOKEN'] || options["access_token"]
+        @client = Octokit::Client.new(access_token: access_token)
       else
-        puts "You must include either a ocktokit.yml file or appropriate environmen variables"
-        exit
+        @client = Octokit::Client.new(
+          login: ENV['GITHUB_LOGIN'] || options["login"], 
+          password: ENV['GITHUB_PASSWORD'] || options["password"]
+        )
       end
+    rescue StandardError
+      puts "Invalid GitHub credentials. See README for usage instructions."
+      exit(1)
     end
 
     def self.client
