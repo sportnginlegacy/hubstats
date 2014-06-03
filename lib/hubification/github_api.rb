@@ -4,11 +4,13 @@ module Hubification
     def self.configure(options={})
       if access_token = ENV['GITHUB_API_TOKEN'] || options["access_token"]
         @client = Octokit::Client.new(access_token: access_token)
-      else
+      elsif (ENV['CLIENT_ID'] || options["client_id"]) && (ENV['CLIENT_SECRET'] || options["client_secret"])
         @client = Octokit::Client.new(
-          login: ENV['GITHUB_LOGIN'] || options["login"], 
-          password: ENV['GITHUB_PASSWORD'] || options["password"]
+          login: ENV['CLIENT_ID'] || options["client_id"], 
+          password: ENV['CLIENT_SECRET'] || options["client_secret"]
         )
+      else
+        raise StandardError
       end
     rescue StandardError
       puts "Invalid GitHub credentials. See README for usage instructions."

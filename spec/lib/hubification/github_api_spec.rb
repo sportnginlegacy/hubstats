@@ -2,11 +2,41 @@ require 'spec_helper'
 
 module Hubification
   describe GithubAPI, :type => :model do
+    context ".configure" do
+      let(:access_token) { "access_token" }
 
-    it 'should have the client.user.login be elliothursh' do
-      client = Hubification::GithubAPI.client
+      context "Config File" do
+        before do
+          allow(ENV).to receive(:[]).and_return(nil)
+        end
 
-      expect(client.user.login).to eq('elliothursh')
+        it 'should intialize with options param' do
+          expect(Octokit::Client).to receive(:new).with(access_token: access_token)
+          client = Hubification::GithubAPI.configure({"access_token" => access_token})
+        end
+      end
+
+      context "environmental variables" do
+        before do
+          allow(ENV).to receive(:[]).with("GITHUB_API_TOKEN").and_return("github_api_token")
+        end
+
+        it 'should initialize env instead of options param' do
+          expect(Octokit::Client).to receive(:new).with(access_token: "github_api_token")
+          client = Hubification::GithubAPI.configure({"access_token" => access_token})
+        end
+      end
+
+      context "improperly" do
+        before do
+          allow(ENV).to receive(:[]).and_return(nil)
+        end
+
+        it 'should not initialize at all'  do
+          expect(lambda { Hubification::GithubAPI.configure()}).to raise_error SystemExit 
+        end
+      end
+
     end
 
     context ".since" do

@@ -2,5 +2,5 @@
 # Must have either this:
 access_token: <40 CHAR ACCESS TOKEN>
 # Or this:
-login: <GITHUB LOGIN>
-password: <GITHUB PASSWORD
+client_id: <CLIENT ID>
+client_secret: <CLIENT SECRET>
