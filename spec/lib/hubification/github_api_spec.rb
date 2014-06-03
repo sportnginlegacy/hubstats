@@ -52,7 +52,7 @@ module Hubification
         end
 
         it 'should not initialize at all'  do
-          expect(lambda { Hubification::GithubAPI.configure()}).to raise_error GithubAPI::InvalidLogin 
+          expect(lambda { Hubification::GithubAPI.configure()}).to raise_error Octokit::Unauthorized
         end
       end
 
