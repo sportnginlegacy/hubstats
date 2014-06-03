@@ -1,0 +1,11 @@
+module Hubification
+  class InstallGenerator < ::Rails::Generators::Base
+
+    source_root File.expand_path('../../../../config/', __FILE__)  
+
+    def octokit_initializer
+      copy_file "octokit.example.yml", "#{Rails.root}/config/octokit.yml"
+    end
+
+  end
+end
