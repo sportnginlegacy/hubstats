@@ -14,7 +14,7 @@ module Hubification
       # Calling API to make sure it configured properly
       @client.user
 
-      return client
+      @client
     end
 
     def self.client
