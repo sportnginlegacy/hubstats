@@ -1,4 +1,9 @@
 test/dummy/log/*
 test/dummy/tmp/*
 test/dummy/config/octokit.yml
-.*
+*.gem
+*.rbc
+.bundle
+.config
+.DS_Store
+.gitkeep
