@@ -1,20 +1,24 @@
 module Hubification
   class GithubAPI
 
-    def self.configure(options={})
+    def self.configure(options = {})
       if access_token = ENV['GITHUB_API_TOKEN'] || options["access_token"]
         @client = Octokit::Client.new(access_token: access_token)
-      elsif (ENV['CLIENT_ID'] || options["client_id"]) && (ENV['CLIENT_SECRET'] || options["client_secret"])
-        @client = Octokit::Client.new(
-          login: ENV['CLIENT_ID'] || options["client_id"], 
-          password: ENV['CLIENT_SECRET'] || options["client_secret"]
-        )
       else
-        raise StandardError
+        @client = Octokit::Client.new(
+          client_id: ENV['CLIENT_ID'] || options["client_id"], 
+          client_secret: ENV['CLIENT_SECRET'] || options["client_secret"]
+        )
       end
+      # Calling API to make sure it configured properly
+      if @client.user == nil
+        raise StandardError
+      else
+         return client
+      end
+      
     rescue StandardError
-      puts "Invalid GitHub credentials. See README for usage instructions."
-      exit(1)
+      raise InvalidLogin, "Invalid GitHub credentials. See README for usage instructions."
     end
 
     def self.client
@@ -45,5 +49,6 @@ module Hubification
       return pulls
     end
 
+    InvalidLogin = Class.new(StandardError)
   end
 end

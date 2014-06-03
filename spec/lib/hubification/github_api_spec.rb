@@ -4,6 +4,12 @@ module Hubification
   describe GithubAPI, :type => :model do
     context ".configure" do
       let(:access_token) { "access_token" }
+      let(:user) { double }
+      let(:client) { double(:user => user) }
+
+      before do
+        allow(client).to receive(:user).and_return( "user" )
+      end
 
       context "Config File" do
         before do
@@ -11,19 +17,32 @@ module Hubification
         end
 
         it 'should intialize with options param' do
-          expect(Octokit::Client).to receive(:new).with(access_token: access_token)
-          client = Hubification::GithubAPI.configure({"access_token" => access_token})
+          expect(Octokit::Client).to receive(:new).with(access_token: access_token).and_return(client)
+          expect(Hubification::GithubAPI.configure({"access_token" => access_token})).to eq(client)
         end
       end
 
-      context "environmental variables" do
+      context "environment variables" do
         before do
           allow(ENV).to receive(:[]).with("GITHUB_API_TOKEN").and_return("github_api_token")
         end
 
         it 'should initialize env instead of options param' do
-          expect(Octokit::Client).to receive(:new).with(access_token: "github_api_token")
-          client = Hubification::GithubAPI.configure({"access_token" => access_token})
+          expect(Octokit::Client).to receive(:new).with(access_token: "github_api_token").and_return(client)
+          expect(Hubification::GithubAPI.configure({"access_token" => access_token})).to eq(client)
+        end
+      end
+
+      context "application authentication" do 
+        before do 
+          allow(ENV).to receive(:[]).and_return(nil)
+          allow(ENV).to receive(:[]).with("CLIENT_ID").and_return("client_id")
+          allow(ENV).to receive(:[]).with("CLIENT_SECRET").and_return("client_secret")
+        end 
+
+        it 'should intialize properly' do
+          expect(Octokit::Client).to receive(:new).with(client_id: "client_id", client_secret: "client_secret").and_return(client)
+          expect(Hubification::GithubAPI.configure({"client_id" => "client_id", "client_secret" => "client_secret"})).to eq(client)
         end
       end
 
@@ -33,7 +52,7 @@ module Hubification
         end
 
         it 'should not initialize at all'  do
-          expect(lambda { Hubification::GithubAPI.configure()}).to raise_error SystemExit 
+          expect(lambda { Hubification::GithubAPI.configure()}).to raise_error GithubAPI::InvalidLogin 
         end
       end
 

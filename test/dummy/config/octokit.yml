@@ -1,5 +1,0 @@
-# Must have either this:
-# access_token: <40 CHAR ACCESS TOKEN>
-# Or this:
-# client_id: <CLIENT ID>
-# client_secret: <CLIENT SECRET>
