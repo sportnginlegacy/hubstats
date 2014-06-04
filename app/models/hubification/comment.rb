@@ -1,7 +1,8 @@
 module Hubification
   class Comment < ActiveRecord::Base
-    attr_accessible :html_url, :url, :id, :body, :path, 
-      :position, :line, :commit_id, :created_at, :updated_at
+    attr_accessible :id, :html_url, :url, :pull_request_url, :diff_hunk, :path, 
+      :position, :original_position, :line, :commit_id,
+      :original_commit_id, :body, :created_at, :updated_at
       
     belongs_to :user
     

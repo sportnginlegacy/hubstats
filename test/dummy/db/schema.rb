@@ -14,8 +14,19 @@
 ActiveRecord::Schema.define(:version => 20140604130550) do
 
   create_table "hubification_comments", :force => true do |t|
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.string   "html_url"
+    t.string   "url"
+    t.string   "pull_request_url"
+    t.string   "diff_hunk"
+    t.string   "path"
+    t.string   "position"
+    t.string   "original_position"
+    t.string   "line"
+    t.string   "commit_id"
+    t.string   "original_commit_id"
+    t.string   "body"
+    t.datetime "created_at",         :null => false
+    t.datetime "updated_at",         :null => false
   end
 
   create_table "hubification_pull_requests", :force => true do |t|
@@ -30,8 +41,8 @@ ActiveRecord::Schema.define(:version => 20140604130550) do
 
   create_table "hubification_users", :force => true do |t|
     t.string   "login"
-    t.string   "integer"
     t.string   "avatar_url"
+    t.string   "gravatar_id"
     t.string   "url"
     t.string   "html_url"
     t.string   "followers_url"
@@ -43,7 +54,7 @@ ActiveRecord::Schema.define(:version => 20140604130550) do
     t.string   "repos_url"
     t.string   "events_url"
     t.string   "received_events_url"
-    t.string   "type"
+    t.string   "role"
     t.boolean  "site_admin"
     t.datetime "created_at",          :null => false
     t.datetime "updated_at",          :null => false

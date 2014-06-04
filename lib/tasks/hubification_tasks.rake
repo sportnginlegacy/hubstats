@@ -3,16 +3,11 @@ namespace :hubification do
   desc "Queries the list of contributors to the repo"
   task :members => :environment do
     client = Hubification::GithubAPI.client
-
-    contributors = client.paginate('/repos/sportngin/ngin/contributors') do { |data, res|
-      data << res
-    }
-
+    contributors = Hubification::GithubAPI.all('contributors')
 
     contributors.each do |contributor|
       puts contributor.login
     end
-
 
   end
 

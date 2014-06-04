@@ -2,8 +2,9 @@ class CreateHubificationUsers < ActiveRecord::Migration
   def change
     create_table :hubification_users do |t|
       t.string :login
-      t.string :integer
+      t.integer :id
       t.string :avatar_url
+      t.string :gravatar_id
       t.string :url
       t.string :html_url
       t.string :followers_url
@@ -15,7 +16,7 @@ class CreateHubificationUsers < ActiveRecord::Migration
       t.string :repos_url
       t.string :events_url
       t.string :received_events_url
-      t.string :type
+      t.string :role
       t.boolean :site_admin
       t.timestamps
     end

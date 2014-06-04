@@ -1,8 +1,8 @@
 module Hubification
   class User < ActiveRecord::Base
-    attr_accessible :login, :id, :avatar_url, :url, :html_url, :follwers_url,
+    attr_accessible :login, :id, :avatar_url, :gravatar_id, :url, :html_url, :followers_url,
       :following_url, :gists_url, :starred_url, :subscriptions_url, :organizations_url,
-      :repos_url, :events_url, :received_events_url, :type, :site_admin
+      :repos_url, :events_url, :received_events_url, :role, :site_admin
     
     validates :id, presence: true, uniqueness: true
 
