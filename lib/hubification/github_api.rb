@@ -6,20 +6,22 @@ module Hubification
         @client = Octokit::Client.new(access_token: access_token)
       else
         @client = Octokit::Client.new(
-          login: ENV['GITHUB_LOGIN'] || options["login"], 
-          password: ENV['GITHUB_PASSWORD'] || options["password"]
+          client_id: ENV['CLIENT_ID'] || options["client_id"], 
+          client_secret: ENV['CLIENT_SECRET'] || options["client_secret"]
         )
       end
-    rescue StandardError
-      puts "Invalid GitHub credentials. See README for usage instructions."
-      exit(1)
+
+      # Calling API to make sure it configured properly
+      @client.user
+
+      @client
     end
 
     def self.client
       @client
     end
 
-    def self.since(time, options = {})
+    def self.since(time, options={})
       options.reverse_merge!(:state => 'closed', :sort => 'created', :direction => 'desc', :per_page => 30)
       again = true
       i = 0

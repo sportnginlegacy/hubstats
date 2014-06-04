@@ -2,11 +2,60 @@ require 'spec_helper'
 
 module Hubification
   describe GithubAPI, :type => :model do
+    context ".configure" do
+      let(:access_token) { "access_token" }
+      let(:user) { double }
+      let(:client) { double(:user => user) }
 
-    it 'should have the client.user.login be elliothursh' do
-      client = Hubification::GithubAPI.client
+      before do
+        allow(client).to receive(:user).and_return( "user" )
+      end
 
-      expect(client.user.login).to eq('elliothursh')
+      context "Config File" do
+        before do
+          allow(ENV).to receive(:[]).and_return(nil)
+        end
+
+        it 'should intialize with options param' do
+          expect(Octokit::Client).to receive(:new).with(access_token: access_token).and_return(client)
+          expect(Hubification::GithubAPI.configure({"access_token" => access_token})).to eq(client)
+        end
+      end
+
+      context "environment variables" do
+        before do
+          allow(ENV).to receive(:[]).with("GITHUB_API_TOKEN").and_return("github_api_token")
+        end
+
+        it 'should initialize env instead of options param' do
+          expect(Octokit::Client).to receive(:new).with(access_token: "github_api_token").and_return(client)
+          expect(Hubification::GithubAPI.configure({"access_token" => access_token})).to eq(client)
+        end
+      end
+
+      context "application authentication" do 
+        before do 
+          allow(ENV).to receive(:[]).and_return(nil)
+          allow(ENV).to receive(:[]).with("CLIENT_ID").and_return("client_id")
+          allow(ENV).to receive(:[]).with("CLIENT_SECRET").and_return("client_secret")
+        end 
+
+        it 'should intialize properly' do
+          expect(Octokit::Client).to receive(:new).with(client_id: "client_id", client_secret: "client_secret").and_return(client)
+          expect(Hubification::GithubAPI.configure({"client_id" => "client_id", "client_secret" => "client_secret"})).to eq(client)
+        end
+      end
+
+      context "improperly" do
+        before do
+          allow(ENV).to receive(:[]).and_return(nil)
+        end
+
+        it 'should not initialize at all'  do
+          expect(lambda { Hubification::GithubAPI.configure()}).to raise_error Octokit::Unauthorized
+        end
+      end
+
     end
 
     context ".since" do
