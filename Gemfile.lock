@@ -83,6 +83,8 @@ GEM
     rake (10.3.2)
     rdoc (3.12.2)
       json (~> 1.4)
+    rename (1.0.2)
+      rails (>= 3.0.0)
     rspec-core (3.0.0.rc1)
       rspec-support (= 3.0.0.rc1)
     rspec-expectations (3.0.0.rc1)
@@ -121,5 +123,6 @@ PLATFORMS
 DEPENDENCIES
   hubification!
   jquery-rails
+  rename
   rspec-rails (~> 3.0.0.beta)
   sqlite3

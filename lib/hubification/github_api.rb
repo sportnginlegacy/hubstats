@@ -18,7 +18,7 @@ module Hubification
     end
 
     def self.client
-      @client
+      @client ||= self.configure()
     end
 
     def self.since(time, options={})

@@ -1,18 +1,19 @@
 namespace :hubification do
-  desc "Queries a list of users"
-  task :signin => :environment do
+
+  desc "Queries the list of contributors to the repo"
+  task :members => :environment do
     client = Hubification::GithubAPI.client
 
-    user = client.user
-    puts user.login
-  end
+    contributors = client.paginate('/repos/sportngin/ngin/contributors') do { |data, res|
+      data << res
+    }
 
-  desc "Queries a list of users"
-  task :members  => :environment do
-    client = Hubification::GithubAPI.client
 
-    org = client.org('Sportngin')
-    puts org.name
+    contributors.each do |contributor|
+      puts contributor.login
+    end
+
+
   end
 
   desc "Outputs pull requests from ngin"
@@ -40,10 +41,5 @@ namespace :hubification do
     end
   end
 
-  desc "Outputs pull requests from ngin until time"
-  task :events => :environment do
-    Hubification::GithubAPI.client
-    
-  end
 
 end

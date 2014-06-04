@@ -11,18 +11,42 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140528154326) do
+ActiveRecord::Schema.define(:version => 20140604130550) do
 
-  create_table "hubification_articles", :force => true do |t|
-    t.string   "title"
-    t.text     "text"
+  create_table "hubification_comments", :force => true do |t|
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
 
-  create_table "hubification_github_apis", :force => true do |t|
+  create_table "hubification_pull_requests", :force => true do |t|
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+  end
+
+  create_table "hubification_repos", :force => true do |t|
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "hubification_users", :force => true do |t|
+    t.string   "login"
+    t.string   "integer"
+    t.string   "avatar_url"
+    t.string   "url"
+    t.string   "html_url"
+    t.string   "followers_url"
+    t.string   "following_url"
+    t.string   "gists_url"
+    t.string   "starred_url"
+    t.string   "subscriptions_url"
+    t.string   "organizations_url"
+    t.string   "repos_url"
+    t.string   "events_url"
+    t.string   "received_events_url"
+    t.string   "type"
+    t.boolean  "site_admin"
+    t.datetime "created_at",          :null => false
+    t.datetime "updated_at",          :null => false
   end
 
 end
