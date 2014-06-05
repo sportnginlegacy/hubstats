@@ -18,20 +18,47 @@ ActiveRecord::Schema.define(:version => 20140604130550) do
     t.string   "url"
     t.string   "pull_request_url"
     t.string   "diff_hunk"
-    t.string   "path"
-    t.string   "position"
+    t.integer  "path"
+    t.integer  "position"
     t.string   "original_position"
     t.string   "line"
     t.string   "commit_id"
     t.string   "original_commit_id"
     t.string   "body"
+    t.integer  "user_id"
     t.datetime "created_at",         :null => false
     t.datetime "updated_at",         :null => false
   end
 
   create_table "hubification_pull_requests", :force => true do |t|
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.string  "url"
+    t.string  "html_url"
+    t.string  "diff_url"
+    t.string  "patch_url"
+    t.string  "issue_url"
+    t.string  "commits_url"
+    t.string  "review_comments_url"
+    t.string  "review_comment_url"
+    t.string  "comments_url"
+    t.string  "statuses_url"
+    t.integer "number"
+    t.string  "state"
+    t.string  "title"
+    t.string  "body"
+    t.string  "created_at",          :null => false
+    t.string  "updated_at",          :null => false
+    t.string  "closed_at"
+    t.string  "merged_at"
+    t.string  "merge_commit_sha"
+    t.string  "merged"
+    t.string  "mergeable"
+    t.integer "comments"
+    t.integer "commits"
+    t.integer "additions"
+    t.integer "deletions"
+    t.integer "changed_files"
+    t.integer "user_id"
+    t.integer "merged_by_id"
   end
 
   create_table "hubification_repos", :force => true do |t|

@@ -16,8 +16,9 @@
     <div class="col col-lg-4 col-lg-offset-1">
       <div class="row">
       <h3> Contributors </h3>
-        <% @users.each do |user| %>
-           <a href=<%= user.html_url%>> <%= user.login %> </a> </br>
+
+        <% @comments.each do |comment| %>
+          <a href=<%= comment.html_url %>> <%= comment.login %> </a> has made <%= comment.num_comments %> comments<br>
         <% end %>
       </div>
     </div>

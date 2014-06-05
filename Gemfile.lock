@@ -55,6 +55,7 @@ GEM
     mime-types (1.25.1)
     multi_json (1.10.1)
     multipart-post (2.0.0)
+    mysql2 (0.3.16)
     octokit (3.1.0)
       sawyer (~> 0.5.3)
     polyglot (0.3.4)
@@ -123,6 +124,7 @@ PLATFORMS
 DEPENDENCIES
   hubification!
   jquery-rails
+  mysql2
   rename
   rspec-rails (~> 3.0.0.beta)
   sqlite3
