@@ -17,8 +17,8 @@
       <div class="row">
       <h3> Contributors </h3>
 
-        <% @comments.each do |comment| %>
-          <a href=<%= comment.html_url %>> <%= comment.login %> </a> has made <%= comment.num_comments %> comments<br>
+        <% @users.each do |user| %>
+          <a href=<%= user.html_url %>> <%= user.login %> </a> has made <%= user.num_comments %> comments and <%= user.num_pulls %> pull requests<br>
         <% end %>
       </div>
     </div>

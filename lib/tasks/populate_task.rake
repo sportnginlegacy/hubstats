@@ -23,7 +23,7 @@ namespace :populate do
   desc "Pull pullrequests from Github saves in database"
   task :pulls => :environment do
     client = Hubification::GithubAPI.client
-    pulls = client.pull_requests('sportngin/ngin', :state => 'closed', :per_page => 100)
+    pulls = Hubification::GithubAPI.all("pulls")
 
     pulls.each do |pull|
       pr = find_or_create_pull(pull)
