@@ -1,3 +1,3 @@
 Rails.application.routes.draw do
-  mount Hubification::Engine => "/hubification"
+  mount Hubstats::Engine => "/hubstats"
 end

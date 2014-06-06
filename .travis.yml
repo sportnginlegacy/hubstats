@@ -7,4 +7,4 @@ rvm:
   - 2.0.0
 script: bundle exec rspec
 before_script:
-  - mysql -e 'create database hubification_test'
+  - mysql -e 'create database hubstats_test'

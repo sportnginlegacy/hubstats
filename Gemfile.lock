@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    hubification (0.0.1)
+    hubstats (0.0.1)
       octokit
       rails (~> 3.2.18)
 
@@ -122,7 +122,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  hubification!
+  hubstats!
   jquery-rails
   mysql2
   rename

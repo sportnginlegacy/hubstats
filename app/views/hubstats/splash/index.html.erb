@@ -1,0 +1,26 @@
+
+<div class="container" id="splash">
+  <div class="row">
+    <div class="col col-lg-7">
+      <div class="row">
+        <h1 class="title text-center"> Hubstats: Github Stats </h1>
+      </div>
+      <div class="row">
+        <h3> Pull Requests from Last Week: </h3>
+        <% @pull_requests.each do |pr| %>
+          <b><%= pr.title %></b> by <b> <%= pr.user.login %> </b> <%= distance_of_time_in_words(DateTime.now,pr.closed_at) %> ago </br>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="col col-lg-4 col-lg-offset-1">
+      <div class="row">
+      <h3> Contributors </h3>
+
+        <% @users.each do |user| %>
+          <a href=<%= user.html_url %>> <%= user.login %> </a> has made <%= user.num_comments %> comments and <%= user.num_pulls %> pull requests<br>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

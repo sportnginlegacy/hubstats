@@ -13,7 +13,7 @@
 
 ActiveRecord::Schema.define(:version => 20140604130550) do
 
-  create_table "hubification_comments", :force => true do |t|
+  create_table "hubstats_comments", :force => true do |t|
     t.string   "html_url"
     t.string   "url"
     t.string   "pull_request_url"
@@ -30,7 +30,7 @@ ActiveRecord::Schema.define(:version => 20140604130550) do
     t.datetime "updated_at",         :null => false
   end
 
-  create_table "hubification_pull_requests", :force => true do |t|
+  create_table "hubstats_pull_requests", :force => true do |t|
     t.string  "url"
     t.string  "html_url"
     t.string  "diff_url"
@@ -61,12 +61,12 @@ ActiveRecord::Schema.define(:version => 20140604130550) do
     t.integer "merged_by_id"
   end
 
-  create_table "hubification_repos", :force => true do |t|
+  create_table "hubstats_repos", :force => true do |t|
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
 
-  create_table "hubification_users", :force => true do |t|
+  create_table "hubstats_users", :force => true do |t|
     t.string   "login"
     t.string   "avatar_url"
     t.string   "gravatar_id"

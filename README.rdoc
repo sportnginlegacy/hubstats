@@ -1,12 +1,12 @@
-= Hubification
+= Hubstats
 
 This project rocks and uses MIT-LICENSE.
 
 = Configuration 
-Hubification needs github credentials to access your repo's pull requests, these can be setup in one of two ways.
+Hubstats needs github credentials to access your repo's pull requests, these can be setup in one of two ways.
 ==Environment Variables
-Hubification uses OAUTH access tokens stored in ENV["GITHUB_API_TOKEN"] or for Application Authentication in ENV["CLIENT_ID"] and ENV["CLIENT_SECRET"]
+Hubstats uses OAUTH access tokens stored in ENV["GITHUB_API_TOKEN"] or for Application Authentication in ENV["CLIENT_ID"] and ENV["CLIENT_SECRET"]
 
 == octokit.yml
 Hubfication can also pull credentials from an octokit.yml file stored in your app's config folder.
-Run rails generate hubification:install from your app's directory to set it up.
+Run rails generate hubstats:install from your app's directory to set it up.
