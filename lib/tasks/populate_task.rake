@@ -2,7 +2,6 @@ namespace :populate do
 
   desc "Pull members from Github saves in database"
   task :users => :environment do
-    client = Hubstats::GithubAPI.client
     contributors = Hubstats::GithubAPI.all('contributors')
 
     contributors.each do |contributor|
@@ -12,7 +11,6 @@ namespace :populate do
 
   desc "Pull comments from Github saves in database"
   task :comments => :environment do
-    client = Hubstats::GithubAPI.client
     comments = Hubstats::GithubAPI.all('comments')
 
     comments.each do |comment|
@@ -20,9 +18,8 @@ namespace :populate do
     end
   end
 
-  desc "Pull pullrequests from Github saves in database"
+  desc "Pull pull requests from Github saves in database"
   task :pulls => :environment do
-    client = Hubstats::GithubAPI.client
     pulls = Hubstats::GithubAPI.all("pulls")
 
     pulls.each do |pull|
@@ -31,34 +28,27 @@ namespace :populate do
   end
 end
 
-def find_or_create_user(user)
-  if (oldUser = Hubstats::User.where(:id => user[:id]).first).nil?
-    member = (user.to_h).except(:contributions)
-    member[:role] = member.delete :type  ##changing :type in to :role
-    return newUser = Hubstats::User.create(member)
-  else
-    return oldUser
-  end
+def find_or_create_user(github_user)
+  github_user[:role] = github_user.delete :type  ##changing :type in to :role
+  user_data = github_user.to_h.slice(*Hubstats::User.column_names.map(&:to_sym))
+  user = Hubstats::User.where(:id => user_data[:id]).first_or_create(user_data)
+  return user if user.save
+  puts user.errors.inspect
 end
 
-def find_or_create_comment(comment)
-  user = find_or_create_user(comment[:user])
-  if (Hubstats::Comment.where(:id => comment[:id]).first).nil?
-    comm = (comment.to_h).except(:user)
-    newComment = Hubstats::Comment.new(comm)
-    newComment[:user_id] = user[:id]
-    newComment.save()
-    puts newComment.errors.inspect
-  end
+def find_or_create_comment(github_comment)
+  user = find_or_create_user(github_comment[:user])
+  comment_data = github_comment.to_h.slice(*Hubstats::Comment.column_names.map(&:to_sym)).except(:user)
+  comment = Hubstats::Comment.where(:id => comment_data[:id]).first_or_create(comment_data)
+  return comment if comment.save
+  puts comment.errors.inspect
+
 end
 
-def find_or_create_pull(pull)
-  user = find_or_create_user(pull[:user])
-  if (Hubstats::PullRequest.where(:id => pull[:id]).first).nil?
-    pr = (pull.to_h).except(:head).except(:base).except(:milestone).except(:assignee).except(:_links).except(:user)
-    pull_request = Hubstats::PullRequest.new(pr)
-    pull_request[:user_id] = user[:id]
-    pull_request.save()
-    puts pull_request.errors.inspect
-  end
+def find_or_create_pull(github_pull)
+  user = find_or_create_user(github_pull[:user])
+  pull_data = github_pull.to_h.slice(*Hubstats::PullRequest.column_names.map(&:to_sym)).except(:user)
+  pull = Hubstats::PullRequest.where(:id => pull_data[:id]).first_or_create(pull_data)
+  return pull if pull.save
+  puts pull.errors.inspect
 end
