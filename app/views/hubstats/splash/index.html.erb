@@ -13,13 +13,21 @@
       </div>
     </div>
 
-    <div class="col col-lg-4 col-lg-offset-1">
+    <div class="col col-lg-3 col-lg-offset-2">
       <div class="row">
-      <h3> Contributors </h3>
-
-        <% @users.each do |user| %>
-          <a href=<%= user.html_url %>> <%= user.login %> </a> has made <%= user.num_comments %> comments and <%= user.num_pulls %> pull requests<br>
-        <% end %>
+        <table class="table">
+          <tr>
+            <td><h4> User </h4></td>
+            <td align="center"><h4> Comments </h4></td>
+            <td align="center"><h4> Pull Requests </h4></td>
+          <% @users.each do |user| %>
+            <tr>
+              <td><a href=<%= user.html_url %>> <%= user.login %> </a></td>
+              <td align="center"><%= user.num_comments %></td>
+              <td align="center"><%= user.num_pulls %> </td>
+            <tr>
+          <% end %>
+        </table>
       </div>
     </div>
   </div>

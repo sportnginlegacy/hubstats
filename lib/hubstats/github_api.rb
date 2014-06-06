@@ -46,22 +46,13 @@ module Hubstats
       return pulls
     end
 
-    def self.all(kind, options={})
-      options.reverse_merge!(:per_page => 30)
-      again = true
-      i = 0
-      info = []
-      while again do 
-        res = client.paginate('/repos/sportngin/ngin/'+kind, :per_page => 30, :page => (i += 1 ) )
-
-        if res.length < options[:per_page]
-          again = false
+    def self.all(kind)
+      client.paginate('/repos/sportngin/ngin/'+kind, :per_page => 100, :page => 1) do |data, last_response| 
+        while last_response.rels[:next] && client.rate_limit.remaining > 0
+            last_response = last_response.rels[:next].get
+            data.concat(last_response.data) if last_response.data.is_a?(Array)
         end
-        info << res
-
       end
-
-      return info.flatten
     end
 
 

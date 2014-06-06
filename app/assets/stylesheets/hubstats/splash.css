@@ -34,3 +34,9 @@ html, body {
 	margin-top: 10px;
 	font-size: 60px ;
 }
+
+.table > tbody > tr > td {
+	border: none;
+	padding: 4px 8px 4px 8px;
+
+}
