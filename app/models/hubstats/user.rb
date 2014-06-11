@@ -11,6 +11,15 @@ module Hubstats
     has_many :pull_requests
     has_many :merged_pulls, :class_name => "PullRequest", :foreign_key => "number"
 
+    def self.find_or_create_user(github_user)
+      github_user[:role] = github_user.delete :type  ##changing :type in to :role
+      github_user = github_user.to_h unless github_user.is_a? Hash
+      user_data = github_user.slice(*Hubstats::User.column_names.map(&:to_sym))
+      user = Hubstats::User.where(:id => user_data[:id]).first_or_create(user_data)
+      return user if user.save
+      puts user.errors.inspect
+    end
+
     def self.pull_request_counts
       self.select("hubstats_users.login, hubstats_users.html_url, hubstats_users.id")
           .select("IFNULL(COUNT(p.user_id),0) as num_pulls")
@@ -25,5 +34,6 @@ module Hubstats
         .group("s.id")
         .order("s.login DESC")
     end
+
   end
 end
