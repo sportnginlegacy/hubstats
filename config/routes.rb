@@ -1,4 +1,4 @@
-Hubification::Engine.routes.draw do
+Hubstats::Engine.routes.draw do
   root to: "splash#index"
 
   resources :splash

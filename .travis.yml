@@ -6,3 +6,7 @@ rvm:
   - 1.9.3
   - 2.0.0
 script: bundle exec rspec
+before_script:
+  - bundle exec rake app:db:create
+  - bundle exec rake app:db:migrate
+  - bundle exec rake app:db:test:prepare
