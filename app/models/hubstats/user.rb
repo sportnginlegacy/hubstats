@@ -17,7 +17,7 @@ module Hubstats
       user_data = github_user.slice(*Hubstats::User.column_names.map(&:to_sym))
       user = Hubstats::User.where(:id => user_data[:id]).first_or_create(user_data)
       return user if user.save
-      puts user.errors.inspect
+      Rails.logger.debug user.errors.inspect
     end
 
     def self.pull_request_counts

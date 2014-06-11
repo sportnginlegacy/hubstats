@@ -10,7 +10,7 @@ module Hubstats
       belongs_to :merged_by, :class_name => "User", :foreign_key => "merged_by_id"
 
       def self.find_or_create_pull(github_pull)
-        (github_pull = github_pull.to_h) if github_pull.respond_to?(:to_h)
+        github_pull = github_pull.to_h if github_pull.respond_to? :to_h
 
         user = Hubstats::User.find_or_create_user(github_pull[:user])
         pull_data = github_pull.slice(*column_names.map(&:to_sym))
@@ -18,7 +18,7 @@ module Hubstats
 
         pull = where(:id => pull_data[:id]).first_or_create(pull_data)
         return pull if pull.save
-        puts pull.errors.inspect
+        Rails.logger.debug pull.errors.inspect
       end
   end
 end

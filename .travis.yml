@@ -7,4 +7,6 @@ rvm:
   - 2.0.0
 script: bundle exec rspec
 before_script:
-  - mysql -e 'create database hubstats_test'
+  - bundle exec rake app:db:create
+  - bundle exec rake app:db:migrate
+  - bundle exec rake app:db:test:prepare
