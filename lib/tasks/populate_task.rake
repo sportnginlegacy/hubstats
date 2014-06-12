@@ -39,7 +39,8 @@ namespace :populate do
     if OCTOCONF.has_key?(:org_name)
       repos = client.organization_repositories(OCTOCONF[:org_name])
     else 
-      OCTOCONF[:repos].each do |repo|
+      repos = []
+      OCTOCONF[:repo_list].each do |repo|
         repos << client.repository(repo)
       end
     end
