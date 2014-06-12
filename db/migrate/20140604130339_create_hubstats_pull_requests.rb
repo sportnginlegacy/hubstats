@@ -29,7 +29,7 @@ class CreateHubstatsPullRequests < ActiveRecord::Migration
       t.integer :deletions
       t.integer :changed_files
       t.belongs_to :user
-      t.belongs_to :merged_by
+      t.belongs_to :repo
       t.timestamps
     end
   end

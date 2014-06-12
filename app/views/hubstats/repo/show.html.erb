@@ -1,23 +1,18 @@
 <div class="container" id="splash">
   <div class="row">
-    <div class="col col-lg-5 col-lg-offset-1">
+    <div class="col col-lg-7">
       <div class="row">
         <h1 class="title text-center"> Sportngin Github Stats </h1>
       </div>
       <div class="row">
-        <h3> Recently Active Repos </h3>
-        <table class="table">
-          <% @repos.each do |repo| %>
-            <tr>
-              <td><%= link_to repo.name.titleize, repo_path(repo) %></td>
-              <td><%= distance_of_time_in_words(DateTime.now,repo.updated_at) %> ago</td>
-            </tr>
-          <% end %>
-        </table>
+        <h3> Pull Requests from Last Week: </h3>
+        <% @pull_requests.each do |pr| %>
+          <b><%= pr.title %></b> by <b> <%= pr.user.login %> </b> <%= distance_of_time_in_words(DateTime.now,pr.closed_at) %> ago </br>
+        <% end %>
       </div>
     </div>
 
-    <div class="col col-lg-4 col-lg-offset-1">
+    <div class="col col-lg-3 col-lg-offset-2">
       <div class="row">
         <table class="table">
           <tr>
@@ -29,10 +24,11 @@
               <td><a href=<%= user.html_url %>> <%= user.login %> </a></td>
               <td align="center"><%= user.num_comments %></td>
               <td align="center"><%= user.num_pulls %> </td>
-            </tr>
+            <tr>
           <% end %>
         </table>
       </div>
     </div>
   </div>
 </div>
+

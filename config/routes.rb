@@ -1,5 +1,5 @@
 Hubstats::Engine.routes.draw do
   root to: "splash#index"
 
-  resources :splash
+ get "/:repo" => "repo#show", :as => :repo
 end

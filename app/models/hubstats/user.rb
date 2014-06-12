@@ -9,7 +9,6 @@ module Hubstats
     has_many :comments
     has_many :repos, :class_name => "Repo"
     has_many :pull_requests
-    has_many :merged_pulls, :class_name => "PullRequest", :foreign_key => "number"
 
     def self.find_or_create_user(github_user)
       github_user[:role] = github_user.delete :type  ##changing :type in to :role
@@ -35,5 +34,8 @@ module Hubstats
         .order("s.login DESC")
     end
 
+    def to_param
+      self.login
+    end
   end
 end

@@ -29,10 +29,11 @@ namespace :hubstats do
       raise ArgumentError, "Must be called with time argument, e.g. since[:time] where :time = 'YYYY-MM-DD' "
     end
     pulls = Hubstats::GithubAPI.pulls_since(time, :state => "closed")
-
     pulls.each do |pull|
       puts pull.closed_at.to_s
     end
+
+    puts pulls[0].inspect
   end
 
   desc "Outputs all pull requests from until"
@@ -44,4 +45,14 @@ namespace :hubstats do
     end
   end
 
+  desc "Gets all org repos"
+  task :repos => :environment do
+    client = Hubstats::GithubAPI.client
+    repos = client.organization_repositories('sportngin', :per_page => 100)
+
+    repos.each do |repo|
+      puts repo.inspect
+    end 
+
+  end
 end

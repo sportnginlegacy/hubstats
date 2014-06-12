@@ -1,5 +1,8 @@
-# Must have either this:
-# access_token: <40 CHAR ACCESS TOKEN>
-# Or this:
-# client_id: <CLIENT ID>
-# client_secret: <CLIENT SECRET>
+auth: # Must include either access_token || (client_id && client_secret)
+  # access_token: <40 CHARACTER ACCESS TOKEN >
+  # client_id: <CLIENT ID>
+  # client_secret: <CLIENT SECRET>
+
+config: # Must include either org_name || repo_list
+  #org_name: <ORGANIZATION NAME>
+  # repo_list: [<ARRAY OF REPOS>]

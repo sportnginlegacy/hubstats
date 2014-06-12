@@ -1,14 +1,32 @@
 module Hubstats
   class Repo < ActiveRecord::Base
-    attr_accessible :id, :name, :full_name, :private, :fork, :url, :html_url,
-      :clone_url, :git_url, :ssh_url, :svn_url, :mirror_url, :homepage, :language,
-      :forks_count, :stargazers_count, :watches_count, :size , :default_branch,
-      :open_issues_count, :has_issues, :has_wiki, :has_downloads, :pushed_at, :created_at,
-      :updated_at, :permissions #permissions is a hash {admin, push ,pull}
+    attr_accessible :id, :name, :full_name, :homepage, :language, :description, :default_branch,
+      :url, :html_url, :clone_url, :git_url, :ssh_url, :svn_url, :mirror_url,
+      :hooks_url, :issue_events_url, :events_url, :contributors_url, :git_commits_url, 
+      :issue_comment_url, :merges_url, :issues_url, :pulls_url, :labels_url,
+      :forks_count, :stargazers_count, :watchers_count, :size, :open_issues_count,
+      :has_issues, :has_wiki, :has_downloads,:fork, :private,
+      :pushed_at, :created_at, :updated_at
 
-    validates :id, presence: true, uniqueness: true
+    has_many :pull_requests
     belongs_to :owner, :class_name => "User", :foreign_key => "id"
 
-  end
+    def self.find_or_create_repo(github_repo)
+      github_repo = github_repo.to_h if github_repo.respond_to? :to_h
+      repo_data = github_repo.slice(*column_names.map(&:to_sym))
 
+      if github_repo[:user]
+        user = Hubstats::User.find_or_create_user(github_repo[:user])
+        repo_data[:user_id] = user[:id]
+      end
+
+      repo = where(:id => repo_data[:id]).first_or_create(repo_data)
+      return repo if repo.save
+      Rails.logger.debug repo.errors.inspect
+    end
+    
+    def to_param
+    self.name
+    end
+  end
 end

@@ -21,10 +21,10 @@ module Hubstats
       return ent
     end
 
-    def self.pulls_since(time, options={})
+    def self.pulls_since(repo_url, time, options={})
       options.reverse_merge!(:state => 'closed', :sort => 'created', :direction => 'desc', :per_page => 100)
       hub = client({:auto_paginate => true })
-      hub.paginate('/repos/sportngin/ngin/pulls', :state => options[:state], :sort => options[:sort], :direction => options[:direction], :per_page => options[:per_page] ) do |data, last_response|
+      hub.paginate(repo_url+'/pulls', :state => options[:state], :sort => options[:sort], :direction => options[:direction], :per_page => options[:per_page] ) do |data, last_response|
         while (last_response.rels[:next] && hub.rate_limit.remaining > 0)
           break if !last_response.data.detect{|v| v.closed_at.to_datetime > time.to_datetime}
           last_response = last_response.rels[:next].get
@@ -34,8 +34,8 @@ module Hubstats
       end
     end
 
-    def self.all(kind)
-      client({:auto_paginate => true }).paginate('/repos/sportngin/ngin/'+kind, :state => 'closed', :labels => 'P1')
+    def self.all(repo_url,kind)
+      client({:auto_paginate => true }).paginate([repo_url,kind].join('/'))
     end
 
   end
