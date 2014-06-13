@@ -1,14 +1,18 @@
-<div class="container" id="splash">
+<div class="container" id="repo">
   <div class="row">
     <div class="col col-lg-7">
       <div class="row">
-        <h1 class="title text-center"> Sportngin Github Stats </h1>
+        <h1 class="title text-center"> <%= @repo.name.titleize %> </h1>
       </div>
       <div class="row">
         <h3> Pull Requests from Last Week: </h3>
-        <% @pull_requests.each do |pr| %>
-          <b><%= pr.title %></b> by <b> <%= pr.user.login %> </b> <%= distance_of_time_in_words(DateTime.now,pr.closed_at) %> ago </br>
-        <% end %>
+        <table class="table">
+          <% @pull_requests.each do |pull| %>
+            <tr>
+              <td><%= link_to pull.title, repo_pull_request_path({:repo => @repo.name, :id => pull.id}) %> by <b> <%= pull.user.login %> </b> <%= distance_of_time_in_words(DateTime.now,pull.closed_at) %> ago </td>
+            </tr>
+          <% end %>
+        </table>
       </div>
     </div>
 

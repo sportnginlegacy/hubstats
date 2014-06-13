@@ -4,5 +4,5 @@ auth: # Must include either access_token || (client_id && client_secret)
   # client_secret: <CLIENT SECRET>
 
 config: # Must include either org_name || repo_list
-  #org_name: <ORGANIZATION NAME>
+  # org_name: <ORGANIZATION NAME>
   # repo_list: [<ARRAY OF REPOS>]

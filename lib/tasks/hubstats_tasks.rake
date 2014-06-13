@@ -1,58 +1,20 @@
 namespace :hubstats do
 
-  desc "Queries the list of contributors to the repo"
-  task :members => :environment do
-    contributors = Hubstats::GithubAPI.all('contributors')
-
-    contributors.each do |contributor|
-      puts contributor.login
-    end
-
+  desc "Create the database, load the schema, and pull data from Github (use hubstats:reset to also drop the db first)"
+  task :setup => :environment do
+    puts "Running rake db:create"
+    Rake::Task['app:db:create'].invoke
+    puts "Running rake db:migrate"
+    Rake::Task['app:db:migrate'].invoke
+    puts "Pulling data from Github. This may take a while..."
+    Rake::Task['app:populate:all'].invoke
   end
 
-  desc "Outputs pull requests from ngin"
-  task :pulls => :environment do
-    time = "2014-04-26T19:01:12Z".to_datetime
-
-    client = Hubstats::GithubAPI.client
-    pulls = client.pull_requests('sportngin/ngin', :state => 'closed', :per_page => 100)
-    pulls.each do |pull|
-      puts pull.closed_at
-    end
+  desc "Drops the database, then runs rake hubstats:setup"
+  task :reset => :environment do
+    puts "Droping Database"
+    Rake::Task['app:db:drop'].invoke
+    Rake::Task['app:hubstats:setup'].invoke
   end
 
-  desc "Outputs pull requests from ngin until time"
-  task :since, [:time] => :environment do |t, args|
-    begin
-      time = Time.parse(args.time).to_datetime
-    rescue
-      raise ArgumentError, "Must be called with time argument, e.g. since[:time] where :time = 'YYYY-MM-DD' "
-    end
-    pulls = Hubstats::GithubAPI.pulls_since(time, :state => "closed")
-    pulls.each do |pull|
-      puts pull.closed_at.to_s
-    end
-
-    puts pulls[0].inspect
-  end
-
-  desc "Outputs all pull requests from until"
-  task :all => :environment do
-    pulls = Hubstats::GithubAPI.all('issues')
-
-    pulls.each do |pull|
-      puts pull.number
-    end
-  end
-
-  desc "Gets all org repos"
-  task :repos => :environment do
-    client = Hubstats::GithubAPI.client
-    repos = client.organization_repositories('sportngin', :per_page => 100)
-
-    repos.each do |repo|
-      puts repo.inspect
-    end 
-
-  end
 end

@@ -26,6 +26,7 @@ ActiveRecord::Schema.define(:version => 20140604130550) do
     t.string   "original_commit_id"
     t.string   "body"
     t.integer  "user_id"
+    t.integer  "pull_request_id"
     t.datetime "created_at",         :null => false
     t.datetime "updated_at",         :null => false
   end

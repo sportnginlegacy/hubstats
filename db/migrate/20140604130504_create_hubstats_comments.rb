@@ -14,6 +14,7 @@ class CreateHubstatsComments < ActiveRecord::Migration
       t.string :original_commit_id
       t.string :body
       t.belongs_to :user
+      t.belongs_to :pull_request
       t.timestamps
     end
   end

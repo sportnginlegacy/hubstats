@@ -1,4 +1,4 @@
 module Hubstats
-  module RepoHelper
+  module ReposHelper
   end
 end
