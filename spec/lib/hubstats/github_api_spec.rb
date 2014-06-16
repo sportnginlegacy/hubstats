@@ -47,7 +47,7 @@ module Hubstats
         end 
 
         it 'intializes client with client-id environment variables' do
-
+          Hubstats::GithubAPI.configure()
           expect(Octokit::Client).to receive(:new).with(client_id: "client_id", client_secret: "client_secret").and_return(client)
           expect(Hubstats::GithubAPI.client).to eq(client)
         end
@@ -59,7 +59,8 @@ module Hubstats
           allow(ENV).to receive(:[]).and_return(nil)
         end
 
-        it 'fails to initialize at all'  do
+        it 'fails to initialize at all' do
+          Hubstats::GithubAPI.configure()
           expect(lambda { Hubstats::GithubAPI.client}).to raise_error Octokit::Unauthorized
         end
       end

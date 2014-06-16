@@ -1,4 +1,4 @@
 module Hubstats
-  module SplashHelper
+  module ReposHelper
   end
 end

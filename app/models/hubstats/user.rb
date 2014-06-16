@@ -1,5 +1,6 @@
 module Hubstats
   class User < ActiveRecord::Base
+
     attr_accessible :login, :id, :avatar_url, :gravatar_id, :url, :html_url, :followers_url,
       :following_url, :gists_url, :starred_url, :subscriptions_url, :organizations_url,
       :repos_url, :events_url, :received_events_url, :role, :site_admin
@@ -9,7 +10,6 @@ module Hubstats
     has_many :comments
     has_many :repos, :class_name => "Repo"
     has_many :pull_requests
-    has_many :merged_pulls, :class_name => "PullRequest", :foreign_key => "number"
 
     def self.find_or_create_user(github_user)
       github_user[:role] = github_user.delete :type  ##changing :type in to :role
@@ -24,16 +24,30 @@ module Hubstats
       self.select("hubstats_users.login, hubstats_users.html_url, hubstats_users.id")
           .select("IFNULL(COUNT(p.user_id),0) as num_pulls")
           .joins('LEFT OUTER JOIN hubstats_pull_requests p ON p.user_id = hubstats_users.id')
+          .where("p.closed_at > ?", 2.weeks.ago)
+          .group("hubstats_users.id")
+    end
+
+    def self.comment_counts
+      self.select("hubstats_users.login, hubstats_users.html_url, hubstats_users.id")
+          .select("IFNULL(COUNT(c.user_id),0) as num_comments")
+          .joins('LEFT OUTER JOIN hubstats_comments c ON c.user_id = hubstats_users.id')
+          .where("c.created_at > ?", 2.weeks.ago)
           .group("hubstats_users.id")
     end
 
     def self.pull_requests_and_comments
-      Hubstats::Comment.select("s.login, s.html_url, s.id, s.num_pulls")
+      Hubstats::Comment
+        .select("s.login, s.html_url, s.id, s.num_pulls")
         .select("IFNULL(COUNT(hubstats_comments.user_id),0) as num_comments")
         .joins("RIGHT OUTER JOIN (#{pull_request_counts().to_sql}) s ON hubstats_comments.user_id = s.id")
         .group("s.id")
-        .order("s.login DESC")
+        .order("s.num_pulls + IFNULL(COUNT(hubstats_comments.user_id),0) DESC")
+        .limit(20)
     end
 
+    def to_param
+      self.login
+    end
   end
 end
