@@ -20,31 +20,30 @@ module Hubstats
       Rails.logger.debug user.errors.inspect
     end
 
-    def self.pull_request_counts
-      self.select("hubstats_users.login, hubstats_users.html_url, hubstats_users.id")
-          .select("IFNULL(COUNT(p.user_id),0) as num_pulls")
-          .joins('LEFT OUTER JOIN hubstats_pull_requests p ON p.user_id = hubstats_users.id')
-          .where("p.closed_at > ?", 2.weeks.ago)
-          .group("hubstats_users.id")
+
+    # This is essentiall a single query
+    def self.comments_by_id
+      Hubstats::Comment.select("user_id")
+      .select("IFNULL(COUNT(user_id),0) as user_comments")
+      .where("created_at > ?", 2.weeks.ago)
+      .group("user_id")
     end
 
-    def self.comment_counts
-      self.select("hubstats_users.login, hubstats_users.html_url, hubstats_users.id")
-          .select("IFNULL(COUNT(c.user_id),0) as num_comments")
-          .joins('LEFT OUTER JOIN hubstats_comments c ON c.user_id = hubstats_users.id')
-          .where("c.created_at > ?", 2.weeks.ago)
-          .group("hubstats_users.id")
+    def self.pulls_by_id
+      Hubstats::PullRequest.select("hubstats_pull_requests.user_id")
+        .select("IFNULL(COUNT(hubstats_pull_requests.user_id),0) as user_pulls")
+        .select("IFNULL(j.user_comments,0) as user_comments")
+        .joins("LEFT OUTER JOIN (#{comments_by_id().to_sql}) j ON j.user_id = hubstats_pull_requests.user_id")
+        .where("closed_at > ?", 2.weeks.ago)
+        .group("hubstats_pull_requests.user_id")
     end
 
-    def self.pull_requests_and_comments
-      Hubstats::Comment
-        .select("s.login, s.html_url, s.id, s.num_pulls")
-        .select("IFNULL(COUNT(hubstats_comments.user_id),0) as num_comments")
-        .joins("RIGHT OUTER JOIN (#{pull_request_counts().to_sql}) s ON hubstats_comments.user_id = s.id")
-        .group("s.id")
-        .order("s.num_pulls + IFNULL(COUNT(hubstats_comments.user_id),0) DESC")
-        .limit(20)
-    end
+    def self.with_recent_activity
+      Hubstats::User.select("hubstats_users.login, hubstats_users.html_url, hubstats_users.id")
+      .select("q.user_pulls as num_pulls, q.user_comments as num_comments")
+      .joins("RIGHT OUTER JOIN (#{pulls_by_id().to_sql}) q on q.user_id = hubstats_users.id")
+      .order("q.user_pulls*2 + q.user_comments DESC")
+    end 
 
     def to_param
       self.login
