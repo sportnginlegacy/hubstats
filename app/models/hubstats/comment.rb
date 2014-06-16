@@ -16,6 +16,7 @@ module Hubstats
       
       user = Hubstats::User.find_or_create_user(github_comment[:user])
       pull_request = Hubstats::PullRequest.where({url: github_comment[:pull_request_url]}).first
+      
       comment_data = github_comment.slice(*Hubstats::Comment.column_names.map(&:to_sym))
       comment_data[:user_id] = user.id
       comment_data[:pull_request_id] = pull_request.id

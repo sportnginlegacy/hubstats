@@ -16,6 +16,11 @@ module Hubstats
       @repo = Hubstats::Repo.where(name: params[:repo]).first
       @pull_requests = Hubstats::PullRequest.belonging_to_repo(@repo.id).closed_since(2.weeks.ago)
       @users = Hubstats::User.pull_requests_and_comments
+      @stats = {
+        user_count: Hubstats::User.count(:all),
+        pull_count: Hubstats::PullRequest.belonging_to_repo(@repo.id).closed_since(2.weeks.ago).count(:all),
+        comment_count: Hubstats::Comment.created_since(2.weeks.ago).count(:all)
+      }
     end
   end
 end

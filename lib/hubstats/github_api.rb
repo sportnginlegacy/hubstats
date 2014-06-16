@@ -15,8 +15,9 @@ module Hubstats
     end
 
     def self.client(options={})
-      configure() if auth_info.nil?
-      ent = Octokit::Client.new(auth_info.merge(options))
+      configure() if @@auth_info.nil?
+      ent = Octokit::Client.new(@@auth_info.merge(options))
+      puts ent.inspect
       ent.user #making sure it was configured properly
       return ent
     end

@@ -1,33 +1,47 @@
 <div class="container" id="repo">
   <div class="row">
-    <div class="col col-lg-7">
-      <div class="row">
-        <h1 class="title text-center"> <%= @repo.name.titleize %> </h1>
-      </div>
-      <div class="row">
-        <h3> Pull Requests from Last Week: </h3>
-        <table class="table">
-          <% @pull_requests.each do |pull| %>
-            <tr>
-              <td><%= link_to pull.title, repo_pull_request_path({:repo => @repo.name, :id => pull.id}) %> by <b> <%= pull.user.login %> </b> <%= distance_of_time_in_words(DateTime.now,pull.closed_at) %> ago </td>
-            </tr>
-          <% end %>
-        </table>
-      </div>
+    <h1 class="title text-center"> <%= @repo.name.titleize %> </h1>
+    <div class="col col-lg-4 text-center">
+      <h1> <%= @stats[:user_count] %> </h1>
+      <h4> Active Users </h4>
+      <p> in last two weeks </p>
     </div>
-
-    <div class="col col-lg-3 col-lg-offset-2">
+    <div class="col col-lg-4 text-center">
+      <h1> <%= @stats[:pull_count] %> </h1>
+      <h4> Pull Requests </h4>
+      <p> in last two weeks </p>
+    </div>
+    <div class="col col-lg-4 text-center">
+      <h1><%= @stats[:comment_count] %> </h1>
+      <h4> Comments </h4>
+      <p> in last two weeks </p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col col-lg-5">
+      <h3> Pull Requests from Last Week: </h3>
+      <table class="table">
+        <% @pull_requests.each do |pull| %>
+          <tr>
+            <td><%= link_to pull.title, repo_pull_request_path({:repo => @repo.name, :id => pull.id}) %> by <b> <%= pull.user.login %> </b> <%= distance_of_time_in_words(DateTime.now,pull.closed_at) %> ago </td>
+          </tr>
+        <% end %>
+      </table>
+    </div>
+    <div class="col col-lg-5 col-lg-offset-2">
       <div class="row">
+        <h3> Most Active Users </h3>
         <table class="table">
           <tr>
-            <td><h4> User </h4></td>
-            <td align="center"><h4> Comments </h4></td>
-            <td align="center"><h4> Pull Requests </h4></td>
+            <td><h5> User </h5></td>
+            <td align="center"><h5> Pull Requests </h5></td>
+            <td align="center"><h5> Comments </h5></td>
+          </tr>
           <% @users.each do |user| %>
             <tr>
               <td><a href=<%= user.html_url %>> <%= user.login %> </a></td>
-              <td align="center"><%= user.num_comments %></td>
               <td align="center"><%= user.num_pulls %> </td>
+              <td align="center"><%= user.num_comments %></td>
             <tr>
           <% end %>
         </table>
@@ -35,4 +49,3 @@
     </div>
   </div>
 </div>
-

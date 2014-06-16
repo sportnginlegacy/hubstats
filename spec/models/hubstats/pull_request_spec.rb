@@ -9,15 +9,23 @@ module Hubstats
         :type => "User"
       }
 
+      github_repo = {
+        :id => 151,
+        :name => "HellWorld"
+      }
+
       github_pull = {
         :user => github_user,
+        :base => {:repo => github_repo},
         :id => 100
       }
 
+      repo = Hubstats::Repo.find_or_create_repo(github_repo)
       pull = Hubstats::PullRequest.find_or_create_pull(github_pull)
 
       expect(pull.id).to eq(github_pull[:id])
       expect(pull.user_id).to eq(github_user[:id])
+      expect(pull.repo_id).to eq(github_repo[:id])
     end
   end
 end
