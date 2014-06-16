@@ -5,7 +5,7 @@ module Hubstats
 
     def index
       @repo = Hubstats::Repo.where(name: params[:repo]).first
-      @pull_requests = Hubstats::PullRequest.all
+      @pull_requests = Hubstats::PullRequest.belonging_to_repo(@repo.id)
     end
 
     def show

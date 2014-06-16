@@ -2,8 +2,8 @@ module Hubstats
   class PullRequest < ActiveRecord::Base
 
     scope :closed_since, lambda {|time| where("closed_at > ?", time).order("closed_at DESC") }
-    scope :belonging_to_repo, lambda {|repo_id| where("repo_id = ?", repo_id)}
-    scope :belonging_to_user, lambda {|user_id| where("user_id = ?", user_id)}
+    scope :belonging_to_repo, lambda {|repo_id| where(repo_id: repo_id)}
+    scope :belonging_to_user, lambda {|user_id| where(user_id: user_id)}
     
     attr_accessible :id, :url, :html_url, :diff_url, :patch_url, :issue_url, :commits_url,
       :review_comments_url, :review_comment_url, :comments_url, :statuses_url, :number,
