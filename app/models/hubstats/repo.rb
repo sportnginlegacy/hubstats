@@ -8,8 +8,8 @@ module Hubstats
       :hooks_url, :issue_events_url, :events_url, :contributors_url, :git_commits_url, 
       :issue_comment_url, :merges_url, :issues_url, :pulls_url, :labels_url,
       :forks_count, :stargazers_count, :watchers_count, :size, :open_issues_count,
-      :has_issues, :has_wiki, :has_downloads,:fork, :private,
-      :pushed_at, :created_at, :updated_at
+      :has_issues, :has_wiki, :has_downloads,:fork, :private, 
+      :pushed_at, :created_at, :updated_at, :owner_id
 
     has_many :pull_requests
     belongs_to :owner, :class_name => "User", :foreign_key => "id"
@@ -18,9 +18,9 @@ module Hubstats
       github_repo = github_repo.to_h if github_repo.respond_to? :to_h
       repo_data = github_repo.slice(*column_names.map(&:to_sym))
 
-      if github_repo[:user]
-        user = Hubstats::User.find_or_create_user(github_repo[:user])
-        repo_data[:user_id] = user[:id]
+      if github_repo[:owner]
+        user = Hubstats::User.find_or_create_user(github_repo[:owner])
+        repo_data[:owner_id] = user[:id]
       end
 
       repo = where(:id => repo_data[:id]).first_or_create(repo_data)

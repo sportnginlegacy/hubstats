@@ -1,8 +1,8 @@
 module Hubstats
   class Comment < ActiveRecord::Base
     scope :created_since, lambda {|time| where("created_at > ?", time).order("closed_at DESC") }
-    scope :belonging_to_pull_request, lambda {|pull_request_id| where("pull_request_id = ?", pull_request_id)}
-    scope :belonging_to_user, lambda {|user_id| where("user_id = ?", user_id)}
+    scope :belonging_to_pull_request, lambda {|pull_request_id| where(pull_request_id: pull_request_id)}
+    scope :belonging_to_user, lambda {|user_id| where(user_id: user_id)}
 
     attr_accessible :id, :html_url, :url, :pull_request_url, :diff_hunk, :path,
       :position, :original_position, :line, :commit_id, :original_commit_id,
