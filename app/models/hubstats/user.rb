@@ -51,7 +51,6 @@ module Hubstats
         pull_requests_count_by_repo(time,repo_id).comments_count_by_repo(time,repo_id).only_active.weighted_sort
       else
         pull_requests_count(time).comments_count(time).only_active.weighted_sort
-          
       end
     end
 
