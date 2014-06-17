@@ -2,7 +2,6 @@ module Hubstats
   class Repo < ActiveRecord::Base
 
     scope :with_recent_activity, where(["updated_at > '%s'", 2.weeks.ago])
-    scope :users_belonging_to_repo, lambda {|repo_id| select("user_id").where(repo_id: repo_id).group_by("user_id")}
 
     attr_accessible :id, :name, :full_name, :homepage, :language, :description, :default_branch,
       :url, :html_url, :clone_url, :git_url, :ssh_url, :svn_url, :mirror_url,
