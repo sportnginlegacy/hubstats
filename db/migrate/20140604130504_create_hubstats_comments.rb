@@ -17,5 +17,8 @@ class CreateHubstatsComments < ActiveRecord::Migration
       t.belongs_to :pull_request
       t.timestamps
     end
+
+    add_index :hubstats_comments, :user_id
+    add_index :hubstats_comments, :pull_request_id
   end
 end

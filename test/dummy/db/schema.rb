@@ -31,6 +31,9 @@ ActiveRecord::Schema.define(:version => 20140604130550) do
     t.datetime "updated_at",         :null => false
   end
 
+  add_index "hubstats_comments", ["pull_request_id"], :name => "index_hubstats_comments_on_pull_request_id"
+  add_index "hubstats_comments", ["user_id"], :name => "index_hubstats_comments_on_user_id"
+
   create_table "hubstats_pull_requests", :force => true do |t|
     t.string  "url"
     t.string  "html_url"
@@ -61,6 +64,9 @@ ActiveRecord::Schema.define(:version => 20140604130550) do
     t.integer "user_id"
     t.integer "repo_id"
   end
+
+  add_index "hubstats_pull_requests", ["repo_id"], :name => "index_hubstats_pull_requests_on_repo_id"
+  add_index "hubstats_pull_requests", ["user_id"], :name => "index_hubstats_pull_requests_on_user_id"
 
   create_table "hubstats_repos", :force => true do |t|
     t.string   "name"
@@ -101,6 +107,8 @@ ActiveRecord::Schema.define(:version => 20140604130550) do
     t.datetime "updated_at",        :null => false
     t.integer  "owner_id"
   end
+
+  add_index "hubstats_repos", ["owner_id"], :name => "index_hubstats_repos_on_owner_id"
 
   create_table "hubstats_users", :force => true do |t|
     t.string   "login"

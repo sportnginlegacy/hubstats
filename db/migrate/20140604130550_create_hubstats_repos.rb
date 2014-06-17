@@ -41,5 +41,7 @@ class CreateHubstatsRepos < ActiveRecord::Migration
       t.belongs_to :owner
       t.timestamps
     end
+
+     add_index :hubstats_repos, :owner_id
   end
 end
