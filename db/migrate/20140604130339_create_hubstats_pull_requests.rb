@@ -32,5 +32,8 @@ class CreateHubstatsPullRequests < ActiveRecord::Migration
       t.belongs_to :repo
       t.timestamps
     end
+
+    add_index :hubstats_pull_requests, :user_id
+    add_index :hubstats_pull_requests, :repo_id
   end
 end
