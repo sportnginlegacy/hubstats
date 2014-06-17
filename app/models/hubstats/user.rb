@@ -1,6 +1,8 @@
 module Hubstats
   class User < ActiveRecord::Base
 
+    scope :belonging_to_repo, lambda {|repo_id| where(repo_id: repo_id)}
+    
     attr_accessible :login, :id, :avatar_url, :gravatar_id, :url, :html_url, :followers_url,
       :following_url, :gists_url, :starred_url, :subscriptions_url, :organizations_url,
       :repos_url, :events_url, :received_events_url, :role, :site_admin
@@ -21,27 +23,44 @@ module Hubstats
     end
 
 
-    # This is essentiall a single query
-    def self.comments_by_id
+    # # This is essentiall a single query
+    def self.users_with_comments
       Hubstats::Comment.select("user_id")
       .select("IFNULL(COUNT(user_id),0) as user_comments")
       .where("created_at > ?", 2.weeks.ago)
       .group("user_id")
     end
 
-    def self.pulls_by_id
-      Hubstats::PullRequest.select("hubstats_pull_requests.user_id")
-        .select("IFNULL(COUNT(hubstats_pull_requests.user_id),0) as user_pulls")
-        .select("IFNULL(j.user_comments,0) as user_comments")
-        .joins("LEFT OUTER JOIN (#{comments_by_id().to_sql}) j ON j.user_id = hubstats_pull_requests.user_id")
-        .where("closed_at > ?", 2.weeks.ago)
-        .group("hubstats_pull_requests.user_id")
+    def self.users_with_pulls
+      Hubstats::PullRequest.select("user_id")
+      .select("IFNULL(COUNT(user_id),0) as user_pulls")
+      .where("closed_at > ?", 2.weeks.ago)
+      .group("user_id")
     end
 
+    def self.pulls_and_comments
+      Hubstats::PullRequest.select("hubstats_pull_requests.user_id")
+        .select("IFNULL(COUNT(hubstats_pull_requests.user_id),0) as user_pulls")
+        .select("IFNULL(user_comments,0) as user_comments")
+        .joins("LEFT OUTER JOIN (#{users_with_comments().to_sql}) c ON c.user_id = hubstats_pull_requests.user_id")
+        .where("closed_at > ?", 2.weeks.ago)
+        .group("user_id")
+    end
+
+    def self.comments_and_pulls
+      Hubstats::Comment.select("hubstats_comments.user_id")
+        .select("IFNULL(COUNT(hubstats_comments.user_id),0) as user_comments")
+        .select("IFNULL(user_pulls,0) as user_pulls")
+        .joins("LEFT OUTER JOIN (#{users_with_pulls().to_sql}) c ON c.user_id = hubstats_comments.user_id")
+        .where("created_at > ?", 2.weeks.ago)
+        .group("user_id")
+    end
+ 
     def self.with_recent_activity
       Hubstats::User.select("hubstats_users.login, hubstats_users.html_url, hubstats_users.id")
-      .select("q.user_pulls as num_pulls, q.user_comments as num_comments")
-      .joins("RIGHT OUTER JOIN (#{pulls_by_id().to_sql}) q on q.user_id = hubstats_users.id")
+      .select("IFNULL(q.user_pulls,0) as num_pulls, IFNULL(q.user_comments,0) as num_comments")
+      .joins("LEFT OUTER JOIN (#{pulls_and_comments().to_sql} UNION #{comments_and_pulls.to_sql}) q on q.user_id = hubstats_users.id")
+      .where("q.user_pulls > 0 OR q.user_comments > 0")
       .order("q.user_pulls*2 + q.user_comments DESC")
     end 
 

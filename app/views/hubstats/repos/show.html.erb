@@ -1,17 +1,17 @@
 <div class="container" id="repo">
   <div class="row">
     <h1 class="title text-center"> <%= @repo.name.titleize %> </h1>
-    <div class="col col-lg-4 text-center">
+    <div class="col col-md-4 col-sm-4 text-center">
       <h1> <%= @stats[:user_count] %> </h1>
       <h4> Active Users </h4>
       <p> in last two weeks </p>
     </div>
-    <div class="col col-lg-4 text-center">
+    <div class="col col-md-4 col-sm-4 text-center">
       <h1> <%= @stats[:pull_count] %> </h1>
       <h4> Pull Requests </h4>
       <p> in last two weeks </p>
     </div>
-    <div class="col col-lg-4 text-center">
+    <div class="col col-md-4 col-sm-4 text-center">
       <h1><%= @stats[:comment_count] %> </h1>
       <h4> Comments </h4>
       <p> in last two weeks </p>

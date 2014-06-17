@@ -6,10 +6,11 @@ module Hubstats
       @repos = Hubstats::Repo.with_recent_activity
       @users = Hubstats::User.with_recent_activity
       @stats = {
-        user_count: @users.length,
+        user_count: @users.count(:all),
         pull_count: Hubstats::PullRequest.closed_since(2.weeks.ago).count(:all),
         comment_count: Hubstats::Comment.created_since(2.weeks.ago).count(:all)
       }
+
     end
 
     def show
@@ -19,7 +20,7 @@ module Hubstats
       @stats = {
         user_count: @users.length,
         pull_count: Hubstats::PullRequest.belonging_to_repo(@repo.id).closed_since(2.weeks.ago).count(:all),
-        comment_count: Hubstats::Comment.created_since(2.weeks.ago).count(:all)
+        comment_count: Hubstats::Comment.belonging_to_repo(@repo.id).created_since(2.weeks.ago).count(:all)
       }
     end
   end
