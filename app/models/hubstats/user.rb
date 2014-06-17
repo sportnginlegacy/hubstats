@@ -1,5 +1,31 @@
 module Hubstats
   class User < ActiveRecord::Base
+    scope :pull_requests_count, lambda { |time|
+      select("hubstats_users.*")
+      .select("COUNT(DISTINCT hubstats_pull_requests.id) AS pull_request_count")
+      .joins("LEFT JOIN hubstats_pull_requests ON hubstats_pull_requests.user_id = hubstats_users.id AND hubstats_pull_requests.closed_at > '#{time}'")
+      .group("hubstats_users.id")
+    }
+    scope :pull_requests_count_by_repo, lambda { |time,repo_id|
+      select("hubstats_users.*")
+      .select("COUNT(DISTINCT hubstats_pull_requests.id) AS pull_request_count")
+      .joins("LEFT JOIN hubstats_pull_requests ON hubstats_pull_requests.user_id = hubstats_users.id AND hubstats_pull_requests.closed_at > '#{time}' AND hubstats_pull_requests.repo_id = '#{repo_id}'")
+      .group("hubstats_users.id")
+    }
+    scope :comments_count, lambda { |time|
+      select("hubstats_users.*")
+      .select("COUNT(DISTINCT hubstats_comments.id) AS comment_count")
+      .joins("LEFT JOIN hubstats_comments ON hubstats_comments.user_id = hubstats_users.id AND hubstats_comments.created_at > '#{time}'")
+      .group("hubstats_users.id")
+    }
+    scope :comments_count_by_repo, lambda { |time,repo_id|
+      select("hubstats_users.*")
+      .select("COUNT(DISTINCT hubstats_comments.id) AS comment_count")
+      .joins("LEFT JOIN hubstats_comments ON hubstats_comments.user_id = hubstats_users.id AND hubstats_comments.created_at > '#{time}' AND hubstats_comments.repo_id = '#{repo_id}'")
+      .group("hubstats_users.id")
+    }
+    scope :only_active, having("comment_count > 0 OR pull_request_count > 0")
+    scope :weighted_sort, order("COUNT(DISTINCT hubstats_pull_requests.id)*2 + COUNT(DISTINCT hubstats_comments.id) DESC")
 
     attr_accessible :login, :id, :avatar_url, :gravatar_id, :url, :html_url, :followers_url,
       :following_url, :gists_url, :starred_url, :subscriptions_url, :organizations_url,
@@ -20,30 +46,12 @@ module Hubstats
       Rails.logger.debug user.errors.inspect
     end
 
-    def self.pull_request_counts
-      self.select("hubstats_users.login, hubstats_users.html_url, hubstats_users.id")
-          .select("IFNULL(COUNT(p.user_id),0) as num_pulls")
-          .joins('LEFT OUTER JOIN hubstats_pull_requests p ON p.user_id = hubstats_users.id')
-          .where("p.closed_at > ?", 2.weeks.ago)
-          .group("hubstats_users.id")
-    end
-
-    def self.comment_counts
-      self.select("hubstats_users.login, hubstats_users.html_url, hubstats_users.id")
-          .select("IFNULL(COUNT(c.user_id),0) as num_comments")
-          .joins('LEFT OUTER JOIN hubstats_comments c ON c.user_id = hubstats_users.id')
-          .where("c.created_at > ?", 2.weeks.ago)
-          .group("hubstats_users.id")
-    end
-
-    def self.pull_requests_and_comments
-      Hubstats::Comment
-        .select("s.login, s.html_url, s.id, s.num_pulls")
-        .select("IFNULL(COUNT(hubstats_comments.user_id),0) as num_comments")
-        .joins("RIGHT OUTER JOIN (#{pull_request_counts().to_sql}) s ON hubstats_comments.user_id = s.id")
-        .group("s.id")
-        .order("s.num_pulls + IFNULL(COUNT(hubstats_comments.user_id),0) DESC")
-        .limit(20)
+    def self.with_recent_activity(time, repo_id = nil)
+      if repo_id
+        pull_requests_count_by_repo(time,repo_id).comments_count_by_repo(time,repo_id).only_active.weighted_sort
+      else
+        pull_requests_count(time).comments_count(time).only_active.weighted_sort
+      end
     end
 
     def to_param

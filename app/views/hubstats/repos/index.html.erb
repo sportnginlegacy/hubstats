@@ -40,8 +40,8 @@
           <% @users.each do |user| %>
             <tr>
               <td><a href=<%= user.html_url %>> <%= user.login %> </a></td>
-              <td align="center"><%= user.num_pulls %> </td>
-              <td align="center"><%= user.num_comments %></td>
+              <td align="center"><%= user.pull_request_count %> </td>
+              <td align="center"><%= user.comment_count %></td>
             <tr>
           <% end %>
         </table>
