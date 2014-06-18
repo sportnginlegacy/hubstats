@@ -21,9 +21,12 @@ module Hubstats
       
       comment_data = github_comment.slice(*Hubstats::Comment.column_names.map(&:to_sym))
       comment_data[:user_id] = user.id
-      comment_data[:pull_request_id] = pull_request.id
-      comment_data[:repo_id] = pull_request.repo_id
 
+      if pull_request
+        comment_data[:pull_request_id] = pull_request.id
+        comment_data[:repo_id] = pull_request.repo_id
+      end
+      
       comment = where(:id => comment_data[:id]).first_or_create(comment_data)
       return comment if comment.save
       Rails.logger.debug comment.errors.inspect

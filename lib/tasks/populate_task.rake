@@ -19,9 +19,14 @@ namespace :populate do
     puts "Adding comments to " + args[:repo]
 
     client = Hubstats::GithubAPI.client({:auto_paginate => true})
-    comments = client.pull_requests_comments(args[:repo])
+    pull_comments = client.pull_requests_comments(args[:repo])
+    pull_comments.each do |comment|
+      comm = Hubstats::Comment.find_or_create_comment(comment)
+    end
 
-    comments.each do |comment|
+    issue_comments = client.issues_comments(args[:repo],{sort: 'created', direction: 'desc'})
+    issue_comments.each do |comment|
+      puts comment.inspect
       comm = Hubstats::Comment.find_or_create_comment(comment)
     end
   end
