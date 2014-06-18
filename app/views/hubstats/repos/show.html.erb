@@ -1,50 +1,17 @@
 <div class="container" id="repo">
   <div class="row">
     <h1 class="title text-center"> <%= @repo.name.titleize %> </h1>
-    <div class="col col-md-4 col-sm-4 text-center">
-      <h1> <%= @stats[:user_count] %> </h1>
-      <h4> Active Users </h4>
-      <p> in last two weeks </p>
-    </div>
-    <div class="col col-md-4 col-sm-4 text-center">
-      <h1> <%= @stats[:pull_count] %> </h1>
-      <h4> Pull Requests </h4>
-      <p> in last two weeks </p>
-    </div>
-    <div class="col col-md-4 col-sm-4 text-center">
-      <h1><%= @stats[:comment_count] %> </h1>
-      <h4> Comments </h4>
-      <p> in last two weeks </p>
-    </div>
+    <%= render 'hubstats/metrics/quick_stats' %>
   </div>
   <div class="row">
     <div class="col col-lg-5">
-      <h3> Pull Requests from Last Week: </h3>
-      <table class="table">
-        <% @pull_requests.each do |pull| %>
-          <tr>
-            <td><%= link_to pull.title, repo_pull_request_path({:repo => @repo.name, :id => pull.id}) %> by <b> <%= pull.user.login %> </b> <%= distance_of_time_in_words(DateTime.now,pull.closed_at) %> ago </td>
-          </tr>
-        <% end %>
-      </table>
+      <h3> Pull Requests since <%= time_ago_in_words(@timespan) %> ago</h3>
+       <%= render 'hubstats/metrics/pulls_table' %>
     </div>
     <div class="col col-lg-5 col-lg-offset-2">
       <div class="row">
         <h3> Most Active Users </h3>
-        <table class="table">
-          <tr>
-            <td><h5> User </h5></td>
-            <td align="center"><h5> Pull Requests </h5></td>
-            <td align="center"><h5> Comments </h5></td>
-          </tr>
-          <% @users.each do |user| %>
-            <tr>
-              <td><a href=<%= user.html_url %>> <%= user.login %> </a></td>
-              <td align="center"><%= user.pull_request_count%> </td>
-              <td align="center"><%= user.comment_count %></td>
-            <tr>
-          <% end %>
-        </table>
+        <%= render 'hubstats/metrics/users_table' %>
       </div>
     </div>
   </div>

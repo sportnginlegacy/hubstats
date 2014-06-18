@@ -12,3 +12,12 @@
  *= require hubstats/bootstrap
  *= require_tree .
  */
+
+
+ #header{
+ 	padding-top: 5px; 
+ }
+
+ #header .title {
+ 	font-size: 24px
+ }
