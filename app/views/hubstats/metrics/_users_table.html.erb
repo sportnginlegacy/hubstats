@@ -1,14 +1,14 @@
 <table class="table">
   <tr>
-    <td><h5> User </h5></td>
-    <td align="center"><h5> Pull Requests </h5></td>
-    <td align="center"><h5> Comments </h5></td>
+    <th> User </th>
+    <th class="title"> Pull Requests </th>
+    <th class="title"> Comments </th>
   </tr>
   <% @users.each do |user| %>
     <tr>
       <td><%= link_to user.login, user_path(user) %> </td>
-      <td align="center"><%= user.pull_request_count %> </td>
-      <td align="center"><%= user.comment_count %></td>
+      <td class="numeric"><%= user.pull_request_count %> </td>
+      <td class="numeric"><%= user.comment_count %></td>
     </tr>
   <% end %>
 </table>

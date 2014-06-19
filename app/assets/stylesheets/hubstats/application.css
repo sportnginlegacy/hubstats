@@ -14,10 +14,14 @@
  */
 
 
- #header{
- 	padding-top: 5px; 
- }
+.numeric, .title {
+  text-align:center
+}
 
- #header .title {
- 	font-size: 24px
- }
+#header{
+  padding-top: 5px; 
+}
+
+#header .title {
+  font-size: 28px;
+}
