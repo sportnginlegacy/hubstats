@@ -24,6 +24,15 @@ module Hubstats
       .joins("LEFT JOIN hubstats_comments ON hubstats_comments.user_id = hubstats_users.id AND hubstats_comments.created_at > '#{time}' AND hubstats_comments.repo_id = '#{repo_id}'")
       .group("hubstats_users.id")
     }
+    scope :pulls_reviewed_count, lambda { |time|
+      select("hubstats_users.*")
+      .select("COUNT(DISTINCT hubstats_pull_requests.id) as reviews_count")
+      .joins("LEFT JOIN hubstats_comments ON hubstats_comments.user_id = hubstats_users.id AND hubstats_comments.created_at > '#{time}'")
+      .joins("LEFT JOIN hubstats_pull_requests ON hubstats_pull_requests.id = hubstats_comments.pull_request_id AND hubstats_pull_requests.closed_at > '#{time}'")
+      .where("hubstats_pull_requests.user_id != hubstats_users.id")
+      .group("hubstats_users.id")
+    }
+
     scope :only_active, having("comment_count > 0 OR pull_request_count > 0")
     scope :weighted_sort, order("COUNT(DISTINCT hubstats_pull_requests.id)*2 + COUNT(DISTINCT hubstats_comments.id) DESC")
 
