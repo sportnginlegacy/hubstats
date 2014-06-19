@@ -5,7 +5,7 @@
   </div>
   <div class="pull-right">
     <select class="form-control" id="time-select">
-      <% @timespan_array.each do |timespan| %>
+      <% Hubstats::TIMESPAN_ARRAY.each do |timespan| %>
         <option value=<%= timespan[:date] %>><%=timespan[:display_value]%></option>
       <% end %>
     </select>
