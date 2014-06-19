@@ -1,7 +1,8 @@
 <table class="table">
   <% @repos.each do |repo| %>
     <tr>
-      <td><%= link_to repo.name, repo_path(repo)%> <%= distance_of_time_in_words(DateTime.now,repo.updated_at) %> ago </td>
+      <td><%= link_to repo.name, repo_path(repo)%></td>
+      <td><%= distance_of_time_in_words(DateTime.now,repo.updated_at) %> ago</td>
     </tr>
   <% end %>
 </table>

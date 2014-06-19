@@ -1,7 +1,14 @@
 <table class="table">
+  <tr>
+    <th><h5> Pull Request</h5></th>
+    <th><h5> User </h5></th>
+    <th><h5> Closed </h5></th>
+  </tr>
   <% @pull_requests.each do |pull| %>
     <tr>
-      <td><%= link_to pull.title, repo_pull_request_path({:repo => @repo.name, :id => pull.id}) %> by <b> <%= pull.user.login %> </b> <%= distance_of_time_in_words(DateTime.now,pull.closed_at) %> ago </td>
+      <td><%= link_to pull.title, repo_pull_request_path({:repo => @repo.name, :id => pull.id}) %></td>
+      <td><%= pull.user.login %></td>
+      <td><%= distance_of_time_in_words(DateTime.now,pull.closed_at) %> ago</td>
     </tr>
   <% end %>
 </table>
