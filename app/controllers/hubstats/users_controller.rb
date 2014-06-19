@@ -11,6 +11,8 @@ module Hubstats
       @user = Hubstats::User.where(login: params[:id]).first
       @pulls = Hubstats::PullRequest.belonging_to_user(@user.id).closed_since(@timespan)
       @comments = Hubstats::Comment.belonging_to_user(@user.id).created_since(@timespan)
+      @reviews = Hubstats::User.pulls_reviewed_count(@timespan).where(login: params[:id]).first
     end
+
   end
 end
