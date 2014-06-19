@@ -1,0 +1,12 @@
+<div class="container" id="header">
+  <div class="pull-left">
+    <div class="title"> <%= link_to "Hubstats: Github Metrics", root_path %> </div>
+  </div>
+  <div class="pull-right">
+    <select class="form-control" id="time-select">
+      <% Hubstats::TIMESPAN_ARRAY.each do |timespan| %>
+        <option value=<%= timespan[:date] %>><%=timespan[:display_value]%></option>
+      <% end %>
+    </select>
+  </div>
+</div>

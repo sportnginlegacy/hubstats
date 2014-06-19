@@ -46,11 +46,11 @@ module Hubstats
       Rails.logger.debug user.errors.inspect
     end
 
-    def self.with_recent_activity(time, repo_id = nil)
+    def self.with_pulls_or_comments(time, repo_id = nil)
       if repo_id
-        pull_requests_count_by_repo(time,repo_id).comments_count_by_repo(time,repo_id).only_active.weighted_sort
+        pull_requests_count_by_repo(time,repo_id).comments_count_by_repo(time,repo_id).weighted_sort
       else
-        pull_requests_count(time).comments_count(time).only_active.weighted_sort
+        pull_requests_count(time).comments_count(time).weighted_sort
       end
     end
 

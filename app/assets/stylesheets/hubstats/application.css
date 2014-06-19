@@ -12,3 +12,16 @@
  *= require hubstats/bootstrap
  *= require_tree .
  */
+
+
+.numeric, .title {
+  text-align:center
+}
+
+#header{
+  padding-top: 5px; 
+}
+
+#header .title {
+  font-size: 28px;
+}
