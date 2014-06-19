@@ -5,12 +5,9 @@
   </div>
   <div class="pull-right">
     <select class="form-control" id="time-select">
-      <option value=<%= Date.today %>>Today</option>
-      <option value=<%= 1.week.ago.to_date %>>One Week</option>
-      <option value=<%= 2.week.ago.to_date %>>Two Weeks</option>
-      <option value=<%= 1.month.ago.to_date %>>One Month</option>
-      <option value=<%= 3.month.ago.to_date %>>Three Months</option>
-      <option value=<%= 10.years.ago.to_date %>>Beginning of Time</option>
+      <% @timespan_array.each do |timespan| %>
+        <option value=<%= timespan[:date] %>><%=timespan[:display_value]%></option>
+      <% end %>
     </select>
   </div>
 </div>

@@ -17,15 +17,14 @@
 
 
 window.onload = function () {
-  var index = readCookie("index") || 2;
+  var index = readCookie("hubstats_index") || 2;
   var timer = document.getElementById("time-select");
 
   timer.selectedIndex = index;
 
   timer.onchange = function() {
     var url = [location.protocol, '//', location.host, location.pathname].join('');
-    createCookie("index",this.selectedIndex,1);
-    createCookie("timespan",this.value,1);
+    createCookie("hubstats_index",this.selectedIndex,1);
     window.location = url;
   };
 }
