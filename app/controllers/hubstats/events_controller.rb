@@ -10,7 +10,7 @@ module Hubstats
       eventsHandler = Hubstats::EventsHandler.new()
       eventsHandler.route(event,kind)
 
-      render :text => ""
+      render :nothing => true
     end
 
   end
