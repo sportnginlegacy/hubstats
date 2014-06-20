@@ -2,7 +2,8 @@ namespace :populate do
 
   desc "Pull members from Github saves in database"
   task :users, [:repo] => :environment do |t, args|
-    args[:repo] ? (repo = args[:repo]) : (raise ArgumentError, "Must be called with repo argument. [:org/:repo]")
+    raise ArgumentError, "Must be called with repo argument. [:org/:repo]" if args[:repo].nil?
+    repo = args[:repo]
     puts "Adding contributors to " + repo
 
     client = Hubstats::GithubAPI.client({:auto_paginate => true})
@@ -15,8 +16,8 @@ namespace :populate do
 
   desc "Pull comments from Github saves in database"
   task :comments, [:repo] => :environment do |t, args|
-    args[:repo] ? (repo = args[:repo]) : (raise ArgumentError, "Must be called with repo argument. [:org/:repo]")
-    repo = Hubstats::Repo.where(full_name: repo).first
+    raise ArgumentError, "Must be called with repo argument. [:org/:repo]" if args[:repo].nil?
+    repo = Hubstats::Repo.where(full_name: args[:repo]).first
     puts "Adding comments to " + repo.full_name
 
     client = Hubstats::GithubAPI.client({:auto_paginate => true})
@@ -39,31 +40,18 @@ namespace :populate do
 
   desc "Pull pull requests from Github saves in database"
   task :pulls, [:repo] => :environment do |t, args|
-    args[:repo] ? (repo = args[:repo]) : (raise ArgumentError, "Must be called with repo argument. [:org/:repo]")
-    puts "Adding pulls to " + args[:repo]
+    raise ArgumentError, "Must be called with repo argument. [:org/:repo]" if args[:repo].nil?
+    repo = Hubstats::Repo.where(full_name: args[:repo]).first
+    puts "Adding comments to " + repo.full_name
 
     client = Hubstats::GithubAPI.client({:auto_paginate => true})
-    closed_pulls = client.pulls(repo, :state => "closed")
-    pulls = closed_pulls.concat(client.pulls(repo, :state => "open"))
-
+    
+    closed_pulls = client.pulls(repo.full_name, :state => "closed")
+    pulls = closed_pulls.concat(client.pulls(repo.full_name, :state => "open"))
     pulls.each do |pull|
       pr = Hubstats::PullRequest.find_or_create_pull(pull)
     end
   end
-
-
-  ## THIS IS ONLY FOR TESTING DELETE WHEN FINISHED WITH HANDLER
-  desc "Pull all events from hubstats"
-  task :events => :environment do |t,args|
-    eventsHandler = Hubstats::EventsHandler.new()
-    client = Hubstats::GithubAPI.client({:auto_paginate => true})
-    events = client.repository_events('sportngin/hubstats')
-
-    events.each do |event|
-      eventsHandler.route(event[:payload],event[:type])
-    end
-  end
-
 
   desc "Pull repos from Github save to database"
   task :all => :environment do
