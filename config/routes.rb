@@ -1,5 +1,6 @@
 Hubstats::Engine.routes.draw do
   root to: "repos#index"
+  post "/handler" => "events#handler", :as => "handler"
   get "/users" => "users#index", :as => :users
   get "/user/:id" => "users#show", :as => :user
 
