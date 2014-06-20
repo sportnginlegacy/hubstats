@@ -25,6 +25,7 @@ ActiveRecord::Schema.define(:version => 20140604130550) do
     t.string   "commit_id"
     t.string   "original_commit_id"
     t.string   "body"
+    t.string   "kind"
     t.integer  "user_id"
     t.integer  "pull_request_id"
     t.integer  "repo_id"

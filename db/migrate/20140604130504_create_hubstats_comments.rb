@@ -13,6 +13,7 @@ class CreateHubstatsComments < ActiveRecord::Migration
       t.string :commit_id
       t.string :original_commit_id
       t.string :body
+      t.string :kind
       t.belongs_to :user
       t.belongs_to :pull_request
       t.belongs_to :repo
