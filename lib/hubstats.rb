@@ -1,5 +1,6 @@
 require "hubstats/engine"
 require "hubstats/github_api"
+require "hubstats/events_handler"
 require 'active_support/core_ext/numeric'
 
 module Hubstats
@@ -28,4 +29,5 @@ module Hubstats
       date: 520.weeks
     }
   ]
+
 end

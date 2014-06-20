@@ -15,51 +15,33 @@ module Hubstats
 
     attr_accessible :id, :html_url, :url, :pull_request_url, :diff_hunk, :path,
       :position, :original_position, :line, :commit_id, :original_commit_id,
-      :body, :created_at, :updated_at, :user_id, :pull_request_id, :repo_id
+      :body, :created_at, :updated_at, :user_id, :pull_request_id, :repo_id,
+      :kind
   
     belongs_to :user
     belongs_to :pull_request
     belongs_to :repo
     
+   
     def self.find_or_create_comment(github_comment)
       github_comment = github_comment.to_h if github_comment.respond_to? :to_h
       
       user = Hubstats::User.find_or_create_user(github_comment[:user])
-      pull_request = Hubstats::PullRequest.where({url: github_comment[:pull_request_url]}).first
+      github_comment[:user_id] = user.id
       
-      if pull_request
-        comment_data = github_comment.slice(*Hubstats::Comment.column_names.map(&:to_sym))
-        comment_data[:user_id] = user.id
-        comment_data[:pull_request_id] = pull_request.id
-        comment_data[:repo_id] = pull_request.repo_id
-
-        comment = where(:id => comment_data[:id]).first_or_create(comment_data)
-        return comment if comment.save
-        Rails.logger.debug comment.errors.inspect
+      if github_comment[:pull_number]
+        pull_request = Hubstats::PullRequest.belonging_to_repo(github_comment[:repo_id]).where(number: github_comment[:pull_number]).first
+        if pull_request
+          github_comment[:pull_request_id] = pull_request.id
+        end
       end
+
+      comment_data = github_comment.slice(*Hubstats::Comment.column_names.map(&:to_sym))
+
+      comment = where(:id => comment_data[:id]).first_or_create(comment_data)
+      return comment if comment.save
+      puts comment.errors.inspect
     end
 
-    def self.find_or_create_issue_comment(github_comment,github_repo)
-      github_comment = github_comment.to_h if github_comment.respond_to? :to_h
-        
-      repo = Hubstats::Repo.where(full_name: github_repo).first
-      user = Hubstats::User.find_or_create_user(github_comment[:user])
-      pull_request = Hubstats::PullRequest.belonging_to_repo(repo.id).where({number: github_comment[:number]}).first
-      
-      if pull_request 
-        comment_data = github_comment.slice(*Hubstats::Comment.column_names.map(&:to_sym))
-        comment_data[:user_id] = user.id
-        comment_data[:pull_request_id] = pull_request.id
-        comment_data[:repo_id] = pull_request.repo_id
-
-        comment = where(:id => comment_data[:id]).first_or_create(comment_data)
-        return comment if comment.save
-        Rails.logger.debug comment.errors.inspect
-      end
-    end
   end
-end
-
-def get_issue_number(issue_url)
-  issue_url.split('/')[-1]
 end

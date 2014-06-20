@@ -47,6 +47,21 @@ namespace :populate do
     end
   end
 
+  ## THIS IS ONLY FOR TESTING DELETE WHEN FINISHED WITH HANDLER
+  desc "Pull all events from hubstats"
+  task :events => :environment do |t,args|
+    eventsHandler = Hubstats::EventsHandler.new()
+    client = Hubstats::GithubAPI.client({:auto_paginate => true})
+    events = client.repository_events('sportngin/hubstats')
+
+    events.each do |event|
+      eventsHandler.route(event)
+    end
+    puts eventsHandler.pulls
+    puts eventsHandler.other
+  end
+
+
   desc "Pull repos from Github save to database"
   task :all => :environment do
     client = Hubstats::GithubAPI.client({:auto_paginate => true})
@@ -54,8 +69,8 @@ namespace :populate do
       re = Hubstats::Repo.find_or_create_repo(repo)
 
       Rake::Task["app:populate:users"].execute({repo: "#{re.full_name}"})
-      Rake::Task["app:populate:pulls"].execute({repo: "#{re.full_name}"})
-      Rake::Task["app:populate:comments"].execute({repo: "#{re.full_name}"})
+      # Rake::Task["app:populate:pulls"].execute({repo: "#{re.full_name}"})
+      # Rake::Task["app:populate:comments"].execute({repo: "#{re.full_name}"})
       
     end
   end
