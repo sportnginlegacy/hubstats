@@ -60,7 +60,7 @@ namespace :populate do
     events = client.repository_events('sportngin/hubstats')
 
     events.each do |event|
-      eventsHandler.route(event)
+      eventsHandler.route(event[:payload],event[:type])
     end
   end
 

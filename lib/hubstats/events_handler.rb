@@ -1,44 +1,45 @@
 module Hubstats
   class EventsHandler
 
-    def route(event) 
-      case event[:type]
-      when "IssueCommentEvent"
-        comment_processor(event,"Issue")
-      when "CommitCommentEvent"
-        comment_processor(event,"Commit")
-      when "PullRequestEvent"
-        pull_processor(event)
-      when "PullRequestReviewCommentEvent"
-        comment_processor(event,"PullRequest")
+    def route(payload, type) 
+      puts 
+      case type
+      when "issue_comment" || "IssueCommentEvent"
+        comment_processor(payload,"Issue")
+      when "commit_comment" || "CommitCommentEvent"
+        comment_processor(payload,"Commit")
+      when "pull_request" || "PullRequestEvent"
+        pull_processor(payload)
+      when "pull_request_review_comment" || "PullRequestReviewCommentEvent"
+        comment_processor(payload,"PullRequest")
       end
     end
 
-    def pull_processor(event)
-      pull_request = event[:payload][:pull_request]
-      if event[:payload][:action] == 'closed'
+    def pull_processor(payload)
+      pull_request = payload[:pull_request]
+      if payload[:event][:action] == 'closed'
         pull = Hubstats::PullRequest.find_or_create_pull(pull_request)
       end
     end
 
-    def comment_processor(event,type)
-      comment = event[:payload][:comment]
-      comment[:kind] = type
-      comment[:repo_id] = event[:repo][:id]
-      comment[:pull_number] = get_pull_number(event)
+    def comment_processor(payload,kind)
+      comment = payload[:comment]
+      comment[:kind] = kind
+      comment[:repo_id] = payload[:repository][:id]
+      comment[:pull_number] = get_pull_number(payload)
 
       Hubstats::Comment.create_or_update(comment)
     end
 
 
     #grabs the number off of anyone of the various places it can be
-    def get_pull_number(event)
-      if event[:payload][:pull_request]
-        return event[:payload][:pull_request][:number]
-      elsif event[:payload][:issue]
-        return event[:payload][:issue][:number]
-      elsif event[:payload][:comment][:pull_request_url]
-        return event[:payload][:comment][:pull_request_url].split('/')[-1]
+    def get_pull_number(payload)
+      if payload[:pull_request]
+        return payload[:pull_request][:number]
+      elsif payload[:issue]
+        return payload[:issue][:number]
+      elsif payload[:comment][:pull_request_url]
+        return payload[:comment][:pull_request_url].split('/')[-1]
       else
         return nil
       end
