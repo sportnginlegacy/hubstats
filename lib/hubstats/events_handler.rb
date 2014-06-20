@@ -1,11 +1,5 @@
 module Hubstats
   class EventsHandler
-    attr_accessor :pulls,:other
-
-    def initialize()
-      @pulls = 0
-      @other = 0
-    end
 
     def route(event) 
       case event[:type]
@@ -33,7 +27,7 @@ module Hubstats
       comment[:repo_id] = event[:repo][:id]
       comment[:pull_number] = get_pull_number(event)
 
-      Hubstats::Comment.find_or_create_comment(comment)
+      Hubstats::Comment.create_or_update(comment)
     end
 
 

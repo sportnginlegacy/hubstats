@@ -29,7 +29,7 @@ module Hubstats
 
       repo = Hubstats::Repo.find_or_create_repo(github_repo)
       pull = Hubstats::PullRequest.find_or_create_pull(pull_request)
-      comment = Hubstats::Comment.find_or_create_comment(github_comment)
+      comment = Hubstats::Comment.create_or_update(github_comment)
 
       expect(comment.id).to eq(github_comment[:id])
       expect(comment.user_id).to eq(github_user[:id])
