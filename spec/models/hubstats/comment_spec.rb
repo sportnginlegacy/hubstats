@@ -27,7 +27,7 @@ module Hubstats
         :user => github_user
       }
 
-      repo = Hubstats::Repo.find_or_create_repo(github_repo)
+      repo = Hubstats::Repo.create_or_update_repo(github_repo)
       pull = Hubstats::PullRequest.find_or_create_pull(pull_request)
       comment = Hubstats::Comment.create_or_update(github_comment)
 

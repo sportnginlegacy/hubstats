@@ -9,6 +9,7 @@ module Hubstats
       when "commit_comment" || "CommitCommentEvent"
         comment_processor(payload,"Commit")
       when "pull_request" || "PullRequestEvent"
+        puts "Hellow"
         pull_processor(payload)
       when "pull_request_review_comment" || "PullRequestReviewCommentEvent"
         comment_processor(payload,"PullRequest")
@@ -17,9 +18,9 @@ module Hubstats
 
     def pull_processor(payload)
       pull_request = payload[:pull_request]
-      if payload[:event][:action] == 'closed'
-        pull = Hubstats::PullRequest.find_or_create_pull(pull_request)
-      end
+      pull_request[:repository] = payload[:repository]
+      
+      Hubstats::PullRequest.find_or_create_pull(pull_request)
     end
 
     def comment_processor(payload,kind)
