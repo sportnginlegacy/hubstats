@@ -16,11 +16,11 @@ module Hubstats
 
       github_pull = {
         :user => github_user,
-        :base => {:repo => github_repo},
+        :repository => github_repo,
         :id => 100
       }
 
-      repo = Hubstats::Repo.find_or_create_repo(github_repo)
+      repo = Hubstats::Repo.create_or_update_repo(github_repo)
       pull = Hubstats::PullRequest.find_or_create_pull(github_pull)
 
       expect(pull.id).to eq(github_pull[:id])

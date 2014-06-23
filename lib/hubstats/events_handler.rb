@@ -17,9 +17,9 @@ module Hubstats
 
     def pull_processor(payload)
       pull_request = payload[:pull_request]
-      if payload[:event][:action] == 'closed'
-        pull = Hubstats::PullRequest.find_or_create_pull(pull_request)
-      end
+      pull_request[:repository] = payload[:repository]
+      
+      Hubstats::PullRequest.find_or_create_pull(pull_request)
     end
 
     def comment_processor(payload,kind)

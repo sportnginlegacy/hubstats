@@ -26,7 +26,7 @@ module Hubstats
     def self.create_or_update(github_comment)
       github_comment = github_comment.to_h if github_comment.respond_to? :to_h
 
-      user = Hubstats::User.find_or_create_user(github_comment[:user])
+      user = Hubstats::User.create_or_update_user(github_comment[:user])
       github_comment[:user_id] = user.id
       
       if github_comment[:pull_number]
@@ -39,8 +39,7 @@ module Hubstats
       comment_data = github_comment.slice(*Hubstats::Comment.column_names.map(&:to_sym))
 
       comment = where(:id => comment_data[:id]).first_or_create(comment_data)
-      comment.update_attributes(comment_data)
-      return comment if comment.save
+      return comment if comment.update_attributes(comment_data)
       puts comment.errors.inspect
     end
 

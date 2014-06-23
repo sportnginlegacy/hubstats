@@ -10,7 +10,7 @@ namespace :populate do
     contributors = client.contribs(args[:repo])
 
     contributors.each do |contributor|
-      cont = Hubstats::User.find_or_create_user(contributor)
+      cont = Hubstats::User.create_or_update_user(contributor)
     end
   end
 
@@ -24,17 +24,17 @@ namespace :populate do
 
     pull_comments = Hubstats::GithubAPI.all(["repos",repo.full_name].join('/'),"pulls/comments")
     pull_comments.each do |comment|
-      comm = Hubstats::Comment.create_or_update(comment_setup(comment,repo.id,"PullRequest"))
+      comm = Hubstats::Comment.create_or_update(comment_setup(comment,repo,"PullRequest"))
     end
 
     issue_comments = client.issues_comments(repo.full_name,{sort: 'created', direction: 'desc'})
     issue_comments.each do |comment|
-      comm = Hubstats::Comment.create_or_update(comment_setup(comment,repo.id,"Issue"))
+      comm = Hubstats::Comment.create_or_update(comment_setup(comment,repo,"Issue"))
     end
 
     commit_comments = client.list_commit_comments(repo.full_name)
     commit_comments.each do |comment|
-      comm = Hubstats::Comment.create_or_update(comment_setup(comment,repo.id,"Commit"))
+      comm = Hubstats::Comment.create_or_update(comment_setup(comment,repo,"Commit"))
     end
   end
 
@@ -42,14 +42,14 @@ namespace :populate do
   task :pulls, [:repo] => :environment do |t, args|
     raise ArgumentError, "Must be called with repo argument. [:org/:repo]" if args[:repo].nil?
     repo = Hubstats::Repo.where(full_name: args[:repo]).first
-    puts "Adding comments to " + repo.full_name
+    puts "Adding pulls to " + repo.full_name
 
     client = Hubstats::GithubAPI.client({:auto_paginate => true})
     
     closed_pulls = client.pulls(repo.full_name, :state => "closed")
-    pulls = closed_pulls.concat(client.pulls(repo.full_name, :state => "open"))
-    pulls.each do |pull|
-      pr = Hubstats::PullRequest.find_or_create_pull(pull)
+    pull_requests = closed_pulls.concat(client.pulls(repo.full_name, :state => "open"))
+    pull_requests.each do |pull_request|
+      pull = Hubstats::PullRequest.find_or_create_pull(pull_setup(pull_request))
     end
   end
 
@@ -57,13 +57,33 @@ namespace :populate do
   task :all => :environment do
     client = Hubstats::GithubAPI.client({:auto_paginate => true})
     get_repos.each do |repo|
-      re = Hubstats::Repo.find_or_create_repo(repo)
+      re = Hubstats::Repo.create_or_update_repo(repo)
 
       Rake::Task["app:populate:users"].execute({repo: "#{re.full_name}"})
       Rake::Task["app:populate:pulls"].execute({repo: "#{re.full_name}"})
       Rake::Task["app:populate:comments"].execute({repo: "#{re.full_name}"})
-      
     end
+    puts "Finished with initial population, grabing extra info for pull requests"
+    Rake::Task["app:populate:update"].execute()
+  end
+
+  desc "indivdually gets and updates pull requests"
+  task :update => :environment do
+    grab_size = 10
+    while Hubstats::PullRequest.where(deletions: nil).where(additions: nil).count() > 0
+      client = Hubstats::GithubAPI.client
+      puts client.rate_limit.remaining
+      incomplete = Hubstats::PullRequest.where(deletions: nil).where(additions: nil).limit(grab_size)
+
+      incomplete.each do |pull|
+        repo = Hubstats::Repo.where(id: pull.repo_id).first
+        pr = client.pull_request(repo.full_name, pull.number)
+        Hubstats::PullRequest.find_or_create_pull(pull_setup(pr))
+      end
+
+      Hubstats::GithubAPI.wait_limit(grab_size,client.rate_limit)
+    end 
+
   end
 
   def get_repos
@@ -79,13 +99,6 @@ namespace :populate do
     repos
   end
 
-  def comment_setup(comment, repo_id, kind)
-    comment[:repo_id] = repo_id
-    comment[:pull_number] = get_pull_number(comment)
-    comment[:kind] = kind
-    return comment
-  end
-
   def get_pull_number(comment)
     if comment[:pull_request]
       return comment[:pull_request][:number]
@@ -98,4 +111,15 @@ namespace :populate do
     end
   end
 
+  def comment_setup(comment, repo, kind)
+    comment[:repo_id] = repo.id
+    comment[:pull_number] = get_pull_number(comment)
+    comment[:kind] = kind
+    return comment
+  end
+
+  def pull_setup(pull_request)
+    pull_request[:repository] = pull_request[:base][:repo]
+    return pull_request
+  end
 end
