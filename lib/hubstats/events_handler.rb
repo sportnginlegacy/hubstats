@@ -9,7 +9,6 @@ module Hubstats
       when "commit_comment" || "CommitCommentEvent"
         comment_processor(payload,"Commit")
       when "pull_request" || "PullRequestEvent"
-        puts "Hellow"
         pull_processor(payload)
       when "pull_request_review_comment" || "PullRequestReviewCommentEvent"
         comment_processor(payload,"PullRequest")

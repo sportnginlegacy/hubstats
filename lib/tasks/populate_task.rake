@@ -69,22 +69,23 @@ namespace :populate do
 
   desc "indivdually gets and updates pull requests"
   task :update => :environment do
-    client = Hubstats::GithubAPI.client
-
     while Hubstats::PullRequest.where(deletions: nil).where(additions: nil).count() > 0
-      incomplete = Hubstats::PullRequest.where(deletions: nil).where(additions: nil).limit(client.rate_limit.remaining)
+      client = Hubstats::GithubAPI.client
+      incomplete = Hubstats::PullRequest.where(deletions: nil).where(additions: nil).limit(250)
+
       incomplete.each do |pull|
         repo = Hubstats::Repo.where(id: pull.repo_id).first
         pr = client.pull_request(repo.full_name, pull.number)
-
         Hubstats::PullRequest.find_or_create_pull(pull_setup(pr))
       end
-      if Hubstats::PullRequest.where(deletions: nil).where(additions: nil).count() > 0
+
+      rate_limit = client.rate_limit
+      if (Hubstats::PullRequest.where(deletions: nil).where(additions: nil).count() > 0) && (rate_limit.remaining < 250)
         puts "Hit Github rate limit, waiting to get more"
-        sleep(5.minutes)
+        sleep(rate_limit.resets_at)
       end
     end
-    
+
   end
 
   def get_repos

@@ -25,8 +25,7 @@ module Hubstats
         pull_data = github_pull.slice(*column_names.map(&:to_sym))
 
         pull = where(:id => pull_data[:id]).first_or_create(pull_data)
-        pull.update_attributes(pull_data)
-        return pull if pull.save
+        return pull if pull.update_attributes(pull_data)
         Rails.logger.debug pull.errors.inspect
       end
   end

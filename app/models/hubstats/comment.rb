@@ -39,8 +39,7 @@ module Hubstats
       comment_data = github_comment.slice(*Hubstats::Comment.column_names.map(&:to_sym))
 
       comment = where(:id => comment_data[:id]).first_or_create(comment_data)
-      comment.update_attributes(comment_data)
-      return comment if comment.save
+      return comment if comment.update_attributes(comment_data)
       puts comment.errors.inspect
     end
 

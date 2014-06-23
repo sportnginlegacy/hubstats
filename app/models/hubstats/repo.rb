@@ -24,8 +24,7 @@ module Hubstats
       end
 
       repo = where(:id => repo_data[:id]).first_or_create(repo_data)
-      repo.update_attributes(repo_data)
-      return repo if repo.save
+      return repo if repo.update_attributes(repo_data)
       Rails.logger.debug repo.errors.inspect
     end
     
