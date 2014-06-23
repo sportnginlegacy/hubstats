@@ -62,8 +62,29 @@ namespace :populate do
       Rake::Task["app:populate:users"].execute({repo: "#{re.full_name}"})
       Rake::Task["app:populate:pulls"].execute({repo: "#{re.full_name}"})
       Rake::Task["app:populate:comments"].execute({repo: "#{re.full_name}"})
-      
     end
+    puts "Finished with initial population, grabing extra info for pull requests"
+    Rake::Task["app:populate:update"].execute()
+  end
+
+  desc "indivdually gets and updates pull requests"
+  task :update => :environment do
+    client = Hubstats::GithubAPI.client
+
+    while Hubstats::PullRequest.where(deletions: nil).where(additions: nil).count() > 0
+      incomplete = Hubstats::PullRequest.where(deletions: nil).where(additions: nil).limit(client.rate_limit.remaining)
+      incomplete.each do |pull|
+        repo = Hubstats::Repo.where(id: pull.repo_id).first
+        pr = client.pull_request(repo.full_name, pull.number)
+
+        Hubstats::PullRequest.find_or_create_pull(pull_setup(pr))
+      end
+      if Hubstats::PullRequest.where(deletions: nil).where(additions: nil).count() > 0
+        puts "Hit Github rate limit, waiting to get more"
+        sleep(5.minutes)
+      end
+    end
+    
   end
 
   def get_repos
@@ -99,7 +120,7 @@ namespace :populate do
   end
 
   def pull_setup(pull_request)
-    pull_request[:repository] = pull_request[:head][:repo]
+    pull_request[:repository] = pull_request[:base][:repo]
     return pull_request
   end
 end
