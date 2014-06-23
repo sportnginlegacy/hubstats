@@ -23,7 +23,7 @@ module Hubstats
       pull_request = {
         :id => 1000,
         :url => "www.pull.com",
-        :base => {:repo => github_repo},
+        :repository => github_repo,
         :user => github_user
       }
 

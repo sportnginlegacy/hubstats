@@ -16,7 +16,7 @@ module Hubstats
 
       github_pull = {
         :user => github_user,
-        :base => {:repo => github_repo},
+        :repository => github_repo,
         :id => 100
       }
 

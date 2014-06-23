@@ -26,7 +26,7 @@ module Hubstats
     it 'finds and returns an existing user' do
       user1 = Hubstats::User.create_or_update_user(github_user1)
       user2 = Hubstats::User.create_or_update_user(github_user2)
-      expect(user2.login).to eq('elliothursh')
+      expect(user2.login).to eq('johnappleseed')
     end
 
   end
