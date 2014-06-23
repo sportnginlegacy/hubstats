@@ -38,5 +38,11 @@ module Hubstats
       client({:auto_paginate => true }).paginate([repo_url,kind].join('/'))
     end
 
+    def self.wait_limit(grab_size,rate_limit)
+      if rate_limit.remaining < grab_size
+        puts "Hit Github rate limit, waiting to get more"
+        sleep(rate_limit.resets_at)
+      end
+    end
   end
 end

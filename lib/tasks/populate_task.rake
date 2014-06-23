@@ -69,9 +69,11 @@ namespace :populate do
 
   desc "indivdually gets and updates pull requests"
   task :update => :environment do
+    grab_size = 10
     while Hubstats::PullRequest.where(deletions: nil).where(additions: nil).count() > 0
       client = Hubstats::GithubAPI.client
-      incomplete = Hubstats::PullRequest.where(deletions: nil).where(additions: nil).limit(250)
+      puts client.rate_limit.remaining
+      incomplete = Hubstats::PullRequest.where(deletions: nil).where(additions: nil).limit(grab_size)
 
       incomplete.each do |pull|
         repo = Hubstats::Repo.where(id: pull.repo_id).first
@@ -79,12 +81,8 @@ namespace :populate do
         Hubstats::PullRequest.find_or_create_pull(pull_setup(pr))
       end
 
-      rate_limit = client.rate_limit
-      if (Hubstats::PullRequest.where(deletions: nil).where(additions: nil).count() > 0) && (rate_limit.remaining < 250)
-        puts "Hit Github rate limit, waiting to get more"
-        sleep(rate_limit.resets_at)
-      end
-    end
+      Hubstats::GithubAPI.wait_limit(grab_size,client.rate_limit)
+    end 
 
   end
 
