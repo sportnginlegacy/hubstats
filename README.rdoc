@@ -18,6 +18,7 @@ These are set in octokit.yml, if you used environment variables for Authenticati
 = Setup
 Run rake hubstats:install:migrations
 Run rake hubstats:setup to run the necessary migrations and start pulling data from github.
+Add 'mount Hubstats::Engine => "/hubstats"' to your apps routes file
 
 
 =TL:DR
@@ -25,3 +26,4 @@ Run rake hubstats:setup to run the necessary migrations and start pulling data f
 -add oauth tokens and repos to watch to octokit.yml
 -rake hubstats:install:migrations
 -rake hubstats:setup
+-Add 'mount Hubstats::Engine => "/hubstats"' to your routes file
