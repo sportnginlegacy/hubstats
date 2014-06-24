@@ -3,7 +3,7 @@ Github statistics
 This project rocks and uses MIT-LICENSE.
 
 = Authentication
-Hubstats needs github credentials to access your repo's pull requests, these can be setup in one of two ways.
+Hubstats needs github credentials to access your repos, these can be setup in one of two ways.
 == Environment Variables
 Hubstats uses OAUTH access tokens stored in ENV["GITHUB_API_TOKEN"] or for Application Authentication in ENV["CLIENT_ID"] and ENV["CLIENT_SECRET"]
 
@@ -13,7 +13,17 @@ Run rails generate hubstats:install from your app's directory to set it up.
 
 = Configuration
 Hubstats needs to know what repos for it to watch. You can set it to watch either an entire organization or a list of specific repos.
-These are set in octokit.yml, so if you used environment variables for Authentication, generate the octokit.yml using rails generate hubstats:install.
+These are set in octokit.yml, if you used environment variables for Authentication, you still must generate the octokit.yml using rails generate hubstats:install.
 
 = Setup
+Run rake hubstats:install:migrations
 Run rake hubstats:setup to run the necessary migrations and start pulling data from github.
+Add 'mount Hubstats::Engine => "/hubstats"' to your apps routes file
+
+
+=TL:DR
+-rails generate hubstats:install
+-add oauth tokens and repos to watch to octokit.yml
+-rake hubstats:install:migrations
+-rake hubstats:setup
+-Add 'mount Hubstats::Engine => "/hubstats"' to your routes file
