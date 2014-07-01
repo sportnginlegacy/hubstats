@@ -1,5 +1,3 @@
-require_relative "../hubhelper.rb"
-include HubHelper
 module Hubstats
   class GithubAPI
 
