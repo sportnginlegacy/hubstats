@@ -1,3 +1,5 @@
+require_relative "../hubhelper.rb"
+include HubHelper
 module Hubstats
   class GithubAPI
 
@@ -34,15 +36,39 @@ module Hubstats
       end
     end
 
-    def self.all(repo_url,kind)
-      client({:auto_paginate => true }).paginate([repo_url,kind].join('/'))
-    end
-
     def self.wait_limit(grab_size,rate_limit)
       if rate_limit.remaining < grab_size
 
         puts "Hit Github rate limit, waiting #{Time.at(rate_limit.resets_in).utc.strftime("%H:%M:%S")} to get more"
         sleep(rate_limit.resets_in)
+      end
+    end
+
+    def self.inline(repo_name, kind, options={})
+      path = ["repos",repo_name].join('/')
+      octo = client({:auto_paginate => true })
+      octo.paginate([path,kind].join('/'), options) do |data, last_response|
+        while (last_response.rels[:next])
+          last_response = last_response.rels[:next].get
+          data.concat(last_response.data) if last_response.data.is_a?(Array)
+          data.map{|v| route(v,kind,repo_name)}.clear
+          wait_limit(1,octo.rate_limit)
+        end
+      end.map{|v| route(v,kind,repo_name)}.clear
+    end
+
+    def self.route(object, kind, repo_name = nil)
+      if kind == "pulls/comments"
+        repo = Hubstats::Repo.where(full_name: repo_name).first
+        Hubstats::Comment.create_or_update(comment_setup(object,repo.id,"PullRequest"))
+      elsif kind == "issues/comments"
+        repo = Hubstats::Repo.where(full_name: repo_name).first
+        Hubstats::Comment.create_or_update(comment_setup(object,repo.id,"Issue"))
+      elsif kind == "comments"
+        repo = Hubstats::Repo.where(full_name: repo_name).first
+        Hubstats::Comment.create_or_update(comment_setup(object,repo.id,"Commit"))
+      elsif kind == "pulls"
+        Hubstats::PullRequest.create_or_update(pull_setup(object))
       end
     end
   end

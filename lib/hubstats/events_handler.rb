@@ -19,7 +19,7 @@ module Hubstats
       pull_request = payload[:pull_request]
       pull_request[:repository] = payload[:repository]
       
-      Hubstats::PullRequest.find_or_create_pull(pull_request)
+      Hubstats::PullRequest.create_or_update(pull_request)
     end
 
     def comment_processor(payload,kind)

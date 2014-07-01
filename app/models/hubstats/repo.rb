@@ -14,12 +14,12 @@ module Hubstats
     has_many :pull_requests
     belongs_to :owner, :class_name => "User", :foreign_key => "id"
 
-    def self.create_or_update_repo(github_repo)
+    def self.create_or_update(github_repo)
       github_repo = github_repo.to_h if github_repo.respond_to? :to_h
       repo_data = github_repo.slice(*column_names.map(&:to_sym))
 
       if github_repo[:owner]
-        user = Hubstats::User.create_or_update_user(github_repo[:owner])
+        user = Hubstats::User.create_or_update(github_repo[:owner])
         repo_data[:owner_id] = user[:id]
       end
 

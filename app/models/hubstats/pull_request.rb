@@ -14,12 +14,12 @@ module Hubstats
       belongs_to :user
       belongs_to :repo
 
-      def self.find_or_create_pull(github_pull)
+      def self.create_or_update(github_pull)
         github_pull = github_pull.to_h if github_pull.respond_to? :to_h
 
-        user = Hubstats::User.create_or_update_user(github_pull[:user])
+        user = Hubstats::User.create_or_update(github_pull[:user])
         github_pull[:user_id] = user.id
-        repo = Hubstats::Repo.create_or_update_repo(github_pull[:repository])
+        repo = Hubstats::Repo.create_or_update(github_pull[:repository])
         github_pull[:repo_id] = repo.id
 
         pull_data = github_pull.slice(*column_names.map(&:to_sym))

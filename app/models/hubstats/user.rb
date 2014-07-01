@@ -46,7 +46,7 @@ module Hubstats
     has_many :repos, :class_name => "Repo"
     has_many :pull_requests
 
-    def self.create_or_update_user(github_user)
+    def self.create_or_update(github_user)
       github_user[:role] = github_user.delete :type  ##changing :type in to :role
       github_user = github_user.to_h unless github_user.is_a? Hash
 
