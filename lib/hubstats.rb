@@ -1,7 +1,9 @@
 require "hubstats/engine"
+require "hub_helper"
 require "hubstats/github_api"
 require "hubstats/events_handler"
-require 'active_support/core_ext/numeric'
+require "active_support/core_ext/numeric"
+
 
 module Hubstats
 
