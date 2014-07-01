@@ -1,0 +1,7 @@
+<table class="table">
+  <% @comments.each do |comment| %>
+    <tr>
+      <td><%= comment.body %> by <b> <%= comment.user.login %> </b> <%= distance_of_time_in_words(DateTime.now,comment.created_at) %> ago </td>
+    </tr>
+  <% end %>
+</table>
