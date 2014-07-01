@@ -1,6 +1,3 @@
-require_relative '../hubhelper.rb'
-include HubHelper
-
 namespace :hubstats do 
   namespace :populate do
 
@@ -60,7 +57,7 @@ namespace :hubstats do
         incomplete.each do |pull|
           repo = Hubstats::Repo.where(id: pull.repo_id).first
           pr = client.pull_request(repo.full_name, pull.number)
-          Hubstats::PullRequest.create_or_update(pull_setup(pr))
+          Hubstats::PullRequest.create_or_update(HubHelper.pull_setup(pr))
         end
 
         Hubstats::GithubAPI.wait_limit(grab_size,client.rate_limit)

@@ -1,8 +1,6 @@
-require_relative '../hubhelper.rb'
-include HubHelper
-
 module Hubstats
   class GithubAPI
+    include HubHelper
 
     cattr_accessor :auth_info
 
