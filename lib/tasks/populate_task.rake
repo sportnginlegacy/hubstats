@@ -1,3 +1,6 @@
+require_relative '../hubhelper.rb'
+include HubHelper
+
 namespace :hubstats do 
   namespace :populate do
 
@@ -48,7 +51,7 @@ namespace :hubstats do
 
     desc "indivdually gets and updates pull requests"
     task :update => :environment do
-      grab_size = 10
+      grab_size = 250
       while Hubstats::PullRequest.where(deletions: nil).where(additions: nil).count() > 0
         client = Hubstats::GithubAPI.client
         puts client.rate_limit.remaining
@@ -77,4 +80,9 @@ namespace :hubstats do
       repos
     end
   end
+end
+
+def pull_setup(pull_request)
+  pull_request[:repository] = pull_request[:base][:repo]
+  return pull_request
 end
