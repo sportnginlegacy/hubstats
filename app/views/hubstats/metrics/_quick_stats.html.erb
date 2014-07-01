@@ -1,12 +1,42 @@
-<div class="col col-lg-4 col-md-4 col-sm-4 col-xs-4 text-center">
-  <h1> <%= @stats[:user_count] %> </h1>
-  <h4> Active Users </h4>
-</div>
-<div class="col col-lg-4 col-md-4 col-sm-4 col-xs-4 text-center">
-  <h1> <%= @stats[:pull_count] %> </h1>
-  <h4> Pull Requests </h4>
-</div>
-<div class="col col-lg-4 col-md-4 col-sm-4 col-xs-4 text-center">
-  <h1><%= @stats[:comment_count] %> </h1>
-  <h4> Comments </h4>
-</div>
+<% if @stats.has_key? :user_count %>
+	<div class="col col-lg-2 col-md-4 col-sm-4 col-xs-4 text-center">
+	  <h1> <%= @stats[:user_count] %> </h1>
+	  <h4> Active Users </h4>
+	</div>
+<% end %>
+<% if @stats.has_key? :pull_count %>
+	<div class="col col-lg-2 col-md-4 col-sm-4 col-xs-4 text-center">
+	  <h1> <%= @stats[:pull_count] %> </h1>
+	  <h4> Pull Requests </h4>
+	</div>
+<% end %>
+<% if @stats.has_key? :comment_count %>
+	<div class="col col-lg-2 col-md-4 col-sm-4 col-xs-4 text-center">
+	  <h1><%= @stats[:comment_count] %> </h1>
+	  <h4> Comments </h4>
+	</div>
+<% end %>
+<% if @stats.has_key? :review_count %>
+	<div class="col col-lg-2 col-md-4 col-sm-4 col-xs-4 text-center">
+	  <h1> <%= @stats[:review_count] %> </h1>
+	  <h4> Code Reviews </h4>
+	</div>
+<% end %>
+<% if @stats.has_key? :net_additions %>
+	<div class="col col-lg-2 col-md-4 col-sm-4 col-xs-4 text-center">
+	  <h1> <%= @stats[:net_additions] %> </h1>
+	  <h4> Net Additions </h4>
+	</div>
+<% end %>
+<% if @stats.has_key? :avg_additions %>
+	<div class="col col-lg-2 col-md-4 col-sm-4 col-xs-4 text-center">
+	  <h1> <%= @stats[:avg_additions] %> </h1>
+	  <h4> Average Additions </h4>
+	</div>
+<% end %>
+<% if @stats.has_key? :avg_deletions%>
+	<div class="col col-lg-2 col-md-4 col-sm-4 col-xs-4 text-center">
+	  <h1><%= @stats[:avg_deletions] %> </h1>
+	  <h4> Average Deletions </h4>
+	</div>
+<% end %>
