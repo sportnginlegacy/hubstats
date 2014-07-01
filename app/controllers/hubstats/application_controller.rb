@@ -5,7 +5,8 @@ module Hubstats
 
     private
     def set_time
-      @timespan = TIMESPAN_ARRAY[cookies[:hubstats_index].to_i][:date].ago.to_date || 2.weeks.ago.to_date
+      cookies[:hubstats_index] ||= 2
+      @timespan = TIMESPAN_ARRAY[cookies[:hubstats_index].to_i][:date].ago.to_date
     end
 
   end
