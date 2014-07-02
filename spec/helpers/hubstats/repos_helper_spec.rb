@@ -12,6 +12,6 @@ require 'spec_helper'
 # end
 module Hubstats
   RSpec.describe ReposHelper, :type => :helper do
-    pending "add some examples to (or delete) #{__FILE__}"
+
   end
 end

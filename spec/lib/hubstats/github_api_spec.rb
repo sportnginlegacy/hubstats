@@ -64,8 +64,13 @@ module Hubstats
           expect(lambda { Hubstats::GithubAPI.client}).to raise_error Octokit::Unauthorized
         end
       end
-
     end
 
+    # context ".update_pulls" do
+
+    #   it 'catches error and continues'
+    #     Hubstats::GithubAPI.update_pulls
+    #   end
+    # end
   end
 end
