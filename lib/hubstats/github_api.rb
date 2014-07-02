@@ -22,32 +22,23 @@ module Hubstats
       return ent
     end
 
-    def self.pulls_since(repo_url, time, options={})
-      options.reverse_merge!(:state => 'closed', :sort => 'created', :direction => 'desc', :per_page => 100)
-      hub = client({:auto_paginate => true })
-      hub.paginate(repo_url+'/pulls', :state => options[:state], :sort => options[:sort], :direction => options[:direction], :per_page => options[:per_page] ) do |data, last_response|
-        while (last_response.rels[:next] && hub.rate_limit.remaining > 0)
-          break if !last_response.data.detect{|v| v.closed_at.to_datetime > time.to_datetime}
-          last_response = last_response.rels[:next].get
-          data.concat(last_response.data) if last_response.data.is_a?(Array)
-        end
-        return data.reject!{|v| v.closed_at.to_datetime < time.to_datetime }
-      end
-    end
+    # def self.pulls_since(repo_name, time, options={})
+    #   options.reverse_merge!(:state => 'all', :sort => 'created', :direction => 'desc', :per_page => 100)
+    #   path = ["repos",repo_name,'pulls'].join('/')
+    #   hub = client({:auto_paginate => true })
+    #   hub.paginate(path, :state => options[:state], :sort => options[:sort], :direction => options[:direction], :per_page => options[:per_page] ) do |data, last_response|
+    #     last_response.data.reject!{|v| v.closed_at.to_datetime < time.to_datetime }.each{|v| route(v,'pulls',repo_name)}.clear
+    #     break if !last_response.data.detect{|v| v.closed_at.to_datetime > time.to_datetime}
+    #   end.reject!{|v| v.closed_at.to_datetime < time.to_datetime }.each{|v| route(v,'pulls',repo_name)}.clear
+    # end
 
     def self.inline(repo_name, kind, options={})
-      i = 0
-      path = ["repos",repo_name].join('/')
+      path = ["repos",repo_name,kind].join('/')
       octo = client({:auto_paginate => true })
-      octo.paginate([path,kind].join('/'), options) do |data, last_response|
-        while (last_response.rels[:next])
-          last_response = last_response.rels[:next].get
-          data.concat(last_response.data) if last_response.data.is_a?(Array)
-          data.map!{|v| route(v,kind,repo_name)}.clear
-          wait_limit(1,octo.rate_limit)
-        end
-        return data
-      end.map!{|v| route(v,kind,repo_name)}.clear
+      octo.paginate(path, options) do |data, last_response|
+        last_response.data.each{|v| route(v,kind,repo_name)}.clear
+        wait_limit(1,octo.rate_limit)
+      end.each{|v| route(v,kind,repo_name)}.clear
     end
 
     def self.create_hook(repo)
@@ -93,11 +84,11 @@ module Hubstats
 
           Hubstats::GithubAPI.wait_limit(grab_size,client.rate_limit)
         end
+        puts "All Pull Requests are up to date"
       rescue Faraday::ConnectionFailed
         puts "Connection Timeout, restarting pull request updating"
         update_pulls
       end
-      puts "All Pull Requests are up to date"
     end
 
 
@@ -119,7 +110,7 @@ module Hubstats
         repo = Hubstats::Repo.where(full_name: repo_name).first
         Hubstats::Comment.create_or_update(HubHelper.comment_setup(object,repo.id,"Commit"))
       elsif kind == "pulls"
-        res = Hubstats::PullRequest.create_or_update(HubHelper.pull_setup(object))
+        Hubstats::PullRequest.create_or_update(HubHelper.pull_setup(object))
       end
     end
   end
