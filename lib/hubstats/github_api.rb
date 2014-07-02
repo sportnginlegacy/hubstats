@@ -26,10 +26,9 @@ module Hubstats
       path = ["repos",repo_name,kind].join('/')
       octo = client({:auto_paginate => true })
       octo.paginate(path, options) do |data, last_response|
-        data.each{|v| route(v,kind,repo_name)}
-        data = last_response.data
+        last_response.data.each{|v| route(v,kind,repo_name)}.clear
         wait_limit(1,octo.rate_limit)
-      end
+      end.each{|v| route(v,kind,repo_name)}.clear
     end
 
     def self.create_hook(repo)
@@ -53,10 +52,11 @@ module Hubstats
             :active => true
           }
         )
-
         puts "Hook on #{repo.full_name} successfully created"
       rescue Octokit::UnprocessableEntity
         puts "Hook on #{repo.full_name} already existed"
+      rescue Octokit::NotFound
+        puts "You don't have sufficient privledges to add an event hook to #{repo.full_name}"
       end
     end
 
