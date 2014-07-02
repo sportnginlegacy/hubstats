@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140702142617) do
+ActiveRecord::Schema.define(:version => 20140604130550) do
 
   create_table "hubstats_comments", :force => true do |t|
     t.string   "html_url"

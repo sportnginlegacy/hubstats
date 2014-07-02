@@ -35,24 +35,77 @@ module Hubstats
       end
     end
 
-    def self.wait_limit(grab_size,rate_limit)
-      if rate_limit.remaining < grab_size
-        puts "Hit Github rate limit, waiting #{Time.at(rate_limit.resets_in).utc.strftime("%H:%M:%S")} to get more"
-        sleep(rate_limit.resets_in)
-      end
-    end
-
     def self.inline(repo_name, kind, options={})
+      i = 0
       path = ["repos",repo_name].join('/')
       octo = client({:auto_paginate => true })
       octo.paginate([path,kind].join('/'), options) do |data, last_response|
         while (last_response.rels[:next])
           last_response = last_response.rels[:next].get
           data.concat(last_response.data) if last_response.data.is_a?(Array)
-          data.map{|v| route(v,kind,repo_name)}.clear
+          data.map!{|v| route(v,kind,repo_name)}.clear
           wait_limit(1,octo.rate_limit)
         end
-      end.map{|v| route(v,kind,repo_name)}.clear
+        return data
+      end.map!{|v| route(v,kind,repo_name)}.clear
+    end
+
+    def self.create_hook(repo)
+      begin
+        client.create_hook(
+          repo.full_name,
+          'web',
+          {
+            :url => 'https://commissioner.sportngin.com/hubstats/handler',
+            :content_type => 'json'
+          },
+          {
+            :events => [
+              'pull_request',
+              'pull_request_review_comment',
+              'commit_comment',
+              'issues',
+              'issue_comment',
+              'member'
+              ],
+            :active => true
+          }
+        )
+
+        puts "Hook on #{repo.full_name} successfully created"
+      rescue Octokit::UnprocessableEntity
+        puts "Hook on #{repo.full_name} already existed"
+      end
+    end
+
+    def self.update_pulls
+      grab_size = 250
+      begin
+        while Hubstats::PullRequest.where(deletions: nil).where(additions: nil).count > 0
+          client = Hubstats::GithubAPI.client
+          incomplete = Hubstats::PullRequest.where(deletions: nil).where(additions: nil).limit(grab_size)
+
+          incomplete.each do |pull|
+            repo = Hubstats::Repo.where(id: pull.repo_id).first
+            pr = client.pull_request(repo.full_name, pull.number)
+            Hubstats::PullRequest.create_or_update(HubHelper.pull_setup(pr))
+          end
+
+          Hubstats::GithubAPI.wait_limit(grab_size,client.rate_limit)
+        end
+      rescue Faraday::ConnectionFailed
+        puts "Connection Timeout, restarting pull request updating"
+        update_pulls
+      end
+      puts "All Pull Requests are up to date"
+    end
+
+
+    def self.wait_limit(grab_size,rate_limit)
+      if rate_limit.remaining < grab_size
+        puts "Hit Github rate limit, waiting #{Time.at(rate_limit.resets_in).utc.strftime("%H:%M:%S")} to get more"
+        sleep(rate_limit.resets_in)
+      end
     end
 
     def self.route(object, kind, repo_name = nil)
@@ -66,8 +119,9 @@ module Hubstats
         repo = Hubstats::Repo.where(full_name: repo_name).first
         Hubstats::Comment.create_or_update(HubHelper.comment_setup(object,repo.id,"Commit"))
       elsif kind == "pulls"
-        Hubstats::PullRequest.create_or_update(HubHelper.pull_setup(object))
+        res = Hubstats::PullRequest.create_or_update(HubHelper.pull_setup(object))
       end
     end
   end
 end
+    

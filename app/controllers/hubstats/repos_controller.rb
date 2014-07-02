@@ -9,9 +9,9 @@ module Hubstats
         user_count: Hubstats::User.with_pulls_or_comments(@timespan).only_active.length,
         pull_count: Hubstats::PullRequest.closed_since(@timespan).count(:all),
         comment_count: Hubstats::Comment.created_since(@timespan).count(:all),
-        avg_additions: Hubstats::PullRequest.closed_since(@timespan).average(:additions).round.to_i,
-        avg_deletions: Hubstats::PullRequest.closed_since(@timespan).average(:deletions).round.to_i,
-        net_additions: Hubstats::PullRequest.closed_since(@timespan).sum(:additions).round.to_i - Hubstats::PullRequest.closed_since(@timespan).sum(:deletions).round.to_i
+        avg_additions: Hubstats::PullRequest.closed_since(@timespan).average(:additions).to_i,
+        avg_deletions: Hubstats::PullRequest.closed_since(@timespan).average(:deletions).to_i,
+        net_additions: Hubstats::PullRequest.closed_since(@timespan).sum(:additions).to_i - Hubstats::PullRequest.closed_since(@timespan).sum(:deletions).to_i
       }
     end
 
@@ -23,9 +23,9 @@ module Hubstats
         user_count: @users.length,
         pull_count: Hubstats::PullRequest.belonging_to_repo(@repo.id).closed_since(@timespan).count(:all),
         comment_count: Hubstats::Comment.belonging_to_repo(@repo.id).created_since(@timespan).count(:all),
-        avg_additions: Hubstats::PullRequest.closed_since(@timespan).belonging_to_repo(@repo.id).average(:additions).round.to_i,
-        avg_deletions: Hubstats::PullRequest.closed_since(@timespan).belonging_to_repo(@repo.id).average(:deletions).round.to_i,
-        net_additions: Hubstats::PullRequest.closed_since(@timespan).belonging_to_repo(@repo.id).sum(:additions).round.to_i - Hubstats::PullRequest.closed_since(@timespan).belonging_to_repo(@repo.id).sum(:deletions).round.to_i
+        avg_additions: Hubstats::PullRequest.closed_since(@timespan).belonging_to_repo(@repo.id).average(:additions).to_i,
+        avg_deletions: Hubstats::PullRequest.closed_since(@timespan).belonging_to_repo(@repo.id).average(:deletions).to_i,
+        net_additions: Hubstats::PullRequest.closed_since(@timespan).belonging_to_repo(@repo.id).sum(:additions).to_i - Hubstats::PullRequest.closed_since(@timespan).belonging_to_repo(@repo.id).sum(:deletions).to_i
       }
     end
   end
