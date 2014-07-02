@@ -36,9 +36,10 @@ module Hubstats
       path = ["repos",repo_name,kind].join('/')
       octo = client({:auto_paginate => true })
       octo.paginate(path, options) do |data, last_response|
-        last_response.data.each{|v| route(v,kind,repo_name)}.clear
+        data.each{|v| route(v,kind,repo_name)}
+        data = last_response.data
         wait_limit(1,octo.rate_limit)
-      end.each{|v| route(v,kind,repo_name)}.clear
+      end
     end
 
     def self.create_hook(repo)
