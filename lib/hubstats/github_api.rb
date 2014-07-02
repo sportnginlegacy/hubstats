@@ -22,16 +22,6 @@ module Hubstats
       return ent
     end
 
-    # def self.pulls_since(repo_name, time, options={})
-    #   options.reverse_merge!(:state => 'all', :sort => 'created', :direction => 'desc', :per_page => 100)
-    #   path = ["repos",repo_name,'pulls'].join('/')
-    #   hub = client({:auto_paginate => true })
-    #   hub.paginate(path, :state => options[:state], :sort => options[:sort], :direction => options[:direction], :per_page => options[:per_page] ) do |data, last_response|
-    #     last_response.data.reject!{|v| v.closed_at.to_datetime < time.to_datetime }.each{|v| route(v,'pulls',repo_name)}.clear
-    #     break if !last_response.data.detect{|v| v.closed_at.to_datetime > time.to_datetime}
-    #   end.reject!{|v| v.closed_at.to_datetime < time.to_datetime }.each{|v| route(v,'pulls',repo_name)}.clear
-    # end
-
     def self.inline(repo_name, kind, options={})
       path = ["repos",repo_name,kind].join('/')
       octo = client({:auto_paginate => true })
