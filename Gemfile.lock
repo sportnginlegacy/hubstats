@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    hubstats (0.0.4)
+    hubstats (0.0.5)
       octokit
       rails (~> 3.2.18)
 

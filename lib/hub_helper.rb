@@ -11,8 +11,8 @@ module HubHelper
     end
   end
 
-  def self.comment_setup(comment, repo, kind)
-    comment[:repo_id] = repo.id
+  def self.comment_setup(comment, repo_id, kind)
+    comment[:repo_id] = repo_id
     comment[:pull_number] = get_pull_number(comment)
     comment[:kind] = kind
     return comment

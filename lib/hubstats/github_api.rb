@@ -37,7 +37,6 @@ module Hubstats
 
     def self.wait_limit(grab_size,rate_limit)
       if rate_limit.remaining < grab_size
-
         puts "Hit Github rate limit, waiting #{Time.at(rate_limit.resets_in).utc.strftime("%H:%M:%S")} to get more"
         sleep(rate_limit.resets_in)
       end
@@ -59,15 +58,15 @@ module Hubstats
     def self.route(object, kind, repo_name = nil)
       if kind == "pulls/comments"
         repo = Hubstats::Repo.where(full_name: repo_name).first
-        Hubstats::Comment.create_or_update(comment_setup(object,repo.id,"PullRequest"))
+        Hubstats::Comment.create_or_update(HubHelper.comment_setup(object,repo.id,"PullRequest"))
       elsif kind == "issues/comments"
         repo = Hubstats::Repo.where(full_name: repo_name).first
-        Hubstats::Comment.create_or_update(comment_setup(object,repo.id,"Issue"))
+        Hubstats::Comment.create_or_update(HubHelper.comment_setup(object,repo.id,"Issue"))
       elsif kind == "comments"
         repo = Hubstats::Repo.where(full_name: repo_name).first
-        Hubstats::Comment.create_or_update(comment_setup(object,repo.id,"Commit"))
+        Hubstats::Comment.create_or_update(HubHelper.comment_setup(object,repo.id,"Commit"))
       elsif kind == "pulls"
-        Hubstats::PullRequest.create_or_update(pull_setup(object))
+        Hubstats::PullRequest.create_or_update(HubHelper.pull_setup(object))
       end
     end
   end
