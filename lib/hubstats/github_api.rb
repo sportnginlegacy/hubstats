@@ -83,7 +83,14 @@ module Hubstats
     end
 
     def self.update_labels
+      puts "Adding labels to pull requests"
       Hubstats::Repo.all.each do |repo|
+        Hubstats::GithubAPI.client({:auto_paginate => true}).labels(repo.full_name).each do |label|
+          label_hash = label.to_h if label.respond_to? :to_h
+          label_data = label_hash.slice(*Hubstats::Label.column_names.map(&:to_sym))
+          label = Hubstats::Label.where(:name => label_data[:name]).first_or_create(label_data)
+        end
+
         Hubstats::Label.all.each do |label|
           inline(repo.full_name,'issues', labels: label.name, state: 'closed')
           inline(repo.full_name,'issues', labels: label.name, state: 'open')

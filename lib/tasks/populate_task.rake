@@ -47,22 +47,25 @@ namespace :hubstats do
       get_repos.each do |repo|
         repo = Hubstats::Repo.create_or_update(repo)
         Hubstats::GithubAPI.create_hook(repo)
-
-        Rake::Task["hubstats:populate:labels"].execute({repo: repo})
+        
         Rake::Task["hubstats:populate:users"].execute({repo: repo})
         Rake::Task["hubstats:populate:pulls"].execute({repo: repo})
         Rake::Task["hubstats:populate:comments"].execute({repo: repo})
       end
       puts "Finished with initial population, grabing extra info for pull requests"
-      Hubstats::GithubAPI.update_labels
-      Rake::Task["hubstats:populate:update"].execute
+      Rake::Task["hubstats:populate:update_labels"].execute
+      Rake::Task["hubstats:populate:update_pulls"].execute
     end
 
     desc "indivdually gets and updates pull requests"
-    task :update => :environment do
+    task :update_pulls => :environment do
       Hubstats::GithubAPI.update_pulls
     end
 
+    desc "sets labels for pull_requests"
+    task :update_labels => :environment do
+      Hubstats::GithubAPI.update_labels
+    end
 
     def repo_checker(args)
       raise ArgumentError, "Must be called with repo argument. [:org/:repo]" if args.nil?
