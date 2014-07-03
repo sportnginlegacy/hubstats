@@ -82,6 +82,14 @@ module Hubstats
       end
     end
 
+    def self.update_labels
+      Hubstats::Repo.all.each do |repo|
+        Hubstats::Label.all.each do |label|
+          inline(repo.full_name,'issues', labels: label.name, state: 'closed')
+          inline(repo.full_name,'issues', labels: label.name, state: 'open')
+        end
+      end
+    end
 
     def self.wait_limit(grab_size,rate_limit)
       if rate_limit.remaining < grab_size
@@ -102,6 +110,12 @@ module Hubstats
         Hubstats::Comment.create_or_update(HubHelper.comment_setup(object,repo.id,"Commit"))
       elsif kind == "pulls"
         Hubstats::PullRequest.create_or_update(HubHelper.pull_setup(object))
+      elsif kind == "issues"
+        if object[:pull_request]
+          repo = Hubstats::Repo.where(full_name: repo_name).first
+          pull_request = Hubstats::PullRequest.where(repo_id: repo.id).where(number: object[:number]).first
+          pull_request.add_labels(object[:labels])
+        end
       end
     end
   end
