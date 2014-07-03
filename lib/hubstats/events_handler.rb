@@ -2,7 +2,6 @@ module Hubstats
   class EventsHandler
 
     def route(payload, type) 
-      puts type
       case type
       when "issue_comment", "IssueCommentEvent"
         comment_processor(payload,"Issue")
