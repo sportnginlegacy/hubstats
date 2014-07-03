@@ -7,26 +7,16 @@ module Hubstats
       Hubstats::User.destroy_all()
     end
 
-    github_user1 = {
-      :login => "elliothursh",
-      :id => 10,
-      :type => "User"
-    }
-    github_user2 = {
-      :login => "johnappleseed",
-      :id => 10,
-      :type => "User"
-    }
 
     it 'creates and returns a user' do
-      user = Hubstats::User.create_or_update(github_user1)
-      expect(user.id).to eq(10)
+      user = build(:user_hash, id: 10)
+      expect(Hubstats::User.create_or_update(user).id).to eq(10)
     end
 
-    it 'finds and returns an existing user' do
-      user1 = Hubstats::User.create_or_update(github_user1)
-      user2 = Hubstats::User.create_or_update(github_user2)
-      expect(user2.login).to eq('johnappleseed')
+    it 'it updates a user based off id' do
+      user1 = Hubstats::User.create_or_update(build(:user_hash, login: 'johnappleseed', id: 10))
+      user2 = Hubstats::User.create_or_update(build(:user_hash, login: 'elliothursh', id: 10))
+      expect(user1).to eq(user2)
     end
 
   end
