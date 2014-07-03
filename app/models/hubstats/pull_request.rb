@@ -13,7 +13,6 @@ module Hubstats
 
       belongs_to :user
       belongs_to :repo
-      has_and_belongs_to_many :labels, :join_table => 'hubstats_labels_pull_requests'
 
       def self.create_or_update(github_pull)
         github_pull = github_pull.to_h if github_pull.respond_to? :to_h
@@ -28,11 +27,6 @@ module Hubstats
         pull = where(:id => pull_data[:id]).first_or_create(pull_data)
         return pull if pull.update_attributes(pull_data)
         Rails.logger.debug pull.errors.inspect
-      end
-
-      def add_labels(labels)
-        labels.map!{|v| Hubstats::Label.where(name: v.name).first}
-        self.labels = labels
       end
   end
 end
