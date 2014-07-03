@@ -3,10 +3,6 @@ class CreateHubstatsUsers < ActiveRecord::Migration
     create_table :hubstats_users do |t|
       t.string :login
       t.integer :id
-      t.string :role
-      t.boolean :site_admin
-      t.timestamps
-      
       t.string :avatar_url
       t.string :gravatar_id
       t.string :url
@@ -20,6 +16,9 @@ class CreateHubstatsUsers < ActiveRecord::Migration
       t.string :repos_url
       t.string :events_url
       t.string :received_events_url
+      t.string :role
+      t.boolean :site_admin
+      t.timestamps
     end
   end
 end

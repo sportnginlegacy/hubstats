@@ -2,25 +2,10 @@ class CreateHubstatsRepos < ActiveRecord::Migration
   def change
     create_table :hubstats_repos do |t|
       t.integer :id
-      t.belongs_to :owner
       t.string :name
       t.string :full_name
-      t.datetime :pushed_at
-      t.datetime :created_at
-      t.datetime :updated_at
-
       t.string :homepage
       t.string :language
-      t.integer :forks_count
-      t.integer :stargazers_count
-      t.integer :watches_count
-      t.integer :size 
-      t.integer :open_issues_count
-      t.boolean :has_issues
-      t.boolean :has_wiki
-      t.boolean :has_downloads
-      t.boolean :private
-      t.boolean :fork
       t.string :description
       t.string :default_branch
       t.string :url
@@ -40,6 +25,21 @@ class CreateHubstatsRepos < ActiveRecord::Migration
       t.string :issues_url
       t.string :pulls_url
       t.string :labels_url
+      t.integer :forks_count
+      t.integer :stargazers_count
+      t.integer :watches_count
+      t.integer :size 
+      t.integer :open_issues_count
+      t.boolean :has_issues
+      t.boolean :has_wiki
+      t.boolean :has_downloads
+      t.boolean :private
+      t.boolean :fork
+      t.datetime :pushed_at
+      t.datetime :created_at
+      t.datetime :updated_at
+      t.belongs_to :owner
+      t.timestamps
     end
 
      add_index :hubstats_repos, :owner_id
