@@ -1,15 +1,15 @@
 <div class="row single-pull">
-	<div class="user-image" >
-		<img src= <%= pull.user.avatar_url%> alt= <%= pull.user.login %> >
-	</div>
+  <div class="user-image" >
+    <img src= <%= pull.user.avatar_url%> alt= <%= pull.user.login %> >
+  </div>
 
-	<div class="pull-info">
-		<h5> <%= pull.title %> </h5>
-		by <%= link_to pull.user.login, user_path(pull.user) %>
-		<% if pull.state == 'closed' %>
-			<%= "closed #{time_ago_in_words(pull.closed_at)} ago "%>
-		<% else %>
-			<%= "opened #{time_ago_in_words(pull.created_at)} ago "%>
-		<% end %> 
-	</div>
+  <div class="pull-info">
+    <h5> <%= pull.title %> </h5>
+    by <%= link_to pull.user.login, user_path(pull.user) %>
+    <% if pull.state == 'closed' %>
+      <%= "closed #{time_ago_in_words(pull.closed_at)} ago "%>
+    <% else %>
+      <%= "opened #{time_ago_in_words(pull.created_at)} ago "%>
+    <% end %> 
+  </div>
 </div>
