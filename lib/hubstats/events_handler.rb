@@ -31,7 +31,6 @@ module Hubstats
       Hubstats::Comment.create_or_update(comment)
     end
 
-
     #grabs the number off of anyone of the various places it can be
     def get_pull_number(payload)
       if payload[:pull_request]
