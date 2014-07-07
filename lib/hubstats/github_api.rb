@@ -82,6 +82,21 @@ module Hubstats
       end
     end
 
+    def self.update_labels
+      puts "Adding labels to pull requests"
+      Hubstats::Repo.all.each do |repo|
+        Hubstats::GithubAPI.client({:auto_paginate => true}).labels(repo.full_name).each do |label|
+          label_hash = label.to_h if label.respond_to? :to_h
+          label_data = label_hash.slice(*Hubstats::Label.column_names.map(&:to_sym))
+          label = Hubstats::Label.where(:name => label_data[:name]).first_or_create(label_data)
+        end
+
+        Hubstats::Label.all.each do |label|
+          inline(repo.full_name,'issues', labels: label.name, state: 'closed')
+          inline(repo.full_name,'issues', labels: label.name, state: 'open')
+        end
+      end
+    end
 
     def self.wait_limit(grab_size,rate_limit)
       if rate_limit.remaining < grab_size
@@ -102,6 +117,12 @@ module Hubstats
         Hubstats::Comment.create_or_update(HubHelper.comment_setup(object,repo.id,"Commit"))
       elsif kind == "pulls"
         Hubstats::PullRequest.create_or_update(HubHelper.pull_setup(object))
+      elsif kind == "issues"
+        if object[:pull_request]
+          repo = Hubstats::Repo.where(full_name: repo_name).first
+          pull_request = Hubstats::PullRequest.where(repo_id: repo.id).where(number: object[:number]).first
+          pull_request.add_labels(object[:labels])
+        end
       end
     end
   end
