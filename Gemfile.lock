@@ -2,8 +2,10 @@ PATH
   remote: .
   specs:
     hubstats (0.0.8)
-      octokit
+      octokit (~> 3.2)
       rails (~> 3.2.18)
+      select2-rails (~> 3.5)
+      will_paginate (~> 3.0)
 
 GEM
   remote: https://rubygems.org/
@@ -110,6 +112,8 @@ GEM
     sawyer (0.5.4)
       addressable (~> 2.3.5)
       faraday (~> 0.8, < 0.10)
+    select2-rails (3.5.9)
+      thor (~> 0.14)
     shoulda-matchers (2.6.1)
       activesupport (>= 3.0.0)
     sprockets (2.2.2)
@@ -123,15 +127,18 @@ GEM
       polyglot
       polyglot (>= 0.3.1)
     tzinfo (0.3.39)
+    will_paginate (3.0.7)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
-  factory_girl_rails
-  faker
+  factory_girl_rails (~> 4.4)
+  faker (~> 1.3)
   hubstats!
   jquery-rails
   mysql2
   rspec-rails (~> 3.0.0.beta)
-  shoulda-matchers
+  select2-rails (~> 3.5)
+  shoulda-matchers (~> 2.6)
+  will_paginate (~> 3.0)

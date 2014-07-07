@@ -10,6 +10,8 @@
  *
  *= require_self
  *= require hubstats/bootstrap
+ *= require select2
+ *= require select2-bootstrap
  *= require_tree .
  */
 
@@ -24,4 +26,34 @@
 
 #header .title {
   font-size: 28px;
+}
+
+
+.user-image {
+  display: inline-block;
+}
+
+.user-image > img{
+  width: 45px;
+  height: 45px;
+}
+
+.pulls {
+  margin-top: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.row .single-pull {
+  padding:5px;
+  margin: 0px;
+  border-bottom: 1px solid #ccc;
+}
+
+.pull-info {
+  display: inline-block;
+}
+
+.pull-info > h5 {
+  margin: 0px;
 }
