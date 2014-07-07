@@ -17,9 +17,9 @@
 //= require_tree .
 
 
-window.onload = function () {
-  setTimespan();
-}
+$(document).ready( function() {
+  setTimespan()
+});
 
 function setTimespan() {
   var index = readCookie("hubstats_index") || 2;
