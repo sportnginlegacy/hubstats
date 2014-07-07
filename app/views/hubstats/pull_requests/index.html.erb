@@ -1,8 +1,57 @@
-<div class="container" id="pulls">
-  <div class="row">
-    <div class="col col-lg-5 col-lg-offset-2">
-      <h3> All Pull Requests</h3>
-      <%= render 'hubstats/metrics/pulls_table' %>
-    </div>
-  </div>
+<div class="container" %>
+	<div class="row" %>
+		<div class="col col-lg-3 col-md-3 col-sm-3">
+			<div class="form-group">
+        <input type="text" class="form-control" placeholder="Repositories...">
+      </div>
+      <div class="form-group">
+        <input type="text" class="form-control" placeholder="Users...">
+      </div>
+      <hr>
+      <h4> Labels </h4>
+	  	<% @labels.each do |label| %>
+		  	<div class="checkbox">
+				  <label>
+				    <input type="checkbox"> <%= label.name %>
+				  </label>
+				</div>
+	  	<% end %>
+
+		</div>
+		<div class="col col-lg-9 col-md-9 col-sm-9">
+
+		  <div id="state-group" class="btn-group" data-toggle="buttons">
+		    <label class="btn btn-default">
+		      <input type="radio" name="mode" id="open"> Open
+		    </label>
+		    <label class="btn btn-default">
+		      <input type="radio" name="mode" id="closed"> Closed
+		    </label>
+		  </div>
+
+		  <div id="sort-group" class="btn-group" data-toggle="buttons">
+		    <label class="btn btn-default">
+		      <input type="radio" name="period" id="newest"> Newest
+		    </label>
+		    <label class="btn btn-default">
+		      <input type="radio" name="period" id="oldest"> Oldest
+		    </label>
+		  </div>
+
+		  <div class="pulls">
+				<%= render partial: 'hubstats/partials/pull', collection: @pull_requests, as: :pull %>
+			</div>
+
+
+			<div class="text-center">
+				<ul class="pagination">
+				  <li><a href="#">&laquo;</a></li>
+				  <li><a href="#1">1</a></li>
+				  <li><a href="#2">2</a></li>
+				  <li><a href="#">3</a></li>
+				  <li><a href="#">&raquo;</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
 </div>

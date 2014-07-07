@@ -8,6 +8,8 @@ gemspec
 # jquery-rails is used by the dummy application
 gem "jquery-rails"
 gem "mysql2"
+gem "select2-rails", "~> 3.5"
+gem "will_paginate", "~> 3.0"
 
 
 # Declare any dependencies that are still in development here instead of in

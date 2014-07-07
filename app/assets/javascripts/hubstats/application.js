@@ -12,11 +12,16 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require select2
 //= require hubstats/bootstrap
 //= require_tree .
 
 
 window.onload = function () {
+  setTimespan();
+}
+
+function setTimespan() {
   var index = readCookie("hubstats_index") || 2;
   var timer = document.getElementById("time-select");
 
