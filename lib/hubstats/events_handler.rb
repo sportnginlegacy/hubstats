@@ -2,15 +2,14 @@ module Hubstats
   class EventsHandler
 
     def route(payload, type) 
-      puts 
       case type
-      when "issue_comment" || "IssueCommentEvent"
+      when "issue_comment", "IssueCommentEvent"
         comment_processor(payload,"Issue")
-      when "commit_comment" || "CommitCommentEvent"
+      when "commit_comment", "CommitCommentEvent"
         comment_processor(payload,"Commit")
-      when "pull_request" || "PullRequestEvent"
+      when "pull_request", "PullRequestEvent"
         pull_processor(payload)
-      when "pull_request_review_comment" || "PullRequestReviewCommentEvent"
+      when "pull_request_review_comment", "PullRequestReviewCommentEvent"
         comment_processor(payload,"PullRequest")
       end
     end

@@ -1,14 +1,14 @@
 FactoryGirl.define do
   factory :user, :class => Hubstats::User do
     login { Faker::Internet.user_name }
-    id {|n| "#{n}"}
+    id {|n| "#{n}".to_i}
     role "User"
   end
 
   factory :user_hash, class:Hash do
     login { Faker::Internet.user_name }
-    id {|n| "#{n}"}
-    type "User"
+    id {|n| "#{n}".to_i}
+    role "User"
 
     initialize_with { attributes } 
   end
