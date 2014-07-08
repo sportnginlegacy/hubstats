@@ -28,32 +28,39 @@
   font-size: 28px;
 }
 
-
-.user-image {
-  display: inline-block;
+.single-comment > .user-image, .single-pull > .user-image {
+  padding: 5px;
 }
 
 .user-image > img{
-  width: 45px;
-  height: 45px;
+  width: 55px;
+  height: 55px;
 }
 
-.pulls {
-  margin-top: 15px;
+.pulls, .comments {
+  margin: 15px 0px 15px 0px;
   border: 1px solid #ccc;
   border-radius: 5px;
 }
 
-.row .single-pull {
+.pulls > .col, .comments > .col {
+  padding: 0px 5px 0px 5px;
+}
+
+.row .single-pull, .row .single-comment {
   padding:5px;
   margin: 0px;
   border-bottom: 1px solid #ccc;
 }
 
-.pull-info {
-  display: inline-block;
+.comment-info > .well {
+  padding: 10px;
+  margin-bottom: 5px;
 }
 
-.pull-info > h5 {
+.single-pull > .pull-info {
+  padding: 0px;
+}
+.pull-info > h4 {
   margin: 0px;
 }

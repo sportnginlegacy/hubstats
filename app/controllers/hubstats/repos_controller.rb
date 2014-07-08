@@ -4,7 +4,13 @@ module Hubstats
   class ReposController < ApplicationController
 
     def index
-      @repos = Hubstats::Repo.where("name LIKE '%#{params[:query]}%'").order("name ASC")
+      if params[:query]
+        @repos = Hubstats::Repo.where("name LIKE '%#{params[:query]}%'").order("name ASC")
+      elsif params[:id]
+        @repos = Hubstats::Repo.where("id IN (#{params[:id]})").order("name ASC")
+      else
+        @repos = Hubstats::Repo.with_recent_activity(@timespan)
+      end
 
       respond_to do |format|
         format.html # show.html.erb
