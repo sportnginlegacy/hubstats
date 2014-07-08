@@ -2,17 +2,14 @@ require_dependency "hubstats/application_controller"
 
 module Hubstats
   class ReposController < ApplicationController
+
     def index
-      @repos = Hubstats::Repo.with_recent_activity(@timespan).limit(20)
-      @users = Hubstats::User.with_pulls_or_comments(@timespan).only_active.limit(20)
-      @stats = {
-        user_count: Hubstats::User.with_pulls_or_comments(@timespan).only_active.length,
-        pull_count: Hubstats::PullRequest.closed_since(@timespan).count(:all),
-        comment_count: Hubstats::Comment.created_since(@timespan).count(:all),
-        avg_additions: Hubstats::PullRequest.closed_since(@timespan).average(:additions).to_i,
-        avg_deletions: Hubstats::PullRequest.closed_since(@timespan).average(:deletions).to_i,
-        net_additions: Hubstats::PullRequest.closed_since(@timespan).sum(:additions).to_i - Hubstats::PullRequest.closed_since(@timespan).sum(:deletions).to_i
-      }
+      @repos = Hubstats::Repo.where("name LIKE '%#{params[:query]}%'").order("name ASC")
+
+      respond_to do |format|
+        format.html # show.html.erb
+        format.json { render :json => @repos}
+      end
     end
 
     def show
@@ -26,6 +23,19 @@ module Hubstats
         avg_additions: Hubstats::PullRequest.closed_since(@timespan).belonging_to_repo(@repo.id).average(:additions).to_i,
         avg_deletions: Hubstats::PullRequest.closed_since(@timespan).belonging_to_repo(@repo.id).average(:deletions).to_i,
         net_additions: Hubstats::PullRequest.closed_since(@timespan).belonging_to_repo(@repo.id).sum(:additions).to_i - Hubstats::PullRequest.closed_since(@timespan).belonging_to_repo(@repo.id).sum(:deletions).to_i
+      }
+    end
+
+    def dashboard
+      @repos = Hubstats::Repo.with_recent_activity(@timespan).limit(20)
+      @users = Hubstats::User.with_pulls_or_comments(@timespan).only_active.limit(20)
+      @stats = {
+        user_count: Hubstats::User.with_pulls_or_comments(@timespan).only_active.length,
+        pull_count: Hubstats::PullRequest.closed_since(@timespan).count(:all),
+        comment_count: Hubstats::Comment.created_since(@timespan).count(:all),
+        avg_additions: Hubstats::PullRequest.closed_since(@timespan).average(:additions).to_i,
+        avg_deletions: Hubstats::PullRequest.closed_since(@timespan).average(:deletions).to_i,
+        net_additions: Hubstats::PullRequest.closed_since(@timespan).sum(:additions).to_i - Hubstats::PullRequest.closed_since(@timespan).sum(:deletions).to_i
       }
     end
   end

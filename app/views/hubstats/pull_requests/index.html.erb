@@ -7,12 +7,8 @@
         </input>
       </div>
       <div class="form-group">
-        <select class="select2-control" id="users">
-          <option></option>
-          <% @users.each do |user| %>
-            <option value=<%= user.id%>><%= user.login %> </option>
-          <% end %>
-        </select>
+        <input class="select2-control" id="users">
+        </input>
       </div>
 
       <hr>
@@ -30,22 +26,22 @@
 
       <div id="state-group" class="btn-group" data-toggle="buttons">
         <label class="btn btn-default" id="all">
-          <input type="radio" name="mode"> All
+          <input type="radio" name="state"> All
         </label>
         <label class="btn btn-default" id="open">
-          <input type="radio" name="mode"> Open
+          <input type="radio" name="state"> Open
         </label>
         <label class="btn btn-default" id="closed">
-          <input type="radio" name="mode"> Closed
+          <input type="radio" name="state"> Closed
         </label>
       </div>
 
       <div id="sort-group" class="btn-group" data-toggle="buttons">
         <label class="btn btn-default" id="desc">
-          <input type="radio" name="period"> Newest
+          <input type="radio" name="sort"> Newest
         </label>
         <label class="btn btn-default" id="asc">
-          <input type="radio" name="period"> Oldest
+          <input type="radio" name="sort"> Oldest
         </label>
       </div>
 

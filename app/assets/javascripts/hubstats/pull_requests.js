@@ -9,13 +9,18 @@ $(document).ready(function() {
     updateQueryStringParameter(queryParameters,"state",$(this).attr('id'));
   });
 
-  $("#repos").change(function() {
-    var ids = $("#repos").val();
-    updateQueryStringParameter(queryParameters,"repo",ids);
-  });
-
   $("#sort-group > .btn").on("click", function(){
     updateQueryStringParameter(queryParameters,"order",$(this).attr('id'));
+  });
+
+  $("#repos").change(function() {
+    var ids = $("#repos").val();
+    updateQueryStringParameter(queryParameters,"repos",ids);
+  });
+  
+  $("#users").change(function() {
+    var ids = $("#users").val();
+    updateQueryStringParameter(queryParameters,"users",ids);
   });
 });
 
@@ -60,22 +65,61 @@ function setDefaults(queryParameters) {
   if (queryParameters["order"])
     $('#' + queryParameters["order"]).addClass('active');
   else
-    $('#asc').addClass('active');
+    $('#desc').addClass('active');
 }
 
 
 
 $(document).ready(function() { 
   $("#repos").select2({
-    data:[
-      {id:126422,text:"Ngin"},
-      {id:16285416,text:"Soyus"},
-      {id:20231003,text:"Hubstats"},
-    ],
     placeholder: "Repositories",
-    multiple: true
+    multiple: true,
+    ajax: {
+      url: "./repos",
+      dataType: 'json',
+      quietMillis: 100,
+      data: function (term) {
+        return {
+          query: term
+        };
+      },
+      results: function (data) {
+        return {
+          results: $.map(data, function (repo) {
+            return {
+              text: repo.name,
+              id: repo.id
+            }
+          })
+        };
+      }
+    }
   }); 
+
+
   $("#users").select2({
-    placeholder: "Users"
-  }); 
+    placeholder: "Users",
+    multiple: true,
+    ajax: {
+      url: "./users",
+      dataType: 'json',
+      quietMillis: 100,
+      data: function (term) {
+        return {
+          query: term
+        };
+      },
+      results: function (data) {
+        return {
+          results: $.map(data, function (user) {
+            return {
+              text: user.login,
+              id: user.id
+            }
+          })
+        };
+      }
+    }
+  });
+
 });
