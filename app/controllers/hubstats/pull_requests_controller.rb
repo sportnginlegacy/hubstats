@@ -5,14 +5,25 @@ module Hubstats
 
     def index
       @pull_requests = Hubstats::PullRequest.closed_since(@timespan).includes(:user)
-        .where(state: params[:state]).order("closed_at #{params[:sort]}")
+      if params[:state] && params[:state] != "all"
+        @pull_requests = @pull_requests.where(state: params[:state])
+      end
+      if params[:order]
+        @pull_requests = @pull_requests.order("created_at #{params[:order]}")
+      end
+      if params[:repo]
+        @pull_requests = @pull_requests.belonging_to_repos(params[:repo])
+      end
 
+      @pull_requests = @pull_requests.paginate(:page => params[:page], :per_page => 15)
+      @repos = Hubstats::Repo.all
+      @users = Hubstats::User.all
       @labels = Hubstats::Label.all
     end 
 
     def repo_index
       @repo = Hubstats::Repo.where(name: params[:repo]).first
-      @pull_requests = Hubstats::PullRequest.belonging_to_repo(@repo.id).closed_since(@timespan)
+      @pull_requests = Hubstats::PullRequest.belonging_to_repo(@repo.id).closed_since(@timespan).order("closed_at DESC")
     end
 
     def show
