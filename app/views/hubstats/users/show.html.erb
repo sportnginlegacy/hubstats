@@ -4,15 +4,9 @@
     <%= render 'hubstats/metrics/quick_stats' %>
   </div>
   <div class="row">
-    <div class="col-lg-8 col-lg-offset-2 col-md-8 col-md-offset-2">
-      <h3> Comments </h3>
-      <% if @comments.length > 0 %>
-        <div class="comments">
-          <%= render partial: 'hubstats/partials/comment', collection: @comments, as: :comment %>
-        </div>
-      <% else %>
-        <p> No comments to show </p>
-      <% end %>
+    <div class="col col-lg-12">
+      <h3> Recent Comments </h3>
+      <%= render 'hubstats/metrics/comments_table' %>
     </div>
   </div>
 </div>

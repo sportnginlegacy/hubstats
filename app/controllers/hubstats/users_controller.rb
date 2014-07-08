@@ -4,14 +4,8 @@ module Hubstats
   class UsersController < ApplicationController
 
     def index 
-      if params[:query]
-        @users = Hubstats::User.where("login LIKE '%#{params[:query]}%'").order("login ASC")
-      elsif params[:id]
-        @users = Hubstats::User.where("id IN (#{params[:id]})").order("login ASC")
-      else
-        @users = Hubstats::User.with_pulls_or_comments(@timespan)
-      end
-      
+      @users = Hubstats::User.where("login LIKE '%#{params[:query]}%'").order("login ASC")
+
       respond_to do |format|
         format.html # index.html.erb
         format.json { render :json => @users}

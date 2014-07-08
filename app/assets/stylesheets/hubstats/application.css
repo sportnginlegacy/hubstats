@@ -28,39 +28,32 @@
   font-size: 28px;
 }
 
-.single-comment > .user-image, .single-pull > .user-image {
-  padding: 5px;
+
+.user-image {
+  display: inline-block;
 }
 
 .user-image > img{
-  width: 55px;
-  height: 55px;
+  width: 45px;
+  height: 45px;
 }
 
-.pulls, .comments {
-  margin: 15px 0px 15px 0px;
+.pulls {
+  margin-top: 15px;
   border: 1px solid #ccc;
   border-radius: 5px;
 }
 
-.pulls > .col, .comments > .col {
-  padding: 0px 5px 0px 5px;
-}
-
-.row .single-pull, .row .single-comment {
+.row .single-pull {
   padding:5px;
   margin: 0px;
   border-bottom: 1px solid #ccc;
 }
 
-.comment-info > .well {
-  padding: 10px;
-  margin-bottom: 5px;
+.pull-info {
+  display: inline-block;
 }
 
-.single-pull > .pull-info {
-  padding: 0px;
-}
-.pull-info > h4 {
+.pull-info > h5 {
   margin: 0px;
 }

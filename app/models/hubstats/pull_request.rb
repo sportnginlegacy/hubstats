@@ -5,8 +5,7 @@ module Hubstats
     scope :belonging_to_repo, lambda {|repo_id| where(repo_id: repo_id)}
     scope :belonging_to_repos, lambda {|repo_ids| where("repo_id IN (#{repo_ids})")}
     scope :belonging_to_user, lambda {|user_id| where(user_id: user_id)}
-    scope :belonging_to_users, lambda {|user_ids| where("user_id IN (#{user_ids})")}
-
+    
     attr_accessible :id, :url, :html_url, :diff_url, :patch_url, :issue_url, :commits_url,
       :review_comments_url, :review_comment_url, :comments_url, :statuses_url, :number,
       :state, :title, :body, :created_at, :updated_at, :closed_at, :merged_at, 
