@@ -1,7 +1,10 @@
-<table class="table">
-  <% @comments.each do |comment| %>
-    <tr>
-      <td><%= comment.body %> by <b> <%= comment.user.login %> </b> <%= distance_of_time_in_words(DateTime.now,comment.created_at) %> ago </td>
-    </tr>
+<div class="row">
+  <h4> Comments </h4>
+  <% if @comments.length > 0 %>
+    <div class="comments">
+      <%= render partial: 'hubstats/partials/comment', collection: @comments, as: :comment %>
+    </div>
+  <% else %>
+    <p> No comments to show </p>
   <% end %>
-</table>
+</div>
