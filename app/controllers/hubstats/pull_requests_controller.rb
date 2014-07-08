@@ -11,13 +11,14 @@ module Hubstats
       if params[:order]
         @pull_requests = @pull_requests.order("created_at #{params[:order]}")
       end
-      if params[:repo]
-        @pull_requests = @pull_requests.belonging_to_repos(params[:repo])
+      if params[:repos]
+        @pull_requests = @pull_requests.belonging_to_repos(params[:repos])
+      end
+      if params[:users]
+        @pull_requests = @pull_requests.belonging_to_user(params[:users])
       end
 
       @pull_requests = @pull_requests.paginate(:page => params[:page], :per_page => 15)
-      @repos = Hubstats::Repo.all
-      @users = Hubstats::User.all
       @labels = Hubstats::Label.all
     end 
 
