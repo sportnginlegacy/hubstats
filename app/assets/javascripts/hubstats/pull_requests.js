@@ -35,25 +35,26 @@ function updateQueryStringParameter(queryParameters, key, value) {
   for (i = 0; i < queryParameters.length; i++) {
     var separator = uri.indexOf('?') !== -1 ? "&" : "?";
     var value = queryParameters[i];
-    uri = (uri + separator + value + '=' + queryParameters[value]);
+    if (queryParameters[value].length >= 1)
+      uri = (uri + separator + value + '=' + queryParameters[value]);
   }
 
   document.location.href = uri
 }
 
 function getUrlVars() {
-    var vars = [], hash;
-    if (window.location.href.indexOf('?') > 0) {
-      var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+  var vars = [], hash;
+  if (window.location.href.indexOf('?') > 0) {
+    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
 
-      for(var i = 0; i < hashes.length; i++)
-      {
-          hash = hashes[i].split('=');
-          vars.push(hash[0]);
-          vars[hash[0]] = hash[1];
-      }
+    for (var i = 0; i < hashes.length; i++) {
+      hash = hashes[i].split('=');
+      vars.push(hash[0]);
+      vars[hash[0]] = hash[1];
     }
-      return vars;
+  }
+
+  return vars;
 }
 
 function setDefaults(queryParameters) {
@@ -71,6 +72,9 @@ function setDefaults(queryParameters) {
 
 
 $(document).ready(function() { 
+  usersIDs = queryParameters["users"] ? queryParameters["users"].replace("%2C", ",") : "";
+  reposIDs = queryParameters["repos"] ? queryParameters["repos"].replace("%2C", ",") : "";
+
   $("#repos").select2({
     placeholder: "Repositories",
     multiple: true,
@@ -93,8 +97,24 @@ $(document).ready(function() {
           })
         };
       }
+    },
+    initSelection: function(element, callback) {
+      if (reposIDs !== "") {
+        $.ajax("./repos", {
+          data: { id: reposIDs },
+          dataType: "json"
+        }).done(function (data) { callback(
+            $.map(data, function (repo) {
+              return {
+                text: repo.name,
+                id: repo.id
+              }
+            })
+          ); 
+        });
+      }
     }
-  }); 
+  }).select2('val', []); 
 
 
   $("#users").select2({
@@ -119,7 +139,23 @@ $(document).ready(function() {
           })
         };
       }
-    }
-  });
+    },
+    initSelection: function(element, callback) {
+      if (usersIDs !== "") {
+        $.ajax("./users", {
+          data: { id: usersIDs },
+          dataType: "json"
+        }).done(function (data) { callback(
+            $.map(data, function (user) {
+              return {
+                text: user.login,
+                id: user.id
+              }
+            })
+          ); 
+        });
+      }
+    } 
+  }).select2('val', []);
 
 });

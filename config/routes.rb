@@ -4,7 +4,7 @@ Hubstats::Engine.routes.draw do
   post "/handler" => "events#handler", :as => "handler"
   get "/pulls" => "pull_requests#index", :as => :pulls
   get "/users" => "users#index", :as => :users
-  get "/repos" => "repos#index", :as => :users
+  get "/repos" => "repos#index", :as => :repos
   get "/user/:id" => "users#show", :as => :user
 
   get "/:repo" => "repos#show", :as => :repo
