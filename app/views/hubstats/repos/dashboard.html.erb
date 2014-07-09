@@ -1,16 +1,21 @@
 <div class="container" id="splash">
-  <div class="row">
+  <div class="row text-center">
     <%= render 'hubstats/metrics/quick_stats' %>
   </div>
   <div class="row">
     <div class="col col-lg-5">
       <h3> Recently Active Repositories </h3>
       <%= render 'hubstats/metrics/repos_table' %>
+      <% if @repo_count > 20 %>
+        <p class="pull-right"><%= link_to "View All", repos_path %></p>
+      <% end %>
     </div>
     <div class="col col-lg-5 col-lg-offset-2">
       <h3> Most Active Users </h3>
       <%= render 'hubstats/metrics/users_table' %>
-      <p class="pull-right"><%= link_to "View All", users_path %></p>
+      <% if @user_count > 20 %>
+        <p class="pull-right"><%= link_to "View All", users_path %></p>
+      <% end %>
     </div>
   </div>
 </div>

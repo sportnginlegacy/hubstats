@@ -1,12 +1,30 @@
 <div class="container" id="header">
-  <div class="pull-left">
-    <div class="title"> <%= link_to "Hubstats: Github Metrics", root_path %> </div>
-  </div>
-  <div class="pull-right">
-    <select class="form-control" id="time-select">
-      <% Hubstats::TIMESPAN_ARRAY.each do |timespan| %>
-        <option value=<%= timespan[:date] %>><%=timespan[:display_value]%></option>
-      <% end %>
-    </select>
-  </div>
+  <nav class="navbar navbar-default" role="navigation">
+    <div class="container-fluid">
+
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand title" href="/hubstats/">Hubstats: Github Metrics</a>
+      </div>
+
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav navbar-right">
+          <li><%= link_to "Metrics", root_path%></li>
+          <li><%= link_to "Search", pulls_path%></li>
+          <li>
+            <select class="form-control push-down" id="time-select">
+              <% Hubstats::TIMESPAN_ARRAY.each do |timespan| %>
+                <option value=<%= timespan[:date] %>><%=timespan[:display_value]%></option>
+              <% end %>
+            </select>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
 </div>

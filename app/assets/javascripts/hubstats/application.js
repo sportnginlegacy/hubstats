@@ -28,9 +28,9 @@ function setTimespan() {
   timer.selectedIndex = index;
 
   timer.onchange = function() {
-    var url = [location.protocol, '//', location.host, location.pathname].join('');
+
     createCookie("hubstats_index",this.selectedIndex,1);
-    window.location = url;
+    window.location.reload();
   };
 }
 

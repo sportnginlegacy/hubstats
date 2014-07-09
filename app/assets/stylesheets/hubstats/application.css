@@ -64,3 +64,11 @@
 .pull-info > h4 {
   margin: 0px;
 }
+
+.push-down {
+  margin-top: 8px;
+}
+
+.push-down-farther {
+ margin-top: 15px;
+}

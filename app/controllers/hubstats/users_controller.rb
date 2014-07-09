@@ -5,9 +5,9 @@ module Hubstats
 
     def index 
       if params[:query]
-        @users = Hubstats::User.where("login LIKE '%#{params[:query]}%'").order("login ASC")
+        @users = Hubstats::User.where("login LIKE ?", "%#{params[:query]}%").order("login ASC")
       elsif params[:id]
-        @users = Hubstats::User.where("id IN (#{params[:id]})").order("login ASC")
+        @users = Hubstats::User.where(id: params[:id].split(",")).order("login ASC")
       else
         @users = Hubstats::User.with_pulls_or_comments(@timespan)
       end
