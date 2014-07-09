@@ -17,9 +17,7 @@
         <div class="checkbox">
           <label>
             <input type="checkbox"> <%= label.name %> 
-            <% if label.pull_request_count >= 1 %>
-              <span class="badge pull-right"><%= label.pull_request_count %></span>
-            <% end %>
+            <span class="badge pull-right"><%= label.pull_request_count %></span>
           </label>
         </div>
       <% end %>
