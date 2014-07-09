@@ -6,8 +6,8 @@ module Hubstats
     scope :opened_since, lambda {|time| where("created_at > ?", time) }
     scope :belonging_to_repo, lambda {|repo_id| where(repo_id: repo_id)}
     scope :belonging_to_user, lambda {|user_id| where(user_id: user_id)}
-    scope :belonging_to_repos, lambda {|repo_id| includes(:repo).where(repo_id: repo_id.split(',')) if repo_id}
-    scope :belonging_to_users, lambda {|user_id| includes(:user).where(user_id: user_id.split(',')) if user_id}
+    scope :belonging_to_repos, lambda {|repo_id| where(repo_id: repo_id.split(',')) if repo_id}
+    scope :belonging_to_users, lambda {|user_id| where(user_id: user_id.split(',')) if user_id}
     scope :with_state, lambda {|state| (where(state: state) unless state == 'all') if state}
 
     attr_accessible :id, :url, :html_url, :diff_url, :patch_url, :issue_url, :commits_url,
@@ -41,20 +41,14 @@ module Hubstats
     end
 
     def self.state_based_order(timespan,state,order)
+      order = ["ASC","DESC"].detect{|order_type| order_type.to_s == order.to_s.upcase } || "DESC"
+
       if state == "closed"
-        if order == 'asc'
-          closed_since(timespan).order("closed_at ASC")
-        else
-          closed_since(timespan).order("closed_at DESC")
-        end
+        closed_since(timespan).order("closed_at #{order}")
       else
-        if order == 'asc'
-          opened_since(timespan).order("created_at ASC")
-        else
-          opened_since(timespan).order("created_at DESC")
-        end
+        opened_since(timespan).order("created_at #{order}")
       end
-    
     end
+
   end
 end

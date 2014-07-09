@@ -4,14 +4,14 @@ module Hubstats
   class PullRequestsController < ApplicationController
 
     def index
-      @pull_requests = Hubstats::PullRequest
+      @pull_requests = Hubstats::PullRequest.includes(:user).includes(:repo)
         .belonging_to_users(params[:users])
         .belonging_to_repos(params[:repos])
         .with_state(params[:state])
         .state_based_order(@timespan,params[:state],params[:order])
         .paginate(:page => params[:page], :per_page => 15)
         
-      @labels = Hubstats::Label.with_number_of_pulls
+      @labels = Hubstats::Label.with_a_pull_request
     end 
 
     def repo_index
