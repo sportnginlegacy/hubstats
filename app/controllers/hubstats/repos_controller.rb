@@ -40,8 +40,7 @@ module Hubstats
         pull_count: Hubstats::PullRequest.closed_since(@timespan).count(:all),
         comment_count: Hubstats::Comment.created_since(@timespan).count(:all),
         avg_additions: Hubstats::PullRequest.closed_since(@timespan).average(:additions).to_i,
-        avg_deletions: Hubstats::PullRequest.closed_since(@timespan).average(:deletions).to_i,
-        net_additions: Hubstats::PullRequest.closed_since(@timespan).sum(:additions).to_i - Hubstats::PullRequest.closed_since(@timespan).sum(:deletions).to_i
+        avg_deletions: Hubstats::PullRequest.closed_since(@timespan).average(:deletions).to_i
       }
     end
   end

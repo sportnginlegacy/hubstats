@@ -11,15 +11,15 @@ module Hubstats
 
       if params[:order]
         if params[:state] == "open" || params[:state] == "all"
-          @pull_requests= @pull_requests.order("created_at #{params[:order]}")
+          @pull_requests= @pull_requests.opened_since(@timespan).order("created_at #{params[:order]}")
         else
-          @pull_requests= @pull_requests.order("closed_at #{params[:order]}")
+          @pull_requests= @pull_requests.closed_since(@timespan).order("closed_at #{params[:order]}")
         end
       else
         if params[:state] == "open" || params[:state] == "all"
-          @pull_requests= @pull_requests.order("created_at DESC")
+          @pull_requests= @pull_requests.opened_since(@timespan).order("created_at DESC")
         else
-          @pull_requests= @pull_requests.order("closed_at DESC")
+          @pull_requests= @pull_requests.closed_since(@timespan).order("closed_at DESC")
         end
       end
 
@@ -31,7 +31,7 @@ module Hubstats
       end
 
       @pull_requests = @pull_requests.paginate(:page => params[:page], :per_page => 15)
-      @labels = Hubstats::Label.all
+      @labels = Hubstats::Label.with_number_of_pulls
     end 
 
     def repo_index
