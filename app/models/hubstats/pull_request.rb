@@ -25,6 +25,8 @@ module Hubstats
 
       user = Hubstats::User.create_or_update(github_pull[:user])
       github_pull[:user_id] = user.id
+
+      github_pull[:repository][:updated_at] = github_pull[:updated_at]
       repo = Hubstats::Repo.create_or_update(github_pull[:repository])
       github_pull[:repo_id] = repo.id
 

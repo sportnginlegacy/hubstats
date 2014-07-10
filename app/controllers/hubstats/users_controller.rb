@@ -26,7 +26,7 @@ module Hubstats
       @stats = {
         pull_count: Hubstats::PullRequest.belonging_to_user(@user.id).closed_since(@timespan).count(:all),
         comment_count: Hubstats::Comment.belonging_to_user(@user.id).created_since(@timespan).count(:all),
-        review_count: @reviews ? reviews_count : 0,
+        review_count: @review ? @review.reviews_count : 0,
         avg_additions: Hubstats::PullRequest.closed_since(@timespan).belonging_to_user(@user.id).average(:additions).to_i,
         avg_deletions: Hubstats::PullRequest.closed_since(@timespan).belonging_to_user(@user.id).average(:deletions).to_i,
         net_additions: Hubstats::PullRequest.closed_since(@timespan).belonging_to_user(@user.id).sum(:additions).to_i - Hubstats::PullRequest.closed_since(@timespan).belonging_to_user(@user.id).sum(:deletions).to_i

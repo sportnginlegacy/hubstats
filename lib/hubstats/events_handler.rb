@@ -27,6 +27,8 @@ module Hubstats
       comment[:repo_id] = payload[:repository][:id]
       comment[:pull_number] = get_pull_number(payload)
 
+      puts "INSPECTING COMMENT"
+      puts comment.inspect
       Hubstats::Comment.create_or_update(comment)
     end
 
