@@ -90,6 +90,9 @@ $(document).ready(function() {
       results: function (data) {
         return {
           results: $.map(data, function (repo) {
+            if (repo.repo) {
+              repo = repo.repo
+            }
             return {
               text: repo.name,
               id: repo.id
@@ -105,6 +108,9 @@ $(document).ready(function() {
           dataType: "json"
         }).done(function (data) { callback(
             $.map(data, function (repo) {
+              if (repo.repo) {
+                repo = repo.repo
+              }
               return {
                 text: repo.name,
                 id: repo.id
@@ -132,6 +138,9 @@ $(document).ready(function() {
       results: function (data) {
         return {
           results: $.map(data, function (user) {
+            if (user.user){
+              user = user.user
+            }
             return {
               text: user.login,
               id: user.id
@@ -147,6 +156,9 @@ $(document).ready(function() {
           dataType: "json"
         }).done(function (data) { callback(
             $.map(data, function (user) {
+              if (user.user){
+                user = user.user
+              }
               return {
                 text: user.login,
                 id: user.id
