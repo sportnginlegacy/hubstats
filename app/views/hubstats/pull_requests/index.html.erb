@@ -16,7 +16,7 @@
       <% @labels.each do |label| %>
         <div class="checkbox">
           <label>
-            <input type="checkbox"> <%= label.name %> 
+            <input type="checkbox" value= "<%=label.name%>"> <%= label.name %> 
             <span class="badge pull-right"><%= label.pull_request_count %></span>
           </label>
         </div>

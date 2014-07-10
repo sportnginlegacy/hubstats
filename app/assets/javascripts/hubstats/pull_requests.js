@@ -4,6 +4,9 @@
 $(document).ready(function() {
   queryParameters = getUrlVars();
   setDefaults(queryParameters);
+  checkedLabels(queryParameters);
+  initLabels(queryParameters)
+  changeColors();
 
   $("#state-group > .btn").on("click", function(){
     updateQueryStringParameter(queryParameters,"state",$(this).attr('id'));
@@ -69,93 +72,34 @@ function setDefaults(queryParameters) {
     $('#desc').addClass('active');
 }
 
-
-
-$(document).ready(function() { 
-  usersIDs = queryParameters["users"] ? queryParameters["users"].replace("%2C", ",") : "";
-  reposIDs = queryParameters["repos"] ? queryParameters["repos"].replace("%2C", ",") : "";
-
-  $("#repos").select2({
-    placeholder: "Repositories",
-    multiple: true,
-    ajax: {
-      url: "./repos",
-      dataType: 'json',
-      quietMillis: 100,
-      data: function (term) {
-        return {
-          query: term
-        };
-      },
-      results: function (data) {
-        return {
-          results: $.map(data, function (repo) {
-            return {
-              text: repo.name,
-              id: repo.id
-            }
-          })
-        };
-      }
-    },
-    initSelection: function(element, callback) {
-      if (reposIDs !== "") {
-        $.ajax("./repos", {
-          data: { id: reposIDs },
-          dataType: "json"
-        }).done(function (data) { callback(
-            $.map(data, function (repo) {
-              return {
-                text: repo.name,
-                id: repo.id
-              }
-            })
-          ); 
-        });
-      }
+function checkedLabels () {
+  $(".checkbox :checkbox").change(function(e){
+    var labels = '';
+    var checked = $(":checkbox:checked");
+    for (var i = 0; i < checked.length; i++) {
+      var separator = (i == 0 ? '' : ',');
+      labels = labels + separator + checked[i].value;
     }
-  }).select2('val', []); 
+    updateQueryStringParameter(queryParameters,"label",labels);
+  });
+}
 
+function initLabels (queryParameters) {
+  if (queryParameters["label"]) {
+    var labels = queryParameters["label"].replace('%20',' ').split(',');
 
-  $("#users").select2({
-    placeholder: "Users",
-    multiple: true,
-    ajax: {
-      url: "./users",
-      dataType: 'json',
-      quietMillis: 100,
-      data: function (term) {
-        return {
-          query: term
-        };
-      },
-      results: function (data) {
-        return {
-          results: $.map(data, function (user) {
-            return {
-              text: user.login,
-              id: user.id
-            }
-          })
-        };
-      }
-    },
-    initSelection: function(element, callback) {
-      if (usersIDs !== "") {
-        $.ajax("./users", {
-          data: { id: usersIDs },
-          dataType: "json"
-        }).done(function (data) { callback(
-            $.map(data, function (user) {
-              return {
-                text: user.login,
-                id: user.id
-              }
-            })
-          ); 
-        });
-      }
-    } 
-  }).select2('val', []);
+    $(":checkbox").each( function() {
+      if ($.inArray( $(this)[0].value , labels ) >= 0) 
+        $(this).prop("checked", true);
+    });
+  }
+}
 
-});
+function changeColors () {
+  $(".color-label").each( function() {
+    var color = '#' + $(this)[0].title;
+
+    $(this).css('background-color',color)
+  })
+
+}

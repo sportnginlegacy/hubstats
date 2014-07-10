@@ -4,14 +4,21 @@ module Hubstats
   class PullRequestsController < ApplicationController
 
     def index
-      @pull_requests = Hubstats::PullRequest.includes(:user).includes(:repo)
+      params[:label].sub!('%20',' ') if params[:label]
+
+      @pull_requests = Hubstats::PullRequest
         .belonging_to_users(params[:users])
         .belonging_to_repos(params[:repos])
         .with_state(params[:state])
         .state_based_order(@timespan,params[:state],params[:order])
+
+      pull_ids = @pull_requests.length > 0 ? @pull_requests.map(&:id).join(',') : nil
+
+      @labels = Hubstats::Label.with_a_pull_request(pull_ids).order("pull_request_count DESC")
+      @pull_requests = @pull_requests
+        .includes(:user).includes(:repo)
+        .with_label(params[:label]).distinct
         .paginate(:page => params[:page], :per_page => 15)
-        
-      @labels = Hubstats::Label.with_a_pull_request
     end 
 
     def repo_index
