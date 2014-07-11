@@ -51,6 +51,10 @@
         <%= render partial: 'hubstats/partials/pull', collection: @pull_requests, as: :pull %>
       </div>
 
+      <div class="text-center">
+        <%= will_paginate @posts, renderer: BootstrapPagination::Rails %>
+      </div>
+
     </div>
   </div>
 </div>

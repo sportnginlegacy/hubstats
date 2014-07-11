@@ -1,11 +1,11 @@
 PATH
   remote: .
   specs:
-    hubstats (0.0.13)
+    hubstats (0.0.14)
       octokit (~> 3.2)
       rails (~> 3.2.18)
       select2-rails (~> 3.5)
-      will_paginate (~> 3.0)
+      will_paginate-bootstrap
 
 GEM
   remote: https://rubygems.org/
@@ -126,8 +126,10 @@ GEM
     treetop (1.4.15)
       polyglot
       polyglot (>= 0.3.1)
-    tzinfo (0.3.39)
+    tzinfo (0.3.40)
     will_paginate (3.0.7)
+    will_paginate-bootstrap (1.0.1)
+      will_paginate (>= 3.0.3)
 
 PLATFORMS
   ruby
@@ -139,6 +141,4 @@ DEPENDENCIES
   jquery-rails
   mysql2
   rspec-rails (~> 3.0.0.beta)
-  select2-rails (~> 3.5)
   shoulda-matchers (~> 2.6)
-  will_paginate (~> 3.0)
