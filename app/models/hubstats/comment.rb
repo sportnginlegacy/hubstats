@@ -24,8 +24,7 @@ module Hubstats
     
    
     def self.create_or_update(github_comment)
-      logger.warn github_comment.inspect
-      github_comment = github_comment.to_h if github_comment.respond_to? :to_h
+      github_comment = github_comment.to_h.with_indifferent_access if github_comment.respond_to? :to_h
 
       user = Hubstats::User.create_or_update(github_comment[:user])
       github_comment[:user_id] = user.id
@@ -41,7 +40,7 @@ module Hubstats
 
       comment = where(:id => comment_data[:id]).first_or_create(comment_data)
       return comment if comment.update_attributes(comment_data)
-      puts comment.errors.inspect
+      Rails.logger.warn comment.errors.inspect
     end
 
   end

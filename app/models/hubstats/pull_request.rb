@@ -23,7 +23,7 @@ module Hubstats
     has_and_belongs_to_many :labels, :join_table => 'hubstats_labels_pull_requests'
 
     def self.create_or_update(github_pull)
-      github_pull = github_pull.to_h if github_pull.respond_to? :to_h
+      github_pull = github_pull.to_h.with_indifferent_access if github_pull.respond_to? :to_h
 
       user = Hubstats::User.create_or_update(github_pull[:user])
       github_pull[:user_id] = user.id
@@ -36,7 +36,7 @@ module Hubstats
 
       pull = where(:id => pull_data[:id]).first_or_create(pull_data)
       return pull if pull.update_attributes(pull_data)
-      Rails.logger.debug pull.errors.inspect
+      Rails.logger.warn pull.errors.inspect
     end
 
     def add_labels(labels)
