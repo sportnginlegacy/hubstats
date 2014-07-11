@@ -62,15 +62,14 @@ module Hubstats
     has_many :pull_requests
 
     def self.create_or_update(github_user)
-      logger.warn github_user.inspect
       github_user[:role] = github_user.delete :type  ##changing :type in to :role
-      github_user = github_user.to_h unless github_user.is_a? Hash
+      github_user = github_user.to_h.with_indifferent_access unless github_user.is_a? Hash
 
       user_data = github_user.slice(*Hubstats::User.column_names.map(&:to_sym))
       
       user = Hubstats::User.where(:id => user_data[:id]).first_or_create(user_data)
       return user if user.update_attributes(user_data)
-      Rails.logger.debug user.errors.inspect
+      Rails.logger.warn user.errors.inspect
     end
 
     def self.with_pulls_or_comments(time, repo_id = nil)

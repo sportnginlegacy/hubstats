@@ -15,7 +15,7 @@ module Hubstats
     belongs_to :owner, :class_name => "User", :foreign_key => "id"
 
     def self.create_or_update(github_repo)
-      github_repo = github_repo.to_h if github_repo.respond_to? :to_h
+      github_repo = github_repo.to_h.with_indifferent_access if github_repo.respond_to? :to_h
       repo_data = github_repo.slice(*column_names.map(&:to_sym))
 
       if github_repo[:owner]
@@ -25,7 +25,7 @@ module Hubstats
 
       repo = where(:id => repo_data[:id]).first_or_create(repo_data)
       return repo if repo.update_attributes(repo_data)
-      Rails.logger.debug repo.errors.inspect
+      Rails.logger.warn repo.errors.inspect
     end
     
     def to_param

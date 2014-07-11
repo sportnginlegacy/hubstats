@@ -18,7 +18,7 @@ module Hubstats
       pull_request = payload[:pull_request]
       pull_request[:repository] = payload[:repository]
       
-      Hubstats::PullRequest.create_or_update(pull_request)
+      Hubstats::PullRequest.create_or_update(pull_request.with_indifferent_access)
     end
 
     def comment_processor(payload,kind)
@@ -27,8 +27,7 @@ module Hubstats
       comment[:repo_id] = payload[:repository][:id]
       comment[:pull_number] = get_pull_number(payload)
 
-      logger.warn comment.inspect
-      Hubstats::Comment.create_or_update(comment)
+      Hubstats::Comment.create_or_update(comment.with_indifferent_access)
     end
 
     #grabs the number off of anyone of the various places it can be
