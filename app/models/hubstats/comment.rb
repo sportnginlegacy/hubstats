@@ -24,6 +24,7 @@ module Hubstats
     
    
     def self.create_or_update(github_comment)
+      logger.warn github_comment.inspect
       github_comment = github_comment.to_h if github_comment.respond_to? :to_h
 
       user = Hubstats::User.create_or_update(github_comment[:user])

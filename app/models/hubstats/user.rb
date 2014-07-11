@@ -62,6 +62,7 @@ module Hubstats
     has_many :pull_requests
 
     def self.create_or_update(github_user)
+      logger.warn github_user.inspect
       github_user[:role] = github_user.delete :type  ##changing :type in to :role
       github_user = github_user.to_h unless github_user.is_a? Hash
 

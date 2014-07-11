@@ -1,7 +1,6 @@
 .btn-label {
   font-weight: bold;
   color: #333333;
-  background-color:;
   width: 100%;
   margin-bottom: 2px;
 }
@@ -16,7 +15,6 @@
 }
 
 .circle-label {
-  background-color: green;
   width: 5px;
   height: 14px;
   border-radius: 100%;
