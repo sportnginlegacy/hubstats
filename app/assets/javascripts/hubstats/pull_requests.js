@@ -4,6 +4,9 @@
 $(document).ready(function() {
   queryParameters = getUrlVars();
   setDefaults(queryParameters);
+  activeLabels(queryParameters);
+  initLabels(queryParameters)
+  changeColors();
 
   $("#state-group > .btn").on("click", function(){
     updateQueryStringParameter(queryParameters,"state",$(this).attr('id'));
@@ -69,93 +72,54 @@ function setDefaults(queryParameters) {
     $('#desc').addClass('active');
 }
 
+function initLabels (queryParameters) {
+  if (queryParameters["label"]) {
+    var labels = queryParameters["label"].replace('%20',' ').split(',');
 
-
-$(document).ready(function() { 
-  usersIDs = queryParameters["users"] ? queryParameters["users"].replace("%2C", ",") : "";
-  reposIDs = queryParameters["repos"] ? queryParameters["repos"].replace("%2C", ",") : "";
-
-  $("#repos").select2({
-    placeholder: "Repositories",
-    multiple: true,
-    ajax: {
-      url: "./repos",
-      dataType: 'json',
-      quietMillis: 100,
-      data: function (term) {
-        return {
-          query: term
-        };
-      },
-      results: function (data) {
-        return {
-          results: $.map(data, function (repo) {
-            return {
-              text: repo.name,
-              id: repo.id
-            }
-          })
-        };
+    $("#labels-container .btn-label").each( function() {
+      var color = '#' + $(this).data("color");
+      if ($.inArray( $(this).children().eq(1).data("label") , labels ) >= 0) {
+        $(this).addClass("active");
+        $(this).css('background-color',color);
+        $(this).css("color", isDark($(this).css("background-color")) ? 'white' : 'black');
       }
-    },
-    initSelection: function(element, callback) {
-      if (reposIDs !== "") {
-        $.ajax("./repos", {
-          data: { id: reposIDs },
-          dataType: "json"
-        }).done(function (data) { callback(
-            $.map(data, function (repo) {
-              return {
-                text: repo.name,
-                id: repo.id
-              }
-            })
-          ); 
-        });
-      }
-    }
-  }).select2('val', []); 
+    });
+  }
+}
 
+function changeColors () {
+  $(".color-label").each( function() {
+    var color = '#' + $(this)[0].title;
+    $(this).css('background-color',color)
+    $(this).css("color", isDark($(this).css("background-color")) ? 'white' : 'black');
+  });
 
-  $("#users").select2({
-    placeholder: "Users",
-    multiple: true,
-    ajax: {
-      url: "./users",
-      dataType: 'json',
-      quietMillis: 100,
-      data: function (term) {
-        return {
-          query: term
-        };
-      },
-      results: function (data) {
-        return {
-          results: $.map(data, function (user) {
-            return {
-              text: user.login,
-              id: user.id
-            }
-          })
-        };
-      }
-    },
-    initSelection: function(element, callback) {
-      if (usersIDs !== "") {
-        $.ajax("./users", {
-          data: { id: usersIDs },
-          dataType: "json"
-        }).done(function (data) { callback(
-            $.map(data, function (user) {
-              return {
-                text: user.login,
-                id: user.id
-              }
-            })
-          ); 
-        });
-      }
-    } 
-  }).select2('val', []);
+  $("#labels-container .btn-label").each( function() {
+    var color = '#' + $(this).data("color");
+    $(this).children().eq(0).css('background-color',color);
+  });
 
-});
+}
+
+function activeLabels () {
+  $("#labels-container .btn-label").click(function () {
+    $(this).toggleClass("active");
+
+    var labels = '';
+    $("#labels-container").children().each( function() {
+      if ($(this).hasClass('active')) {
+        var separator = (labels.length == 0 ? '' : ',');
+        labels = labels + separator + $(this).children().eq(1).data('label');
+      }
+    });
+    updateQueryStringParameter(queryParameters,"label",labels);
+  });
+}
+
+function isDark( color ) {
+    var match = /rgb\((\d+).*?(\d+).*?(\d+)\)/.exec(color);
+    return parseFloat(match[1])
+         + parseFloat(match[2])
+         + parseFloat(match[3])
+           < 3 * 256 / 2;
+}

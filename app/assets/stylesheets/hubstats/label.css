@@ -1,0 +1,24 @@
+.btn-label {
+  font-weight: bold;
+  color: #333333;
+  background-color:;
+  width: 100%;
+  margin-bottom: 2px;
+}
+
+.btn-label:hover {
+  color: #000000;
+  background-color: #EEEEEE;
+}
+
+.btn-label.active {
+  box-shadow: none;
+}
+
+.circle-label {
+  background-color: green;
+  width: 5px;
+  height: 14px;
+  border-radius: 100%;
+  margin: 2px 4px 0px 0px;
+}
