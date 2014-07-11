@@ -4,7 +4,7 @@ module Hubstats
   class PullRequestsController < ApplicationController
 
     def index
-      params[:label].sub!('%20',' ') if params[:label]
+      URI.decode(params[:label]) if params[:label]
 
       @pull_requests = Hubstats::PullRequest
         .belonging_to_users(params[:users])
@@ -12,8 +12,8 @@ module Hubstats
         .with_state(params[:state])
         .state_based_order(@timespan,params[:state],params[:order])
 
-      pull_ids = @pull_requests.length > 0 ? @pull_requests.map(&:id).join(',') : nil
-
+      pull_ids =@pull_requests.map(&:id)
+      
       @labels = Hubstats::Label.with_a_pull_request(pull_ids).order("pull_request_count DESC")
       @pull_requests = @pull_requests
         .includes(:user).includes(:repo)

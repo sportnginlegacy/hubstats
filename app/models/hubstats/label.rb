@@ -9,7 +9,7 @@ module Hubstats
       .group("hubstats_labels.id")
     }
 
-    scope :with_ids, lambda { |pull_ids| (where("hubstats_labels_pull_requests.pull_request_id IN (#{pull_ids})")) if pull_ids }
+    scope :with_ids, lambda { |pull_ids| (where("hubstats_labels_pull_requests.pull_request_id" => pull_ids)) unless pull_ids.blank? }
 
     scope :with_state, lambda {|state| (where(state: state) unless state == 'all') if state}
 
