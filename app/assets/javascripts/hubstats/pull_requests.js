@@ -4,7 +4,7 @@
 $(document).ready(function() {
   queryParameters = getUrlVars();
   setDefaults(queryParameters);
-  checkedLabels(queryParameters);
+  activeLabels(queryParameters);
   initLabels(queryParameters)
   changeColors();
 
@@ -72,25 +72,17 @@ function setDefaults(queryParameters) {
     $('#desc').addClass('active');
 }
 
-function checkedLabels () {
-  $(".checkbox :checkbox").change(function(e){
-    var labels = '';
-    var checked = $(":checkbox:checked");
-    for (var i = 0; i < checked.length; i++) {
-      var separator = (i == 0 ? '' : ',');
-      labels = labels + separator + checked[i].value;
-    }
-    updateQueryStringParameter(queryParameters,"label",labels);
-  });
-}
-
 function initLabels (queryParameters) {
   if (queryParameters["label"]) {
     var labels = queryParameters["label"].replace('%20',' ').split(',');
 
-    $(":checkbox").each( function() {
-      if ($.inArray( $(this)[0].value , labels ) >= 0) 
-        $(this).prop("checked", true);
+    $("#labels-container .btn-label").each( function() {
+      var color = '#' + $(this).data("color");
+      if ($.inArray( $(this).children().eq(1).data("label") , labels ) >= 0) {
+        $(this).addClass("active");
+        $(this).css('background-color',color);
+        $(this).css("color", isDark($(this).css("background-color")) ? 'white' : 'black');
+      }
     });
   }
 }
@@ -98,8 +90,36 @@ function initLabels (queryParameters) {
 function changeColors () {
   $(".color-label").each( function() {
     var color = '#' + $(this)[0].title;
-
     $(this).css('background-color',color)
-  })
+    $(this).css("color", isDark($(this).css("background-color")) ? 'white' : 'black');
+  });
 
+  $("#labels-container .btn-label").each( function() {
+    var color = '#' + $(this).data("color");
+    $(this).children().eq(0).css('background-color',color);
+  });
+
+}
+
+function activeLabels () {
+  $("#labels-container .btn-label").click(function () {
+    $(this).toggleClass("active");
+
+    var labels = '';
+    $("#labels-container").children().each( function() {
+      if ($(this).hasClass('active')) {
+        var separator = (labels.length == 0 ? '' : ',');
+        labels = labels + separator + $(this).children().eq(1).data('label');
+      }
+    });
+    updateQueryStringParameter(queryParameters,"label",labels);
+  });
+}
+
+function isDark( color ) {
+    var match = /rgb\((\d+).*?(\d+).*?(\d+)\)/.exec(color);
+    return parseFloat(match[1])
+         + parseFloat(match[2])
+         + parseFloat(match[3])
+           < 3 * 256 / 2;
 }

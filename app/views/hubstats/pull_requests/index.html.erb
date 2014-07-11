@@ -13,14 +13,15 @@
 
       <hr>
       <h4> Labels </h4>
-      <% @labels.each do |label| %>
-        <div class="checkbox">
-          <label>
-            <input type="checkbox" value= "<%=label.name%>"> <%= label.name %> 
-            <span class="badge pull-right"><%= label.pull_request_count %></span>
-          </label>
-        </div>
-      <% end %>
+      <div id="labels-container">
+        <% @labels.each do |label| %>
+          <a class="btn btn-label btn-sm" data-color="<%= label.color %>" >
+            <span class="circle-label pull-left"></span>
+            <span class="label-text pull-left" data-label="<%=label.name%>"> <%= label.name %> </span>
+            <span class="pull-right"> <%= label.pull_request_count %> </span>
+          </a>
+        <% end %>
+      </div>
 
     </div>
     <div class="col col-lg-9 col-md-9 col-sm-9">
