@@ -1,6 +1,8 @@
 module Hubstats
   class User < ActiveRecord::Base
 
+    scope :with_id, lambda {|user_id| where(id: user_id.split(',')) if user_id}
+
     scope :pull_requests_count, lambda { |time|
       select("hubstats_users.id as user_id")
       .select("COUNT(DISTINCT hubstats_pull_requests.id) AS pull_request_count")
@@ -34,6 +36,14 @@ module Hubstats
       .group("hubstats_users.id")
     }
 
+    scope :averages, lambda { |time|
+      select("hubstats_users.id as user_id")
+      .select("ROUND(IFNULL(AVG(hubstats_pull_requests.additions),0)) AS average_additions")
+      .select("ROUND(IFNULL(AVG(hubstats_pull_requests.deletions),0)) AS average_deletions")
+      .joins("LEFT JOIN hubstats_pull_requests ON hubstats_pull_requests.user_id = hubstats_users.id AND hubstats_pull_requests.closed_at > '#{time}'")
+      .group("hubstats_users.id")
+    }
+
     scope :pull_and_comment_count, lambda { |time|
       select("hubstats_users.*, pull_request_count, comment_count")
       .joins("LEFT JOIN (#{pull_requests_count(time).to_sql}) AS pull_requests ON pull_requests.user_id = hubstats_users.id")
@@ -42,9 +52,17 @@ module Hubstats
     }
 
     scope :pull_and_comment_count_by_repo, lambda { |time,repo_id|
-            select("hubstats_users.*, pull_request_count, comment_count")
+      select("hubstats_users.*, pull_request_count, comment_count")
       .joins("LEFT JOIN (#{pull_requests_count_by_repo(time,repo_id).to_sql}) AS pull_requests ON pull_requests.user_id = hubstats_users.id")
       .joins("LEFT JOIN (#{comments_count_by_repo(time,repo_id).to_sql}) AS comments ON comments.user_id = hubstats_users.id")
+      .group("hubstats_users.id")
+    }
+
+    scope :with_all_metrics, lambda { |time|
+      select("hubstats_users.*, pull_request_count, comment_count, average_additions, average_deletions")
+      .joins("LEFT JOIN (#{averages(time).to_sql}) AS averages ON averages.user_id = hubstats_users.id")
+      .joins("LEFT JOIN (#{pull_requests_count(time).to_sql}) AS pull_requests ON pull_requests.user_id = hubstats_users.id")
+      .joins("LEFT JOIN (#{comments_count(time).to_sql}) AS comments ON comments.user_id = hubstats_users.id")
       .group("hubstats_users.id")
     }
 
@@ -77,6 +95,20 @@ module Hubstats
         pull_and_comment_count_by_repo(time,repo_id).weighted_sort
       else
         pull_and_comment_count(time).weighted_sort
+      end
+    end
+
+    def self.custom_order(order)
+
+      case order
+      when 'largest-pulls'
+        order("average_additions = 0, average_additions DESC")
+      when 'most-active'
+        order("(pull_request_count)*2 + (comment_count) DESC")
+      when 'least-active'
+        order("(pull_request_count)*2 + (comment_count) ASC")
+      else
+        order("average_additions = 0, average_additions ASC")
       end
     end
 

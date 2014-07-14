@@ -28,7 +28,17 @@
   font-size: 28px;
 }
 
-.single-comment > .user-image, .single-pull > .user-image {
+.text-large {
+  font-size: 32px;
+}
+.stat-label {
+  display: inline-block;
+}
+
+.single-comment > .user-image, 
+.single-pull > .user-image, 
+.single-user > .user-image,
+.single-user > .user-image-small {
   padding: 5px;
 }
 
@@ -37,17 +47,22 @@
   height: 55px;
 }
 
-.pulls, .comments {
+.user-image-small > img{
+  width: 45px;
+  height: 45px;
+}
+
+.pulls, .comments, .users {
   margin: 15px 0px 15px 0px;
   border: 1px solid #ccc;
   border-radius: 5px;
 }
 
-.pulls > .col, .comments > .col {
+.pulls > .col, .comments > .col, .users > .col{
   padding: 0px 5px 0px 5px;
 }
 
-.row .single-pull, .row .single-comment {
+.row .single-pull, .row .single-comment, .row .single-user{
   padding:5px;
   margin: 0px;
   border-bottom: 1px solid #ccc;
@@ -58,10 +73,11 @@
   margin-bottom: 5px;
 }
 
-.single-pull > .pull-info {
+.single-pull > .pull-info, .single-user > .user-info {
   padding: 0px;
 }
-.pull-info > h4 {
+
+.pull-info > h4, .user-info > h4 {
   margin: 0px;
 }
 
@@ -72,3 +88,6 @@
 .push-down-farther {
  margin-top: 15px;
 }
+
+.subtle:hover {
+  text-decoration: none;

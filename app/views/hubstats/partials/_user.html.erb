@@ -1,0 +1,42 @@
+<div class="row single-user">
+  <div class="user-image col-lg-1 col-md-1 col-sm-1" >
+    <img src= <%= user.avatar_url%> alt= <%= user.login %> >
+  </div>
+  <div class="user-info col-lg-3 col-md-3 col-sm-3">
+    <h4> 
+      <%= link_to user.login, user_path(user) %>
+    </h4>
+    <br>
+    <h4>
+      <a class="subtle" href=<%= user.html_url %> > 
+        <span class="octicon octicon-mark-github"></span>
+        <span class="octicon octicon-logo-github"></span> 
+      </a>
+    </h4>
+  </div>
+  <div class="col-lg-2 col-md-2 col-sm-2">
+    <div class="push-down pull-right">
+      <span class="text-large"><%= user.pull_request_count %></span>
+      <span class="mega-octicon octicon-git-pull-request"></span>
+    </div>
+  </div>
+  <div class="col-lg-2 col-md-2 col-sm-2">
+    <div class="push-down pull-right">
+      <span class="text-large"><%= user.comment_count %></span>
+      <span class="mega-octicon octicon-comment"></span>
+    </div>
+  </div>
+  <div class="col-lg-2 col-md-2 col-sm-2">
+    <div class="push-down pull-right">
+      <span class="text-large"><%= user.average_additions %></span>
+      <span class="mega-octicon octicon-plus"></span>
+    </div>
+  </div>
+  <div class="col-lg-2 col-md-2 col-sm-2">
+    <div class="push-down pull-right">
+      <span class="text-large"><%= user.average_deletions %></span>
+      <span class="mega-octicon octicon-dash"></span>
+    </div>
+  </div>
+
+</div>

@@ -5,7 +5,7 @@
   margin-bottom: 2px;
 }
 
-.btn-label:hover {
+.btn-label:hover{
   color: #000000;
   background-color: #EEEEEE;
 }
@@ -13,6 +13,7 @@
 .btn-label.active {
   box-shadow: none;
 }
+
 
 .circle-label {
   width: 5px;
