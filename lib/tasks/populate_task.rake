@@ -69,6 +69,11 @@ namespace :hubstats do
       Hubstats::GithubAPI.update_labels
     end
 
+    desc "deletes WebHook for all repos"
+    task :delete_hooks => :environment do
+      Hubstats::GithubAPI.delete_hooks
+    end
+
     def repo_checker(args)
       raise ArgumentError, "Must be called with repo argument. [:org/:repo]" if args.nil?
       if args.is_a? String

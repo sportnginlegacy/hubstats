@@ -99,6 +99,19 @@ module Hubstats
       end
     end
 
+    def self.delete_hooks
+      puts "deleting hooks"
+      Hubstats::Repo.find_each do |repo|
+        count = 0
+        Hubstats::GithubAPI.client.hooks(repo.full_name).each do |hook|
+          if hook[:config][:url] == Hubstats.config.webhook_endpoint
+            count = count + 1
+            Hubstats::GithubAPI.client.remove_hook(repo.full_name, hook[:id])
+          end
+        end
+        puts "deleted #{count} hooks from #{repo.full_name}"
+      end
+    end
     def self.wait_limit(grab_size,rate_limit)
       if rate_limit.remaining < grab_size
         puts "Hit Github rate limit, waiting #{Time.at(rate_limit.resets_in).utc.strftime("%H:%M:%S")} to get more"
