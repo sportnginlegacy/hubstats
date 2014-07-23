@@ -40,7 +40,7 @@ module Hubstats
     end
 
     def add_labels(labels)
-      labels.map!{|label| Hubstats::Label.where(name: label.name).first}
+      labels.map!{|v| Hubstats::Label.where(name: v.name).first}
       self.labels = labels
     end
 

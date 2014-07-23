@@ -111,12 +111,6 @@ module Hubstats
       end
     end
 
-    def self.get_labels(repo_name, pull_request_number)
-      issue = Hubstats::GithubAPI.client.issue(repo_name, pull_request_number)
-      issue[:labels]
-    end
-
-
     def self.wait_limit(grab_size,rate_limit)
       if rate_limit.remaining < grab_size
         puts "Hit Github rate limit, waiting #{Time.at(rate_limit.resets_in).utc.strftime("%H:%M:%S")} to get more"
