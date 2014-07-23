@@ -44,6 +44,7 @@ namespace :hubstats do
 
     desc "Pull repos from Github save to database"
     task :all => :environment do
+
       get_repos.each do |repo|
         repo = Hubstats::Repo.create_or_update(repo)
         Hubstats::GithubAPI.create_hook(repo)
@@ -52,6 +53,7 @@ namespace :hubstats do
         Rake::Task["hubstats:populate:pulls"].execute({repo: repo})
         Rake::Task["hubstats:populate:comments"].execute({repo: repo})
       end
+
       puts "Finished with initial population, grabing extra info for pull requests"
       Rake::Task["hubstats:populate:update_labels"].execute
       Rake::Task["hubstats:populate:update_pulls"].execute
@@ -78,11 +80,11 @@ namespace :hubstats do
 
     def get_repos
       client = Hubstats::GithubAPI.client
-      if OCTOCONF.has_key?(:org_name)
-        repos = client.organization_repositories(OCTOCONF[:org_name])
+      if Hubstats.config.github_config.has_key?("org_name")
+        repos = client.organization_repositories(Hubstats.config.github_config["org_name"])
       else 
         repos = []
-        OCTOCONF[:repo_list].each do |repo|
+        Hubstats.config.github_config["repo_list"].each do |repo|
           repos << client.repository(repo)
         end
       end

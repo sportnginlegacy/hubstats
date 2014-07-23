@@ -1,8 +1,11 @@
-auth: # Must include either access_token || (client_id && client_secret)
+github_auth: # Must include either access_token || (client_id && client_secret)
   # access_token: <40 CHARACTER ACCESS TOKEN >
   # client_id: <CLIENT ID>
   # client_secret: <CLIENT SECRET>
 
-config: # Must include either org_name || repo_list
+github_config: # Must include either org_name || repo_list
   # org_name: <ORGANIZATION NAME>
   # repo_list: [<ARRAY OF REPOS>]
+
+webhook_secret: #<40 CHARACTER ACCESS TOKEN >
+webhook_endpoint: #<url of webhook enpoint>

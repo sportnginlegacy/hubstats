@@ -3,7 +3,7 @@ module Hubstats
     include HubHelper
 
     cattr_accessor :auth_info
-
+    
     def self.configure(options={})
       @@auth_info = {}
       if access_token = ENV['GITHUB_API_TOKEN'] || options["access_token"]
@@ -37,8 +37,9 @@ module Hubstats
           repo.full_name,
           'web',
           {
-            :url => 'https://commissioner.sportngin.com/hubstats/handler',
-            :content_type => 'json'
+            :url => Hubstats.config.webhook_endpoint,
+            :content_type => 'json',
+            :secret => Hubstats.config.webhook_secret
           },
           {
             :events => [
