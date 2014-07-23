@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    hubstats (0.0.16)
+    hubstats (0.0.18)
       octokit (~> 3.2)
       rails (~> 3.2.18)
       select2-rails (~> 3.5)
