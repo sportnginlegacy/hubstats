@@ -34,6 +34,6 @@ module Hubstats
   ]
 
   def self.config
-    @config ||= Hubstats::Config.parse
+    @@config ||= Hubstats::Config.parse
   end
 end
