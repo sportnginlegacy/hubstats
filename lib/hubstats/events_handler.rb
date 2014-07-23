@@ -19,7 +19,7 @@ module Hubstats
       pull_request[:repository] = payload[:repository]
       new_pull = Hubstats::PullRequest.create_or_update(pull_request.with_indifferent_access)
 
-      new_pull.add_labels(HubStats::GitHubAPI.get_labels(Hubstats::Repo.where(id: new_pull.repo_id).first,new_pull.number ))
+      new_pull.add_labels(Hubstats::GithubAPI.get_labels(Hubstats::Repo.where(id: new_pull.repo_id).first, new_pull.number ))
     end
 
     def comment_processor(payload,kind)

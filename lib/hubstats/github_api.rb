@@ -111,8 +111,10 @@ module Hubstats
       end
     end
 
-    def self.get_labels(repo_name, pull_request_number)
-      issue = Hubstats::GithubAPI.client.issue(repo_name, pull_request_number)
+    def self.get_labels(repo, pull_request_number)
+      puts repo.inspect
+      puts pull_request_number
+      issue = Hubstats::GithubAPI.client.issue(repo.full_name, pull_request_number)
       issue[:labels]
     end
 
