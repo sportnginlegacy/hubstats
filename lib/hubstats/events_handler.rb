@@ -29,7 +29,9 @@ module Hubstats
       comment[:repo_id] = payload[:repository][:id]
       comment[:pull_number] = get_pull_number(payload)
 
-      Hubstats::Comment.create_or_update(comment.with_indifferent_access)
+      comment = Hubstats::Comment.create_or_update(comment.with_indifferent_access)
+      update_labels_from_comment(payload) if (kind == "Issue")
+      comment
     end
 
     #grabs the number off of anyone of the various places it can be
@@ -45,5 +47,13 @@ module Hubstats
       end
     end
 
+    def update_labels_from_comment(payload)
+      repo_id = payload[:repository][:id]
+      number = payload[:issue][:number]
+      labels = payload[:issue][:labels]
+      pull = Hubstats::PullRequest.belonging_to_repo(repo_id).where(number: number).first
+      pull.add_labels(labels)
+    end
+    
   end
 end

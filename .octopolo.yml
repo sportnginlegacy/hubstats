@@ -1,0 +1,8 @@
+deploy_branch: master
+github_repo: sportngin/hubstats
+user_notifications: elliothursh
+
+deployable_label: true
+
+plugins:
+- sportngin_octopolo_templates
