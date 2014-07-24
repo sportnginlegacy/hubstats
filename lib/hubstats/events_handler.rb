@@ -19,9 +19,7 @@ module Hubstats
       pull_request[:repository] = payload[:repository]
       new_pull = Hubstats::PullRequest.create_or_update(pull_request.with_indifferent_access)
       repo_name = Hubstats::Repo.where(id: new_pull.repo_id).first.full_name
-      puts repo_name.inspect
       labels = Hubstats::GithubAPI.get_labels(repo_name, new_pull.number )
-      puts labels.inspect
       new_pull.add_labels(labels)
     end
 
