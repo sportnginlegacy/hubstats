@@ -1,6 +1,6 @@
 deploy_branch: master
 github_repo: sportngin/hubstats
-user_notifications: tst-automation
+user_notifications: elliothursh
 
 deployable_label: true
 
