@@ -32,3 +32,5 @@ Hubstats needs to know what repos for it to watch. You can set it to watch eithe
   Add 'mount Hubstats::Engine => "/hubstats"' to your routes file
 
 This project rocks and uses MIT-LICENSE.
+
+
