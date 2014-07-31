@@ -2,19 +2,19 @@
 
   <div class="row">
     <h1 class="title text-center"><a href=<%=@repo.html_url%>> <%= @repo.name.titleize %> </a></h1>
-    <%= render 'hubstats/metrics/quick_stats' %>
+    <%= render 'hubstats/partials/quick_stats' %>
   </div>
 
   <div class="row">
 
     <div class="col col-lg-6">
       <h3> Pull Requests</h3>       
-      <%= render partial: 'hubstats/partials/pull-condensed', collection: @pull_requests, as: :pull %>
+      <%= render 'hubstats/tables/pulls-condensed'%>
     </div>
 
     <div class="col col-lg-6">
       <h3> Active Users </h3>
-      <%= render partial: 'hubstats/partials/user-condensed', collection: @users, as: :user %>
+      <%= render 'hubstats/tables/users-condensed' %>
     </div>
 
   </div>

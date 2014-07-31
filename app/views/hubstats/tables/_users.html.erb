@@ -1,0 +1,7 @@
+<% if @users.length > 0 %>
+  <div class="users">
+    <%= render partial: 'hubstats/partials/user', collection: @users, as: :user %>
+  </div>
+<% else %>
+  <p> No users to show </p>
+<% end %>

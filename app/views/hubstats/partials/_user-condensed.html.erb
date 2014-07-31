@@ -6,12 +6,6 @@
     <h4> 
       <%= link_to user.login, user_path(user) %>
     </h4>
-    <h4>
-      <a class="subtle" href=<%= user.html_url %> > 
-        <span class="octicon octicon-mark-github"></span>
-        <span class="octicon octicon-logo-github"></span> 
-      </a>
-    </h4>
   </div>
   <div class="col-lg-3 col-lg-offset-1 col-md-3 col-sm-3 col-xs-3">
     <div class="pull-right">
@@ -23,6 +17,14 @@
     <div class="pull-right">
       <span class="text-large"><%= user.comment_count %></span>
       <span class="mega-octicon octicon-comment"></span>
+    </div>
+  </div>
+  <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+    <div class="pull-right">
+      <a class="subtle" href=<%= user.html_url %> > 
+        <span class="octicon octicon-mark-github"></span>
+      </a>
+      </span>
     </div>
   </div>
 </div>
