@@ -3,19 +3,22 @@
     <%= render 'hubstats/metrics/quick_stats' %>
   </div>
   <div class="row">
-    <div class="col col-lg-5">
-      <h3> Recently Active Repositories </h3>
-      <%= render 'hubstats/metrics/repos_table' %>
+
+    <div class="col col-lg-6">
+      <h3> Active Repositories </h3>       
+      <%= render partial: 'hubstats/partials/repo', collection: @repos, as: :repo %>
       <% if @repo_count > 20 %>
         <p class="pull-right"><%= link_to "View All", repos_path %></p>
       <% end %>
     </div>
-    <div class="col col-lg-5 col-lg-offset-2">
-      <h3> Most Active Users </h3>
-      <%= render 'hubstats/metrics/users_table' %>
+
+    <div class="col col-lg-6">
+      <h3> Active Users </h3>
+      <%= render partial: 'hubstats/partials/user-condensed', collection: @users, as: :user %>
       <% if @user_count > 20 %>
         <p class="pull-right"><%= link_to "View All", users_path %></p>
       <% end %>
     </div>
+    
   </div>
 </div>

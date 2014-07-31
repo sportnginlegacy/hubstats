@@ -1,0 +1,18 @@
+<div class="row single-repo">
+  <div class="repo-image-small col-lg-1 col-md-1 col-sm-1 col-xs-2" >
+    <span class="repo-octicon-small mega-octicon octicon-repo"></span>
+
+  </div>
+  <div class="repo-info col-lg-10 col-md-10 col-sm-10 col-xs-8">
+    <h4> 
+      <%= link_to repo.name, repo_path(repo)%>
+    </h4>
+    updated <%= distance_of_time_in_words(DateTime.now,repo.updated_at) %> ago
+  </div>
+  <div class="repo-image-small col-lg-1 col-md-1 col-sm-1 col-xs-2" >
+    <a class="subtle" href=<%= repo.html_url %> > 
+      <span class="repo-octicon-small mega-octicon octicon-mark-github"></span>
+    </a>
+  </div>
+
+</div>

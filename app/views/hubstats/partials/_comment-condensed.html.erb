@@ -1,9 +1,9 @@
 <div class="row single-comment">
-  <div class="user-image col-lg-1 col-md-1 col-sm-1">
+  <div class="user-image-small col-lg-1 col-md-1 col-sm-2 col-xs-2">
     <img src= <%= comment.user.avatar_url%> alt= <%= comment.user.login %> >
   </div>
 
-  <div class="comment-info col-lg-10 col-md-10 col-sm-10">
+  <div class="comment-info col-lg-10 col-md-10 col-sm-8 col-xs-8">
     <%= link_to comment.user.login, user_path(comment.user) %> commented
     <%= "#{time_ago_in_words(comment.created_at)} ago "%> <br>
     <div class="well">
@@ -11,7 +11,7 @@
     </div>
   </div>
 
-  <div class="user-image col-lg-1 col-md-1 col-sm-1 col-xs-1">
+  <div class="user-image col-lg-1 col-md-1 col-sm-2 col-xs-2">
     <a class="subtle pull-right" href=<%= comment.html_url %> > 
       <span class="octicon octicon-mark-github"></span>
     </a>

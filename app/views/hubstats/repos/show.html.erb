@@ -1,18 +1,22 @@
 <div class="container" id="repo">
+
   <div class="row">
-    <h1 class="title text-center"> <%= @repo.name.titleize %> </h1>
+    <h1 class="title text-center"><a href=<%=@repo.html_url%>> <%= @repo.name.titleize %> </a></h1>
     <%= render 'hubstats/metrics/quick_stats' %>
   </div>
+
   <div class="row">
-    <div class="col col-lg-5">
-      <h3> Pull Requests since <%= time_ago_in_words(@timespan) %> ago</h3>
-       <%= render 'hubstats/metrics/pulls_table' %>
+
+    <div class="col col-lg-6">
+      <h3> Pull Requests</h3>       
+      <%= render partial: 'hubstats/partials/pull-condensed', collection: @pull_requests, as: :pull %>
     </div>
-    <div class="col col-lg-5 col-lg-offset-2">
-      <div class="row">
-        <h3> Most Active Users </h3>
-        <%= render 'hubstats/metrics/users_table' %>
-      </div>
+
+    <div class="col col-lg-6">
+      <h3> Active Users </h3>
+      <%= render partial: 'hubstats/partials/user-condensed', collection: @users, as: :user %>
     </div>
+
   </div>
+
 </div>

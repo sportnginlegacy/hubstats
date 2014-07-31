@@ -31,38 +31,59 @@
 .text-large {
   font-size: 32px;
 }
+
+.text-small {
+  font-size: 12px;
+  margin: 0px;
+}
 .stat-label {
   display: inline-block;
 }
 
 .single-comment > .user-image, 
+.single-comment > .user-image-small,
 .single-pull > .user-image, 
+.single-pull > .user-image-small,
 .single-user > .user-image,
 .single-user > .user-image-small {
   padding: 5px;
 }
 
-.user-image > img{
+
+.user-image > img,
+.repo-image {
   width: 55px;
   height: 55px;
 }
 
-.user-image-small > img{
-  width: 45px;
-  height: 45px;
+.repo-octicon-small {
+  font-size: 36px !important;
 }
 
-.pulls, .comments, .users {
+.repo-image-small {
+  padding: 5px !important;
+}
+
+.user-image-small > img,
+.repo-image-small > .repo-octicon-small{
+  width: 36px;
+  height: 36px;
+}
+
+.pulls, .comments, .users, .repos {
   margin: 15px 0px 15px 0px;
   border: 1px solid #ccc;
   border-radius: 5px;
 }
 
-.pulls > .col, .comments > .col, .users > .col{
+.pulls > .col, .comments > .col, .users > .col, .repos > .col{
   padding: 0px 5px 0px 5px;
 }
 
-.row .single-pull, .row .single-comment, .row .single-user{
+.row .single-pull,
+.row .single-comment,
+.row .single-user,
+.row .single-repo {
   padding:5px;
   margin: 0px;
   border-bottom: 1px solid #ccc;
@@ -73,11 +94,15 @@
   margin-bottom: 5px;
 }
 
-.single-pull > .pull-info, .single-user > .user-info {
+.single-pull > .pull-info,
+.single-user > .user-info,
+.single-repo > .repo-info {
   padding: 0px;
 }
 
-.pull-info > h4, .user-info > h4 {
+.pull-info > h4,
+.user-info > h4,
+.repo-info > h4 {
   margin: 0px;
 }
 
