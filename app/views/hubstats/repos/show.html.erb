@@ -10,6 +10,9 @@
     <div class="col col-lg-6">
       <h3> Pull Requests</h3>       
       <%= render 'hubstats/tables/pulls-condensed'%>
+      <% if @pull_count > 20 %>
+        <p class="pull-right"><%= link_to "View All", pulls_path(:repos => @repo.id) %></p>
+      <% end %>
     </div>
 
     <div class="col col-lg-6">

@@ -9,7 +9,7 @@ module Hubstats
       elsif params[:id] ## 
         @users = Hubstats::User.where(id: params[:id].split(",")).order("login ASC")
       else
-        @users = Hubstats::User.with_all_metrics(@timespan).with_id(params[:users]).custom_order(params[:order]).paginate(:page => params[:page], :per_page => 15)
+        @users = Hubstats::User.only_active.with_all_metrics(@timespan).with_id(params[:users]).custom_order(params[:order]).paginate(:page => params[:page], :per_page => 15)
       end
       
       respond_to do |format|
@@ -20,16 +20,18 @@ module Hubstats
 
     def show
       @user = Hubstats::User.where(login: params[:id]).first
-      @pull_requests = Hubstats::PullRequest.belonging_to_user(@user.id).closed_since(@timespan).order("closed_at DESC").limit(20)
+      @pull_requests = Hubstats::PullRequest.belonging_to_user(@user.id).updated_since(@timespan).order("updated_at DESC").limit(20)
       @comments = Hubstats::Comment.belonging_to_user(@user.id).created_since(@timespan).order("created_at DESC").limit(20)
       @review = Hubstats::User.pulls_reviewed_count(@timespan).where(login: params[:id]).first
+      @pull_count = Hubstats::PullRequest.belonging_to_user(@user.id).updated_since(@timespan).count(:all)
+      @comment_count = Hubstats::Comment.belonging_to_user(@user.id).created_since(@timespan).count(:all)
       @stats = {
-        pull_count: Hubstats::PullRequest.belonging_to_user(@user.id).closed_since(@timespan).count(:all),
-        comment_count: Hubstats::Comment.belonging_to_user(@user.id).created_since(@timespan).count(:all),
+        pull_count: @pull_count,
+        comment_count: @comment_count,
         review_count: @review ? @review.reviews_count : 0,
-        avg_additions: Hubstats::PullRequest.closed_since(@timespan).belonging_to_user(@user.id).average(:additions).to_i,
-        avg_deletions: Hubstats::PullRequest.closed_since(@timespan).belonging_to_user(@user.id).average(:deletions).to_i,
-        net_additions: Hubstats::PullRequest.closed_since(@timespan).belonging_to_user(@user.id).sum(:additions).to_i - Hubstats::PullRequest.closed_since(@timespan).belonging_to_user(@user.id).sum(:deletions).to_i
+        avg_additions: Hubstats::PullRequest.updated_since(@timespan).belonging_to_user(@user.id).average(:additions).to_i,
+        avg_deletions: Hubstats::PullRequest.updated_since(@timespan).belonging_to_user(@user.id).average(:deletions).to_i,
+        net_additions: Hubstats::PullRequest.updated_since(@timespan).belonging_to_user(@user.id).sum(:additions).to_i - Hubstats::PullRequest.updated_since(@timespan).belonging_to_user(@user.id).sum(:deletions).to_i
       }
     end
 
