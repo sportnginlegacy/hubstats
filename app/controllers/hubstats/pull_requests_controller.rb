@@ -27,8 +27,6 @@ module Hubstats
       @comments = Hubstats::Comment.belonging_to_pull_request(params[:id]).includes(:user).created_since(@timespan)
       @stats = {
         comment_count: @comments.count(:all),
-        avg_additions: @pull_request.additions.to_i,
-        avg_deletions: @pull_request.deletions.to_i,
         net_additions: @pull_request.additions.to_i - @pull_request.deletions.to_i
       }
     end
