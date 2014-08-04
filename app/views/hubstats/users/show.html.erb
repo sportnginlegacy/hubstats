@@ -1,18 +1,18 @@
 <div class="container" id="repo">
   <div class="row">
-    <h1 class="title text-center"> <%= @user.login %> </h1>
-    <%= render 'hubstats/metrics/quick_stats' %>
+    <h1 class="title text-center"><a href=<%=@user.html_url%>> <%= @user.login %></a> </h1>
+    <%= render 'hubstats/partials/quick_stats' %>
   </div>
   <div class="row">
-    <div class="col-lg-8 col-lg-offset-2 col-md-8 col-md-offset-2">
+
+    <div class="col-lg-6 col-md-5 col-sm-5 col-xs-5">
+      <h3> Pull Requests</h3> 
+      <%= render 'hubstats/tables/pulls-condensed' %>
+    </div>
+
+    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
       <h3> Comments </h3>
-      <% if @comments.length > 0 %>
-        <div class="comments">
-          <%= render partial: 'hubstats/partials/comment', collection: @comments, as: :comment %>
-        </div>
-      <% else %>
-        <p> No comments to show </p>
-      <% end %>
+      <%= render 'hubstats/tables/comments-condensed' %>
     </div>
   </div>
 </div>

@@ -24,9 +24,9 @@
         </label>
       </div>
 
-            <div class="users">
-        <%= render partial: 'hubstats/partials/user', collection: @users, as: :user %>
-      </div>
+  
+      <%= render 'hubstats/tables/users' %>
+
       <div class="text-center">
         <%= will_paginate @users, renderer: BootstrapPagination::Rails %>
       </div>

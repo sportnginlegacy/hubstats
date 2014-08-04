@@ -1,0 +1,8 @@
+<% if @pull_requests.length > 0 %>
+  <div class="pulls">
+    <%= render partial: 'hubstats/partials/pull', collection: @pull_requests, as: :pull %>
+  </div>
+<% else %>
+  <p> No pull requests to show </p>
+<% end %>
+

@@ -21,20 +21,12 @@ module Hubstats
         .paginate(:page => params[:page], :per_page => 15)
     end 
 
-    def repo_index
-      @repo = Hubstats::Repo.where(name: params[:repo]).first
-      @pull_requests = Hubstats::PullRequest.belonging_to_repo(@repo.id).closed_since(@timespan).order("closed_at DESC")
-    end
-
     def show
       @repo = Hubstats::Repo.where(name: params[:repo]).first
       @pull_request = Hubstats::PullRequest.belonging_to_repo(@repo.id).where(id: params[:id]).first
       @comments = Hubstats::Comment.belonging_to_pull_request(params[:id]).includes(:user).created_since(@timespan)
       @stats = {
-        github: @pull_request.html_url,
         comment_count: @comments.count(:all),
-        additions: @pull_request.additions.to_i,
-        deletions: @pull_request.deletions.to_i,
         net_additions: @pull_request.additions.to_i - @pull_request.deletions.to_i
       }
     end
