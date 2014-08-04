@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
   s.description = "Github Statistics"
 
   s.files         = `git ls-files -z`.split("\x0")
-  s.test_files    = spec.files.grep(%r{^(test|spec|features)/})
+  s.test_files    = s.files.grep(%r{^(test|spec|features)/})
 
   s.add_dependency "rails", "~> 3.2.18"
   s.add_dependency "octokit", "~> 3.2"
