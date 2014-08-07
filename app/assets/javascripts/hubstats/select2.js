@@ -6,7 +6,7 @@ $(document).ready(function() {
     placeholder: "Repositories",
     multiple: true,
     ajax: {
-      url: "./repos",
+      url: getPath("repo"),
       dataType: 'json',
       quietMillis: 100,
       data: function (term) {
@@ -27,7 +27,7 @@ $(document).ready(function() {
     },
     initSelection: function(element, callback) {
       if (reposIDs !== "") {
-        $.ajax("./repos", {
+        $.ajax(getPath("repo"), {
           data: { id: reposIDs },
           dataType: "json"
         }).done(function (data) { callback(
@@ -48,7 +48,7 @@ $(document).ready(function() {
     placeholder: "Users",
     multiple: true,
     ajax: {
-      url: "./users",
+      url: getPath("user"),
       dataType: 'json',
       quietMillis: 100,
       data: function (term) {
@@ -69,7 +69,7 @@ $(document).ready(function() {
     },
     initSelection: function(element, callback) {
       if (usersIDs !== "") {
-        $.ajax("./users", {
+        $.ajax( getPath("user"), {
           data: { id: usersIDs },
           dataType: "json"
         }).done(function (data) { callback(
@@ -84,5 +84,12 @@ $(document).ready(function() {
       }
     } 
   }).select2('val', []);
-
 });
+
+
+function getPath (model) {
+  if (model == 'user') {
+    return $("#brand").attr('ajax_user_path');}
+  else if (model == 'repo')
+    return $("#brand").attr('ajax_repo_path');
+};
