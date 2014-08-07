@@ -6,19 +6,26 @@ module Hubstats
     def index
       URI.decode(params[:label]) if params[:label]
 
-      @pull_requests = Hubstats::PullRequest
+      pull_ids = Hubstats::PullRequest
         .belonging_to_users(params[:users])
         .belonging_to_repos(params[:repos])
         .with_state(params[:state])
-        .state_based_order(@timespan,params[:state],params[:order])
-
-      pull_ids =@pull_requests.map(&:id)
+        .map(&:id)
       
       @labels = Hubstats::Label.with_a_pull_request(pull_ids).order("pull_request_count DESC")
-      @pull_requests = @pull_requests
-        .includes(:user).includes(:repo)
-        .with_label(params[:label]).distinct
+
+      @pull_requests = Hubstats::PullRequest.includes(:user).includes(:repo)
+        .belonging_to_users(params[:users]).belonging_to_repos(params[:repos])
+        .group_by(params[:group]).with_label(params[:label])
+        .state_based_order(@timespan,params[:state],params[:order])
         .paginate(:page => params[:page], :per_page => 15)
+
+      if params[:group] == 'user'
+        @groups = @pull_requests.to_a.group_by(&:user_name)
+      elsif params[:group] == 'repo'
+        @groups = @pull_requests.to_a.group_by(&:repo_name)
+      end
+
     end 
 
     def show

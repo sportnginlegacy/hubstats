@@ -47,11 +47,16 @@
         </label>
       </div>
 
-      <%= render 'hubstats/tables/pulls' %>
-  
+      <select id="group-by" class="form-control pull-right" style="width: 100px; display: inline; ">
+        <option value="">Group By</option>
+        <option value="user">User</option>
+        <option value="repo">Repo</option>
+      </select>
 
+      <%= render 'hubstats/tables/grouped_pulls' %>
+  
       <div class="text-center">
-        <%= will_paginate @posts, renderer: BootstrapPagination::Rails %>
+        <%= will_paginate @pull_requests, renderer: BootstrapPagination::Rails %>
       </div>
 
     </div>
