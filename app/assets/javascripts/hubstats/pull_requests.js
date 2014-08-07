@@ -81,7 +81,6 @@ function setDefaults(queryParameters) {
 
 function initLabels (queryParameters) {
   if (queryParameters["label"]) {
-    console.log(queryParameters["label"]);
     var labels = queryParameters["label"].split(',');
 
     $("#labels-container .btn-label").each( function() {
