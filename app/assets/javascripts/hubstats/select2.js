@@ -89,7 +89,7 @@ $(document).ready(function() {
 
 function getPath (model) {
   if (model == 'user') {
-    return $("#brand").attr('ajax_user_path');}
+    return $("#brand").attr('data-user-path');}
   else if (model == 'repo')
-    return $("#brand").attr('ajax_repo_path');
+    return $("#brand").attr('data-repo-path');
 };
