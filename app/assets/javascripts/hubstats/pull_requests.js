@@ -16,6 +16,10 @@ $(document).ready(function() {
     updateQueryStringParameter(queryParameters,"order",$(this).attr('id'));
   });
 
+  $("#group-by").on("change", function(){
+    updateQueryStringParameter(queryParameters,"group",$(this)[0].value);
+  });
+
   $("#repos").change(function() {
     var ids = $("#repos").val();
     updateQueryStringParameter(queryParameters,"repos",ids);
@@ -53,7 +57,7 @@ function getUrlVars() {
     for (var i = 0; i < hashes.length; i++) {
       hash = hashes[i].split('=');
       vars.push(hash[0]);
-      vars[hash[0]] = hash[1];
+      vars[hash[0]] = hash[1].replace(/%20/g,' ').replace(/%2C/g,',');
     }
   }
 
@@ -70,11 +74,14 @@ function setDefaults(queryParameters) {
     $('#' + queryParameters["order"]).addClass('active');
   else
     $('#desc').addClass('active');
+
+  if (queryParameters["group"])
+    $('#group-by').val(queryParameters["group"]);
 }
 
 function initLabels (queryParameters) {
   if (queryParameters["label"]) {
-    var labels = queryParameters["label"].replace('%20',' ').split(',');
+    var labels = queryParameters["label"].split(',');
 
     $("#labels-container .btn-label").each( function() {
       var color = '#' + $(this).data("color");

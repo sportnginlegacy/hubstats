@@ -89,6 +89,13 @@
   border-bottom: 1px solid #ccc;
 }
 
+.single-pull.group-header {
+  padding: 10px;
+  background-color: #F5F5F5;
+}
+.group-header > h3{
+  margin: 0px;
+}
 .comment-info > .well {
   word-wrap: break-word;
   padding: 10px;
