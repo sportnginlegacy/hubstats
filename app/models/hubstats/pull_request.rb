@@ -61,7 +61,7 @@ module Hubstats
       elsif group == 'repo'
         with_repo_name.order("repo_name asc")
       else
-        self
+        scoped
       end
     end
 

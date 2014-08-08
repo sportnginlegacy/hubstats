@@ -9,7 +9,7 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand title" href=<%=root_path%>>Hubstats</a>
+        <%= link_to "Hubstats", root_path, {:data => {:repo_path => repos_path(), :user_path => users_path()}, :class => "navbar-brand title", :id =>"brand"} %>
       </div>
 
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
