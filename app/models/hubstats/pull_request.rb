@@ -11,7 +11,6 @@ module Hubstats
     scope :with_state, lambda {|state| (where(state: state) unless state == 'all') if state}
     scope :with_label, lambda { |label_name| ({ :joins => :labels, :conditions => {:hubstats_labels => {name: label_name.split(',')} } }) if label_name }
     scope :distinct, select("DISTINCT hubstats_pull_requests.*")
-    scope :filler, where("1 = 1")
     scope :with_repo_name, select('DISTINCT hubstats_repos.name as repo_name, hubstats_pull_requests.*').joins("LEFT JOIN hubstats_repos ON hubstats_repos.id = hubstats_pull_requests.repo_id")
     scope :with_user_name, select('DISTINCT hubstats_users.login as user_name, hubstats_pull_requests.*').joins("LEFT JOIN hubstats_users ON hubstats_users.id = hubstats_pull_requests.user_id")
 
@@ -62,7 +61,7 @@ module Hubstats
       elsif group == 'repo'
         with_repo_name.order("repo_name asc")
       else
-        filler
+        scoped
       end
     end
 
