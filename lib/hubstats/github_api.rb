@@ -3,7 +3,7 @@ module Hubstats
     include HubHelper
 
     cattr_accessor :auth_info
-    
+
     def self.configure(options={})
       @@auth_info = {}
       if access_token = ENV['GITHUB_API_TOKEN'] || options["access_token"]
@@ -29,6 +29,44 @@ module Hubstats
         last_response.data.each{|v| route(v,kind,repo_name)}.clear
         wait_limit(1,octo.rate_limit)
       end.each{|v| route(v,kind,repo_name)}.clear
+    end
+
+    # Public: Gets repos found in configuration file
+    #
+    # Returns - an array of github repo objects
+    def self.get_repos
+      client = Hubstats::GithubAPI.client
+      if Hubstats.config.github_config.has_key?("org_name")
+        repos = client.organization_repositories(Hubstats.config.github_config["org_name"])
+      else
+        repos = []
+        Hubstats.config.github_config["repo_list"].each do |repo|
+          repos << client.repository(repo)
+        end
+      end
+      repos
+    end
+
+    def self.update_pulls
+      grab_size = 250
+      begin
+        while Hubstats::PullRequest.where(deletions: nil).where(additions: nil).count > 0
+          client = Hubstats::GithubAPI.client
+          incomplete = Hubstats::PullRequest.where(deletions: nil).where(additions: nil).limit(grab_size)
+
+          incomplete.each do |pull|
+            repo = Hubstats::Repo.where(id: pull.repo_id).first
+            pr = client.pull_request(repo.full_name, pull.number)
+            Hubstats::PullRequest.create_or_update(HubHelper.pull_setup(pr))
+          end
+
+          Hubstats::GithubAPI.wait_limit(grab_size,client.rate_limit)
+        end
+        puts "All Pull Requests are up to date"
+      rescue Faraday::ConnectionFailed
+        puts "Connection Timeout, restarting pull request updating"
+        update_pulls
+      end
     end
 
     def self.create_hook(repo)
@@ -61,61 +99,74 @@ module Hubstats
       end
     end
 
-    def self.update_pulls
-      grab_size = 250
+    # Public: Delete webhook from github repository
+    #
+    # repo - a repo github object
+    # old_endpoint - A string of the previous endpoint
+    #
+    # Return - nothing
+    def self.delete_hook(repo, old_endpoint)
       begin
-        while Hubstats::PullRequest.where(deletions: nil).where(additions: nil).count > 0
-          client = Hubstats::GithubAPI.client
-          incomplete = Hubstats::PullRequest.where(deletions: nil).where(additions: nil).limit(grab_size)
-
-          incomplete.each do |pull|
-            repo = Hubstats::Repo.where(id: pull.repo_id).first
-            pr = client.pull_request(repo.full_name, pull.number)
-            Hubstats::PullRequest.create_or_update(HubHelper.pull_setup(pr))
-          end
-
-          Hubstats::GithubAPI.wait_limit(grab_size,client.rate_limit)
-        end
-        puts "All Pull Requests are up to date"
-      rescue Faraday::ConnectionFailed
-        puts "Connection Timeout, restarting pull request updating"
-        update_pulls
-      end
-    end
-
-    def self.update_labels
-      puts "Adding labels to pull requests"
-      Hubstats::Repo.all.each do |repo|
-        Hubstats::GithubAPI.client({:auto_paginate => true}).labels(repo.full_name).each do |label|
-          label_hash = label.to_h if label.respond_to? :to_h
-          label_data = label_hash.slice(*Hubstats::Label.column_names.map(&:to_sym))
-          label = Hubstats::Label.where(:name => label_data[:name]).first_or_create(label_data)
-        end
-
-        Hubstats::Label.all.each do |label|
-          inline(repo.full_name,'issues', labels: label.name, state: 'closed')
-          inline(repo.full_name,'issues', labels: label.name, state: 'open')
-        end
-      end
-    end
-
-    def self.delete_hooks
-      puts "deleting hooks"
-      Hubstats::Repo.find_each do |repo|
-        Hubstats::GithubAPI.client.hooks(repo.full_name).each do |hook|
-          if hook[:config][:url] == Hubstats.config.webhook_endpoint
+        client.hooks(repo.full_name).each do |hook|
+          if hook[:config][:url] == old_endpoint
             Hubstats::GithubAPI.client.remove_hook(repo.full_name, hook[:id])
             puts "successfully deleted hook with id #{hook[:id]} and url #{hook[:config][:url]} from #{repo.full_name}"
           end
         end
+      rescue Octokit::NotFound
+        puts "You don't have sufficient privledges to remove an event hook to #{repo.full_name}"
       end
     end
 
-    def self.get_labels(repo_name, pull_request_number)
-      issue = Hubstats::GithubAPI.client.issue(repo_name, pull_request_number)
-      issue[:labels]
+    # Public: updates a hook if it exists, otherwise creates one
+    #
+    # repo - a repo github object
+    # old_endpoint - A string of the previous endpoint
+    #
+    # Returns - the new hook
+    def self.update_hook(repo, old_endpoint = nil)
+      delete_hook(repo, old_endpoint) unless old_endpoint == nil
+      create_hook(repo)
     end
 
+    def self.get_labels(repo)
+      octo = Hubstats::GithubAPI.client({:auto_paginate => true})
+      labels = octo.labels(repo.full_name)
+      wait_limit(1,octo.rate_limit)
+      labels.each do |label|
+        label_hash = label.to_h if label.respond_to? :to_h
+        label_data = label_hash.slice(*Hubstats::Label.column_names.map(&:to_sym))
+        label = Hubstats::Label.where(:name => label_data[:name]).first_or_create(label_data)
+      end
+      labels
+    end
+
+    def self.add_labels(repo)
+      octo = Hubstats::GithubAPI.client
+      labels = get_labels(repo)
+      labels.each do |label|
+        wait_limit(1,octo.rate_limit)
+        inline(repo.full_name,'issues', labels: label.name, state: 'all')
+      end
+    end
+
+    def self.update_labels
+      Hubstats::Repo.all.each do |repo|
+        Hubstats::GithubAPI.add_labels(repo)
+      end
+       wait_limit(1,octo.rate_limit)
+    end
+
+    # Public: updates a hook if it exists, otherwise creates one
+    #
+    # repo_name - a the repo_name
+    # pull_request_number - the number of the pull_request you want labels of
+    #
+    # Returns - the new hook
+    def self.get_labels_for_pull(repo_name, pull_request_number)
+      issue = client.issue(repo_name, pull_request_number)
+      issue[:labels]
+    end
 
     def self.wait_limit(grab_size,rate_limit)
       if rate_limit.remaining < grab_size

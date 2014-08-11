@@ -7,7 +7,7 @@ namespace :hubstats do
     puts "Running rake db:migrate"
     Rake::Task['db:migrate'].invoke
     puts "Pulling data from Github. This may take a while..."
-    Rake::Task['hubstats:populate:all'].invoke
+    Rake::Task['hubstats:populate:setup_repos'].invoke
   end
 
   desc "Drops the database, then runs rake hubstats:setup"
@@ -15,6 +15,11 @@ namespace :hubstats do
     puts "Droping Database"
     Rake::Task['db:drop'].invoke
     Rake::Task['hubstats:setup'].invoke
+  end
+
+  desc "Updates changes to the config file"
+  task :update => :environment do
+    puts "Updating repos"
   end
 
 end
