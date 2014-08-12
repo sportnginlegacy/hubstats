@@ -22,6 +22,13 @@ module Hubstats
       return ent
     end
 
+    # Public: Gets all of a specific kind from a repo, and processes them.
+    #
+    # repo_name - the name of a repo
+    # kind - a kind of object (pull,comment)
+    # options - any possible option a particular kind of object
+    #
+    # Returns an array of that particular kind
     def self.inline(repo_name, kind, options={})
       path = ["repos",repo_name,kind].join('/')
       octo = client({:auto_paginate => true })
@@ -35,7 +42,6 @@ module Hubstats
     #
     # Returns - an array of github repo objects
     def self.get_repos
-      client = Hubstats::GithubAPI.client
       if Hubstats.config.github_config.has_key?("org_name")
         repos = client.organization_repositories(Hubstats.config.github_config["org_name"])
       else
@@ -47,6 +53,7 @@ module Hubstats
       repos
     end
 
+    # Public: Gets extra information on pull requests, e.g size, additions ...
     def self.update_pulls
       grab_size = 250
       begin
@@ -60,7 +67,7 @@ module Hubstats
             Hubstats::PullRequest.create_or_update(HubHelper.pull_setup(pr))
           end
 
-          Hubstats::GithubAPI.wait_limit(grab_size,client.rate_limit)
+          wait_limit(grab_size,client.rate_limit)
         end
         puts "All Pull Requests are up to date"
       rescue Faraday::ConnectionFailed
@@ -129,43 +136,41 @@ module Hubstats
       create_hook(repo)
     end
 
+    # Public: gets labels for a particular label
+    #
+    # repo - a repo github object
+    #
+    # Returns - all the labels for a given repo
     def self.get_labels(repo)
+      labels = []
       octo = Hubstats::GithubAPI.client({:auto_paginate => true})
-      labels = octo.labels(repo.full_name)
-      wait_limit(1,octo.rate_limit)
-      labels.each do |label|
+      github_labels = octo.labels(repo.full_name)
+      github_labels.each do |label|
         label_hash = label.to_h if label.respond_to? :to_h
         label_data = label_hash.slice(*Hubstats::Label.column_names.map(&:to_sym))
-        label = Hubstats::Label.where(:name => label_data[:name]).first_or_create(label_data)
+        labels << Hubstats::Label.where(:name => label_data[:name]).first_or_create(label_data)
       end
       labels
     end
 
-    def self.add_labels(repo)
-      octo = Hubstats::GithubAPI.client
-      labels = get_labels(repo)
-      labels.each do |label|
-        wait_limit(1,octo.rate_limit)
-        inline(repo.full_name,'issues', labels: label.name, state: 'all')
-      end
-    end
-
-    def self.update_labels
-      Hubstats::Repo.all.each do |repo|
-        Hubstats::GithubAPI.add_labels(repo)
-      end
-       wait_limit(1,octo.rate_limit)
-    end
-
-    # Public: updates a hook if it exists, otherwise creates one
+    # Public: gets the label for a given pull request
     #
     # repo_name - a the repo_name
     # pull_request_number - the number of the pull_request you want labels of
     #
-    # Returns - the new hook
+    # Returns - the issue
     def self.get_labels_for_pull(repo_name, pull_request_number)
       issue = client.issue(repo_name, pull_request_number)
       issue[:labels]
+    end
+
+    # Public: Gets all the labels for a repo, adds all labels to a pull
+    #
+    # repo - the particular repository, you want to add labels to
+    def self.add_labels(repo)
+      get_labels(repo).each do |label|
+        inline(repo.full_name,'issues', labels: label.name, state: 'all')
+      end
     end
 
     def self.wait_limit(grab_size,rate_limit)

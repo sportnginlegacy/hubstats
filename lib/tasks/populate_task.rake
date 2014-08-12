@@ -63,7 +63,7 @@ namespace :hubstats do
     desc "Pull labels from Github saves in database"
     task :labels, [:repo] => :environment do |t, args|
       repo = repo_checker(args[:repo])
-      puts "Adding labels for to " + repo.full_name
+      puts "Getting labels for " + repo.full_name
       Hubstats::GithubAPI.add_labels(repo)
     end
 
@@ -72,14 +72,14 @@ namespace :hubstats do
       Hubstats::GithubAPI.update_pulls
     end
 
-    desc "deletes WebHook for all repos"
+    desc "Updates labels for all repos"
     task :update_labels => :environment do
       Hubstats::Repo.all.each do |repo|
         Hubstats::GithubAPI.add_labels(repo)
       end
     end
 
-    desc "deletes WebHook for all repos"
+    desc "Updates WebHooks for all repos"
     task :update_hooks, [:old_endpoint] => :environment do |t, args|
       Hubstats::Repo.all.each do |repo|
         Hubstats::GithubAPI.update_hook(repo, args[:old_endpoint])
