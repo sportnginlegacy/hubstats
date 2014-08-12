@@ -20,6 +20,8 @@ namespace :hubstats do
       puts "Finished with initial updating, grabing extra info about pull requests"
       Rake::Task["hubstats:populate:update_pulls"].execute
     end
+
+    desc "Pulls in all information for an indivdual repo"
     task :setup_repo, [:repo] => :environment do |t, args|
       repo = args[:repo]
       Hubstats::Repo.create_or_update(repo)

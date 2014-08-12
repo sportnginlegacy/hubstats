@@ -20,6 +20,7 @@ namespace :hubstats do
   desc "Updates changes to the config file"
   task :update => :environment do
     puts "Updating repos"
+    Rake::Task['hubstats:populate:update_repos'].invoke
   end
 
 end
