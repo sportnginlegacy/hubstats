@@ -1,6 +1,37 @@
 namespace :hubstats do 
   namespace :populate do
 
+    desc "Pull repos from Github save to database"
+    task :setup_repos => :environment do
+      Hubstats::GithubAPI.get_repos.each do |repo|
+        Rake::Task["hubstats:populate:setup_repo"].execute({repo: repo})
+      end
+      puts "Finished with initial population, grabing extra info about pull requests"
+      Rake::Task["hubstats:populate:update_pulls"].execute
+    end
+
+    desc "Updates which repos hubstats tracks" 
+    task :update_repos => :environment do
+      Hubstats::GithubAPI.get_repos.each do |repo|
+        unless Hubstats::Repo.where(full_name: repo.full_name).first
+          Rake::Task["hubstats:populate:setup_repo"].execute({repo: repo})
+        end
+      end
+      puts "Finished with initial updating, grabing extra info about pull requests"
+      Rake::Task["hubstats:populate:update_pulls"].execute
+    end
+
+    desc "Pulls in all information for an indivdual repo"
+    task :setup_repo, [:repo] => :environment do |t, args|
+      repo = args[:repo]
+      Hubstats::Repo.create_or_update(repo)
+      Hubstats::GithubAPI.create_hook(repo)
+      Rake::Task["hubstats:populate:users"].execute({repo: repo})
+      Rake::Task["hubstats:populate:pulls"].execute({repo: repo})
+      Rake::Task["hubstats:populate:comments"].execute({repo: repo})
+      Rake::Task["hubstats:populate:labels"].execute({repo: repo})
+    end 
+
     desc "Pull members from Github saves in database"
     task :users, [:repo] => :environment do |t, args|
       repo = repo_checker(args[:repo])
@@ -32,31 +63,8 @@ namespace :hubstats do
     desc "Pull labels from Github saves in database"
     task :labels, [:repo] => :environment do |t, args|
       repo = repo_checker(args[:repo])
-      puts "Adding labels for to " + repo.full_name
-
-      Hubstats::GithubAPI.client({:auto_paginate => true}).labels(repo.full_name).each do |label|
-
-        label_hash = label.to_h if label.respond_to? :to_h
-        label_data = label_hash.slice(*Hubstats::Label.column_names.map(&:to_sym))
-        label = Hubstats::Label.where(:name => label_data[:name]).first_or_create(label_data)
-      end
-    end
-
-    desc "Pull repos from Github save to database"
-    task :all => :environment do
-
-      get_repos.each do |repo|
-        repo = Hubstats::Repo.create_or_update(repo)
-        Hubstats::GithubAPI.create_hook(repo)
-        
-        Rake::Task["hubstats:populate:users"].execute({repo: repo})
-        Rake::Task["hubstats:populate:pulls"].execute({repo: repo})
-        Rake::Task["hubstats:populate:comments"].execute({repo: repo})
-      end
-
-      puts "Finished with initial population, grabing extra info for pull requests"
-      Rake::Task["hubstats:populate:update_labels"].execute
-      Rake::Task["hubstats:populate:update_pulls"].execute
+      puts "Getting labels for " + repo.full_name
+      Hubstats::GithubAPI.add_labels(repo)
     end
 
     desc "indivdually gets and updates pull requests"
@@ -64,14 +72,18 @@ namespace :hubstats do
       Hubstats::GithubAPI.update_pulls
     end
 
-    desc "sets labels for pull_requests"
+    desc "Updates labels for all repos"
     task :update_labels => :environment do
-      Hubstats::GithubAPI.update_labels
+      Hubstats::Repo.all.each do |repo|
+        Hubstats::GithubAPI.add_labels(repo)
+      end
     end
 
-    desc "deletes WebHook for all repos"
-    task :delete_hooks => :environment do
-      Hubstats::GithubAPI.delete_hooks
+    desc "Updates WebHooks for all repos"
+    task :update_hooks, [:old_endpoint] => :environment do |t, args|
+      Hubstats::Repo.all.each do |repo|
+        Hubstats::GithubAPI.update_hook(repo, args[:old_endpoint])
+      end
     end
 
     def repo_checker(args)
@@ -83,17 +95,5 @@ namespace :hubstats do
       end
     end
 
-    def get_repos
-      client = Hubstats::GithubAPI.client
-      if Hubstats.config.github_config.has_key?("org_name")
-        repos = client.organization_repositories(Hubstats.config.github_config["org_name"])
-      else 
-        repos = []
-        Hubstats.config.github_config["repo_list"].each do |repo|
-          repos << client.repository(repo)
-        end
-      end
-      repos
-    end
   end
 end

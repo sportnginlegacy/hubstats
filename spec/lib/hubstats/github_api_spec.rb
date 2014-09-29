@@ -66,11 +66,47 @@ module Hubstats
       end
     end
 
-    # context ".update_pulls" do
+    context ".update_hook" do
+      subject {Hubstats::GithubAPI}
+      let(:repo) {'hubstats'}
+      context "with old_endpoint" do
+        let(:old_endpoint) {'www.hubstats.com'}
+        it 'calls delete_hook' do
+          allow(subject).to receive(:create_hook)
+          expect(subject).to receive(:delete_hook).with(repo,old_endpoint)
+          subject.update_hook('hubstats','www.hubstats.com')
+        end
+      end
 
-    #   it 'catches error and continues'
-    #     Hubstats::GithubAPI.update_pulls
-    #   end
-    # end
+      context "without old_point" do
+        it 'does not call delete_hook' do
+          allow(subject).to receive(:create_hook)
+          expect(subject).to_not receive(:delete_hook).with(repo)
+          subject.update_hook('hubstats')
+        end
+      end
+    end
+
+    context ".create_hook" do
+      subject {Hubstats::GithubAPI}
+      let(:config) {double(:webhook_secret => 'a1b2c3d4', :webhook_endpoint => "hubstats.com")}
+      let(:client) {double}
+      let(:repo) {double(:full_name =>'hubstats') }
+      before do
+        allow(Hubstats).to receive(:config) {config}
+        allow(subject).to receive(:client) {client}
+      end
+
+      it "calls octokit create_hook" do
+        expect(client).to receive(:create_hook)
+        subject.create_hook(repo)
+      end
+
+      it "rescues unprocessable entity" do
+        allow(client).to receive(:create_hook) { raise Octokit::UnprocessableEntity }
+        subject.create_hook(repo)
+      end
+    end
+
   end
 end

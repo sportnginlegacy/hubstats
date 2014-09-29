@@ -7,19 +7,18 @@ module Hubstats
       let(:repo) {build(:repo)}
       let(:payload) {build(:pull_request_payload_hash)}
 
+      subject {Hubstats::EventsHandler.new()}
       it 'successfully routes the event' do
-        ehandler = Hubstats::EventsHandler.new()
-        expect(ehandler).to receive(:pull_processor)
-        ehandler.route(payload,payload[:type])
+        expect(subject).to receive(:pull_processor)
+        subject.route(payload,payload[:type])
       end
 
       it 'adds labels to pull request' do
-        ehandler = Hubstats::EventsHandler.new()
         allow(Hubstats::PullRequest).to receive(:create_or_update) {pull}
         allow(Hubstats::Repo).to receive(:where) {[repo,repo]}
-        allow(Hubstats::GithubAPI).to receive(:get_labels) {['low','high']}
+        allow(Hubstats::GithubAPI).to receive(:get_labels_for_pull) {['low','high']}
         expect(pull).to receive(:add_labels).with(['low','high'])
-        ehandler.route(payload,payload[:type])
+        subject.route(payload,payload[:type])
       end
     end
 
