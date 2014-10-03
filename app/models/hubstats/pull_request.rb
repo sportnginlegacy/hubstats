@@ -49,9 +49,9 @@ module Hubstats
     def self.state_based_order(timespan,state,order)
       order = ["ASC","DESC"].detect{|order_type| order_type.to_s == order.to_s.upcase } || "DESC"
       if state == "closed"
-        with_state(state).closed_since(timespan).order("hubstats_pull_requests.closed_at #{order}")
+        with_state(state).updated_since(timespan).order("hubstats_pull_requests.closed_at #{order}")
       else
-        with_state(state).opened_since(timespan).order("hubstats_pull_requests.created_at #{order}")
+        with_state(state).updated_since(timespan).order("hubstats_pull_requests.created_at #{order}")
       end
     end
 

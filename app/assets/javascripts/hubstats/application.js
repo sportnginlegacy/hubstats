@@ -32,7 +32,7 @@ function setTimespan() {
     createCookie("hubstats_index",this.selectedIndex,1);
     window.location.reload();
   };
-}
+};
 
 function createCookie(name,value,days) {
     if (days) {
@@ -42,7 +42,7 @@ function createCookie(name,value,days) {
     }
     else var expires = "";
     document.cookie = name+"="+value+expires+"; path=/";
-}
+};
 
 function readCookie(name) {
     var nameEQ = name + "=";
@@ -53,8 +53,8 @@ function readCookie(name) {
         if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
     }
     return null;
-}
+};
 
 function eraseCookie(name) {
     createCookie(name,"",-1);
-}
+};
