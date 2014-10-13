@@ -1,5 +1,5 @@
 module Hubstats
-  class ApplicationController < ActionController::Base
+  class ApplicationController < ApplicationController
 
     before_filter :set_time
 

@@ -1,7 +1,7 @@
 module Hubstats
   class PullRequest < ActiveRecord::Base
-    scope :closed_since, lambda {|time| where("closed_at > ?", time) }
-    scope :updated_since, lambda {|time| where("updated_at > ?", time) }
+    scope :closed_since, lambda {|time| where("hubstats_pull_requests.closed_at > ?", time) }
+    scope :updated_since, lambda {|time| where("hubstats_pull_requests.updated_at > ?", time) }
     scope :opened_since, lambda {|time| where("hubstats_pull_requests.created_at > ?", time) }
     scope :belonging_to_repo, lambda {|repo_id| where(repo_id: repo_id)}
     scope :belonging_to_user, lambda {|user_id| where(user_id: user_id)}
