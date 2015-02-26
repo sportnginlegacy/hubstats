@@ -3,19 +3,16 @@ module Hubstats
 
     scope :with_id, lambda {|user_id| where(id: user_id.split(',')) if user_id}
 
-    scope :merged_pulls, lambda { 
-      where("hubstats_pull_requests.merged = '1'")
-    }
     scope :pull_requests_count, lambda { |time|
       select("hubstats_users.id as user_id")
-      .select("COUNT(DISTINCT hubstats_pull_requests.id) AS pull_request_count")
-      .joins("LEFT JOIN hubstats_pull_requests ON hubstats_pull_requests.user_id = hubstats_users.id AND hubstats_pull_requests.created_at > '#{time}'")
+      .select("IFNULL(COUNT(DISTINCT hubstats_pull_requests.id),0) AS pull_request_count")
+      .joins("LEFT JOIN hubstats_pull_requests ON hubstats_pull_requests.user_id = hubstats_users.id AND hubstats_pull_requests.created_at > '#{time}' AND hubstats_pull_requests.merged = '1'")
       .group("hubstats_users.id")
     }
     scope :pull_requests_count_by_repo, lambda { |time,repo_id|
       select("hubstats_users.id as user_id")
-      .select("COUNT(DISTINCT hubstats_pull_requests.id) AS pull_request_count")
-      .joins("LEFT JOIN hubstats_pull_requests ON hubstats_pull_requests.user_id = hubstats_users.id AND hubstats_pull_requests.created_at > '#{time}' AND hubstats_pull_requests.repo_id = '#{repo_id}'")
+      .select("IFNULL(COUNT(DISTINCT hubstats_pull_requests.id),0) AS pull_request_count")
+      .joins("LEFT JOIN hubstats_pull_requests ON hubstats_pull_requests.user_id = hubstats_users.id AND hubstats_pull_requests.created_at > '#{time}' AND hubstats_pull_requests.repo_id = '#{repo_id}' AND hubstats_pull_requests.merged = '1'")
       .group("hubstats_users.id")
     }
     scope :comments_count, lambda { |time|
@@ -34,7 +31,7 @@ module Hubstats
       select("hubstats_users.id as user_id")
       .select("COUNT(DISTINCT hubstats_pull_requests.id) as reviews_count")
       .joins("LEFT JOIN hubstats_comments ON hubstats_comments.user_id = hubstats_users.id AND hubstats_comments.created_at > '#{time}'")
-      .joins("LEFT JOIN hubstats_pull_requests ON hubstats_pull_requests.id = hubstats_comments.pull_request_id AND hubstats_pull_requests.created_at > '#{time}'")
+      .joins("LEFT JOIN hubstats_pull_requests ON hubstats_pull_requests.id = hubstats_comments.pull_request_id AND hubstats_pull_requests.closed_at > '#{time}'")
       .where("hubstats_pull_requests.user_id != hubstats_users.id")
       .group("hubstats_users.id")
     }
@@ -43,28 +40,28 @@ module Hubstats
       select("hubstats_users.id as user_id")
       .select("ROUND(IFNULL(AVG(hubstats_pull_requests.additions),0)) AS average_additions")
       .select("ROUND(IFNULL(AVG(hubstats_pull_requests.deletions),0)) AS average_deletions")
-      .joins("LEFT JOIN hubstats_pull_requests ON hubstats_pull_requests.user_id = hubstats_users.id AND hubstats_pull_requests.created_at > '#{time}'")
+      .joins("LEFT JOIN hubstats_pull_requests ON hubstats_pull_requests.user_id = hubstats_users.id AND hubstats_pull_requests.created_at > '#{time}' AND hubstats_pull_requests.merged = '1'")
       .group("hubstats_users.id")
     }
 
     scope :pull_and_comment_count, lambda { |time|
       select("hubstats_users.*, pull_request_count, comment_count")
-      .joins("LEFT JOIN (#{pull_requests_count(time).merged_pulls.to_sql}) AS pull_requests ON pull_requests.user_id = hubstats_users.id")
+      .joins("LEFT JOIN (#{pull_requests_count(time).to_sql}) AS pull_requests ON pull_requests.user_id = hubstats_users.id")
       .joins("LEFT JOIN (#{comments_count(time).to_sql}) AS comments ON comments.user_id = hubstats_users.id")
       .group("hubstats_users.id")
     }
 
     scope :pull_and_comment_count_by_repo, lambda { |time,repo_id|
       select("hubstats_users.*, pull_request_count, comment_count")
-      .joins("LEFT JOIN (#{pull_requests_count_by_repo(time,repo_id).merged_pulls.to_sql}) AS pull_requests ON pull_requests.user_id = hubstats_users.id")
+      .joins("LEFT JOIN (#{pull_requests_count_by_repo(time,repo_id).to_sql}) AS pull_requests ON pull_requests.user_id = hubstats_users.id")
       .joins("LEFT JOIN (#{comments_count_by_repo(time,repo_id).to_sql}) AS comments ON comments.user_id = hubstats_users.id")
       .group("hubstats_users.id")
     }
 
     scope :with_all_metrics, lambda { |time|
       select("hubstats_users.*, pull_request_count, comment_count, average_additions, average_deletions")
-      .joins("LEFT JOIN (#{averages(time).merged_pulls.to_sql}) AS averages ON averages.user_id = hubstats_users.id")
-      .joins("LEFT JOIN (#{pull_requests_count(time).merged_pulls.to_sql}) AS pull_requests ON pull_requests.user_id = hubstats_users.id")
+      .joins("LEFT JOIN (#{averages(time).to_sql}) AS averages ON averages.user_id = hubstats_users.id")
+      .joins("LEFT JOIN (#{pull_requests_count(time).to_sql}) AS pull_requests ON pull_requests.user_id = hubstats_users.id")
       .joins("LEFT JOIN (#{comments_count(time).to_sql}) AS comments ON comments.user_id = hubstats_users.id")
       .group("hubstats_users.id")
     }
