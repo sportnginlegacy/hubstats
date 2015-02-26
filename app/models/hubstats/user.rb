@@ -56,7 +56,7 @@ module Hubstats
 
     scope :pull_and_comment_count_by_repo, lambda { |time,repo_id|
       select("hubstats_users.*, pull_request_count, comment_count")
-      .joins("LEFT JOIN (#{pull_requests_count_by_repo(time,repo_id).to_sql}) AS pull_requests ON pull_requests.user_id = hubstats_users.id")
+      .joins("LEFT JOIN (#{pull_requests_count_by_repo(time,repo_id).merged_pulls.to_sql}) AS pull_requests ON pull_requests.user_id = hubstats_users.id")
       .joins("LEFT JOIN (#{comments_count_by_repo(time,repo_id).to_sql}) AS comments ON comments.user_id = hubstats_users.id")
       .group("hubstats_users.id")
     }
