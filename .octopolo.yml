@@ -1,0 +1,4 @@
+github_repo: sportngin/hubstats
+semantic_versioning: true
+branches_to_keep:
+  - master
