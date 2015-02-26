@@ -13,11 +13,13 @@
     <% end %>
     <br>
     by <%= link_to pull.user.login, user_path(pull.user) %>
-    <% if pull.state == 'closed' %>
+    <% if pull.merged == '1'%>
+      <%= "merged #{time_ago_in_words(pull.created_at)} ago "%>
+    <% elsif pull.state == 'closed' %>
       <%= "closed #{time_ago_in_words(pull.closed_at)} ago "%>
-    <% else %>
+    <% else %> 
       <%= "opened #{time_ago_in_words(pull.created_at)} ago "%>
-    <% end %> 
+    <% end %>
   </div>
 
   <div class="col-lg-2 col-md-2 col-sm-2" >

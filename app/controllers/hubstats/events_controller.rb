@@ -10,7 +10,7 @@ module Hubstats
       event = params.with_indifferent_access
       eventsHandler = Hubstats::EventsHandler.new()
       eventsHandler.route(event,kind)
-
+      
       render :nothing => true
     end
 
