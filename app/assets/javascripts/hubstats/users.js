@@ -10,7 +10,6 @@ $(document).ready(function() {
   });
 
   $("#comments").on("click", function(){
-    console.log($(this).attr('class'));
     toggleOrder(queryParameters,$(this).attr('id'));
   });
 
@@ -24,7 +23,6 @@ $(document).ready(function() {
 });
 
 function toggleOrder(queryParams, sort_by) {
-  console.log(queryParameters["order"]);
   if (queryParameters["order"] !== undefined) {
     if (queryParameters["order"] === sort_by+"-desc" ) {
       updateQueryStringParameter(queryParameters,"order",sort_by+"-asc");
