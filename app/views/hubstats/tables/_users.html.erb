@@ -1,5 +1,21 @@
 <% if @users.length > 0 %>
   <div class="users">
+    <div class="row single-user header">
+      <div class="col-lg-4 col-md-4 col-sm-4">
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2">
+        <a class="header desc" id="pulls"> Pulls <span class="octicon"></span> </a>
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2">
+        <a class="header desc" id="comments"> Comments <span class="octicon"></span></a>
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2">
+        <a class="header desc" id="additions"> Additions <span class="octicon"></span></a>
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2">
+        <a class="header desc" id="deletions"> Deletions <span class="octicon"></span></a>
+      </div>
+    </div>
     <%= render partial: 'hubstats/partials/user', collection: @users, as: :user %>
   </div>
 <% else %>

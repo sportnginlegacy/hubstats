@@ -5,15 +5,46 @@ $(document).ready(function() {
   queryParameters = getUrlVars();
   setUserDefaults(queryParameters);
 
-  $("#user-sort-group > .btn").on("click", function(){
-    updateQueryStringParameter(queryParameters,"order",$(this).attr('id'));
+  $("#pulls").on("click", function(){
+    toggleOrder(queryParameters,$(this).attr('id'));
   });
 
+  $("#comments").on("click", function(){
+    toggleOrder(queryParameters,$(this).attr('id'));
+  });
+
+  $("#additions").on("click", function(){
+    toggleOrder(queryParameters,$(this).attr('id'));
+  });
+
+  $("#deletions").on("click", function(){
+    toggleOrder(queryParameters,$(this).attr('id'));
+  });
 });
 
+function toggleOrder(queryParams, sort_by) {
+  if (queryParameters["order"] !== undefined) {
+    if (queryParameters["order"] === sort_by+"-desc" ) {
+      updateQueryStringParameter(queryParameters,"order",sort_by+"-asc");
+    } else {
+      updateQueryStringParameter(queryParameters,"order",sort_by+"-desc");
+    }
+  } else {
+    updateQueryStringParameter(queryParameters,"order",sort_by+"-asc");
+  }
+}
+
 function setUserDefaults(queryParameters) {
-  if (queryParameters["order"])
-    $('#' + queryParameters["order"]).addClass('active');
-  else 
-    $('#smallest-pulls').addClass('active');
+  if (queryParameters["order"]) {
+    sort_by = queryParameters["order"].split("-")[0];
+    order = queryParameters["order"].split("-")[1];
+    if (order === 'asc') {
+      $('#'+sort_by+' .octicon').addClass('octicon-arrow-up');
+    } else {
+      $('#'+sort_by+' .octicon').addClass('octicon-arrow-down');
+    }
+  }
+  else {
+    $("#pulls .octicon").addClass('octicon-arrow-down');
+  }
 }

@@ -76,6 +76,10 @@
   border-radius: 5px;
 }
 
+.users {
+  margin: 0px 0px 15px 0px;
+}
+
 .pulls > .col, .comments > .col, .users > .col, .repos > .col{
   padding: 0px 5px 0px 5px;
 }
@@ -123,5 +127,15 @@
 }
 
 .subtle:hover {
+  text-decoration: none;
+}
+
+.header {
+  text-align: center;
+  margin: 0px;
+}
+
+a.header:hover {
+  cursor: pointer;
   text-decoration: none;
 }
