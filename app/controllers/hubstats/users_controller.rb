@@ -31,7 +31,8 @@ module Hubstats
         review_count: @review ? @review.reviews_count : 0,
         avg_additions: Hubstats::PullRequest.merged_since(@timespan).belonging_to_user(@user.id).average(:additions).to_i,
         avg_deletions: Hubstats::PullRequest.merged_since(@timespan).belonging_to_user(@user.id).average(:deletions).to_i,
-        net_additions: Hubstats::PullRequest.merged_since(@timespan).belonging_to_user(@user.id).sum(:additions).to_i - Hubstats::PullRequest.merged_since(@timespan).belonging_to_user(@user.id).sum(:deletions).to_i
+        net_additions: Hubstats::PullRequest.merged_since(@timespan).belonging_to_user(@user.id).sum(:additions).to_i
+          - Hubstats::PullRequest.merged_since(@timespan).belonging_to_user(@user.id).sum(:deletions).to_i
       }
     end
 

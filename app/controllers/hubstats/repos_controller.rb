@@ -30,7 +30,8 @@ module Hubstats
         comment_count: Hubstats::Comment.belonging_to_repo(@repo.id).created_since(@timespan).count(:all),
         avg_additions: Hubstats::PullRequest.merged_since(@timespan).belonging_to_repo(@repo.id).average(:additions).to_i,
         avg_deletions: Hubstats::PullRequest.merged_since(@timespan).belonging_to_repo(@repo.id).average(:deletions).to_i,
-        net_additions: Hubstats::PullRequest.merged_since(@timespan).belonging_to_repo(@repo.id).sum(:additions).to_i - Hubstats::PullRequest.updated_since(@timespan).belonging_to_repo(@repo.id).sum(:deletions).to_i
+        net_additions: Hubstats::PullRequest.merged_since(@timespan).belonging_to_repo(@repo.id).sum(:additions).to_i
+          - Hubstats::PullRequest.merged_since(@timespan).belonging_to_repo(@repo.id).sum(:deletions).to_i
       }
     end
 
