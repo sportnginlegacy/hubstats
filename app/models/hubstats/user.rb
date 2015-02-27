@@ -105,7 +105,7 @@ module Hubstats
         when 'pulls'
           order("pull_request_count #{order}")
         when 'comments'
-          order("pull_request_count #{order}")
+          order("comment_count #{order}")
         when 'additions'
           order("average_additions #{order}")
         when 'deletions'
