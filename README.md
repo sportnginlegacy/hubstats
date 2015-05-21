@@ -8,7 +8,6 @@ Hubstats is a rails plugin which allows you to search and monitor pull requests 
 
  Run `rake hubstats:install:migrations`.
 
-
  Run `rake hubstats:setup` to run the necessary migrations and start pulling data from Github.
 
  Add 'mount Hubstats::Engine => "/hubstats"' to your apps routes file.
@@ -46,10 +45,15 @@ Set the endpoint to be:
 Hubstats needs to know what repos for it to watch. You can set it to watch either an entire organization or a list of specific repos in octokit.yml.
 
 ## TL:DR
+
   Run `rails generate hubstats:install`.
+  
   Configure octokit.yml with your Github information.
+  
   Run `rake hubstats:install:migrations`.
+  
   Run `rake hubstats:setup`.
+  
   Add 'mount Hubstats::Engine => "/hubstats"' to your routes file.
 
 This project rocks and uses MIT-LICENSE.
