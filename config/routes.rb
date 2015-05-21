@@ -7,7 +7,6 @@ Hubstats::Engine.routes.draw do
   get "/users" => "users#index", :as => :users
   get "/repos" => "repos#index", :as => :repos
   get "/user/:id" => "users#show", :as => :user
-
   get "/:repo" => "repos#show", :as => :repo
   scope "/:repo", :as => :repo do
     get '/pull/:id' => "pull_requests#show", :as => :pull
