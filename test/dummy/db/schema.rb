@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140703201051) do
+ActiveRecord::Schema.define(:version => 20150521203261) do
 
   create_table "hubstats_comments", :force => true do |t|
     t.string   "kind"
