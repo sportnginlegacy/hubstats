@@ -1,0 +1,43 @@
+<div class="container" %>
+  <div class="row" %>
+    <div class="col col-lg-3 col-md-3 col-sm-3">
+
+    <!--This div is the two controls on the top left, one is for repos and one is for users-->
+     <div class="form-group">
+        <input class="select2-control" id="repos">
+        </input>
+      </div>
+      <div class="form-group">
+        <input class="select2-control" id="users">
+        </input>
+      </div>
+    </div>
+
+    <div class="col col-lg-9 col-md-9 col-sm-9">
+
+      <!--The below div is for the different buttons that control the sorting of what deploys users want to view-->
+      <div id="sort-group" class="btn-group" data-toggle="buttons">
+        <label class="btn btn-default" id="desc">
+          <input type="radio" name="sort"> Newest
+        </label>
+        <label class="btn btn-default" id="asc">
+          <input type="radio" name="sort"> Oldest
+        </label>
+      </div>
+
+      <!--The following div is for the group by drop down menu on the top right (but not the timespan one)-->
+      <select id="group-by" class="form-control pull-right" style="width: 100px; display: inline; ">
+        <option value="">Group By</option>
+        <option value="user">User</option>
+        <option value="repo">Repo</option>
+      </select>
+<!--
+      <%= render 'hubstats/tables/grouped_pulls' %>
+  
+      <div class="text-center">
+        <%= will_paginate @pull_requests, renderer: BootstrapPagination::Rails %>
+      </div>-->
+
+    </div>
+  </div>
+</div>

@@ -8,8 +8,11 @@ Hubstats::Engine.routes.draw do
   get "/repos" => "repos#index", :as => :repos
   get "/user/:id" => "users#show", :as => :user
   get "/:repo" => "repos#show", :as => :repo
+  get "/deploys" => "deploys#index", as => :deploys
   scope "/:repo", :as => :repo do
     get '/pull/:id' => "pull_requests#show", :as => :pull
   end
+
+  #handler/deployment
 
 end
