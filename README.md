@@ -4,6 +4,8 @@ Hubstats is a rails plugin which allows you to search and monitor pull requests 
 
 ## Setup
 
+The following setup is designed to only be used when integrating this plugin into a rails application or for when adding new migrations.
+
  Run `rails generate hubstats:install`.
 
  Run `rake hubstats:install:migrations`.
@@ -18,13 +20,13 @@ Hubstats is a rails plugin which allows you to search and monitor pull requests 
 
 Hubstats needs Github credentials to access your repos, these can be setup in one of two ways:
 
-#### octokit.yml
+#### `octokit.yml`
 
-Add your GitHub API token or ClientID and Secret to octokit.yml.
+Add your GitHub API token or ClientID and Secret to `octokit.yml`.
 
 #### Environment Variables
 
-Hubstats can also use OAUTH access tokens stored in ENV["GITHUB_API_TOKEN"] or for Application Authentication in ENV["CLIENT_ID"] and ENV["CLIENT_SECRET"], if for some reason you don't want to store them in octokit.yml.
+Hubstats can also use OAUTH access tokens stored in ENV["GITHUB_API_TOKEN"] or for Application Authentication in ENV["CLIENT_ID"] and ENV["CLIENT_SECRET"], if for some reason you don't want to store them in `octokit.yml`.
 
 ### Webhooks
 
@@ -44,11 +46,15 @@ Set the endpoint to be:
 
 Hubstats needs to know what repos for it to watch. You can set it to watch either an entire organization or a list of specific repos in octokit.yml.
 
+### The `test` Directory
+
+`test` directory exists because since hubstats is a plugin that's designed to work inside of an application, in order to view it locally and to test what the plugin would look like, we need to install the plugin into a greater application to run. This is the purpose of the `test` directory. `test/dummy` contains a plugin that automatically syncs up with the other code. When in the development process, one just needs to run `rails s` from the command line (while in `test/dummy`) to serve the plugin.
+
 ## TL:DR
 
   Run `rails generate hubstats:install`.
   
-  Configure octokit.yml with your Github information.
+  Configure `octokit.yml` with your Github information.
   
   Run `rake hubstats:install:migrations`.
   
