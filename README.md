@@ -20,7 +20,7 @@ The following setup is designed to only be used when integrating this plugin int
 
 Hubstats needs Github credentials to access your repos, these can be setup in one of two ways:
 
-#### `octokit.yml`
+#### Configuring the `octokit.yml`
 
 Add your GitHub API token or ClientID and Secret to `octokit.yml`.
 
