@@ -1,4 +1,4 @@
-<% if @pull_requests.length > 0 %>
+<% if @deploys.length > 0 %>
   <div class="deploys">
     <%= render partial: 'hubstats/partials/deploys-condensed', collection: @deploys, as: :deploy %>
   </div>
