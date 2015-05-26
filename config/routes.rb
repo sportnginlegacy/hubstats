@@ -1,9 +1,10 @@
 Hubstats::Engine.routes.draw do
   root to: "pull_requests#index"
 
-  post "/handler" => "events#handler", :as => "handler"
-  get "/metrics" => "repos#dashboard", :as => "metrics" 
+  post "/handler" => "events#handler", :as => :handler
+  get "/metrics" => "repos#dashboard", :as => :metrics 
   get "/pulls" => "pull_requests#index", :as => :pulls
+  get "/deploys" => "deploys#index", :as => :deploys
   get "/users" => "users#index", :as => :users
   get "/repos" => "repos#index", :as => :repos
   get "/user/:id" => "users#show", :as => :user
