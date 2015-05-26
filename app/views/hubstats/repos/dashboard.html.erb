@@ -4,7 +4,7 @@
   </div>
   <div class="row">
 
-    <div class="col col-lg-6">
+    <div class="col col-lg-12">
       <h3> Active Repositories </h3>       
       <%= render 'hubstats/tables/repos' %>
       <% if @repo_count > 20 %>
@@ -12,13 +12,13 @@
       <% end %>
     </div>
 
-    <div class="col col-lg-6">
+  <!--  <div class="col col-lg-6">
       <h3> Active Users </h3>
       <%= render 'hubstats/tables/users-condensed' %>
       <% if @user_count > 20 %>
         <p class="pull-right"><%= link_to "View All", users_path %></p>
       <% end %>
-    </div>
+    </div> -->
     
   </div>
 </div>

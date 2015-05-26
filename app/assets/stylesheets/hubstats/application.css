@@ -108,13 +108,15 @@
 
 .single-pull > .pull-info,
 .single-user > .user-info,
-.single-repo > .repo-info {
+.single-repo > .repo-info,
+.single-deploy > .deploy-info, {
   padding: 0px;
 }
 
 .pull-info > h4,
 .user-info > h4,
-.repo-info > h4 {
+.repo-info > h4,
+.deploy-info > h4 {
   margin: 0px;
 }
 

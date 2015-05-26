@@ -1,16 +1,18 @@
-<div class="container" >
+<div class="container" id="repo">
 <!--  <div class="row">
     <h1 class="title text-center">
       <%= link_to @deploy.name.titleize, deploy_path %> /
-      <a href=<%=@pull_request.html_url%>>
-        <%= @pull_request.title.titleize %>
+        <a href=<%=@deploy.html_url%>>
+        <%= @deploy.title.titleize %>
       </a>
     </h1>
+    <%= render 'hubstats/partials/quick_stats' %>
   </div>
 
   <div class="col col-lg-8 col-lg-offset-2">
     <div class="row">
       <h4> Comments </h4>
+      <%= render 'hubstats/tables/comments' %>
     </div>
-  </div>-->
+  </div> -->
 </div>
