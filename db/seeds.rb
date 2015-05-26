@@ -11,8 +11,8 @@ deploy_list = [
 ]
 
 deploy_list.each do |git_revision, repo_id, deployed_at, deployed_by|
-	Deploy.create(git_revision: git_revision, 
-		          repo_id: repo_id, 
-		          deployed_at: deployed_at, 
-		          deployed_by: deployed_by)
+	Deploy.create(git_revision: git_revision,
+	              repo_id: repo_id, 
+	              deployed_at: deployed_at,
+	              deployed_by: deployed_by)
 end
