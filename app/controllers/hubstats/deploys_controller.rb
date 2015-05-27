@@ -28,5 +28,13 @@ module Hubstats
     def show
     end
 
+    #create should be run on a post route whenever a deploy is made (we get deploys from new relic)
+    def create(revision, repo_name, time=Time.now.getutc, username) #if the time isn't provided, get the current time
+        @deployed_by = username
+        @git_revision = revision
+        @repo_id = Repo.where(name: repo_name)
+        @time = time
+    end
+
   end
  end

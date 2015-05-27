@@ -1,0 +1,19 @@
+<div class="row single-deploy">
+
+  <div class="deploy-info col-lg-9 col-md-9 col-sm-9">
+    <h4> 
+      <%= link_to deploy.repo_id, repo_path(deploy.repo_id) %> / 
+    </h4>
+    <br>
+    by <%= link_to deploy.deployed_by, user_path(deploy.deployed_by) %>
+    <%= "#{time_ago_in_words(deploy.deployed_at)} ago "%>
+  </div>
+
+  <div class="col-lg-2 col-md-2 col-sm-2" >
+    <div class="deploy-right">
+      <a class="subtle"
+        <span class="octicon octicon-mark-github"></span>
+      </a>
+    </div>
+  </div>
+</div>
