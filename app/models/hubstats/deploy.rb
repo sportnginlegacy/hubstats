@@ -10,5 +10,6 @@ module Hubstats
 		belongs_to :user
 		belongs_to :repo
 		has_many :pull_requests
+
 	end
 end

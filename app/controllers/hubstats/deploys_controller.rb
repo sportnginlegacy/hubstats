@@ -32,7 +32,8 @@ module Hubstats
     def create(revision, repo_name, time=Time.now.getutc, username) #if the time isn't provided, get the current time
         @deployed_by = username
         @git_revision = revision
-        @repo_id = Repo.where(name: repo_name)
+        @repo_id = Repo.where(full_name: repo_name).first.id
+        @repo_name = Repo.where(full_name: repo_name).first.name
         @time = time
     end
 
