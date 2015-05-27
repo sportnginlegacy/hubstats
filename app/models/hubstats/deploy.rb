@@ -1,10 +1,7 @@
 module Hubstats
 	class Deploy < ActiveRecord::Base
-		# git revision as string
-		# repo ID as integer
-		# deployed_at as timestamp
-		# deployed_by as username string
 
+    scope :deployed_since, lambda {|time| where("hubstats_deploys.deployed_at > ?", time) }
 		scope :belonging_to_repo, lambda {|repo_id| where(repo_id: repo_id)}
     scope :belonging_to_user, lambda {|user_id| where(user_id: user_id)}
     scope :belonging_to_repos, lambda {|repo_id| where(repo_id: repo_id.split(',')) if repo_id}
@@ -18,14 +15,13 @@ module Hubstats
 		belongs_to :repo
 		has_many :pull_requests
 
-		#the below method is all about the timespan and ordering thing
+		# Order the data in a given timespan in a given order
 		def self.order_with_timespan(timespan, order)
-			# order is whatever the order_type is as an uppercase string or it's "DESC"
       order = ["ASC", "DESC"].detect{|order_type| order_type.to_s == order.to_s.upcase } || "DESC"
-      order("hubstats_deploys.deployed_at #{order}")
-     #   order("hubstats_deploys.deployed_at ASC")
+      deployed_since(timespan).order("hubstats_deploys.deployed_at #{order}")
     end
 
+    # Sorts based on whether data is being grouped by user or repo
     def self.group_by(group)
       if group == 'user'
         with_user_name.order("user_name ASC")
