@@ -46,9 +46,9 @@ Set the endpoint to be:
 
 Hubstats needs to know what repos for it to watch. You can set it to watch either an entire organization or a list of specific repos in octokit.yml.
 
-### The `test` Directory
+### Testing
 
-`test` directory exists because since hubstats is a plugin that's designed to work inside of an application, in order to view it locally and to test what the plugin would look like, we need to install the plugin into a greater application to run. This is the purpose of the `test` directory. `test/dummy` contains a plugin that automatically syncs up with the other code. When in the development process, one just needs to run `rails s` from the command line (while in `test/dummy`) to serve the plugin.
+All of the automated tests are written in RSpec. Since hubstats is a plugin, not an application, we need to install the plugin into a Rails application to run. The `test` directory is a dummy rails application for manually testing the UI by serving hubstats locally. When developing and using the `test/dummy` locally, then the test will automatically sync with any updated code, so it doesn't need to be re-served when changes are made with the normal Rails application. When in the development process, one just needs to run `rails s` once from the command line (while in `test/dummy`) to serve the plugin. http://guides.rubyonrails.org/plugins.html will give more information on the implementation of a Rails plugin. 
 
 ## TL:DR
 
