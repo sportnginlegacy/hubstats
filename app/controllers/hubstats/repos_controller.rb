@@ -25,6 +25,7 @@ module Hubstats
       @user_count = Hubstats::User.with_pulls_or_comments(@timespan,@repo.id).only_active.length
       @stats = {
         user_count: @user_count,
+        deploy_count: @deploy_count,
         pull_count: @pull_count,
         comment_count: Hubstats::Comment.belonging_to_repo(@repo.id).created_since(@timespan).count(:all),
         avg_additions: Hubstats::PullRequest.merged_since(@timespan).belonging_to_repo(@repo.id).average(:additions).to_i,
@@ -41,6 +42,7 @@ module Hubstats
       @user_count = Hubstats::User.with_pulls_or_comments(@timespan).only_active.length
       @stats = {
         user_count: @user_count,
+        deploy_count: Hubstats::Deploy.count(:all),
         pull_count: Hubstats::PullRequest.merged_since(@timespan).count(:all),
         comment_count: Hubstats::Comment.created_since(@timespan).count(:all),
         avg_additions: Hubstats::PullRequest.merged_since(@timespan).average(:additions).to_i,

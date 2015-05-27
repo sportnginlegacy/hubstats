@@ -14,7 +14,6 @@
     </div>
 
     <div class="col col-lg-9 col-md-9 col-sm-9">
-
       <!--The below div is for the different buttons that control the sorting of what deploys users want to view-->
       <div id="sort-group" class="btn-group" data-toggle="buttons">
         <label class="btn btn-default" id="desc">
@@ -32,7 +31,9 @@
         <option value="repo">Repo</option>
       </select>
 
-      <%= render 'hubstats/tables/grouped_deploys' %>
+      <%= render 'hubstats/tables/deploys' %>
+
+
 
     </div>
   </div>

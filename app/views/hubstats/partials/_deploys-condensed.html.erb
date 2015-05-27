@@ -1,6 +1,7 @@
-<div class="row single-deploy">
+<div class="row single-pull">
 
-  <div class="deploy-info col-lg-9 col-md-9 col-sm-9 col-xs-8">
+<!--eventually need to change some info in here to be deploy-->
+  <div class="pull-info col-lg-9 col-md-9 col-sm-9 col-xs-8">
     <h4>       <!--maybe change below to just be repo name-->
       <%= link_to pull.title, repo_pull_path({:repo => pull.repo.name, :id => pull.id}) %> 
     </h4>
@@ -9,7 +10,7 @@
   </div>
 
   <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2" >
-    <div class="deploy-right">
+    <div class="pull-right">
       <a class="subtle" href=<%= pull.html_url %> > 
         <span class="octicon octicon-mark-github"></span>
       </a>

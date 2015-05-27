@@ -5,6 +5,12 @@
 	  <h4> Active Users </h4>
 	</div>
 <% end %>
+<% if @stats.has_key? :deploy_count %>
+	<div class="col col-lg-2 col-md-4 col-sm-4 col-xs-4 text-center">
+	  <h1> <%= @stats[:deploy_count] %> </h1>
+	  <h4> Deploys </h4>
+	</div>
+<% end %>
 <% if @stats.has_key? :pull_count %>
 	<div class="col col-lg-2 col-md-4 col-sm-4 col-xs-4 text-center">
 	  <h1> <%= @stats[:pull_count] %> </h1>
