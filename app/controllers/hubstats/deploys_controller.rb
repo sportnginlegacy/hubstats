@@ -31,8 +31,9 @@ module Hubstats
 
     def create
       @deploy = Deploy.new(params[:deploy])
+      @deploy.deployed_at ||= Time.now.getutc
       if @deploy.save
-        redirect_to :action => 'index'
+        render :nothing =>true, :status => 200
       else
         render :nothing => true, :status => 400
       end
