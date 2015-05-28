@@ -4,6 +4,8 @@ Hubstats is a rails plugin which allows you to search and monitor pull requests 
 
 ## Setup
 
+The following setup is designed to only be used when integrating this plugin into a rails application or for when adding new migrations.
+
  Run `rails generate hubstats:install`.
 
  Run `rake hubstats:install:migrations`.
@@ -18,13 +20,13 @@ Hubstats is a rails plugin which allows you to search and monitor pull requests 
 
 Hubstats needs Github credentials to access your repos, these can be setup in one of two ways:
 
-#### octokit.yml
+#### Configuring the `octokit.yml`
 
-Add your GitHub API token or ClientID and Secret to octokit.yml.
+Add your GitHub API token or ClientID and Secret to `octokit.yml`.
 
 #### Environment Variables
 
-Hubstats can also use OAUTH access tokens stored in ENV["GITHUB_API_TOKEN"] or for Application Authentication in ENV["CLIENT_ID"] and ENV["CLIENT_SECRET"], if for some reason you don't want to store them in octokit.yml.
+Hubstats can also use OAUTH access tokens stored in ENV["GITHUB_API_TOKEN"] or for Application Authentication in ENV["CLIENT_ID"] and ENV["CLIENT_SECRET"], if for some reason you don't want to store them in `octokit.yml`.
 
 ### Webhooks
 
@@ -44,11 +46,15 @@ Set the endpoint to be:
 
 Hubstats needs to know what repos for it to watch. You can set it to watch either an entire organization or a list of specific repos in octokit.yml.
 
+### Testing
+
+All of the automated tests are written in RSpec. Since hubstats is a plugin, not an application, we need to install the plugin into a Rails application to run. The `test` directory is a dummy rails application for manually testing the UI by serving hubstats locally. When developing and using the `test/dummy` locally, then the test will automatically sync with any updated code, so it doesn't need to be re-served when changes are made with the normal Rails application. When in the development process, one just needs to run `rails s` once from the command line (while in `test/dummy`) to serve the plugin. http://guides.rubyonrails.org/plugins.html will give more information on the implementation of a Rails plugin. 
+
 ## TL:DR
 
   Run `rails generate hubstats:install`.
   
-  Configure octokit.yml with your Github information.
+  Configure `octokit.yml` with your Github information.
   
   Run `rake hubstats:install:migrations`.
   

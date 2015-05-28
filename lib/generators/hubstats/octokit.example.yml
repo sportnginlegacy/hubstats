@@ -8,4 +8,4 @@ github_config: # Must include either org_name || repo_list
   # repo_list: [<ARRAY OF REPOS>]
 
 webhook_secret: #<40 CHARACTER ACCESS TOKEN >
-webhook_endpoint: #<url of webhook enpoint>
+webhook_endpoint: #<url of webhook endpoint>

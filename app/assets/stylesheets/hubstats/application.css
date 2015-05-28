@@ -45,7 +45,9 @@
 .single-pull > .user-image, 
 .single-pull > .user-image-small,
 .single-user > .user-image,
-.single-user > .user-image-small {
+.single-user > .user-image-small,
+.single-deploy > .user-image,
+.single-deploy > .user-image-small {
   padding: 5px;
 }
 
@@ -70,7 +72,7 @@
   height: 36px;
 }
 
-.pulls, .comments, .users, .repos {
+.pulls, .comments, .users, .repos, .deploys {
   margin: 15px 0px 15px 0px;
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -80,20 +82,22 @@
   margin: 0px 0px 15px 0px;
 }
 
-.pulls > .col, .comments > .col, .users > .col, .repos > .col{
+.pulls > .col, .comments > .col, .users > .col, .repos > .col, .deploys > .col {
   padding: 0px 5px 0px 5px;
 }
 
 .row .single-pull,
 .row .single-comment,
 .row .single-user,
-.row .single-repo {
+.row .single-repo,
+.row .single-deploy {
   padding:5px;
   margin: 0px;
   border-bottom: 1px solid #ccc;
 }
 
-.single-pull.group-header {
+.single-pull.group-header,
+.single-deploy.group-header {
   padding: 10px;
   background-color: #F5F5F5;
 }
@@ -108,13 +112,15 @@
 
 .single-pull > .pull-info,
 .single-user > .user-info,
-.single-repo > .repo-info {
+.single-repo > .repo-info,
+.single-deploy > .deploy-info, {
   padding: 0px;
 }
 
 .pull-info > h4,
 .user-info > h4,
-.repo-info > h4 {
+.repo-info > h4,
+.deploy-info > h4 {
   margin: 0px;
 }
 

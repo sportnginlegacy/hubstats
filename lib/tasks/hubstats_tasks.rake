@@ -23,4 +23,10 @@ namespace :hubstats do
     Rake::Task['hubstats:populate:update_repos'].invoke
   end
 
+  desc "Updates the seed"
+  task :seed => :environment do
+    puts "Updating seed"
+    Rake::Task['db:seed'].invoke
+  end
+
 end

@@ -1,0 +1,16 @@
+<% if @deploys.length > 0 %>
+  <% if @groups %>
+      <% @groups.each do |group| %>
+        <div class="deploys">
+          <div class="row single-pull group-header">
+            <h3> <%= group[0] %> </h3>
+          </div>
+          <%= render partial: 'hubstats/partials/deploy', collection: group[1], as: :deploy %>
+        </div>
+      <% end %>
+  <% else %>
+    <%= render 'hubstats/tables/deploys' %>
+  <% end %>
+<% else %>
+  <p> No deploys to show </p>
+<% end %>
