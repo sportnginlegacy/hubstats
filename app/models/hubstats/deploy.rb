@@ -1,6 +1,17 @@
 module Hubstats
   class Deploy < ActiveRecord::Base
 
+    before_validation :check_time, on: :create
+    validates :git_revision, :deployed_at, :deployed_by, :repo_id, presence: true
+    validates_associated :repo_id
+    validates_presence_of :repo_id
+
+    def check_time
+        if deployed_at == nil
+            self.deployed_at = Time.now.getutc
+        end
+    end
+
     scope :deployed_since, lambda {|time| where("hubstats_deploys.deployed_at > ?", time) }
     scope :belonging_to_repo, lambda {|repo_id| where(repo_id: repo_id)}
     scope :belonging_to_user, lambda {|user_id| where(user_id: user_id)}
