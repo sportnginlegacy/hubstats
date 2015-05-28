@@ -29,13 +29,12 @@ module Hubstats
     def show
     end
 
-    # create should be run on a post route whenever a deploy is made (we get deploys from new relic)
     def create
       @deploy = Deploy.new(params[:deploy])
       if @deploy.save
         redirect_to :action => 'index'
       else
-        render :action => "new"
+        render :nothing => true, :status => 400
       end
     end
 
