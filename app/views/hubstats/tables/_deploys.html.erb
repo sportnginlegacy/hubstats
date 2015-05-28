@@ -1,5 +1,5 @@
 <% if @deploys.length > 0 %>
-  <div class="pulls">
+  <div class="deploys">
     <%= render partial: 'hubstats/partials/deploy', collection: @deploys, as: :deploy %>
   </div>
 <% else %>

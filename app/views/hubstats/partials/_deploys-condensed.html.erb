@@ -1,17 +1,16 @@
-<div class="row single-pull">
-
-<!--eventually need to change some info in here to be deploy-->
-  <div class="pull-info col-lg-9 col-md-9 col-sm-9 col-xs-8">
-    <h4>       <!--maybe change below to just be repo name-->
-      <%= link_to pull.title, repo_pull_path({:repo => pull.repo.name, :id => pull.id}) %> 
+<div class="row single-deploy">
+  
+  <div class="deploy-info col-lg-9 col-md-9 col-sm-9 col-xs-8">
+    <h4>
+      <%= link_to deploy.repo.name, repo_path({:repo => deploy.repo.name, :id => deploy.id}) %> 
     </h4>
-    by <%= link_to pull.user.login, user_path(pull.user) %>
-    <%= "#{time_ago_in_words(pull.deployed_at)} ago "%>
+    by <%= link_to deploy.deployed_by, user_path(deploy.deployed_by) %>
+    <%= "#{time_ago_in_words(deploy.deployed_at)} ago "%>
   </div>
 
   <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2" >
-    <div class="pull-right">
-      <a class="subtle" href=<%= pull.html_url %> > 
+    <div class="deploy-right">
+      <a class="subtle" href=<%= deploy.html_url %> > 
         <span class="octicon octicon-mark-github"></span>
       </a>
     </div>
