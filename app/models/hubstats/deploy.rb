@@ -4,12 +4,10 @@ module Hubstats
     before_validation :check_time, on: :create
     validates :git_revision, :deployed_at, :deployed_by, :repo_id, presence: true
     validates_associated :repo
-    validates_presence_of :repo_id
+    #validates_presence_of :repo_id
 
     def check_time
-        if deployed_at == nil
-            self.deployed_at = Time.now.getutc
-        end
+        self.deployed_at = Time.now.getutc if deployed_at.nil?
     end
 
     scope :deployed_since, lambda {|time| where("hubstats_deploys.deployed_at > ?", time) }

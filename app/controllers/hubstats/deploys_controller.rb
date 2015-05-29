@@ -30,15 +30,19 @@ module Hubstats
     end
 
     def create
-      @deploy = Deploy.new()
-      @deploy.deployed_at = params[:deployed_at]
-      @deploy.deployed_by = params[:deployed_by]
-      @deploy.git_revision = params[:git_revision]
-      @deploy.repo_id = Hubstats::Repo.where(full_name: params[:repo_name]).first.id.to_i
-      if @deploy.save
-        render :nothing =>true, :status => 200
-      else
+      if params[:deployed_by].nil? || params[:git_revision].nil? || params[:repo_name].nil?
         render :nothing => true, :status => 400
+      else
+        @deploy = Deploy.new
+        @deploy.deployed_at = params[:deployed_at]
+        @deploy.deployed_by = params[:deployed_by]
+        @deploy.git_revision = params[:git_revision]
+        @deploy.repo_id = Hubstats::Repo.where(full_name: params[:repo_name]).first.id.to_i
+        if @deploy.save
+          render :nothing =>true, :status => 200
+        else
+          render :nothing => true, :status => 400
+        end
       end
     end
 
