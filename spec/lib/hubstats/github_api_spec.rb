@@ -61,7 +61,7 @@ module Hubstats
 
         it 'fails to initialize at all' do
           Hubstats::GithubAPI.configure()
-          expect(lambda { Hubstats::GithubAPI.client}).to raise_error Octokit::Unauthorized
+          expect{Hubstats::GithubAPI.client}.to raise_error Octokit::Unauthorized
         end
       end
     end

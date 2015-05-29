@@ -41,13 +41,16 @@ module Hubstats
                                 deployed_at: "2014-12-19 08:00:00", 
                                 deployed_by: "panderson74"})
 
-      @deploys_ordered = [@deploy3, @deploy4, @deploy2, @deploy1]
+      @deploys_ordered1 = [@deploy3, @deploy4, @deploy2, @deploy1]
+      @deploys_ordered2 = [@deploy1, @deploy2, @deploy4, @deploy3]
 
       expect(Deploy.count).to eq(4)
 
-      @new_ordered_deploys = Deploy.order_with_timespan(520.weeks, "DESC")
+      @new_ordered_deploys1 = Deploy.order_with_timespan(520.weeks, "DESC")
+      @new_ordered_deploys2 = Deploy.order_with_timespan(520.weeks, "ASC")
 
-      expect(@new_ordered_deploys).to eq(@deploys_ordered)
+      expect(@new_ordered_deploys1).to eq(@deploys_ordered1)
+      expect(@new_ordered_deploys2).to eq(@deploys_ordered2)
     end
 
     it 'should error when not given a git_revision, repo_id, or deployed_by' do
