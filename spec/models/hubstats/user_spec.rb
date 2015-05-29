@@ -2,11 +2,9 @@ require 'spec_helper'
 
 module Hubstats
   describe User, :type => :model do
-
     before do
       Hubstats::User.destroy_all()
     end
-
 
     it 'creates and returns a user' do
       user = build(:user_hash, id: 10)
@@ -18,6 +16,5 @@ module Hubstats
       user2 = Hubstats::User.create_or_update(build(:user_hash, login: 'elliothursh', id: 10))
       expect(user1).to eq(user2)
     end
-
   end
 end

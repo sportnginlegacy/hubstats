@@ -24,10 +24,22 @@ module Hubstats
     it 'orders deploys based on timespan' do
       repo = build(:repo)
 
-      @deploy1 = Deploy.create({git_revision: "c1a2b37", repo_id: repo.id, deployed_at: "2009-12-03 23:00:00", deployed_by: "emmasax1"})
-      @deploy2 = Deploy.create({git_revision: "kd92h10", repo_id: repo.id, deployed_at: "2010-05-26 22:00:00", deployed_by: "odelltuttle"})
-      @deploy3 = Deploy.create({git_revision: "k10d8as", repo_id: repo.id, deployed_at: "2015-08-21 12:00:00", deployed_by: "EvaMartinuzzi"})
-      @deploy4 = Deploy.create({git_revision: "917d9ss", repo_id: repo.id, deployed_at: "2014-12-19 08:00:00", deployed_by: "panderson74"})
+      @deploy1 = Deploy.create({git_revision: "c1a2b37",
+                                repo_id: repo.id, 
+                                deployed_at: "2009-12-03 23:00:00", 
+                                deployed_by: "emmasax1"})
+      @deploy2 = Deploy.create({git_revision: "kd92h10",
+                                repo_id: repo.id, 
+                                deployed_at: "2010-05-26 22:00:00", 
+                                deployed_by: "odelltuttle"})
+      @deploy3 = Deploy.create({git_revision: "k10d8as",
+                                repo_id: repo.id, 
+                                deployed_at: "2015-08-21 12:00:00", 
+                                deployed_by: "EvaMartinuzzi"})
+      @deploy4 = Deploy.create({git_revision: "917d9ss",
+                                repo_id: repo.id, 
+                                deployed_at: "2014-12-19 08:00:00", 
+                                deployed_by: "panderson74"})
 
       @deploys_ordered = [@deploy3, @deploy4, @deploy2, @deploy1]
 
@@ -65,6 +77,6 @@ module Hubstats
                                         :deployed_at => nil, 
                                         :deployed_by => "emmasax1")).to be_valid
     end
-	end
+  end
 end
 
