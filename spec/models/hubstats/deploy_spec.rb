@@ -115,5 +115,14 @@ module Hubstats
                            deployed_at: nil, 
                            deployed_by: "emmasax1")).to be_valid
     end
+
+    #it 'should pass when not given a deployed_at' do
+    #  repo = build(:repo)
+
+    #  expect(Deploy.create(git_revision: "c1a2b37", 
+    #                       repo_id: 314241, 
+    #                       deployed_at: nil, 
+    #                       deployed_by: "emmasax1")).not_to be_valid
+    #end
   end
 end

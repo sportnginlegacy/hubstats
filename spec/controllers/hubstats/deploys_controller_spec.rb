@@ -65,17 +65,17 @@ module Hubstats
 
       it "should correctly order all of the deploys" do
         post(:create, {"git_revision" => "c1a2b37",
-                                  "repo_name" => "sportngin/ngin",
-                                  "deployed_at" => "2009-02-03 03:00:00 -0500",
-                                  "deployed_by" => "emmasax1"})
+                       "repo_name" => "sportngin/ngin",
+                       "deployed_at" => "2009-02-03 03:00:00 -0500",
+                       "deployed_by" => "emmasax1"})
         post(:create, {"git_revision" => "kd9c102",
-                                  "repo_name" => "sportngin/ngin",
-                                  "deployed_at" => "2015-02-03 03:00:00 -0500",
-                                  "deployed_by" => "emmasax1"})
+                       "repo_name" => "sportngin/ngin",
+                       "deployed_at" => "2015-02-03 03:00:00 -0500",
+                       "deployed_by" => "emmasax1"})
         post(:create, {"git_revision" => "owk19sf",
-                                  "repo_name" => "sportngin/ngin",
-                                  "deployed_at" => "2011-02-03 03:00:00 -0500",
-                                  "deployed_by" => "emmasax1"})
+                       "repo_name" => "sportngin/ngin",
+                       "deployed_at" => "2011-02-03 03:00:00 -0500",
+                       "deployed_by" => "emmasax1"})
         get :index
         expect(response).to have_http_status(200)
         expect(response).to render_template(:index)
