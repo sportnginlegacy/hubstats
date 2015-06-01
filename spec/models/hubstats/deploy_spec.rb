@@ -89,7 +89,7 @@ module Hubstats
                            deployed_by: nil)).not_to be_valid
     end
 
-    it 'should create a deploy wihtout a deployed_at because nil turns into current time' do
+    it 'should create a deploy wihtout a deployed_at because nil time turns into current time' do
       repo = build(:repo)
       expect(Deploy.create(git_revision: "c1a2b37", 
                            repo_id: repo.id, 
