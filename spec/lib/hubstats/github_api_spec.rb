@@ -20,7 +20,7 @@ module Hubstats
           allow(ENV).to receive(:[]).and_return(nil)
         end
 
-        it 'initializes client with options param' do
+        it 'should initialize client with options param' do
           Hubstats::GithubAPI.configure({"access_token" => access_token})
           expect(Octokit::Client).to receive(:new).with(access_token: access_token).and_return(client)
           expect(Hubstats::GithubAPI.client).to eq(client)
@@ -32,7 +32,7 @@ module Hubstats
           allow(ENV).to receive(:[]).with("GITHUB_API_TOKEN").and_return("github_api_token")
         end
 
-        it 'initializes client with environment variables' do
+        it 'should initialize client with environment variables' do
           Hubstats::GithubAPI.configure({"access_token" => access_token})
           expect(Octokit::Client).to receive(:new).with(access_token: "github_api_token").and_return(client)
           expect(Hubstats::GithubAPI.client()).to eq(client)
@@ -46,7 +46,7 @@ module Hubstats
           allow(ENV).to receive(:[]).with("CLIENT_SECRET").and_return("client_secret")
         end 
 
-        it 'intializes client with client-id environment variables' do
+        it 'should intialize client with client-id environment variables' do
           Hubstats::GithubAPI.configure()
           expect(Octokit::Client).to receive(:new).with(client_id: "client_id", client_secret: "client_secret").and_return(client)
           expect(Hubstats::GithubAPI.client).to eq(client)
@@ -59,9 +59,9 @@ module Hubstats
           allow(ENV).to receive(:[]).and_return(nil)
         end
 
-        it 'fails to initialize at all' do
+        it 'should fail to initialize at all' do
           Hubstats::GithubAPI.configure()
-          expect(lambda { Hubstats::GithubAPI.client}).to raise_error Octokit::Unauthorized
+          expect{Hubstats::GithubAPI.client}.to raise_error Octokit::Unauthorized
         end
       end
     end
@@ -71,7 +71,7 @@ module Hubstats
       let(:repo) {'hubstats'}
       context "with old_endpoint" do
         let(:old_endpoint) {'www.hubstats.com'}
-        it 'calls delete_hook' do
+        it 'should call delete_hook' do
           allow(subject).to receive(:create_hook)
           expect(subject).to receive(:delete_hook).with(repo,old_endpoint)
           subject.update_hook('hubstats','www.hubstats.com')
@@ -79,7 +79,7 @@ module Hubstats
       end
 
       context "without old_point" do
-        it 'does not call delete_hook' do
+        it 'should not call delete_hook' do
           allow(subject).to receive(:create_hook)
           expect(subject).to_not receive(:delete_hook).with(repo)
           subject.update_hook('hubstats')
@@ -97,12 +97,12 @@ module Hubstats
         allow(subject).to receive(:client) {client}
       end
 
-      it "calls octokit create_hook" do
+      it "should call octokit create_hook" do
         expect(client).to receive(:create_hook)
         subject.create_hook(repo)
       end
 
-      it "rescues unprocessable entity" do
+      it "should rescue unprocessable entity" do
         allow(client).to receive(:create_hook) { raise Octokit::UnprocessableEntity }
         subject.create_hook(repo)
       end

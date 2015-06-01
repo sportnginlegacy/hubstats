@@ -12,7 +12,7 @@ module Hubstats
       #  .map(&:id)
 
       # sets to include user and repo, and sorts data
-      @deploys = Hubstats::Deploy.includes(:user).includes(:repo)
+      @deploys = Hubstats::Deploy.includes(:repo)
         .order_with_timespan(@timespan, params[:order])
       #  .belonging_to_users(params[:users]).belonging_to_repos(params[:repos])
       #  .paginate(:page => params[:page], :per_page => 15).order("deployed_at DESC")
@@ -30,11 +30,26 @@ module Hubstats
     end
 
     def create
-      @deploy = Deploy.new(params[:deploy])
-      if @deploy.save
-        redirect_to :action => 'index'
+      if params[:deployed_by].nil? || params[:git_revision].nil? || params[:repo_name].nil?
+        render text: "Missing a necessary parameter: deployer, git revision, or repository name.", :status => 400 and return
       else
-        render :nothing => true, :status => 400
+        @deploy = Deploy.new
+        @deploy.deployed_at = params[:deployed_at]
+        @deploy.deployed_by = params[:deployed_by]
+        @deploy.git_revision = params[:git_revision]
+        @repo = Hubstats::Repo.where(full_name: params[:repo_name])
+        
+        if @repo.empty?
+          render text: "Repository name is invalid.", :status => 400 and return
+        else
+          @deploy.repo_id = @repo.first.id.to_i
+        end
+        
+        if @deploy.save
+          render :nothing =>true, :status => 200 and return
+        else
+          render :nothing => true, :status => 400 and return
+        end
       end
     end
 

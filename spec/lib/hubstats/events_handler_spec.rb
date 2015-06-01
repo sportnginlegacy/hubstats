@@ -8,30 +8,30 @@ module Hubstats
       let(:payload) {build(:pull_request_payload_hash)}
 
       subject {Hubstats::EventsHandler.new()}
-      it 'successfully routes the event' do
+      it 'should successfully route the event' do
         expect(subject).to receive(:pull_processor)
         subject.route(payload,payload[:type])
       end
 
-      it 'adds labels to pull request' do
-        allow(Hubstats::PullRequest).to receive(:create_or_update) {pull}
-        allow(Hubstats::Repo).to receive(:where) {[repo,repo]}
-        allow(Hubstats::GithubAPI).to receive(:get_labels_for_pull) {['low','high']}
+      it 'should add labels to pull request' do
+        allow(PullRequest).to receive(:create_or_update) {pull}
+        allow(Repo).to receive(:where) {[repo,repo]}
+        allow(GithubAPI).to receive(:get_labels_for_pull) {['low','high']}
         expect(pull).to receive(:add_labels).with(['low','high'])
         subject.route(payload,payload[:type])
       end
     end
 
     context "CommentEvent" do
-      it 'successfully routes the event' do
-        ehandler = Hubstats::EventsHandler.new()
+      it 'should successfully route the event' do
+        ehandler = EventsHandler.new()
         payload = build(:comment_payload_hash)
         expect(ehandler).to receive(:comment_processor)
 
         ehandler.route(payload,payload[:type])
       end
 
-      it 'successfully processes the event' do
+      it 'should successfully process the event' do
         ehandler = Hubstats::EventsHandler.new()
         payload = build(:comment_payload_hash)
         expect(Hubstats::Comment).to receive(:create_or_update)
@@ -39,7 +39,7 @@ module Hubstats
         ehandler.route(payload,payload[:type])
       end
 
-      it 'successfully creates_or_updates the event' do
+      it 'should successfully creates_or_updates the event' do
         ehandler = Hubstats::EventsHandler.new()
         payload = build(:comment_payload_hash)
         expect(ehandler.route(payload,payload[:type]).class).to eq(Hubstats::Comment)

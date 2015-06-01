@@ -21,7 +21,7 @@ module Hubstats
       if exists = Hubstats::Label.where(name: label[:name]).first
         return exists
       else
-        Hubstats::Label.new(name: label[:name], url: label[:url], color: label[:color])
+        Label.new(name: label[:name], url: label[:url], color: label[:color])
       end
     end
 
