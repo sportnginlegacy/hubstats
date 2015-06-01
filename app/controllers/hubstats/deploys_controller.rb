@@ -31,17 +31,24 @@ module Hubstats
 
     def create
       if params[:deployed_by].nil? || params[:git_revision].nil? || params[:repo_name].nil?
-        render :nothing => true, :status => 400
+        render text: "Missing a necessary parameter: deployer, git revision, or repository name.", :status => 400 and return
       else
         @deploy = Deploy.new
         @deploy.deployed_at = params[:deployed_at]
         @deploy.deployed_by = params[:deployed_by]
         @deploy.git_revision = params[:git_revision]
-        @deploy.repo_id = Hubstats::Repo.where(full_name: params[:repo_name]).first.id.to_i
-        if @deploy.save
-          render :nothing =>true, :status => 200
+        @repo = Hubstats::Repo.where(full_name: params[:repo_name])
+        
+        if @repo.empty?
+          render text: "Repository name is invalid.", :status => 400 and return
         else
-          render :nothing => true, :status => 400
+          @deploy.repo_id = @repo.first.id.to_i
+        end
+        
+        if @deploy.save
+          render :nothing =>true, :status => 200 and return
+        else
+          render :nothing => true, :status => 400 and return
         end
       end
     end

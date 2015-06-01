@@ -55,6 +55,14 @@ module Hubstats
                        "deployed_by" => "emmasax1"})
         expect(response).to have_http_status(400)
       end
+
+      it 'should NOT create a deploy when given a non existing repo_name' do
+        post(:create, {"git_revision" => "c1a2b37",
+                       "repo_name" => "sportngin/make_resourceful",
+                       "deployed_at" => "2009-02-03 03:00:00 -0500",
+                       "deployed_by" => "emmasax1"})
+        expect(response).to have_http_status(400)
+      end
     end
 
     describe "#index" do

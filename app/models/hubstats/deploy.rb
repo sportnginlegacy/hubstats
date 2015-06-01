@@ -3,7 +3,7 @@ module Hubstats
 
     before_validation :check_time, on: :create
     validates :git_revision, :deployed_at, :deployed_by, :repo_id, presence: true
-    validates_associated :repo
+    #validates_associated :repo
 
     def check_time
         self.deployed_at = Time.now.getutc if deployed_at.nil?
