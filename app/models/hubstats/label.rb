@@ -18,7 +18,7 @@ module Hubstats
     has_and_belongs_to_many :pull_requests, :join_table => 'hubstats_labels_pull_requests'
 
     def self.first_or_create(label)
-      if exists = Label.where(name: label[:name]).first
+      if exists = Hubstats::Label.where(name: label[:name]).first
         return exists
       else
         Label.new(name: label[:name], url: label[:url], color: label[:color])

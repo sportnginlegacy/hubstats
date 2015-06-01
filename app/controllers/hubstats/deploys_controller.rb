@@ -12,7 +12,7 @@ module Hubstats
       #  .map(&:id)
 
       # sets to include user and repo, and sorts data
-      @deploys = Hubstats::Deploy.includes(:user).includes(:repo)
+      @deploys = Hubstats::Deploy.includes(:repo)
         .order_with_timespan(@timespan, params[:order])
       #  .belonging_to_users(params[:users]).belonging_to_repos(params[:repos])
       #  .paginate(:page => params[:page], :per_page => 15).order("deployed_at DESC")
