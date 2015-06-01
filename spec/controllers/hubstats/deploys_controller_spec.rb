@@ -59,7 +59,7 @@ module Hubstats
 
     describe "#index" do
 
-    	before :each do
+      before :each do
         create(:repo, :full_name => "sportngin/ngin")
       end
 
