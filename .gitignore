@@ -10,3 +10,4 @@ test/dummy/db/migrate/*
 .DS_Store
 .gitkeep
 Gemfile.lock
+.idea
