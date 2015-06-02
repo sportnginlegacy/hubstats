@@ -6,7 +6,8 @@
 
   <div class="deploy-info col-lg-9 col-md-9 col-sm-9">
     <h4> 
-      <%= link_to deploy.repo.name, repo_path(deploy.repo.name) %>
+      <%= link_to deploy.repo.name, repo_path(deploy.repo.name) %> /
+      <%= link_to deploy.git_revision, repo_path(deploy.repo.name) %>
     </h4>
     <br> <!--will eventually have to get link working-->
     by <%= link_to deploy.deployed_by, user_path(deploy.deployed_by) %>

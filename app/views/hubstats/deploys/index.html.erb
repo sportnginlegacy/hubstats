@@ -33,8 +33,9 @@
 
       <%= render 'hubstats/tables/deploys' %>
 
-
-
+      <div class="text-center">
+        <%= will_paginate @deploy, renderer: BootstrapPagination::Rails %>
+      </div>
     </div>
   </div>
 </div>
