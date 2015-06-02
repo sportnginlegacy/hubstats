@@ -17,7 +17,7 @@ namespace :hubstats do
           Rake::Task["hubstats:populate:setup_repo"].execute({repo: repo})
         end
       end
-      puts "Finished with initial updating, grabing extra info about pull requests"
+      puts "Finished with initial updating, grabbing extra info about pull requests"
       Rake::Task["hubstats:populate:update_pulls"].execute
     end
 
