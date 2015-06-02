@@ -45,7 +45,10 @@ module Hubstats
         else
           @deploy.repo_id = @repo.first.id.to_i
         end
-        
+
+        #pull_request_id_array = params[:pull_reqeust_ids].scan(/(\d+)/).flatten
+        #@deploy.pull_requests = Hubstats::PullRequsts.where(id: pull_request_id_array)
+
         if @deploy.save
           render :nothing =>true, :status => 200 and return
         else
