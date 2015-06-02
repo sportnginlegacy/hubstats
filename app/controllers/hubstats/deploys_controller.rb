@@ -15,6 +15,7 @@ module Hubstats
       @deploys = Hubstats::Deploy.includes(:repo)
         .order_with_timespan(@timespan, params[:order])
         .paginate(:page => params[:page], :per_page => 15)
+        .group_by(params[:group])
       #  .belonging_to_users(params[:users]).belonging_to_repos(params[:repos])
 
       if params[:group] == 'user'

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150526155910) do
+ActiveRecord::Schema.define(:version => 20150602150102) do
 
   create_table "hubstats_comments", :force => true do |t|
     t.string   "kind"
@@ -35,6 +35,11 @@ ActiveRecord::Schema.define(:version => 20150526155910) do
 
   add_index "hubstats_comments", ["pull_request_id"], :name => "index_hubstats_comments_on_pull_request_id"
   add_index "hubstats_comments", ["user_id"], :name => "index_hubstats_comments_on_user_id"
+
+  create_table "hubstats_deploy_users", :force => true do |t|
+    t.string "github_username"
+    t.string "deploying_username"
+  end
 
   create_table "hubstats_deploys", :force => true do |t|
     t.string   "git_revision"
