@@ -26,8 +26,5 @@ def replace_name_with_id (repo_name)
 end
 
 deploy_list.each do |git_revision, repo_name, deployed_at, deployed_by, user_id|
-	Hubstats::Deploy.create(git_revision: git_revision,
-		                      repo_id: replace_name_with_id(repo_name),
-		                      deployed_at: deployed_at,
-		                      deployed_by: deployed_by)
+	Hubstats::Deploy.create(git_revision: git_revision, repo_id: replace_name_with_id(repo_name), deployed_at: deployed_at, deployed_by: deployed_by, user_id: user_id)
 end

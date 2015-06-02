@@ -22,7 +22,7 @@ module Hubstats
 
     attr_accessible :git_revision, :repo_id, :deployed_at, :deployed_by, :user_id#, :pull_requests
 
-    has_and_belongs_to_many :users
+    belongs_to :user
     belongs_to :repo
     has_many :pull_requests
 
