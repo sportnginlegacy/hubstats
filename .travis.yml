@@ -1,4 +1,9 @@
+sudo: false
+branches:
+  only:
+    - master
 language: ruby
+cache: bundler
 env:
   - RAILS_VERSION=4.0
   - RAILS_VERSION=3.2
@@ -10,3 +15,4 @@ before_script:
   - bundle exec rake app:db:create
   - bundle exec rake app:db:migrate
   - bundle exec rake app:db:test:prepare
+
