@@ -10,8 +10,10 @@
       <%= link_to deploy.git_revision, repo_path(deploy.repo.name) %>
     </h4>
     <br> <!--should route to the user/id path-->
-    by <%= link_to deploy.user.login, user_path(deploy.user) %>
+    by <%= link_to deploy.deployed_by, user_path(deploy.deployed_by) %>
     <%= "#{time_ago_in_words(deploy.deployed_at)} ago "%>
+
+    Pull Requests in this Deploy: <%= deploy.pull_requests.each do |pull_request| pull_request.id end %>
   </div>
 
   <div class="col-lg-2 col-md-2 col-sm-2" >
