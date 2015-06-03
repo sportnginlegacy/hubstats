@@ -12,15 +12,22 @@
     <br> <!--should route to the user/id path-->
     by <%= link_to deploy.deployed_by, user_path(deploy.deployed_by) %>
     <%= "#{time_ago_in_words(deploy.deployed_at)} ago "%>
-
-    Pull Requests in this Deploy: <%= deploy.pull_requests.each do |pull_request| pull_request.id end %>
+    <br>
+  </div>
+  <div align="right">
+      <% deploy.pull_requests.each_with_index do |pull_request, index| %>
+        <% if index == deploy.pull_requests.size - 1 %>
+          # <%= pull_request.number.to_s %>
+        <% else %>
+          # <%= pull_request.number.to_s %>,
+        <% end %>
+      <% end %>
   </div>
 
-  <div class="col-lg-2 col-md-2 col-sm-2" >
+  <!--<div class="col-lg-2 col-md-2 col-sm-2" >
     <div class="deploy-right">
-      <a class="subtle"
-        <span class="octicon octicon-mark-github"></span>
-      </a>
+      # <%= deploy.pull_requests %> 
+      </span>
     </div>
-  </div>
+  </div>-->
 </div>

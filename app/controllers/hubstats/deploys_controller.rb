@@ -12,7 +12,7 @@ module Hubstats
       #  .map(&:id)
 
       # sets to include user and repo, and sorts data
-      @deploys = Hubstats::Deploy.includes(:repo)
+      @deploys = Hubstats::Deploy.includes(:repo).includes(:pull_requests)
         .order_with_timespan(@timespan, params[:order])
         .group_by(params[:group])
         .paginate(:page => params[:page], :per_page => 15)
@@ -47,7 +47,8 @@ module Hubstats
         end
 
         @pull_request_id_array = params[:pull_request_ids].split(",").map {|i| i.strip.to_i}
-        @deploy.pull_requests = Hubstats::PullRequest.where(id: @pull_request_id_array)
+        @deploy.pull_requests = Hubstats::PullRequest.where(repo_id: @deploy.repo_id)
+                                                     .where(number: @pull_request_id_array)
 
         if @deploy.save
           render :nothing =>true, :status => 200 and return

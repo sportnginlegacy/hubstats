@@ -19,7 +19,7 @@ module Hubstats
     scope :with_user_name, select("DISTINCT hubstats_users.login as user_name, hubstats_deploys.*").joins("LEFT JOIN hubstats_users ON hubstats_users.id = hubstats_deploys.user_id")
     #scope :has_many_pull_requests, lambda {|| where(....)}
 
-    attr_accessible :git_revision, :repo_id, :deployed_at, :deployed_by, :user_id
+    attr_accessible :git_revision, :repo_id, :deployed_at, :deployed_by, :user_id, :pull_request_ids
 
     belongs_to :user
     belongs_to :repo
