@@ -117,5 +117,22 @@ module Hubstats
         expect(response).to render_template(:index)
       end
     end
+
+    describe "#show" do
+
+      before :each do
+        create(:repo, :full_name => "sportngin/ngin")
+      end
+
+      it "should show the pull requests of the specific deploy" do
+        deploy = create(:deploy, :git_revision => "c1a2b37",
+                        :repo_id => 101010,
+                        :deployed_at => "2009-02-03 03:00:00 -0500",
+                        :deployed_by => "emmasax1")
+        get :show, id: deploy
+        expect(assigns(:deploy)).to eq(deploy)
+        expect(assigns(:deploy).repo_id).to eq(101010)
+      end
+    end
   end
 end
