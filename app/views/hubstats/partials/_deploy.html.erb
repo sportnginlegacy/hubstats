@@ -1,10 +1,10 @@
 <div class="row single-deploy">
 
-<!--  <div class="user-image col-lg-1 col-md-1 col-sm-1" >
-    <img src= <%= deploy.deployed_by%> alt= <%= deploy.deployed_by%> >
-  </div>-->
+  <div class="user-image col-lg-1 col-md-1 col-sm-1" >
+    <img src= <%= deploy.deployed_by %> alt= <%= deploy.deployed_by%> >
+  </div>
 
-  <div class="deploy-info col-lg-9 col-md-9 col-sm-9">
+  <div class="deploy-info col-lg-6 col-md-7 col-sm-6">
     <h4> 
       <%= link_to deploy.repo.name, repo_path(deploy.repo.name) %> /
       <%= link_to deploy.git_revision, repo_path(deploy.repo.name) %>
@@ -14,20 +14,17 @@
     <%= "#{time_ago_in_words(deploy.deployed_at)} ago "%>
     <br>
   </div>
-  <div align="right">
+
+  <div class="col-lg-5 col-md-5 col-sm-5">
+    <div class="deploy-right">
       <% deploy.pull_requests.each_with_index do |pull_request, index| %>
         <% if index == deploy.pull_requests.size - 1 %>
-          # <%= pull_request.number.to_s %>
+          <%= link_to pull_request.number.to_s, pull_request.html_url %>
+          <span class="octicon octicon-mark-github"></span>
         <% else %>
-          # <%= pull_request.number.to_s %>,
+          <%= link_to pull_request.number.to_s, pull_request.html_url %>,
         <% end %>
       <% end %>
-  </div>
-
-  <!--<div class="col-lg-2 col-md-2 col-sm-2" >
-    <div class="deploy-right">
-      # <%= deploy.pull_requests %> 
-      </span>
     </div>
-  </div>-->
+  </div>
 </div>
