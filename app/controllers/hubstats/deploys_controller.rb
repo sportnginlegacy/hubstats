@@ -28,6 +28,14 @@ module Hubstats
     end
 
     def show
+      @deploy = Hubstats::Deploy.find(params[:id])
+      @repo = @deploy.repo
+      @pull_requests = Hubstats::PullRequest.belonging_to_deploy(@deploy.id)
+      #@pull_request_count = Hubstats::PullRequest.where(deploy_id: params[:id]).additions.belonging_to_pull_request(params[:id]).includes(:user).created_since(@timespan).count(:all)
+      # @stats = {
+        #pull_request_count: @pull_request_count,
+        #net_additions: @pull_request.additions.to_i - @pull_request.deletions.to_i
+      # }
     end
 
     def create

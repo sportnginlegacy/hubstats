@@ -1,13 +1,13 @@
 <div class="row single-deploy">
 
   <div class="user-image col-lg-1 col-md-1 col-sm-1" >
-    <img src= <%= deploy.deployed_by %> alt= <%= deploy.deployed_by%> >
+    <!-- <img src= <%= deploy.deployed_by %> alt= <%= deploy.deployed_by%> > -->
   </div>
 
   <div class="deploy-info col-lg-6 col-md-7 col-sm-6">
     <h4> 
       <%= link_to deploy.repo.name, repo_path(deploy.repo.name) %> /
-      <%= link_to deploy.git_revision, repo_path(deploy.repo.name) %>
+      <%= link_to deploy.git_revision, deploy_path(deploy) %>
     </h4>
     <br> <!--should route to the user/id path-->
     by <%= link_to deploy.deployed_by, user_path(deploy.deployed_by) %>
