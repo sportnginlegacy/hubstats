@@ -5,11 +5,11 @@
           <div class="row single-pull group-header">
             <h3> <%= group[0] %> </h3>
           </div>
-          <%= render partial: "hubstats/partials/pull", collection: group[1], as: :pull %>
+          <%= render partial: 'hubstats/partials/pull', collection: group[1], as: :pull %>
         </div>
       <% end %>
   <% else %>
-    <%= render "hubstats/tables/pulls" %>
+    <%= render 'hubstats/tables/pulls' %>
   <% end %>
 <% else %>
   <p> No pull requests to show </p>

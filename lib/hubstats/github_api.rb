@@ -6,11 +6,11 @@ module Hubstats
 
     def self.configure(options={})
       @@auth_info = {}
-      if access_token = ENV["GITHUB_API_TOKEN"] || options["access_token"]
+      if access_token = ENV['GITHUB_API_TOKEN'] || options["access_token"]
         @@auth_info[:access_token] = access_token
       else
-        @@auth_info[:client_id] = ENV["CLIENT_ID"] || options["client_id"]
-        @@auth_info[:client_secret] = ENV["CLIENT_SECRET"] || options["client_secret"]
+        @@auth_info[:client_id] = ENV['CLIENT_ID'] || options["client_id"]
+        @@auth_info[:client_secret] = ENV['CLIENT_SECRET'] || options["client_secret"]
       end
       @@auth_info
     end
@@ -30,7 +30,7 @@ module Hubstats
     #
     # Returns an array of that particular kind
     def self.inline(repo_name, kind, options={})
-      path = ["repos",repo_name,kind].join("/")
+      path = ["repos",repo_name,kind].join('/')
       octo = client({:auto_paginate => true })
       octo.paginate(path, options) do |data, last_response|
         last_response.data.each{|v| route(v,kind,repo_name)}.clear
@@ -80,20 +80,20 @@ module Hubstats
       begin
         client.create_hook(
           repo.full_name,
-          "web",
+          'web',
           {
             :url => Hubstats.config.webhook_endpoint,
-            :content_type => "json",
+            :content_type => 'json',
             :secret => Hubstats.config.webhook_secret
           },
           {
             :events => [
-              "pull_request",
-              "pull_request_review_comment",
-              "commit_comment",
-              "issues",
-              "issue_comment",
-              "member"
+              'pull_request',
+              'pull_request_review_comment',
+              'commit_comment',
+              'issues',
+              'issue_comment',
+              'member'
               ],
             :active => true
           }
@@ -169,7 +169,7 @@ module Hubstats
     # repo - the particular repository, you want to add labels to
     def self.add_labels(repo)
       get_labels(repo).each do |label|
-        inline(repo.full_name,"issues", labels: label.name, state: "all")
+        inline(repo.full_name,'issues', labels: label.name, state: 'all')
       end
     end
 

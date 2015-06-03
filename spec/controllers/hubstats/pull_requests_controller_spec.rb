@@ -1,4 +1,4 @@
-require "spec_helper"
+require 'spec_helper'
 
 module Hubstats
   RSpec.describe PullRequestsController, :type => :controller do

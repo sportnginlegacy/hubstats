@@ -1,8 +1,8 @@
-require "spec_helper"
+require 'spec_helper'
 
 module Hubstats
   describe Comment, :type => :model do
-    it "should create and return a comment and user" do
+    it 'should create and return a comment and user' do
       github_user = {:login => "elliothursh",
                      :id => 10,
                     :type => "User"}

@@ -1,8 +1,8 @@
-require "spec_helper"
+require 'spec_helper'
 
 module Hubstats
   describe Repo, :type => :model do
-  	it "should create a repo" do
+  	it 'should create a repo' do
   		repo_hash = {id: 131242,
   		             owner_id: 3728684,
   		             name: "example_name",

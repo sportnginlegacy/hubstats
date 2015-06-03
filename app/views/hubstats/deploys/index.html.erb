@@ -31,7 +31,7 @@
         <option value="repo">Repo</option>
       </select>
 
-      <%= render "hubstats/tables/deploys" %>
+      <%= render 'hubstats/tables/deploys' %>
 
       <div class="text-center">
         <%= will_paginate @deploy, renderer: BootstrapPagination::Rails %>

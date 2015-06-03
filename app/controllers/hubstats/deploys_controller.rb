@@ -18,9 +18,9 @@ module Hubstats
         .paginate(:page => params[:page], :per_page => 15)
       #  .belonging_to_users(params[:users]).belonging_to_repos(params[:repos])
 
-      if params[:group] == "user"
+      if params[:group] == 'user'
         @groups = @deploys.to_a.group_by(&:user_name)
-      elsif params[:group] == "repo"
+      elsif params[:group] == 'repo'
         @groups = @deploys.to_a.group_by(&:repo_name)
       else
         @groups = nil

@@ -1,4 +1,4 @@
-require "spec_helper"
+require 'spec_helper'
 
 module Hubstats
   describe DeploysController, :type => :controller do
@@ -9,7 +9,7 @@ module Hubstats
         create(:repo, :full_name => "sportngin/ngin")
       end
 
-      it "should create a deploy" do
+      it 'should create a deploy' do
         post(:create, {"git_revision" => "c1a2b37",
                        "repo_name" => "sportngin/ngin",
                        "deployed_at" => "2009-02-03 03:00:00 -0500",
@@ -23,7 +23,7 @@ module Hubstats
         expect(response).to have_http_status(200)
       end
 
-      it "should create a deploy without a deployed_at because nil time turns into current time" do
+      it 'should create a deploy without a deployed_at because nil time turns into current time' do
         post(:create, {"git_revision" => "c1a2b37",
                        "repo_name" => "sportngin/ngin",
                        "deployed_at" => nil,
@@ -36,7 +36,7 @@ module Hubstats
         expect(response).to have_http_status(200)
       end
 
-      it "should NOT create a deploy without a git_revision" do
+      it 'should NOT create a deploy without a git_revision' do
         post(:create, {"git_revision" => nil,
                        "repo_name" => "sportngin/ngin",
                        "deployed_at" => "2009-02-03 03:00:00 -0500",
@@ -45,7 +45,7 @@ module Hubstats
         expect(response).to have_http_status(400)
       end
 
-      it "should NOT create a deploy without a deployed_by" do
+      it 'should NOT create a deploy without a deployed_by' do
         post(:create, {"git_revision" => "c1a2b37",
                        "repo_name" => "sportngin/ngin",
                        "deployed_at" => "2009-02-03 03:00:00 -0500",
@@ -54,7 +54,7 @@ module Hubstats
         expect(response).to have_http_status(400)
       end
 
-      it "should NOT create a deploy without a repo_name" do
+      it 'should NOT create a deploy without a repo_name' do
         post(:create, {"git_revision" => "c1a2b37",
                        "repo_name" => nil,
                        "deployed_at" => "2009-02-03 03:00:00 -0500",
@@ -63,7 +63,7 @@ module Hubstats
         expect(response).to have_http_status(400)
       end
 
-      it "should NOT create a deploy when given a non existing repo_name" do
+      it 'should NOT create a deploy when given a non existing repo_name' do
         post(:create, {"git_revision" => "c1a2b37",
                        "repo_name" => "sportngin/make_resourceful",
                        "deployed_at" => "2009-02-03 03:00:00 -0500",
@@ -72,7 +72,7 @@ module Hubstats
         expect(response).to have_http_status(400)
       end
 
-      it "should NOT create a deploy without pull request ids" do
+      it 'should NOT create a deploy without pull request ids' do
         post(:create, {"git_revision" => "c1a2b37",
                        "repo_name" => "sportngin/make_resourceful",
                        "deployed_at" => "2009-02-03 03:00:00 -0500",
@@ -81,7 +81,7 @@ module Hubstats
         expect(response).to have_http_status(400)
       end
 
-      it "should NOT create a deploy when given empty pull request ids" do
+      it 'should NOT create a deploy when given empty pull request ids' do
         post(:create, {"git_revision" => "c1a2b37",
                        "repo_name" => "sportngin/make_resourceful",
                        "deployed_at" => "2009-02-03 03:00:00 -0500",

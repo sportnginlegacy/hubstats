@@ -53,7 +53,7 @@
         <option value="repo">Repo</option>
       </select>
 
-      <%= render "hubstats/tables/grouped_pulls" %>
+      <%= render 'hubstats/tables/grouped_pulls' %>
   
       <div class="text-center">
         <%= will_paginate @pull_requests, renderer: BootstrapPagination::Rails %>

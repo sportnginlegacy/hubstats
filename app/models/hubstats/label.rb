@@ -15,7 +15,7 @@ module Hubstats
 
     attr_accessible :url, :name, :color
 
-    has_and_belongs_to_many :pull_requests, :join_table => "hubstats_labels_pull_requests"
+    has_and_belongs_to_many :pull_requests, :join_table => 'hubstats_labels_pull_requests'
 
     def self.first_or_create(label)
       if exists = Hubstats::Label.where(name: label[:name]).first

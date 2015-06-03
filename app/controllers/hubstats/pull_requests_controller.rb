@@ -20,9 +20,9 @@ module Hubstats
         .state_based_order(@timespan,params[:state],params[:order])
         .paginate(:page => params[:page], :per_page => 15)
 
-      if params[:group] == "user"
+      if params[:group] == 'user'
         @groups = @pull_requests.to_a.group_by(&:user_name)
-      elsif params[:group] == "repo"
+      elsif params[:group] == 'repo'
         @groups = @pull_requests.to_a.group_by(&:repo_name)
       end
 

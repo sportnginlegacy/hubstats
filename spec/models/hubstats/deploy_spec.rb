@@ -1,8 +1,8 @@
-require "spec_helper"
+require 'spec_helper'
 
 module Hubstats
   describe Deploy, :type => :model do
-    it "should create a deploy and check validations" do
+    it 'should create a deploy and check validations' do
       repo = build(:repo)
       deploy_hash = {git_revision: "c1a2b37", 
                      repo_id: repo.id,
@@ -16,7 +16,7 @@ module Hubstats
       expect(deploy.deployed_by).to eq(deploy_hash[:deployed_by])
     end
 
-    it "should order deploys based on timespan ASC" do
+    it 'should order deploys based on timespan ASC' do
       repo = build(:repo)
       deploy1 = Deploy.create(git_revision: "c1a2b37",
                               repo_id: repo.id, 
@@ -40,7 +40,7 @@ module Hubstats
       expect(new_ordered_deploys).to eq(deploys_ordered)
     end
 
-    it "should order deploys based on timespan DESC" do
+    it 'should order deploys based on timespan DESC' do
       repo = build(:repo)
       deploy1 = Deploy.create(git_revision: "c1a2b37",
                               repo_id: repo.id, 
@@ -64,7 +64,7 @@ module Hubstats
       expect(new_ordered_deploys).to eq(deploys_ordered)
     end
 
-    it "should NOT create a deploy without a git_revision" do
+    it 'should NOT create a deploy without a git_revision' do
       repo = build(:repo)
       expect(Deploy.create(git_revision: nil, 
                            repo_id: repo.id, 
@@ -72,7 +72,7 @@ module Hubstats
                            deployed_by: "emmasax1")).not_to be_valid
     end
 
-    it "should NOT create a deploy without a repo_id" do
+    it 'should NOT create a deploy without a repo_id' do
       repo = build(:repo)
       expect(Deploy.create(git_revision: "c1a2b37", 
                            repo_id: nil, 
@@ -81,7 +81,7 @@ module Hubstats
     end
 
 
-    it "should NOT create a deploy without a deployed_by" do
+    it 'should NOT create a deploy without a deployed_by' do
       repo = build(:repo)
       expect(Deploy.create(git_revision: "c1a2b37", 
                            repo_id: repo.id, 
@@ -89,7 +89,7 @@ module Hubstats
                            deployed_by: nil)).not_to be_valid
     end
 
-    it "should create a deploy wihtout a deployed_at because nil time turns into current time" do
+    it 'should create a deploy wihtout a deployed_at because nil time turns into current time' do
       repo = build(:repo)
       expect(Deploy.create(git_revision: "c1a2b37", 
                            repo_id: repo.id, 
@@ -97,7 +97,7 @@ module Hubstats
                            deployed_by: "emmasax1")).to be_valid
     end
 
-    it "should NOT create a deploy without an already valid repo_id" do
+    it 'should NOT create a deploy without an already valid repo_id' do
       repo = build(:repo, :id => nil,
                           :name => nil,
                           :full_name => nil)

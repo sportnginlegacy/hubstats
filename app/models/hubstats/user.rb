@@ -100,15 +100,15 @@ module Hubstats
 
     def self.custom_order(order_params)
       if order_params
-        order = order_params.include?("asc") ? "ASC" : "DESC"
-        case order_params.split("-").first
-        when "pulls"
+        order = order_params.include?('asc') ? "ASC" : "DESC"
+        case order_params.split('-').first
+        when 'pulls'
           order("pull_request_count #{order}")
-        when "comments"
+        when 'comments'
           order("comment_count #{order}")
-        when "additions"
+        when 'additions'
           order("average_additions #{order}")
-        when "deletions"
+        when 'deletions'
           order("average_deletions #{order}")
         else
           order("pull_request_count #{order}")

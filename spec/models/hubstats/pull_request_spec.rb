@@ -1,8 +1,8 @@
-require "spec_helper"
+require 'spec_helper'
 
 module Hubstats
   describe PullRequest, :type => :model do
-    it "should create and return a Pull Request" do
+    it 'should create and return a Pull Request' do
       pull = build(:pull_request_hash)
       pull_request = PullRequest.create_or_update(pull)
       expect(pull_request.id).to eq(pull[:id])
