@@ -47,9 +47,9 @@ namespace :hubstats do
       repo = repo_checker(args[:repo])
       puts "Adding comments to " + repo.full_name
 
-      pull_comments = Hubstats::GithubAPI.inline(repo.full_name,'pulls/comments')
-      issue_comments = Hubstats::GithubAPI.inline(repo.full_name,'issues/comments')
-      commit_comments = Hubstats::GithubAPI.inline(repo.full_name,'comments')
+      pull_comments = Hubstats::GithubAPI.inline(repo.full_name,"pulls/comments")
+      issue_comments = Hubstats::GithubAPI.inline(repo.full_name,"issues/comments")
+      commit_comments = Hubstats::GithubAPI.inline(repo.full_name,"comments")
     end
 
     desc "Pull pull requests from Github saves in database"
@@ -57,7 +57,7 @@ namespace :hubstats do
       repo = repo_checker(args[:repo])
       puts "Adding pulls to " + repo.full_name
       
-      pull_requests = Hubstats::GithubAPI.inline(repo.full_name,'pulls', :state => "all")
+      pull_requests = Hubstats::GithubAPI.inline(repo.full_name,"pulls", :state => "all")
     end
 
     desc "Pull labels from Github saves in database"

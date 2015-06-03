@@ -1,6 +1,6 @@
 <% if @comments.length > 0 %>
   <div class="comments">
-    <%= render partial: 'hubstats/partials/comment', collection: @comments, as: :comment %>
+    <%= render partial: "hubstats/partials/comment", collection: @comments, as: :comment %>
   </div>
 <% else %>
   <p> No comments to show </p>

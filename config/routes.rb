@@ -9,6 +9,6 @@ Hubstats::Engine.routes.draw do
   get "/repos" => "repos#dashboard", :as => :repos #routes to list of repos and stats
   get "/:repo" => "repos#show", :as => :repo #routes to specific repo's stats
   scope "/:repo", :as => :repo do
-    get '/pull/:id' => "pull_requests#show", :as => :pull
+    get "/pull/:id" => "pull_requests#show", :as => :pull
   end
 end

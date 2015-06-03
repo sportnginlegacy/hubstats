@@ -12,9 +12,9 @@ module Hubstats
       end
     end
 
-    require 'octokit'
-    require 'select2-rails'
-    require 'will_paginate-bootstrap'
+    require "octokit"
+    require "select2-rails"
+    require "will_paginate-bootstrap"
 
     config.generators do |g|
       g.test_framework :rspec

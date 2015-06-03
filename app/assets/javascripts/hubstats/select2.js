@@ -7,7 +7,7 @@ $(document).ready(function() {
     multiple: true,
     ajax: {
       url: getPath("repo"),
-      dataType: 'json',
+      dataType: "json",
       quietMillis: 100,
       data: function (term) {
         return {
@@ -41,7 +41,7 @@ $(document).ready(function() {
         });
       }
     }
-  }).select2('val', []); 
+  }).select2("val", []); 
 
 
   $("#users").select2({
@@ -49,7 +49,7 @@ $(document).ready(function() {
     multiple: true,
     ajax: {
       url: getPath("user"),
-      dataType: 'json',
+      dataType: "json",
       quietMillis: 100,
       data: function (term) {
         return {
@@ -83,13 +83,13 @@ $(document).ready(function() {
         });
       }
     } 
-  }).select2('val', []);
+  }).select2("val", []);
 });
 
 
 function getPath (model) {
-  if (model == 'user') {
-    return $("#brand").attr('data-user-path');}
-  else if (model == 'repo')
-    return $("#brand").attr('data-repo-path');
+  if (model == "user") {
+    return $("#brand").attr("data-user-path");}
+  else if (model == "repo")
+    return $("#brand").attr("data-repo-path");
 };

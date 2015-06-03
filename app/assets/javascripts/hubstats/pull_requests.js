@@ -9,11 +9,11 @@ $(document).ready(function() {
   changeColors();
 
   $("#state-group > .btn").on("click", function(){
-    updateQueryStringParameter(queryParameters,"state",$(this).attr('id'));
+    updateQueryStringParameter(queryParameters,"state",$(this).attr("id"));
   });
 
   $("#sort-group > .btn").on("click", function(){
-    updateQueryStringParameter(queryParameters,"order",$(this).attr('id'));
+    updateQueryStringParameter(queryParameters,"order",$(this).attr("id"));
   });
 
   $("#group-by").on("change", function(){
@@ -40,10 +40,10 @@ function updateQueryStringParameter(queryParameters, key, value) {
 
   var i;
   for (i = 0; i < queryParameters.length; i++) {
-    var separator = uri.indexOf('?') !== -1 ? "&" : "?";
+    var separator = uri.indexOf("?") !== -1 ? "&" : "?";
     var value = queryParameters[i];
     if (queryParameters[value].length >= 1)
-      uri = (uri + separator + value + '=' + queryParameters[value]);
+      uri = (uri + separator + value + "=" + queryParameters[value]);
   }
 
   document.location.href = uri
@@ -51,11 +51,11 @@ function updateQueryStringParameter(queryParameters, key, value) {
 
 function getUrlVars() {
   var vars = [], hash;
-  if (window.location.href.indexOf('?') > 0) {
-    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+  if (window.location.href.indexOf("?") > 0) {
+    var hashes = window.location.href.slice(window.location.href.indexOf("?") + 1).split("&");
 
     for (var i = 0; i < hashes.length; i++) {
-      hash = hashes[i].split('=');
+      hash = hashes[i].split("=");
       vars.push(hash[0]);
       vars[hash[0]] = decodeURIComponent(hash[1]);
     }
@@ -65,29 +65,29 @@ function getUrlVars() {
 
 function setDefaults(queryParameters) {
   if (queryParameters["state"])
-    $('#' + queryParameters["state"]).addClass('active');
+    $("#" + queryParameters["state"]).addClass("active");
   else 
-    $('#all').addClass('active');
+    $("#all").addClass("active");
 
   if (queryParameters["order"])
-    $('#' + queryParameters["order"]).addClass('active');
+    $("#" + queryParameters["order"]).addClass("active");
   else
-    $('#desc').addClass('active');
+    $("#desc").addClass("active");
 
   if (queryParameters["group"])
-    $('#group-by').val(queryParameters["group"]);
+    $("#group-by").val(queryParameters["group"]);
 }
 
 function initLabels (queryParameters) {
   if (queryParameters["label"]) {
-    var labels = queryParameters["label"].split(',');
+    var labels = queryParameters["label"].split(",");
 
     $("#labels-container .btn-label").each( function() {
-      var color = '#' + $(this).data("color");
+      var color = "#" + $(this).data("color");
       if ($.inArray( $(this).children().eq(1).data("label") , labels ) >= 0) {
         $(this).addClass("active");
-        $(this).css('background-color',color);
-        $(this).css("color", isDark($(this).css("background-color")) ? 'white' : 'black');
+        $(this).css("background-color",color);
+        $(this).css("color", isDark($(this).css("background-color")) ? "white" : "black");
       }
     });
   }
@@ -95,14 +95,14 @@ function initLabels (queryParameters) {
 
 function changeColors () {
   $(".color-label").each( function() {
-    var color = '#' + $(this)[0].title;
-    $(this).css('background-color',color)
-    $(this).css("color", isDark($(this).css("background-color")) ? 'white' : 'black');
+    var color = "#" + $(this)[0].title;
+    $(this).css("background-color",color)
+    $(this).css("color", isDark($(this).css("background-color")) ? "white" : "black");
   });
 
   $("#labels-container .btn-label").each( function() {
-    var color = '#' + $(this).data("color");
-    $(this).children().eq(0).css('background-color',color);
+    var color = "#" + $(this).data("color");
+    $(this).children().eq(0).css("background-color",color);
   });
 
 }
@@ -111,11 +111,11 @@ function activeLabels () {
   $("#labels-container .btn-label").click(function () {
     $(this).toggleClass("active");
 
-    var labels = '';
+    var labels = "";
     $("#labels-container").children().each( function() {
-      if ($(this).hasClass('active')) {
-        var separator = (labels.length == 0 ? '' : ',');
-        labels = labels + separator + $(this).children().eq(1).data('label');
+      if ($(this).hasClass("active")) {
+        var separator = (labels.length == 0 ? "" : ",");
+        labels = labels + separator + $(this).children().eq(1).data("label");
       }
     });
     updateQueryStringParameter(queryParameters,"label",labels);

@@ -6,19 +6,19 @@ $(document).ready(function() {
   setUserDefaults(queryParameters);
 
   $("#pulls").on("click", function(){
-    toggleOrder(queryParameters,$(this).attr('id'));
+    toggleOrder(queryParameters,$(this).attr("id"));
   });
 
   $("#comments").on("click", function(){
-    toggleOrder(queryParameters,$(this).attr('id'));
+    toggleOrder(queryParameters,$(this).attr("id"));
   });
 
   $("#additions").on("click", function(){
-    toggleOrder(queryParameters,$(this).attr('id'));
+    toggleOrder(queryParameters,$(this).attr("id"));
   });
 
   $("#deletions").on("click", function(){
-    toggleOrder(queryParameters,$(this).attr('id'));
+    toggleOrder(queryParameters,$(this).attr("id"));
   });
 });
 
@@ -38,13 +38,13 @@ function setUserDefaults(queryParameters) {
   if (queryParameters["order"]) {
     sort_by = queryParameters["order"].split("-")[0];
     order = queryParameters["order"].split("-")[1];
-    if (order === 'asc') {
-      $('#'+sort_by+' .octicon').addClass('octicon-arrow-up');
+    if (order === "asc") {
+      $("#"+sort_by+" .octicon").addClass("octicon-arrow-up");
     } else {
-      $('#'+sort_by+' .octicon').addClass('octicon-arrow-down');
+      $("#"+sort_by+" .octicon").addClass("octicon-arrow-down");
     }
   }
   else {
-    $("#pulls .octicon").addClass('octicon-arrow-down');
+    $("#pulls .octicon").addClass("octicon-arrow-down");
   }
 }

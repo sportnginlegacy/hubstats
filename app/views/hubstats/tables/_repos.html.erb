@@ -1,6 +1,6 @@
 <% if @repos.length > 0 %>
   <div class="repos">
-    <%= render partial: 'hubstats/partials/repo', collection: @repos, as: :repo %>
+    <%= render partial: "hubstats/partials/repo", collection: @repos, as: :repo %>
   </div>
 <% else %>
   <p> No repos to show </p>

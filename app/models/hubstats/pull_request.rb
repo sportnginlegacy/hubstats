@@ -12,8 +12,8 @@ module Hubstats
     scope :with_state, lambda {|state| (where(state: state) unless state == 'all') if state}
     scope :with_label, lambda { |label_name| ({ :joins => :labels, :conditions => {:hubstats_labels => {name: label_name.split(',')} } }) if label_name }
     scope :distinct, select("DISTINCT hubstats_pull_requests.*")
-    scope :with_repo_name, select('DISTINCT hubstats_repos.name as repo_name, hubstats_pull_requests.*').joins("LEFT JOIN hubstats_repos ON hubstats_repos.id = hubstats_pull_requests.repo_id")
-    scope :with_user_name, select('DISTINCT hubstats_users.login as user_name, hubstats_pull_requests.*').joins("LEFT JOIN hubstats_users ON hubstats_users.id = hubstats_pull_requests.user_id")
+    scope :with_repo_name, select("DISTINCT hubstats_repos.name as repo_name, hubstats_pull_requests.*").joins("LEFT JOIN hubstats_repos ON hubstats_repos.id = hubstats_pull_requests.repo_id")
+    scope :with_user_name, select("DISTINCT hubstats_users.login as user_name, hubstats_pull_requests.*").joins("LEFT JOIN hubstats_users ON hubstats_users.id = hubstats_pull_requests.user_id")
 
     attr_accessible :id, :url, :html_url, :diff_url, :patch_url, :issue_url, :commits_url,
       :review_comments_url, :review_comment_url, :comments_url, :statuses_url, :number,
@@ -23,7 +23,7 @@ module Hubstats
 
     belongs_to :user
     belongs_to :repo
-    has_and_belongs_to_many :labels, :join_table => 'hubstats_labels_pull_requests'
+    has_and_belongs_to_many :labels, :join_table => "hubstats_labels_pull_requests"
 
     def self.create_or_update(github_pull)
       github_pull = github_pull.to_h.with_indifferent_access if github_pull.respond_to? :to_h
@@ -57,9 +57,9 @@ module Hubstats
     end
 
     def self.group_by(group)
-      if group == 'user'
+      if group == "user"
         with_user_name.order("user_name ASC")
-      elsif group == 'repo'
+      elsif group == "repo"
         with_repo_name.order("repo_name asc")
       else
         scoped

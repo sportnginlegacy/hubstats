@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 module Hubstats
   class SplashControllerTest < ActionController::TestCase

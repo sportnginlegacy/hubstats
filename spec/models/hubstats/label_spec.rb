@@ -1,8 +1,8 @@
-require 'spec_helper'
+require "spec_helper"
 
 module Hubstats
   describe Label, :type => :model do
-    it 'should create a label' do
+    it "should create a label" do
       label_hash = {name: "Feature request",
                     color: "FCEC7F",
                     url: "https://api.github.com/repos/sportngin/ngin/labels/feature-request"}
