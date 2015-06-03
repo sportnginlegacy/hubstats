@@ -13,11 +13,13 @@ module Hubstats
         post(:create, {"git_revision" => "c1a2b37",
                        "repo_name" => "sportngin/ngin",
                        "deployed_at" => "2009-02-03 03:00:00 -0500",
-                       "deployed_by" => "emmasax1"})
+                       "deployed_by" => "emmasax1",
+                       "pull_request_ids" => "33364992, 5870592, 33691392"})
         expect(assigns(:deploy).git_revision).to eq("c1a2b37")
         expect(assigns(:deploy).deployed_at).to eq("2009-02-03 03:00:00 -0500")
         expect(assigns(:deploy).deployed_by).to eq("emmasax1")
         expect(assigns(:deploy).repo_id).to eq(101010)
+        expect(assigns(:pull_request_id_array)).to eq([33364992, 5870592, 33691392])
         expect(response).to have_http_status(200)
       end
 
@@ -25,10 +27,12 @@ module Hubstats
         post(:create, {"git_revision" => "c1a2b37",
                        "repo_name" => "sportngin/ngin",
                        "deployed_at" => nil,
-                       "deployed_by" => "emmasax1"})
+                       "deployed_by" => "emmasax1",
+                       "pull_request_ids" => "33364992, 5870592, 33691392"})
         expect(assigns(:deploy).git_revision).to eq("c1a2b37")
         expect(assigns(:deploy).deployed_by).to eq("emmasax1")
         expect(assigns(:deploy).repo_id).to eq(101010)
+        expect(assigns(:pull_request_id_array)).to eq([33364992, 5870592, 33691392])
         expect(response).to have_http_status(200)
       end
 
@@ -36,7 +40,8 @@ module Hubstats
         post(:create, {"git_revision" => nil,
                        "repo_name" => "sportngin/ngin",
                        "deployed_at" => "2009-02-03 03:00:00 -0500",
-                       "deployed_by" => "emmasax1"})
+                       "deployed_by" => "emmasax1",
+                       "pull_request_ids" => "33364992, 5870592, 33691392"})
         expect(response).to have_http_status(400)
       end
 
@@ -44,7 +49,8 @@ module Hubstats
         post(:create, {"git_revision" => "c1a2b37",
                        "repo_name" => "sportngin/ngin",
                        "deployed_at" => "2009-02-03 03:00:00 -0500",
-                       "deployed_by" => nil})
+                       "deployed_by" => nil,
+                       "pull_request_ids" => "33364992, 5870592, 33691392"})
         expect(response).to have_http_status(400)
       end
 
@@ -52,7 +58,8 @@ module Hubstats
         post(:create, {"git_revision" => "c1a2b37",
                        "repo_name" => nil,
                        "deployed_at" => "2009-02-03 03:00:00 -0500",
-                       "deployed_by" => "emmasax1"})
+                       "deployed_by" => "emmasax1",
+                       "pull_request_ids" => "33364992, 5870592, 33691392"})
         expect(response).to have_http_status(400)
       end
 
@@ -60,7 +67,26 @@ module Hubstats
         post(:create, {"git_revision" => "c1a2b37",
                        "repo_name" => "sportngin/make_resourceful",
                        "deployed_at" => "2009-02-03 03:00:00 -0500",
-                       "deployed_by" => "emmasax1"})
+                       "deployed_by" => "emmasax1",
+                       "pull_request_ids" => "33364992, 5870592, 33691392"})
+        expect(response).to have_http_status(400)
+      end
+
+      it 'should NOT create a deploy without pull request ids' do
+        post(:create, {"git_revision" => "c1a2b37",
+                       "repo_name" => "sportngin/make_resourceful",
+                       "deployed_at" => "2009-02-03 03:00:00 -0500",
+                       "deployed_by" => "emmasax1",
+                       "pull_request_ids" => nil})
+        expect(response).to have_http_status(400)
+      end
+
+      it 'should NOT create a deploy when given empty pull request ids' do
+        post(:create, {"git_revision" => "c1a2b37",
+                       "repo_name" => "sportngin/make_resourceful",
+                       "deployed_at" => "2009-02-03 03:00:00 -0500",
+                       "deployed_by" => "emmasax1",
+                       "pull_request_ids" => ""})
         expect(response).to have_http_status(400)
       end
     end
