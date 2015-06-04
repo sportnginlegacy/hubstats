@@ -4,12 +4,13 @@ module Hubstats
   class DeploysController < ApplicationController
 
     def index
-      #deploy_id = Hubstats::Deploy
+      deploy_id = Hubstats::Deploy
+        .belonging_to_repos(params[:repo])
+        .map(&:id)
       #  .order_with_timespan(@timespan, "ASC")
       #  .belonging_to_users(params[:users])
       #  .belonging_to_repos(params[:repo])
       #  .has_many_pull_requests(params[:pull_requests])
-      #  .map(&:id)
 
       # sets to include user and repo, and sorts data
       @deploys = Hubstats::Deploy.includes(:repo).includes(:pull_requests)
@@ -18,9 +19,9 @@ module Hubstats
         .paginate(:page => params[:page], :per_page => 15)
       #  .belonging_to_users(params[:users]).belonging_to_repos(params[:repos])
 
-      if params[:group] == 'user'
+      if params[:group] == "user"
         @groups = @deploys.to_a.group_by(&:user_name)
-      elsif params[:group] == 'repo'
+      elsif params[:group] == "repo"
         @groups = @deploys.to_a.group_by(&:repo_name)
       else
         @groups = nil

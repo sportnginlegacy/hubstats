@@ -33,9 +33,9 @@ module Hubstats
 
     # Sorts based on whether data is being grouped by user or repo
     def self.group_by(group)
-       if group == 'user'
+       if group == "user"
          with_user_name.order("user_name ASC")
-       elsif group == 'repo'
+       elsif group == "repo"
          with_repo_name.order("repo_name asc")
        else
          scoped
