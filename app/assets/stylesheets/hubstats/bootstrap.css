@@ -654,8 +654,7 @@ blockquote .small:before {
   content: '\2014 \00A0';
 }
 .blockquote-reverse,
-blockquote.pull-right,
-blockquote.deploy-right {
+blockquote.pull-right{
   padding-right: 15px;
   padding-left: 0;
   text-align: right;
@@ -664,24 +663,18 @@ blockquote.deploy-right {
 }
 .blockquote-reverse footer:before,
 blockquote.pull-right footer:before,
-blockquote.deploy-right footer:before,
 .blockquote-reverse small:before,
 blockquote.pull-right small:before,
-blockquote.deploy-right small:before,
 .blockquote-reverse .small:before,
-blockquote.pull-right .small:before
-blockquote.deploy-right .small:before, {
+blockquote.pull-right .small:before {
   content: '';
 }
 .blockquote-reverse footer:after,
 blockquote.pull-right footer:after,
-blockquote.deploy-right footer:after,
 .blockquote-reverse small:after,
 blockquote.pull-right small:after,
-blockquote.deploy-right small:after,
 .blockquote-reverse .small:after,
-blockquote.pull-right .small:after 
-blockquote.deploy-right .small:after,{
+blockquote.pull-right .small:after {
   content: '\00A0 \2014';
 }
 blockquote:before,

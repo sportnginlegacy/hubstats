@@ -59,6 +59,7 @@ module Hubstats
           allow(ENV).to receive(:[]).and_return(nil)
         end
 
+        # commented out because it fails half the time as a result of so many repeated calls to Octokit
         #it 'should fail to initialize at all' do
         #  Hubstats::GithubAPI.configure()
         #  expect{Hubstats::GithubAPI.client}.to raise_error Octokit::Unauthorized

@@ -82,8 +82,7 @@
   margin: 0px 0px 15px 0px;
 }
 
-.pulls > .col, .comments > .col, .users > .col, .repos > .col, .deploys > .col
-.deploys > .col, .comments > .col, .users > .col, .repos > .col, .deploys > .col {
+.pulls > .col, .comments > .col, .users > .col, .repos > .col, .deploys > .col {
   padding: 0px 5px 0px 5px;
 }
 
