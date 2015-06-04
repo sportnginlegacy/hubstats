@@ -1,12 +1,15 @@
 <div class="container" id="deploy">
   <div class="row">
+    <!--Title with the repo name and git revision sha-->
     <h1 class="title text-center">
       <%= link_to @deploy.repo.name.titleize, repo_path(@deploy.repo.name) %> /
       <%= @deploy.git_revision.titleize %>
     </h1>
+    <!--Show the number of pull requests, comments, and net additions-->
     <%= render "hubstats/partials/quick_stats" %>
   </div>
 
+  <!--Show all of the pull requests in a "condensed"view -->
   <div class="col col-lg-8 col-lg-offset-2">
     <div class="row">
       <h4> Pull Requests </h4>

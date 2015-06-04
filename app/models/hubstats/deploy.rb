@@ -16,8 +16,7 @@ module Hubstats
     scope :belonging_to_users, lambda {|user_id| where(user_id: user_id.split(',')) if user_id}
     scope :order_with_timespan
     scope :with_repo_name, select('DISTINCT hubstats_repos.name as repo_name, hubstats_deploys.*').joins("LEFT JOIN hubstats_repos ON hubstats_repos.id = hubstats_deploys.repo_id")
-    scope :with_user_name, select('DISTINCT hubstats_users.login as user_name, hubstats_deploys.*').joins("LEFT JOIN hubstats_users ON hubstats_users.id = hubstats_deploys.user_id")
-    #scope :has_many_pull_requests, lambda {|| where(....)}
+    scope :with_user_name, select('DISTINCT hubstats_deploys.deployed_by as user_name, hubstats_deploys.*').joins("LEFT JOIN hubstats_users ON hubstats_users.id = hubstats_deploys.user_id")
 
     attr_accessible :git_revision, :repo_id, :deployed_at, :deployed_by, :user_id, :pull_request_ids
 
@@ -36,7 +35,7 @@ module Hubstats
        if group == "user"
          with_user_name.order("user_name ASC")
        elsif group == "repo"
-         with_repo_name.order("repo_name asc")
+         with_repo_name.order("repo_name ASC")
        else
          scoped
        end

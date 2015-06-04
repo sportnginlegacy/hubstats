@@ -16,11 +16,10 @@ module Hubstats
         @groups = @deploys.to_a.group_by(&:user_name)
       elsif params[:group] == "repo"
         @groups = @deploys.to_a.group_by(&:repo_name)
-      else
-        @groups = nil
       end
     end
 
+    # show basic stats and pull requests from a single deploy
     def show
       @deploy = Hubstats::Deploy.includes(:repo).includes(:pull_requests).find(params[:id])
       repo = @deploy.repo
@@ -35,6 +34,7 @@ module Hubstats
       }
     end
 
+    # finds all of the additions and deletions in all pull requests and then makes the net additions
     def find_net_additions(deploy_id)
       deploy = Hubstats::Deploy.find(deploy_id)
       pull_requests = deploy.pull_requests
@@ -47,6 +47,7 @@ module Hubstats
       return total_additions - total_deletions
     end
 
+    # returns the total amount of comments from all pull requests in a deploy
     def find_comment_count(deploy_id)
       deploy = Hubstats::Deploy.find(deploy_id)
       pull_requests = deploy.pull_requests
@@ -59,6 +60,7 @@ module Hubstats
       return total_comments
     end
 
+    # make a new deploy with all of the correct attributes
     def create
       if params[:deployed_by].nil? || params[:git_revision].nil? || params[:repo_name].nil?
         render text: "Missing a necessary parameter: deployer, git revision, or repository name.", :status => 400 and return

@@ -3,7 +3,7 @@
     <div class="col col-lg-3 col-md-3 col-sm-3">
 
     <!--This div is the two controls on the top left, one is for repos and one is for users-->
-     <div class="form-group">
+      <div class="form-group">
         <input class="select2-control" id="repos">
         </input>
       </div>
@@ -31,8 +31,10 @@
         <option value="repo">Repo</option>
       </select>
 
+      <!--Shows all of the deploys-->
       <%= render 'hubstats/tables/grouped_deploys' %>
 
+      <!--Contains the pagination so that only 15 deploys show per page-->
       <div class="text-center">
         <%= will_paginate @deploy, renderer: BootstrapPagination::Rails %>
       </div>
