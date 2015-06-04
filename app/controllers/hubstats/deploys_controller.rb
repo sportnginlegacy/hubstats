@@ -6,18 +6,16 @@ module Hubstats
     def index
       deploy_id = Hubstats::Deploy
         .belonging_to_repos(params[:repo])
+        .belonging_to_users(params[:users])
+        .order_with_timespan(@timespan, "ASC")
         .map(&:id)
-      #  .order_with_timespan(@timespan, "ASC")
-      #  .belonging_to_users(params[:users])
-      #  .belonging_to_repos(params[:repo])
-      #  .has_many_pull_requests(params[:pull_requests])
 
       # sets to include user and repo, and sorts data
       @deploys = Hubstats::Deploy.includes(:repo).includes(:pull_requests)
+        .belonging_to_users(params[:users]).belonging_to_repos(params[:repos])
         .order_with_timespan(@timespan, params[:order])
         .group_by(params[:group])
         .paginate(:page => params[:page], :per_page => 15)
-      #  .belonging_to_users(params[:users]).belonging_to_repos(params[:repos])
 
       if params[:group] == "user"
         @groups = @deploys.to_a.group_by(&:user_name)
@@ -32,11 +30,11 @@ module Hubstats
       @deploy = Hubstats::Deploy.find(params[:id])
       @repo = @deploy.repo
       @pull_requests = Hubstats::PullRequest.belonging_to_deploy(@deploy.id)
-      #@pull_request_count = Hubstats::PullRequest.where(deploy_id: params[:id]).additions.belonging_to_pull_request(params[:id]).includes(:user).created_since(@timespan).count(:all)
-      # @stats = {
-        #pull_request_count: @pull_request_count,
+      @pull_request_count = Hubstats::PullRequest.belonging_to_deploy(@deploy.id)
+      @stats = {
+        pull_request_count: @pull_request_count
         #net_additions: @pull_request.additions.to_i - @pull_request.deletions.to_i
-      # }
+      }
     end
 
     def create
