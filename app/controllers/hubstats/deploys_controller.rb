@@ -23,7 +23,7 @@ module Hubstats
 
     def show
       @deploy = Hubstats::Deploy.find(params[:id])
-      @repo = @deploy.repo
+      repo = @deploy.repo
       @pull_requests = @deploy.pull_requests
       pull_request_count = @pull_requests.length
       net_additions = find_net_additions(@deploy.id)

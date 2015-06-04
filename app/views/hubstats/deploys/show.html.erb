@@ -1,7 +1,7 @@
 <div class="container" id="deploy">
   <div class="row">
     <h1 class="title text-center">
-      <%= link_to @repo.name.titleize, repo_path(@repo.name) %> /
+      <%= link_to @deploy.repo.name.titleize, repo_path(@deploy.repo.name) %> /
       <%= @deploy.git_revision.titleize %>
     </h1>
     <%= render "hubstats/partials/quick_stats" %>

@@ -132,9 +132,9 @@ module Hubstats
 
         # These fail because we're not calling the actual table in the controller; the factory girl for pull request doesn't have a deploy_id.
         # However, it would work if a pull request did belong to a deploy
-        #get :show, id: deploy
-        #expect(assigns(:deploy)).to eq(deploy)
-        #expect(assigns(:deploy).repo_id).to eq(101010)
+        get :show, id: deploy.id
+        expect(assigns(:deploy)).to eq(deploy)
+        expect(assigns(:deploy).repo_id).to eq(101010)
       end
     end
   end
