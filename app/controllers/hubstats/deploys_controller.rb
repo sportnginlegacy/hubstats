@@ -11,12 +11,13 @@ module Hubstats
       #  .map(&:id)
 
       # sets to include user and repo, and sorts data
-      @deploys = Hubstats::Deploy.includes(:repo).includes(:pull_requests)
+      @deploys = Hubstats::Deploy
         .belonging_to_users(params[:users]).belonging_to_repos(params[:repos])
         .order_with_timespan(@timespan, params[:order])
         .group_by(params[:group])
         .paginate(:page => params[:page], :per_page => 15)
 
+      # enables grouping by user or repo
       if params[:group] == "user"
         @groups = @deploys.to_a.group_by(&:user_name)
       elsif params[:group] == "repo"
@@ -30,7 +31,7 @@ module Hubstats
       @deploy = Hubstats::Deploy.find(params[:id])
       @repo = @deploy.repo
       @pull_requests = @deploy.pull_requests
-      @pull_request_count = @deploy.pull_requests.length
+      @pull_request_count = @pull_requests.length
       @stats = {
         pull_request_count: @pull_request_count
         #net_additions: @pull_request.additions.to_i - @pull_request.deletions.to_i
