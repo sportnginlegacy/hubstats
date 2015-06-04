@@ -654,7 +654,7 @@ blockquote .small:before {
   content: '\2014 \00A0';
 }
 .blockquote-reverse,
-blockquote.pull-right{
+blockquote.pull-right {
   padding-right: 15px;
   padding-left: 0;
   text-align: right;
