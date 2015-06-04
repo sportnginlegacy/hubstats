@@ -8,7 +8,7 @@
     <%= "#{time_ago_in_words(deploy.deployed_at)} ago "%>
   </div>
 
-  <div class="col-lg-5 col-md-5 col-sm-5">
+  <div class="col-lg-2 col-md-2 col-sm-2">
     <div class="deploy-right">
       <% deploy.pull_requests.each_with_index do |pull_request, index| %>
         <% if index == deploy.pull_requests.size - 1 %>
