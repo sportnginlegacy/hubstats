@@ -129,9 +129,6 @@ module Hubstats
                         :repo_id => 101010,
                         :deployed_at => "2009-02-03 03:00:00 -0500",
                         :deployed_by => "emmasax1")
-
-        # These fail because we're not calling the actual table in the controller; the factory girl for pull request doesn't have a deploy_id.
-        # However, it would work if a pull request did belong to a deploy
         get :show, id: deploy.id
         expect(assigns(:deploy)).to eq(deploy)
         expect(assigns(:deploy).repo_id).to eq(101010)
