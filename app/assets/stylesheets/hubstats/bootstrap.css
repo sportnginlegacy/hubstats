@@ -5641,8 +5641,7 @@ button.close {
   margin-right: auto;
   margin-left: auto;
 }
-.pull-right,
-.deploy-right {
+.pull-right {
   float: right !important;
 }
 .pull-left {
