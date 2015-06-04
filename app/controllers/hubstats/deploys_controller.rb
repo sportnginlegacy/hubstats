@@ -9,6 +9,7 @@ module Hubstats
         .belonging_to_users(params[:users]).belonging_to_repos(params[:repos])
         .group_by(params[:group])
         .order_with_timespan(@timespan, params[:order])
+        .paginate(:page => params[:page], :per_page => 15)
 
       # enables grouping by user or repo
       if params[:group] == "user"
