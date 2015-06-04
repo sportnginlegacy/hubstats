@@ -6,6 +6,7 @@ module Hubstats
     scope :merged_since, lambda {|time| where("hubstats_pull_requests.merged").where("hubstats_pull_requests.created_at > ?", time) }
     scope :belonging_to_repo, lambda {|repo_id| where(repo_id: repo_id)}
     scope :belonging_to_user, lambda {|user_id| where(user_id: user_id)}
+    scope :belonging_to_deploy, lambda {|deploy_id| where(deploy_id: deploy_id)}
     scope :belonging_to_repos, lambda {|repo_id| where(repo_id: repo_id.split(',')) if repo_id}
     scope :belonging_to_users, lambda {|user_id| where(user_id: user_id.split(',')) if user_id}
     scope :group, lambda {|group| group_by(:repo_id) if group }
@@ -23,7 +24,8 @@ module Hubstats
 
     belongs_to :user
     belongs_to :repo
-    has_and_belongs_to_many :labels, :join_table => 'hubstats_labels_pull_requests'
+    belongs_to :deploy
+    has_and_belongs_to_many :labels, :join_table => "hubstats_labels_pull_requests"
 
     def self.create_or_update(github_pull)
       github_pull = github_pull.to_h.with_indifferent_access if github_pull.respond_to? :to_h

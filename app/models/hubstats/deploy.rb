@@ -3,21 +3,22 @@ module Hubstats
 
     before_validation :check_time, on: :create
     validates :git_revision, :deployed_at, :deployed_by, :repo_id, presence: true
-    #validates_associated :repo
 
     def check_time
         self.deployed_at = Time.now.getutc if deployed_at.nil?
     end
 
-    scope :deployed_since, lambda {|time| where("hubstats_deploys.deployed_at > ?", time) }
+    scope :deployed_since, lambda {|time| where("hubstats_deploys.deployed_at > ?", time)}
+    scope :group, lambda {|group| group_by(:repo_id) if group }
     scope :belonging_to_repo, lambda {|repo_id| where(repo_id: repo_id)}
     scope :belonging_to_user, lambda {|user_id| where(user_id: user_id)}
     scope :belonging_to_repos, lambda {|repo_id| where(repo_id: repo_id.split(',')) if repo_id}
     scope :belonging_to_users, lambda {|user_id| where(user_id: user_id.split(',')) if user_id}
     scope :order_with_timespan
-    #scope :has_many_pull_requests, lambda {|| where(....)}
+    scope :with_repo_name, select('DISTINCT hubstats_repos.name as repo_name, hubstats_deploys.*').joins("LEFT JOIN hubstats_repos ON hubstats_repos.id = hubstats_deploys.repo_id")
+    scope :with_user_name, select('DISTINCT hubstats_deploys.deployed_by as user_name, hubstats_deploys.*').joins("LEFT JOIN hubstats_users ON hubstats_users.id = hubstats_deploys.user_id")
 
-    attr_accessible :git_revision, :repo_id, :deployed_at, :deployed_by
+    attr_accessible :git_revision, :repo_id, :deployed_at, :deployed_by, :user_id, :pull_request_ids
 
     belongs_to :user
     belongs_to :repo
@@ -30,15 +31,15 @@ module Hubstats
     end
 
     # Sorts based on whether data is being grouped by user or repo
-    #def self.group_by(group)
-    #   if group == 'user'
-    #     with_user_name.order("user_name ASC")
-    #   elsif group == 'repo'
-    #     with_repo_name.order("repo_name asc")
-    #   else
-    #     scoped
-    #   end
-    # end
+    def self.group_by(group)
+       if group == "user"
+         with_user_name.order("user_name ASC")
+       elsif group == "repo"
+         with_repo_name.order("repo_name ASC")
+       else
+         scoped
+       end
+    end
 
   end
 end

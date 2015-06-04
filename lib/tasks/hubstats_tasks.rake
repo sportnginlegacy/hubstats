@@ -12,7 +12,7 @@ namespace :hubstats do
 
   desc "Drops the database, then runs rake hubstats:setup"
   task :reset => :environment do
-    puts "Droping Database"
+    puts "Dropping Database"
     Rake::Task['db:drop'].invoke
     Rake::Task['hubstats:setup'].invoke
   end

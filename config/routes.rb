@@ -1,7 +1,7 @@
 Hubstats::Engine.routes.draw do
   root to: "pull_requests#index" #sets default root to be the pulls page
   post "/handler" => "events#handler", :as => :handler
-  resources :deploys, :only => [:create, :index] #routes to both index and to create method
+  resources :deploys, :only => [:create, :index, :show] #routes to index, show, and to create method
   get "/metrics" => "repos#dashboard", :as => :metrics #routes to list of repos and stats
   get "/pulls" => "pull_requests#index", :as => :pulls #routes to list of pulls
   get "/users" => "users#index", :as => :users #routes to list of users

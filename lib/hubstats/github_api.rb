@@ -102,7 +102,7 @@ module Hubstats
       rescue Octokit::UnprocessableEntity
         puts "Hook on #{repo.full_name} already existed"
       rescue Octokit::NotFound
-        puts "You don't have sufficient privledges to add an event hook to #{repo.full_name}"
+        puts "You don't have sufficient privileges to add an event hook to #{repo.full_name}"
       end
     end
 
@@ -121,7 +121,7 @@ module Hubstats
           end
         end
       rescue Octokit::NotFound
-        puts "You don't have sufficient privledges to remove an event hook to #{repo.full_name}"
+        puts "You don't have sufficient privileges to remove an event hook to #{repo.full_name}"
       end
     end
 

@@ -21,7 +21,6 @@ module Hubstats
     belongs_to :user
     belongs_to :pull_request
     belongs_to :repo
-    
    
     def self.create_or_update(github_comment)
       github_comment = github_comment.to_h.with_indifferent_access if github_comment.respond_to? :to_h

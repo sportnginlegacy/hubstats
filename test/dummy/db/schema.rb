@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150526155910) do
+ActiveRecord::Schema.define(:version => 20150602210153) do
 
   create_table "hubstats_comments", :force => true do |t|
     t.string   "kind"
@@ -41,6 +41,7 @@ ActiveRecord::Schema.define(:version => 20150526155910) do
     t.integer  "repo_id"
     t.datetime "deployed_at"
     t.string   "deployed_by"
+    t.integer  "user_id"
   end
 
   create_table "hubstats_labels", :force => true do |t|
@@ -83,6 +84,7 @@ ActiveRecord::Schema.define(:version => 20150526155910) do
     t.string   "merge_commit_sha"
     t.string   "merged"
     t.string   "mergeable"
+    t.integer  "deploy_id"
   end
 
   add_index "hubstats_pull_requests", ["repo_id"], :name => "index_hubstats_pull_requests_on_repo_id"

@@ -1,4 +1,4 @@
-# Hubstats
+# Hubstats [![Build Status](https://travis-ci.org/sportngin/hubstats.svg?branch=master)](https://travis-ci.org/sportngin/hubstats)
 
 Hubstats is a rails plugin which allows you to search and monitor pull requests made across a collection of repositories. It also gives extra statistics about users and pull requests not found on GitHub.
 
