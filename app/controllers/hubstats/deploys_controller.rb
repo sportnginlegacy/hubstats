@@ -58,7 +58,9 @@ module Hubstats
       @pull_requests = @deploy.pull_requests
       @total_comments = 0
       @pull_requests.each do |pull|
-        @total_comments += pull.comments
+        if pull.comments
+          @total_comments += pull.comments
+        end
       end
       return @total_comments
     end
