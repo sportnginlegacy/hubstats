@@ -4,11 +4,11 @@ module Hubstats
   class DeploysController < ApplicationController
 
     def index
-      deploy_id = Hubstats::Deploy
-        .belonging_to_repos(params[:repo])
-        .belonging_to_users(params[:users])
-        .order_with_timespan(@timespan, "ASC")
-        .map(&:id)
+      #deploy_id = Hubstats::Deploy
+      #  .belonging_to_repos(params[:repo])
+      #  .belonging_to_users(params[:users])
+      #  .order_with_timespan(@timespan, "ASC")
+      #  .map(&:id)
 
       # sets to include user and repo, and sorts data
       @deploys = Hubstats::Deploy.includes(:repo).includes(:pull_requests)
@@ -29,8 +29,8 @@ module Hubstats
     def show
       @deploy = Hubstats::Deploy.find(params[:id])
       @repo = @deploy.repo
-      @pull_requests = Hubstats::PullRequest.belonging_to_deploy(@deploy.id)
-      @pull_request_count = Hubstats::PullRequest.belonging_to_deploy(@deploy.id)
+      @pull_requests = @deploy.pull_requests
+      @pull_request_count = @deploy.pull_requests.length
       @stats = {
         pull_request_count: @pull_request_count
         #net_additions: @pull_request.additions.to_i - @pull_request.deletions.to_i

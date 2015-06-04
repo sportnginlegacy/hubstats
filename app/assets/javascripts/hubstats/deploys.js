@@ -1,6 +1,7 @@
 // Place all the behaviors and hooks related to the matching controller here.
 // All this logic will automatically be available in application.js.
 
+/*
 $(document).ready(function() {
   queryParameters = getUrlVars();
   setDefaults(queryParameters);
@@ -75,4 +76,4 @@ function setDefaults(queryParameters) {
 
   if (queryParameters["group"])
     $('#group-by').val(queryParameters["group"]);
-};
+};*/
