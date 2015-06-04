@@ -5,7 +5,7 @@ module Hubstats
 
     def index
       # sets to include user and repo, and sorts data
-      @deploys = Hubstats::Deploy
+      @deploys = Hubstats::Deploy.includes(:repo).includes(:pull_requests)
         .belonging_to_users(params[:users]).belonging_to_repos(params[:repos])
         .order_with_timespan(@timespan, params[:order])
         .group_by(params[:group])
@@ -22,7 +22,7 @@ module Hubstats
     end
 
     def show
-      @deploy = Hubstats::Deploy.find(params[:id])
+      @deploy = Hubstats::Deploy.includes(:repo).includes(:pull_requests).find(params[:id])
       repo = @deploy.repo
       @pull_requests = @deploy.pull_requests
       pull_request_count = @pull_requests.length
