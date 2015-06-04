@@ -7,9 +7,8 @@ module Hubstats
       # sets to include user and repo, and sorts data
       @deploys = Hubstats::Deploy.includes(:repo).includes(:pull_requests)
         .belonging_to_users(params[:users]).belonging_to_repos(params[:repos])
-        .order_with_timespan(@timespan, params[:order])
         .group_by(params[:group])
-        .paginate(:page => params[:page], :per_page => 15)
+        .order_with_timespan(@timespan, params[:order])
 
       # enables grouping by user or repo
       if params[:group] == "user"
