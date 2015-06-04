@@ -4,12 +4,6 @@ module Hubstats
   class DeploysController < ApplicationController
 
     def index
-      #deploy_id = Hubstats::Deploy
-      #  .belonging_to_repos(params[:repo])
-      #  .belonging_to_users(params[:users])
-      #  .order_with_timespan(@timespan, "ASC")
-      #  .map(&:id)
-
       # sets to include user and repo, and sorts data
       @deploys = Hubstats::Deploy
         .belonging_to_users(params[:users]).belonging_to_repos(params[:repos])
