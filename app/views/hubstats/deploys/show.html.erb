@@ -4,6 +4,7 @@
       <%= link_to @repo.name.titleize, repo_path(@repo.name) %> /
       <%= @deploy.git_revision.titleize %>
     </h1>
+    <%= render "hubstats/partials/quick_stats" %>
   </div>
 
   <div class="col col-lg-8 col-lg-offset-2">

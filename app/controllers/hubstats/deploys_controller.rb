@@ -32,10 +32,35 @@ module Hubstats
       @repo = @deploy.repo
       @pull_requests = @deploy.pull_requests
       @pull_request_count = @pull_requests.length
+      @net_additions = find_net_additions(@deploy.id)
+      @comment_count = find_comment_count(@deploy.id)
       @stats = {
-        pull_request_count: @pull_request_count
-        #net_additions: @pull_request.additions.to_i - @pull_request.deletions.to_i
+        pull_count: @pull_request_count,
+        net_additions: @net_additions,
+        comment_count: @comment_count
       }
+    end
+
+    def find_net_additions(deploy_id)
+      @deploy = Hubstats::Deploy.find(deploy_id)
+      @pull_requests = @deploy.pull_requests
+      @total_additions = 0
+      @total_deletions = 0
+      @pull_requests.each do |pull|
+        @total_additions += pull.additions.to_i
+        @total_deletions += pull.deletions.to_i
+      end
+      return @total_additions - @total_deletions
+    end
+
+    def find_comment_count(deploy_id)
+      @deploy = Hubstats::Deploy.find(deploy_id)
+      @pull_requests = @deploy.pull_requests
+      @total_comments = 0
+      @pull_requests.each do |pull|
+        @total_comments += pull.comments
+      end
+      return @total_comments
     end
 
     def create
