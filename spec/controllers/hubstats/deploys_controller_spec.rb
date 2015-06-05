@@ -6,33 +6,32 @@ module Hubstats
     describe "#create" do
 
       before :each do
-        create(:repo, :full_name => "sportngin/ngin")
+        #create(:repo, :full_name => "sportngin/ngin")
+        create(:pull_request, :number => 33364992, :merged_by => 202020)
       end
 
       it 'should create a deploy' do
         post(:create, {"git_revision" => "c1a2b37",
-                       "repo_name" => "sportngin/ngin",
+                       "repo_name" => "hub/hubstats",
                        "deployed_at" => "2009-02-03 03:00:00 -0500",
-                       "deployed_by" => "emmasax1",
                        "pull_request_ids" => "33364992, 5870592, 33691392"})
         expect(assigns(:deploy).git_revision).to eq("c1a2b37")
         expect(assigns(:deploy).deployed_at).to eq("2009-02-03 03:00:00 -0500")
-        expect(assigns(:deploy).deployed_by).to eq("emmasax1")
         expect(assigns(:deploy).repo_id).to eq(101010)
         expect(assigns(:pull_request_id_array)).to eq([33364992, 5870592, 33691392])
+        expect(assigns(:deploy).user_id).to eq(202020)
         expect(response).to have_http_status(200)
       end
 
       it 'should create a deploy without a deployed_at because nil time turns into current time' do
         post(:create, {"git_revision" => "c1a2b37",
-                       "repo_name" => "sportngin/ngin",
+                       "repo_name" => "hub/hubstats",
                        "deployed_at" => nil,
-                       "deployed_by" => "emmasax1",
                        "pull_request_ids" => "33364992, 5870592, 33691392"})
         expect(assigns(:deploy).git_revision).to eq("c1a2b37")
-        expect(assigns(:deploy).deployed_by).to eq("emmasax1")
         expect(assigns(:deploy).repo_id).to eq(101010)
         expect(assigns(:pull_request_id_array)).to eq([33364992, 5870592, 33691392])
+        expect(assigns(:deploy).user_id).to eq(202020)
         expect(response).to have_http_status(200)
       end
 
@@ -40,17 +39,15 @@ module Hubstats
         post(:create, {"git_revision" => nil,
                        "repo_name" => "sportngin/ngin",
                        "deployed_at" => "2009-02-03 03:00:00 -0500",
-                       "deployed_by" => "emmasax1",
                        "pull_request_ids" => "33364992, 5870592, 33691392"})
         expect(response).to have_http_status(400)
       end
 
-      it 'should NOT create a deploy without a deployed_by' do
+      it 'should NOT create a deploy without a user_id' do
         post(:create, {"git_revision" => "c1a2b37",
                        "repo_name" => "sportngin/ngin",
                        "deployed_at" => "2009-02-03 03:00:00 -0500",
-                       "deployed_by" => nil,
-                       "pull_request_ids" => "33364992, 5870592, 33691392"})
+                       "pull_request_ids" => "5870592, 33691392"})
         expect(response).to have_http_status(400)
       end
 
@@ -58,7 +55,6 @@ module Hubstats
         post(:create, {"git_revision" => "c1a2b37",
                        "repo_name" => nil,
                        "deployed_at" => "2009-02-03 03:00:00 -0500",
-                       "deployed_by" => "emmasax1",
                        "pull_request_ids" => "33364992, 5870592, 33691392"})
         expect(response).to have_http_status(400)
       end
@@ -67,7 +63,6 @@ module Hubstats
         post(:create, {"git_revision" => "c1a2b37",
                        "repo_name" => "sportngin/make_resourceful",
                        "deployed_at" => "2009-02-03 03:00:00 -0500",
-                       "deployed_by" => "emmasax1",
                        "pull_request_ids" => "33364992, 5870592, 33691392"})
         expect(response).to have_http_status(400)
       end
@@ -76,7 +71,6 @@ module Hubstats
         post(:create, {"git_revision" => "c1a2b37",
                        "repo_name" => "sportngin/make_resourceful",
                        "deployed_at" => "2009-02-03 03:00:00 -0500",
-                       "deployed_by" => "emmasax1",
                        "pull_request_ids" => nil})
         expect(response).to have_http_status(400)
       end
@@ -85,7 +79,6 @@ module Hubstats
         post(:create, {"git_revision" => "c1a2b37",
                        "repo_name" => "sportngin/make_resourceful",
                        "deployed_at" => "2009-02-03 03:00:00 -0500",
-                       "deployed_by" => "emmasax1",
                        "pull_request_ids" => ""})
         expect(response).to have_http_status(400)
       end
@@ -100,16 +93,13 @@ module Hubstats
       it "should correctly order all of the deploys" do
         deploy1 = create(:deploy, :git_revision => "c1a2b37",
                                   :repo_id => 101010,
-                                  :deployed_at => "2009-02-03 03:00:00 -0500",
-                                  :deployed_by => "emmasax1")
+                                  :deployed_at => "2009-02-03 03:00:00 -0500")
         deploy2 = create(:deploy, :git_revision => "kd9c102",
                                   :repo_id => 101010,
-                                  :deployed_at => "2015-02-03 03:00:00 -0500",
-                                  :deployed_by => "emmasax1")
+                                  :deployed_at => "2015-02-03 03:00:00 -0500")
         deploy3 = create(:deploy, :git_revision => "owk19sf",
                                   :repo_id => 101010,
-                                  :deployed_at => "2011-02-03 03:00:00 -0500",
-                                  :deployed_by => "emmasax1")
+                                  :deployed_at => "2011-02-03 03:00:00 -0500")
         deploys_ordered = [deploy2, deploy3, deploy1]
         expect(Hubstats::Deploy).to receive_message_chain("group_by.order_with_timespan.paginate").and_return(deploys_ordered)
         get :index
@@ -127,8 +117,7 @@ module Hubstats
       it "should show the pull requests of the specific deploy" do
         deploy = create(:deploy, :git_revision => "c1a2b37",
                         :repo_id => 101010,
-                        :deployed_at => "2009-02-03 03:00:00 -0500",
-                        :deployed_by => "emmasax1")
+                        :deployed_at => "2009-02-03 03:00:00 -0500")
         get :show, id: deploy.id
         expect(assigns(:deploy)).to eq(deploy)
         expect(assigns(:deploy).repo_id).to eq(101010)

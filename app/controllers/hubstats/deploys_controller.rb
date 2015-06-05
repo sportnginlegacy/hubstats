@@ -62,12 +62,11 @@ module Hubstats
 
     # make a new deploy with all of the correct attributes
     def create
-      if params[:deployed_by].nil? || params[:git_revision].nil? || params[:repo_name].nil?
-        render text: "Missing a necessary parameter: deployer, git revision, or repository name.", :status => 400 and return
+      if params[:git_revision].nil? || params[:repo_name].nil?
+        render text: "Missing a necessary parameter: git revision or repository name.", :status => 400 and return
       else
         @deploy = Deploy.new
         @deploy.deployed_at = params[:deployed_at]
-        @deploy.deployed_by = params[:deployed_by]
         @deploy.git_revision = params[:git_revision]
         @repo = Hubstats::Repo.where(full_name: params[:repo_name])
         
@@ -80,6 +79,8 @@ module Hubstats
         @pull_request_id_array = params[:pull_request_ids].split(",").map {|i| i.strip.to_i}
         @deploy.pull_requests = Hubstats::PullRequest.where(repo_id: @deploy.repo_id)
                                                      .where(number: @pull_request_id_array)
+
+        @deploy.user_id = @deploy.pull_requests.first.merged_by
 
         if @deploy.save
           render :nothing =>true, :status => 200 and return

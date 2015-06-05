@@ -5,6 +5,10 @@
       <%= link_to @deploy.repo.name.titleize, repo_path(@deploy.repo.name) %> /
       <%= @deploy.git_revision.titleize %>
     </h1>
+    <br>
+    <h4 class="text-center">
+      Deployed at: <%= @deploy.deployed_at %>
+    </h4>
     <!--Show the number of pull requests, comments, and net additions-->
     <%= render "hubstats/partials/quick_stats" %>
   </div>

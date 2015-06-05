@@ -20,7 +20,7 @@ module Hubstats
       :review_comments_url, :review_comment_url, :comments_url, :statuses_url, :number,
       :state, :title, :body, :created_at, :updated_at, :closed_at, :merged_at, 
       :merge_commit_sha, :merged, :mergeable, :comments, :commits, :additions,
-      :deletions, :changed_files, :user_id, :repo_id
+      :deletions, :changed_files, :user_id, :repo_id, :merged_by
 
     belongs_to :user
     belongs_to :repo
@@ -40,6 +40,11 @@ module Hubstats
       pull_data = github_pull.slice(*column_names.map(&:to_sym))
 
       pull = where(:id => pull_data[:id]).first_or_create(pull_data)
+
+      if github_pull[:merged_by] && github_pull[:merged_by][:id]
+        pull.merged_by = github_pull[:merged_by][:id]
+      end
+
       return pull if pull.update_attributes(pull_data)
       Rails.logger.warn pull.errors.inspect
     end

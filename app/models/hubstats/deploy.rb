@@ -2,7 +2,7 @@ module Hubstats
   class Deploy < ActiveRecord::Base
 
     before_validation :check_time, on: :create
-    validates :git_revision, :deployed_at, :deployed_by, :repo_id, presence: true
+    validates :git_revision, :deployed_at, :user_id, :repo_id, presence: true
 
     def check_time
         self.deployed_at = Time.now.getutc if deployed_at.nil?
@@ -16,9 +16,9 @@ module Hubstats
     scope :belonging_to_users, lambda {|user_id| where(user_id: user_id.split(',')) if user_id}
     scope :order_with_timespan
     scope :with_repo_name, select('DISTINCT hubstats_repos.name as repo_name, hubstats_deploys.*').joins("LEFT JOIN hubstats_repos ON hubstats_repos.id = hubstats_deploys.repo_id")
-    scope :with_user_name, select('DISTINCT hubstats_deploys.deployed_by as user_name, hubstats_deploys.*').joins("LEFT JOIN hubstats_users ON hubstats_users.id = hubstats_deploys.user_id")
+    scope :with_user_name, select('DISTINCT hubstats_users.login as user_name, hubstats_deploys.*').joins("LEFT JOIN hubstats_users ON hubstats_users.id = hubstats_deploys.user_id")
 
-    attr_accessible :git_revision, :repo_id, :deployed_at, :deployed_by, :user_id, :pull_request_ids
+    attr_accessible :git_revision, :repo_id, :deployed_at, :user_id, :pull_request_ids
 
     belongs_to :user
     belongs_to :repo
