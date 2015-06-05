@@ -54,7 +54,7 @@ module Hubstats
       total_comments = 0
       pull_requests.each do |pull|
         if pull.comments
-          total_comments += pull.comments
+          total_comments += Hubstats::Comment.belonging_to_pull_request(pull.id).includes(:user).created_since(@timespan).count(:all)
         end
       end
       return total_comments
