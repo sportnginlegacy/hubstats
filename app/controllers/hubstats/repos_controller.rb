@@ -38,7 +38,7 @@ module Hubstats
     end
 
     def dashboard
-      @repos = Hubstats::Repo.with_recent_activity(@timespan).limit(20)
+      @repos = Hubstats::Repo.with_recent_activity(@timespan)
       @users = Hubstats::User.with_pulls_or_comments(@timespan).only_active.limit(20)
       @repo_count = Hubstats::Repo.with_recent_activity(@timespan).count(:all)
       @user_count = Hubstats::User.with_pulls_or_comments(@timespan).only_active.length

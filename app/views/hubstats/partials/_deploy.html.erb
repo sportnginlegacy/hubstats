@@ -10,7 +10,7 @@
       <%= link_to deploy.repo.name, repo_path(deploy.repo.name) %> /
       <%= link_to deploy.git_revision, deploy_path(deploy) %>
     </h4>
-    <br> <!--should route to the user/id path-->
+    <br>
     by <%= link_to deploy.user.login, user_path(deploy.user) %>
     <%= "#{time_ago_in_words(deploy.deployed_at)} ago "%>
     <br>
