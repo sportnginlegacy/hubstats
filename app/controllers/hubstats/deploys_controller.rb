@@ -53,9 +53,14 @@ module Hubstats
       pull_requests = deploy.pull_requests
       total_comments = 0
       pull_requests.each do |pull|
+<<<<<<< HEAD
         if pull.comments != nil
           total_comments += Hubstats::Comment.belonging_to_pull_request(pull.id).includes(:user).created_since(@timespan).count(:all)
           #total_comments += pull.comments
+=======
+        if pull.comments
+          total_comments += Hubstats::Comment.belonging_to_pull_request(pull.id).includes(:user).created_since(@timespan).count(:all)
+>>>>>>> 10ec6c12151f7882d2663d86d58113d5bef1189e
         end
       end
       return total_comments
