@@ -41,12 +41,15 @@ module Hubstats
 
       pull = where(:id => pull_data[:id]).first_or_create(pull_data)
 
+      puts "Got to zeroth if"
       if github_pull[:merged_by] && github_pull[:merged_by][:id]
+        puts "Got to first if"
         pull.merged_by = github_pull[:merged_by][:id]
-        puts pull.merged_by.inspect
-        deploy = Hubstats::Deploy.where(id: pull.deploy_id).first
-          if deploy && (deploy.user_id != nil)
+        deploy = Hubstats::Deploy.where(id: pull.deploy_id, user_id: nil).first
+          if deploy# && (deploy.user_id == nil)
+            puts "Got to second if"
             deploy.user_id = pull.merged_by
+            deploy.save
           end
       end
 
