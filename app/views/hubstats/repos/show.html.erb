@@ -23,6 +23,9 @@
     <div class="col col-lg-6">
       <h3> Deploys </h3>
       <%= render "hubstats/tables/deploys-condensed" %>
+      <% if @deploy_count > 20 %>
+        <p class="pull-right"><%= link_to "View All", deploys_path(:repos => @repo.id) %></p>
+      <% end %>
     </div>
 
   </div>

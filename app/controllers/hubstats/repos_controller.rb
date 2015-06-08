@@ -21,7 +21,7 @@ module Hubstats
       @repo = Hubstats::Repo.where(name: params[:repo]).first
       @pull_requests = Hubstats::PullRequest.belonging_to_repo(@repo.id).updated_since(@timespan).order("updated_at DESC").limit(20)
       @users = Hubstats::User.with_pulls_or_comments(@timespan,@repo.id).only_active.limit(20)
-      @deploys = Hubstats::Deploy.belonging_to_repo(@repo_id).deployed_since(@timespan)
+      @deploys = Hubstats::Deploy.belonging_to_repo(@repo.id).deployed_since(@timespan).limit(20)
       @pull_count = Hubstats::PullRequest.belonging_to_repo(@repo.id).updated_since(@timespan).count(:all)
       @deploy_count = Hubstats::Deploy.belonging_to_repo(@repo.id).deployed_since(@timespan).count(:all)
       @user_count = Hubstats::User.with_pulls_or_comments(@timespan,@repo.id).only_active.length
