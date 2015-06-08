@@ -16,6 +16,15 @@ FactoryGirl.define do
     initialize_with { attributes } 
   end
 
+  factory :pull_request_hash_no_merge, class:Hash do
+    association :user, factory: :user_hash, strategy: :build
+    association :repository, factory: :repo_hash, strategy: :build
+    id {Faker::Number.number(6).to_i}
+    number {|n| "#{n}".to_i}
+
+    initialize_with { attributes } 
+  end
+
   factory :pull_request_payload_hash, class:Hash do 
     id {Faker::Number.number(6).to_i}
     type "PullRequestEvent"
