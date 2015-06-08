@@ -92,13 +92,20 @@ module Hubstats
       it "should correctly order all of the deploys" do
         deploy1 = create(:deploy, :git_revision => "c1a2b37",
                                   :repo_id => 101010,
-                                  :deployed_at => "2009-02-03 03:00:00 -0500")
+                                  :deployed_at => "2009-02-03 03:00:00 -0500",
+                                  :user_id => 404040)
         deploy2 = create(:deploy, :git_revision => "kd9c102",
                                   :repo_id => 101010,
-                                  :deployed_at => "2015-02-03 03:00:00 -0500")
+                                  :deployed_at => "2015-02-03 03:00:00 -0500",
+                                  :user_id => 303030)
         deploy3 = create(:deploy, :git_revision => "owk19sf",
                                   :repo_id => 101010,
-                                  :deployed_at => "2011-02-03 03:00:00 -0500")
+                                  :deployed_at => "2011-02-03 03:00:00 -0500",
+                                  :user_id => 202020)
+        deploy4 = create(:deploy, :git_revision => "owk19sf",
+                                  :repo_id => 101010,
+                                  :deployed_at => "2011-02-03 03:00:00 -0500",
+                                  :user_id => nil)
         deploys_ordered = [deploy2, deploy3, deploy1]
         expect(Hubstats::Deploy).to receive_message_chain("group_by.order_with_timespan.paginate").and_return(deploys_ordered)
         get :index

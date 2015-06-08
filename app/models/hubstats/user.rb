@@ -110,6 +110,8 @@ module Hubstats
       if order_params
         order = order_params.include?('asc') ? "ASC" : "DESC"
         case order_params.split('-').first
+        when 'deploys'
+          order("deploy_count #{order}")
         when 'pulls'
           order("pull_request_count #{order}")
         when 'comments'

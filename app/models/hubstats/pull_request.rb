@@ -43,6 +43,11 @@ module Hubstats
 
       if github_pull[:merged_by] && github_pull[:merged_by][:id]
         pull.merged_by = github_pull[:merged_by][:id]
+        puts pull.merged_by.inspect
+        deploy = Hubstats::Deploy.where(id: pull.deploy_id).first
+          if deploy && (deploy.user_id != nil)
+            deploy.user_id = pull.merged_by
+          end
       end
 
       return pull if pull.update_attributes(pull_data)

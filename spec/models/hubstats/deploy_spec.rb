@@ -81,12 +81,12 @@ module Hubstats
     end
 
 
-    it 'should NOT create a deploy without a deployed_by' do
+    it 'should create a deploy without a user_id' do
       repo = build(:repo)
       expect(Deploy.create(git_revision: "c1a2b37", 
                            repo_id: repo.id, 
                            deployed_at: "2009-02-03 03:00:00 -0500", 
-                           user_id: nil)).not_to be_valid
+                           user_id: nil)).to be_valid
     end
 
     it 'should create a deploy wihtout a deployed_at because nil time turns into current time' do

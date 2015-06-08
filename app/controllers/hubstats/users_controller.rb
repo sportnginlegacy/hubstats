@@ -23,15 +23,13 @@ module Hubstats
       @pull_requests = Hubstats::PullRequest.belonging_to_user(@user.id).updated_since(@timespan).order("updated_at DESC").limit(20)
       @comments = Hubstats::Comment.belonging_to_user(@user.id).created_since(@timespan).order("created_at DESC").limit(20)
       @deploys = Hubstats::Deploy.belonging_to_user(@user.id).deployed_since(@timespan).limit(20)
-      @review = Hubstats::User.pulls_reviewed_count(@timespan).where(login: params[:id]).first
       @pull_count = Hubstats::PullRequest.belonging_to_user(@user.id).updated_since(@timespan).count(:all)
       @deploy_count = Hubstats::Deploy.belonging_to_user(@user.id).deployed_since(@timespan).count(:all)
       @comment_count = Hubstats::Comment.belonging_to_user(@user.id).created_since(@timespan).count(:all)
-      @stats = {
+      @stats_basics = {
         pull_count: Hubstats::PullRequest.belonging_to_user(@user.id).merged_since(@timespan).count(:all),
         deploy_count: @deploy_count,
         comment_count: @comment_count,
-        review_count: @review ? @review.reviews_count : 0,
         avg_additions: Hubstats::PullRequest.merged_since(@timespan).belonging_to_user(@user.id).average(:additions).to_i,
         avg_deletions: Hubstats::PullRequest.merged_since(@timespan).belonging_to_user(@user.id).average(:deletions).to_i,
         net_additions: Hubstats::PullRequest.merged_since(@timespan).belonging_to_user(@user.id).sum(:additions).to_i -

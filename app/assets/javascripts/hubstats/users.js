@@ -5,6 +5,10 @@ $(document).ready(function() {
   queryParameters = getUrlVars();
   setUserDefaults(queryParameters);
 
+  $("#deploys").on("click", function(){
+    toggleOrder(queryParameters,$(this).attr('id'));
+  });
+
   $("#pulls").on("click", function(){
     toggleOrder(queryParameters,$(this).attr('id'));
   });

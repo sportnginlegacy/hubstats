@@ -2,7 +2,7 @@ module Hubstats
   class Deploy < ActiveRecord::Base
 
     before_validation :check_time, on: :create
-    validates :git_revision, :deployed_at, :user_id, :repo_id, presence: true
+    validates :git_revision, :deployed_at, :repo_id, presence: true
 
     def check_time
         self.deployed_at = Time.now.getutc if deployed_at.nil?

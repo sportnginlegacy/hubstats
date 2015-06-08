@@ -25,11 +25,13 @@ module Hubstats
       @pull_count = Hubstats::PullRequest.belonging_to_repo(@repo.id).updated_since(@timespan).count(:all)
       @deploy_count = Hubstats::Deploy.belonging_to_repo(@repo.id).deployed_since(@timespan).count(:all)
       @user_count = Hubstats::User.with_pulls_or_comments(@timespan,@repo.id).only_active.length
-      @stats = {
+      @stats_basics = {
         user_count: @user_count,
         deploy_count: @deploy_count,
         pull_count: @pull_count,
-        comment_count: Hubstats::Comment.belonging_to_repo(@repo.id).created_since(@timespan).count(:all),
+        comment_count: Hubstats::Comment.belonging_to_repo(@repo.id).created_since(@timespan).count(:all)
+      }
+      @stats_additions = {
         avg_additions: Hubstats::PullRequest.merged_since(@timespan).belonging_to_repo(@repo.id).average(:additions).to_i,
         avg_deletions: Hubstats::PullRequest.merged_since(@timespan).belonging_to_repo(@repo.id).average(:deletions).to_i,
         net_additions: Hubstats::PullRequest.merged_since(@timespan).belonging_to_repo(@repo.id).sum(:additions).to_i -
@@ -40,13 +42,17 @@ module Hubstats
     def dashboard
       @repos = Hubstats::Repo.with_recent_activity(@timespan)
       @user_count = Hubstats::User.with_pulls_or_comments(@timespan).only_active.length
-      @stats = {
+      @stats_basics = {
         user_count: @user_count,
         deploy_count: Hubstats::Deploy.count(:all),
         pull_count: Hubstats::PullRequest.merged_since(@timespan).count(:all),
-        comment_count: Hubstats::Comment.created_since(@timespan).count(:all),
+        comment_count: Hubstats::Comment.created_since(@timespan).count(:all)
+      }
+      @stats_additions = {
         avg_additions: Hubstats::PullRequest.merged_since(@timespan).average(:additions).to_i,
-        avg_deletions: Hubstats::PullRequest.merged_since(@timespan).average(:deletions).to_i
+        avg_deletions: Hubstats::PullRequest.merged_since(@timespan).average(:deletions).to_i,
+        net_additions: Hubstats::PullRequest.merged_since(@timespan).sum(:additions).to_i - 
+          Hubstats::PullRequest.merged_since(@timespan).sum(:deletions).to_i
       }
     end
   end

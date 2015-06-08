@@ -5,7 +5,7 @@ module Hubstats
 
     def index
       # sets to include user and repo, and sorts data
-      @deploys = Hubstats::Deploy.includes(:repo).includes(:pull_requests)
+      @deploys = Hubstats::Deploy.includes(:repo, :pull_requests, :user).where("user_id IS NOT NULL")
         .belonging_to_users(params[:users]).belonging_to_repos(params[:repos])
         .group_by(params[:group])
         .order_with_timespan(@timespan, params[:order])
@@ -27,7 +27,7 @@ module Hubstats
       pull_request_count = @pull_requests.length
       net_additions = find_net_additions(@deploy.id)
       comment_count = find_comment_count(@deploy.id)
-      @stats = {
+      @stats_basics = {
         pull_count: pull_request_count,
         net_additions: net_additions,
         comment_count: comment_count
@@ -80,7 +80,11 @@ module Hubstats
         @deploy.pull_requests = Hubstats::PullRequest.where(repo_id: @deploy.repo_id)
                                                      .where(number: @pull_request_id_array)
 
-        @deploy.user_id = @deploy.pull_requests.first.merged_by
+        if @deploy.pull_requests.first.merged_by != nil
+          @deploy.user_id = @deploy.pull_requests.first.merged_by
+        else
+          @deploy.user_id = nil
+        end
 
         if @deploy.save
           render :nothing =>true, :status => 200 and return
