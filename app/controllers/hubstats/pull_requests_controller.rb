@@ -33,7 +33,7 @@ module Hubstats
       @pull_request = Hubstats::PullRequest.belonging_to_repo(@repo.id).where(id: params[:id]).first
       @comments = Hubstats::Comment.belonging_to_pull_request(params[:id]).includes(:user).created_since(@timespan).limit(20)
       @comment_count = Hubstats::Comment.belonging_to_pull_request(params[:id]).includes(:user).created_since(@timespan).count(:all)
-      #@deploys = Hubstats::Deploy.belonging_to_pull_request(@deploy_id).deployed_since(@timespan)
+      @deploys = Hubstats::Deploy.where(id: @pull_request.deploy_id)
       @stats = {
         comment_count: @comment_count,
         net_additions: @pull_request.additions.to_i - @pull_request.deletions.to_i

@@ -15,5 +15,14 @@
       <%= render 'hubstats/tables/comments' %>
     </div>
   </div>
+
+  <div class="col col-lg-8 col-lg-offset-2">
+    <div class="row">
+      <%if @pull_request.state == "closed"%>
+      <h4> Deploy </h4>
+      <%= render 'hubstats/tables/deploys-condensed' %>
+      <%end%>
+    </div>
+  </div>
 </div>
 
