@@ -6,7 +6,6 @@ module Hubstats
     describe "#create" do
 
       before :each do
-        #create(:repo, :full_name => "sportngin/ngin")
         create(:pull_request, :number => 33364992, :merged_by => 202020)
       end
 
