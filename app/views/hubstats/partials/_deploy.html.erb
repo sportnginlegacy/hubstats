@@ -4,7 +4,7 @@
      <img src= <%= deploy.user.avatar_url %> alt= <%= deploy.user.login %> >
   </div>
 
-  <!--Show the repo name, git revision, and who deployed it when -->
+  <!-- Show the repo name, git revision, and who deployed it when  -->
   <div class="deploy-info col-lg-6 col-md-7 col-sm-6">
     <h4> 
       <%= link_to deploy.repo.name, repo_path(deploy.repo.name) %> /
@@ -16,7 +16,7 @@
     <br>
   </div>
 
-  <!--Show a list of links with all the pull requests in the deploy-->
+  <!-- Show a list of links with all the pull requests in the deploy -->
   <div class="col-lg-5 col-md-5 col-sm-5">
     <div class="deploy-right">
       <% deploy.pull_requests.each_with_index do |pull_request, index| %>
