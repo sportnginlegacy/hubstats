@@ -15,6 +15,12 @@ module Hubstats
       .joins("LEFT JOIN hubstats_pull_requests ON hubstats_pull_requests.user_id = hubstats_users.id AND hubstats_pull_requests.created_at > '#{time}' AND hubstats_pull_requests.repo_id = '#{repo_id}' AND hubstats_pull_requests.merged = '1'")
       .group("hubstats_users.id")
     }
+    scope :deploys_count, lambda { |time|
+      select("hubstats_users.id as user_id")
+      .select("IFNULL(COUNT(DISTINCT hubstats_deploys.id),0) AS deploy_count")
+      .joins("LEFT JOIN hubstats_deploys ON hubstats_deploys.user_id = hubstats_users.id AND hubstats_deploys.deployed_at > '#{time}'")
+      .group("hubstats_users.id")
+    }
     scope :comments_count, lambda { |time|
       select("hubstats_users.id as user_id")
       .select("COUNT(DISTINCT hubstats_comments.id) AS comment_count")
@@ -59,10 +65,11 @@ module Hubstats
     }
 
     scope :with_all_metrics, lambda { |time|
-      select("hubstats_users.*, pull_request_count, comment_count, average_additions, average_deletions")
+      select("hubstats_users.*, deploy_count, pull_request_count, comment_count, average_additions, average_deletions")
       .joins("LEFT JOIN (#{averages(time).to_sql}) AS averages ON averages.user_id = hubstats_users.id")
       .joins("LEFT JOIN (#{pull_requests_count(time).to_sql}) AS pull_requests ON pull_requests.user_id = hubstats_users.id")
       .joins("LEFT JOIN (#{comments_count(time).to_sql}) AS comments ON comments.user_id = hubstats_users.id")
+      .joins("LEFT JOIN (#{deploys_count(time).to_sql}) AS deploys ON deploys.user_id = hubstats_users.id")
       .group("hubstats_users.id")
     }
 
@@ -78,6 +85,7 @@ module Hubstats
     has_many :comments
     has_many :repos, :class_name => "Repo"
     has_many :pull_requests
+    has_many :deploys
 
     def self.create_or_update(github_user)
       github_user[:role] = github_user.delete :type  ##changing :type in to :role
@@ -102,6 +110,8 @@ module Hubstats
       if order_params
         order = order_params.include?('asc') ? "ASC" : "DESC"
         case order_params.split('-').first
+        when 'deploys'
+          order("deploy_count #{order}")
         when 'pulls'
           order("pull_request_count #{order}")
         when 'comments'

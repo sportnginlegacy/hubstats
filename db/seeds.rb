@@ -13,7 +13,7 @@ deploy_list = [
 	["is93h1n", "sportngin/janky", "2014-12-31 09:00:00 -0500", "EvaMartinuzzi", 6384174, "3274757, 5708038"],
 	["kdiq13j", "sportngin/ngin", "2013-11-17 04:00:00 -0500", "Olson3R", 6902485, "10444039, 11917574"],
 	["ciap1kd", "sportngin/statcore_ice_hockey", "2010-08-29 01:00:00 -0500", "odelltuttle", 7231089, "25856007"],
-	["iek9s0d", "sportngin/freshbooks.rb", "2015-05-13 12:00:00 -0500", "tombadaczewski", 4095632, "4534280, 3557640"],
+	["iek9s0d", "sportngin/thinking-sphinx", "2015-05-13 12:00:00 -0500", "tombadaczewski", 4095632, "4534280, 3557640"],
 	["918240d", "sportngin/pocket_ngin", "2015-04-01 03:00:00 -0500", "plaincheesepizza", 5577837, "27117320, 1967369, 20911625"],
 	["dis8203", "sportngin/sport_ngin_live", "2015-02-27 08:00:00 -0500", "GeoffreyHinck", 5167099, "9657609, 4745225, 35976969, 5180938"],
 	["2kd9sac", "sportngin/jarvis", "2015-05-26 03:00:00 -0500", "Bleisz22", 7452482, "23303693, 2990349"],

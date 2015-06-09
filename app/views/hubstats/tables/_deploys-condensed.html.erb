@@ -1,7 +1,7 @@
 <% if @deploys.length > 0 %>
   <div class="deploys">
-    <%= render partial: 'hubstats/partials/deploys-condensed', collection: @deploys, as: :deploy %>
+    <%= render partial: 'hubstats/partials/deploy-condensed', collection: @deploys, as: :deploy %>
   </div>
 <% else %>
-  <p> No deploys to show </p>
+  <p> No deployment information available</p>
 <% end %>

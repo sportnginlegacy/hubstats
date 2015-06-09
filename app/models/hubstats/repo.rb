@@ -12,6 +12,7 @@ module Hubstats
       :pushed_at, :created_at, :updated_at, :owner_id
 
     has_many :pull_requests
+    has_many :deploys
     belongs_to :owner, :class_name => "User", :foreign_key => "id"
 
     def self.create_or_update(github_repo)

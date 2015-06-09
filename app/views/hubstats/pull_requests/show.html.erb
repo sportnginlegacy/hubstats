@@ -9,6 +9,16 @@
     <%= render 'hubstats/partials/quick_stats' %>
   </div>
 
+  <!-- If the pull request is closed, then show the deploy that merged this PR -->
+  <div class="col col-lg-8 col-lg-offset-2">
+    <div class="row">
+      <%if @pull_request.state == "closed"%>
+      <h4> Deployment </h4>
+      <%= render 'hubstats/tables/deploys-condensed' %>
+      <%end%>
+    </div>
+  </div>
+
   <div class="col col-lg-8 col-lg-offset-2">
     <div class="row">
       <h4> Comments </h4>

@@ -2,10 +2,25 @@
 
   <div class="row">
     <h1 class="title text-center"><a href=<%=@repo.html_url%>> <%= @repo.name.titleize %> </a></h1>
-    <%= render 'hubstats/partials/quick_stats' %>
+    <%= render 'hubstats/partials/quick_stats' %>    
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <%= render 'hubstats/partials/quick_addition_stats' %>
   </div>
 
   <div class="row">
+
+    <!-- Show all of the deploys for this repository -->
+    <div class="col col-lg-6">
+      <h3> Deploys </h3>
+      <%= render "hubstats/tables/deploys-condensed" %>
+      <% if @deploy_count > 20 %>
+        <p class="pull-right"><%= link_to "View All", deploys_path(:repos => @repo.id) %></p>
+      <% end %>
+    </div>
 
     <div class="col col-lg-6">
       <h3> Pull Requests</h3>       
@@ -15,10 +30,10 @@
       <% end %>
     </div>
 
-    <div class="col col-lg-6">
-      <h3> Active Users </h3>
-      <%= render 'hubstats/tables/users-condensed' %>
-    </div>
+    <!-- <div class="col col-lg-6"> -->
+      <!-- <h3> Active Users </h3> -->
+      <!-- <%= render 'hubstats/tables/users-condensed' %> -->
+    <!-- </div> -->
 
   </div>
 

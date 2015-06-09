@@ -1,14 +1,19 @@
 <div class="row single-deploy">
+  <div class="user-image-small col-lg-1 col-md-1 col-sm-1 col-xs-2" >
+    <img src= <%= deploy.user.avatar_url%> alt= <%= deploy.user.login %> >
+  </div>
   
-  <div class="deploy-info col-lg-9 col-md-9 col-sm-9 col-xs-8">
+  <!-- Show the git revision and when the deploy happened by whom -->
+  <div class="deploy-info col-lg-6 col-md-6 col-sm-6 col-xs-5">
     <h4>
-      <%= deploy.git_revision %> 
+      <%= link_to deploy.git_revision, deploy_path(deploy) %> 
     </h4>
-    by <%= link_to deploy.deployed_by, user_path(deploy.deployed_by) %>
+    by <%= link_to deploy.user.login, user_path(deploy.user) %>
     <%= "#{time_ago_in_words(deploy.deployed_at)} ago "%>
   </div>
 
-  <div class="col-lg-2 col-md-2 col-sm-2">
+  <!-- Show all of the pull requests linked to the github PR -->
+  <div class="col-lg-5 col-md-5 col-sm-5">
     <div class="deploy-right">
       <% deploy.pull_requests.each_with_index do |pull_request, index| %>
         <% if index == deploy.pull_requests.size - 1 %>

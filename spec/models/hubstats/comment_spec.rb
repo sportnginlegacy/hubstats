@@ -18,8 +18,8 @@ module Hubstats
       repo = Repo.create_or_update(github_repo)
       pull = PullRequest.create_or_update(pull_request)
       comment = Comment.create_or_update(github_comment)
-      expect(comment.id).to eq(github_comment[:id])
-      expect(comment.user_id).to eq(github_user[:id])
+      expect(comment.id).to eq(100)
+      expect(comment.user_id).to eq(10)
     end
   end
 end

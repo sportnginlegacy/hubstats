@@ -5,7 +5,6 @@ class CreateHubstatsDeploys < ActiveRecord::Migration
       t.integer :repo_id
       t.timestamp :deployed_at
       t.string :deployed_by
-      t.integer :user_id
     end
   end
 end

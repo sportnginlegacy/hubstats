@@ -8,9 +8,9 @@ module Hubstats
                     url: "https://api.github.com/repos/sportngin/ngin/labels/feature-request"}
       label = Label.create(label_hash)
       expect(Label.count).to eq(1)
-      expect(label.name).to eq(label_hash[:name])
-      expect(label.color).to eq(label_hash[:color])
-      expect(label.url).to eq(label_hash[:url])
+      expect(label.name).to eq("Feature request")
+      expect(label.color).to eq("FCEC7F")
+      expect(label.url).to eq("https://api.github.com/repos/sportngin/ngin/labels/feature-request")
     end
   end
 end
