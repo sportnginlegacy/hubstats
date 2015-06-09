@@ -16,7 +16,7 @@ module Hubstats
       user2 = User.create_or_update(build(:user_hash, login: 'johndoe', id: 10))
       expect(user1).to eq(user2)
       expect(user2.login).to eq("johndoe")
-      expect(user2.login).not_to eq("johnapplesdeed")
+      expect(user1.login).not_to eq("johnapplesdeed")
     end
   end
 end

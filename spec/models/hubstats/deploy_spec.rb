@@ -10,10 +10,10 @@ module Hubstats
                      user_id: 202020}
       deploy = Deploy.create(deploy_hash)
       expect(Deploy.count).to eq(1)
-      expect(deploy.git_revision).to eq(deploy_hash[:git_revision])
-      expect(deploy.repo_id).to eq(deploy_hash[:repo_id])
-      expect(deploy.deployed_at).to eq(deploy_hash[:deployed_at])
-      expect(deploy.user_id).to eq(deploy_hash[:user_id])
+      expect(deploy.git_revision).to eq("c1a2b37")
+      expect(deploy.repo_id).to eq(repo.id)
+      expect(deploy.deployed_at).to eq("2009-02-03 03:00:00 -0500")
+      expect(deploy.user_id).to eq(202020)
     end
 
     it 'should order deploys based on timespan ASC' do
