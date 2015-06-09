@@ -97,7 +97,7 @@ module Hubstats
                            user_id: 202020)).to be_valid
     end
 
-    it 'should NOT create a deploy without an already valid repo_id' do
+    it 'should NOT create a deploy with an invalid repo_id' do
       repo = build(:repo, :id => nil,
                           :name => nil,
                           :full_name => nil)
