@@ -19,6 +19,7 @@ module Hubstats
       expect(pull_request.user_id).to eq(pull[:user][:id])
       expect(pull_request.repo_id).to eq(pull[:repository][:id])
       expect(pull_request.number).to eq(pull[:number])
+      expect(pull_request.merged_by).to eq(nil)
     end
 
     it "should create a pull request and update the deploy's user_id" do

@@ -62,32 +62,40 @@ module Hubstats
 
     # make a new deploy with all of the correct attributes
     def create
-      if params[:git_revision].nil? || params[:repo_name].nil?
-        render text: "Missing a necessary parameter: git revision or repository name.", :status => 400 and return
+      if params[:git_revision].nil? || params[:repo_name].nil? || params[:pull_request_ids].nil?
+        render text: "Missing a necessary parameter: git revision, pull request ids, or repository name.", :status => 400 and return
       else
         @deploy = Deploy.new
         @deploy.deployed_at = params[:deployed_at]
         @deploy.git_revision = params[:git_revision]
         @repo = Hubstats::Repo.where(full_name: params[:repo_name])
         
+        # Check before assigning the repository
         if @repo.empty?
           render text: "Repository name is invalid.", :status => 400 and return
         else
           @deploy.repo_id = @repo.first.id.to_i
         end
 
+        # Check before assigning the pull requests
         @pull_request_id_array = params[:pull_request_ids].split(",").map {|i| i.strip.to_i}
-        @deploy.pull_requests = Hubstats::PullRequest.where(repo_id: @deploy.repo_id)
-                                                     .where(number: @pull_request_id_array)
-
-        if @deploy.pull_requests.first.merged_by != nil
-          @deploy.user_id = @deploy.pull_requests.first.merged_by
+        if @pull_request_id_array.empty? || @pull_request_id_array == [0]
+          render text: "No pull request ids given.", :status => 400 and return
         else
-          @deploy.user_id = nil
+          @deploy.pull_requests = Hubstats::PullRequest.where(repo_id: @deploy.repo_id).where(number: @pull_request_id_array)
+        end
+
+        # Check before assigning the user_id
+        if @deploy.pull_requests.first.nil?
+          render text: "Pull requests not valid", :status => 400 and return
+        else
+          if @deploy.pull_requests.first.merged_by
+            @deploy.user_id = @deploy.pull_requests.first.merged_by
+          end
         end
 
         if @deploy.save
-          render :nothing =>true, :status => 200 and return
+          render :nothing => true, :status => 200 and return
         else
           render :nothing => true, :status => 400 and return
         end

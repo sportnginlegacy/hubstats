@@ -36,18 +36,18 @@ module Hubstats
 
       it 'should NOT create a deploy without a git_revision' do
         post(:create, {"git_revision" => nil,
-                       "repo_name" => "sportngin/ngin",
+                       "repo_name" => "hub/hubstats",
                        "deployed_at" => "2009-02-03 03:00:00 -0500",
                        "pull_request_ids" => "33364992, 5870592, 33691392"})
         expect(response).to have_http_status(400)
       end
 
-      it 'should NOT create a deploy without a user_id' do
+      it 'should create a deploy without a user_id' do
         post(:create, {"git_revision" => "c1a2b37",
-                       "repo_name" => "sportngin/ngin",
+                       "repo_name" => "hub/hubstats",
                        "deployed_at" => "2009-02-03 03:00:00 -0500",
-                       "pull_request_ids" => "5870592, 33691392"})
-        expect(response).to have_http_status(400)
+                       "pull_request_ids" => "33364992, 5870592, 33691392"})
+        expect(response).to have_http_status(200)
       end
 
       it 'should NOT create a deploy without a repo_name' do
@@ -60,7 +60,7 @@ module Hubstats
 
       it 'should NOT create a deploy when given a non existing repo_name' do
         post(:create, {"git_revision" => "c1a2b37",
-                       "repo_name" => "sportngin/make_resourceful",
+                       "repo_name" => "sportngin/example",
                        "deployed_at" => "2009-02-03 03:00:00 -0500",
                        "pull_request_ids" => "33364992, 5870592, 33691392"})
         expect(response).to have_http_status(400)
@@ -68,7 +68,7 @@ module Hubstats
 
       it 'should NOT create a deploy without pull request ids' do
         post(:create, {"git_revision" => "c1a2b37",
-                       "repo_name" => "sportngin/make_resourceful",
+                       "repo_name" => "hub/hubstats",
                        "deployed_at" => "2009-02-03 03:00:00 -0500",
                        "pull_request_ids" => nil})
         expect(response).to have_http_status(400)
@@ -76,9 +76,25 @@ module Hubstats
 
       it 'should NOT create a deploy when given empty pull request ids' do
         post(:create, {"git_revision" => "c1a2b37",
-                       "repo_name" => "sportngin/make_resourceful",
+                       "repo_name" => "hub/hubstats",
                        "deployed_at" => "2009-02-03 03:00:00 -0500",
                        "pull_request_ids" => ""})
+        expect(response).to have_http_status(400)
+      end
+
+      it 'should NOT create a deploy when given something that are not pull request ids' do
+        post(:create, {"git_revision" => "c1a2b37",
+                       "repo_name" => "hub/hubstats",
+                       "deployed_at" => "2009-02-03 03:00:00 -0500",
+                       "pull_request_ids" => "blah bleh blooh"})
+        expect(response).to have_http_status(400)
+      end
+
+      it 'should NOT create a deploy when given invalid pull request ids' do
+        post(:create, {"git_revision" => "c1a2b37",
+                       "repo_name" => "hub/hubstats",
+                       "deployed_at" => "2009-02-03 03:00:00 -0500",
+                       "pull_request_ids" => "77, 81, 92"})
         expect(response).to have_http_status(400)
       end
     end

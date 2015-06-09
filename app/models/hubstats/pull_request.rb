@@ -43,11 +43,10 @@ module Hubstats
 
       # Updates the merged_by part of the pull request and the user_id of the deploy
       if github_pull[:merged_by] && github_pull[:merged_by][:id]
-        pull.merged_by = github_pull[:merged_by][:id]
-        pull_data[:merged_by] = pull.merged_by
+        pull_data[:merged_by] = github_pull[:merged_by][:id]
         deploy = Hubstats::Deploy.where(id: pull.deploy_id, user_id: nil).first
           if deploy
-            deploy.user_id = pull.merged_by
+            deploy.user_id = pull_data[:merged_by]
             deploy.save!
           end
       end

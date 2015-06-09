@@ -21,6 +21,7 @@ FactoryGirl.define do
     association :repository, factory: :repo_hash, strategy: :build
     id {Faker::Number.number(6).to_i}
     number {|n| "#{n}".to_i}
+    merged_by(nil)
 
     initialize_with { attributes } 
   end
