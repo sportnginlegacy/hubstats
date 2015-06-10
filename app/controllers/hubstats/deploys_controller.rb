@@ -5,7 +5,7 @@ module Hubstats
 
     def index
       # sets to include user and repo, and sorts data
-      @deploys = Hubstats::Deploy.includes(:repo, :pull_requests, :user).where("user_id IS NOT NULL")
+      @deploys = Hubstats::Deploy.includes(:repo, :pull_requests, :user)
         .belonging_to_users(params[:users]).belonging_to_repos(params[:repos])
         .group_by(params[:group])
         .order_with_timespan(@timespan, params[:order])

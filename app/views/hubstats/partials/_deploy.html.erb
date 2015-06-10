@@ -1,7 +1,8 @@
 <div class="row single-deploy">
-
   <div class="user-image col-lg-1 col-md-1 col-sm-1" >
-     <img src= <%= deploy.user.avatar_url %> alt= <%= deploy.user.login %> >
+    <% if deploy.user != nil %>
+      <img src= <%= deploy.user.avatar_url%> alt= <%= deploy.user.login %> >
+    <% end %>
   </div>
 
   <!-- Show the repo name, git revision, and who deployed it when  -->
@@ -11,7 +12,12 @@
       <%= link_to deploy.git_revision, deploy_path(deploy) %>
     </h4>
     <br>
-    by <%= link_to deploy.user.login, user_path(deploy.user) %>
+    by 
+    <% if deploy.user != nil %>
+      <%= link_to deploy.user.login, user_path(deploy.user) %>
+    <% else %>
+      unknown
+    <% end %>
     <%= "#{time_ago_in_words(deploy.deployed_at)} ago "%>
     <br>
   </div>
