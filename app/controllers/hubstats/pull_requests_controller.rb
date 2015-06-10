@@ -36,7 +36,9 @@ module Hubstats
       @deploys = Hubstats::Deploy.where(id: @pull_request.deploy_id).order("deployed_at DESC")
       @stats_basics = {
         comment_count: @comment_count,
-        net_additions: @pull_request.additions.to_i - @pull_request.deletions.to_i
+        net_additions: @pull_request.additions.to_i - @pull_request.deletions.to_i,
+        additions: @pull_request.additions.to_i,
+        deletions: @pull_request.deletions.to_i
       }
     end
 

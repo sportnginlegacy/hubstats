@@ -47,4 +47,16 @@
 	  <h1><%= @stats_basics[:avg_deletions] %> </h1>
 	  <h4> Average Deletions per Pull </h4>
 	</div>
-	<% end %>
+<% end %>
+<% if @stats_basics.has_key? :additions %>
+	<div class="col col-lg-2 col-md-4 col-sm-4 col-xs-4 text-center">
+	  <h1> <%= @stats_basics[:additions] %> </h1>
+	  <h4> Additions </h4>
+	</div>
+<% end %>
+<% if @stats_basics.has_key? :deletions%>
+	<div class="col col-lg-2 col-md-4 col-sm-4 col-xs-4 text-center">
+	  <h1><%= @stats_basics[:deletions] %> </h1>
+	  <h4> Deletions </h4>
+	</div>
+<% end %>
