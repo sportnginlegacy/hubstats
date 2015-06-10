@@ -44,11 +44,13 @@ module Hubstats
 
     scope :averages, lambda { |time|
       select("hubstats_users.id as user_id")
-      .select("ROUND(IFNULL(AVG(hubstats_pull_requests.additions),0)) AS average_additions")
-      .select("ROUND(IFNULL(AVG(hubstats_pull_requests.deletions),0)) AS average_deletions")
+      .select("ROUND(IFNULL(hubstats_pull_requests.additions, 0)) AS additions")
+      .select("ROUND(IFNULL(hubstats_pull_requests.deletions, 0)) AS deletions")
       .joins("LEFT JOIN hubstats_pull_requests ON hubstats_pull_requests.user_id = hubstats_users.id AND hubstats_pull_requests.created_at > '#{time}' AND hubstats_pull_requests.merged = '1'")
       .group("hubstats_users.id")
     }
+      # .select("ROUND(IFNULL(AVG(hubstats_pull_requests.additions),0)) AS average_additions")
+      # .select("ROUND(IFNULL(AVG(hubstats_pull_requests.deletions),0)) AS average_deletions")
 
     scope :pull_and_comment_count, lambda { |time|
       select("hubstats_users.*, pull_request_count, comment_count")
@@ -65,13 +67,14 @@ module Hubstats
     }
 
     scope :with_all_metrics, lambda { |time|
-      select("hubstats_users.*, deploy_count, pull_request_count, comment_count, average_additions, average_deletions")
+      select("hubstats_users.*, deploy_count, pull_request_count, comment_count, additions, deletions")
       .joins("LEFT JOIN (#{averages(time).to_sql}) AS averages ON averages.user_id = hubstats_users.id")
       .joins("LEFT JOIN (#{pull_requests_count(time).to_sql}) AS pull_requests ON pull_requests.user_id = hubstats_users.id")
       .joins("LEFT JOIN (#{comments_count(time).to_sql}) AS comments ON comments.user_id = hubstats_users.id")
       .joins("LEFT JOIN (#{deploys_count(time).to_sql}) AS deploys ON deploys.user_id = hubstats_users.id")
       .group("hubstats_users.id")
     }
+    # select("hubstats_users.*, deploy_count, pull_request_count, comment_count, average_additions, average_deletions")
 
     scope :only_active, having("comment_count > 0 OR pull_request_count > 0")
     scope :weighted_sort, order("(pull_request_count)*2 + (comment_count) DESC")
@@ -116,8 +119,9 @@ module Hubstats
           order("pull_request_count #{order}")
         when 'comments'
           order("comment_count #{order}")
-        when 'netadditions' # will order by average_additions - average-deletions instead of separate
-          order("average_additions - average_deletions #{order}")
+        when 'netadditions' # will order by average_additions - average-deletions instead of each separately
+          order("additions - deletions #{order}")
+          # order("average_additions - average_deletions #{order}")
         # when 'additions'
         #   order("average_additions #{order}")
         # when 'deletions'

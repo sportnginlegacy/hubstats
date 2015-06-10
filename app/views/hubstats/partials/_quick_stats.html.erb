@@ -39,12 +39,12 @@
 <% if @stats_basics.has_key? :avg_additions %>
 	<div class="col col-lg-2 col-md-4 col-sm-4 col-xs-4 text-center">
 	  <h1> <%= @stats_basics[:avg_additions] %> </h1>
-	  <h4> Average Additions </h4>
+	  <h4> Average Additions per Pull </h4>
 	</div>
 <% end %>
 <% if @stats_basics.has_key? :avg_deletions%>
 	<div class="col col-lg-2 col-md-4 col-sm-4 col-xs-4 text-center">
 	  <h1><%= @stats_basics[:avg_deletions] %> </h1>
-	  <h4> Average Deletions </h4>
+	  <h4> Average Deletions per Pull </h4>
 	</div>
 	<% end %>
