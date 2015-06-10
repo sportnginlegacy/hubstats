@@ -116,10 +116,12 @@ module Hubstats
           order("pull_request_count #{order}")
         when 'comments'
           order("comment_count #{order}")
-        when 'additions'
-          order("average_additions #{order}")
-        when 'deletions'
-          order("average_deletions #{order}")
+        when 'netadditions' # will order by average_additions - average-deletions instead of separate
+          order("average_additions - average_deletions #{order}")
+        # when 'additions'
+        #   order("average_additions #{order}")
+        # when 'deletions'
+        #   order("average_deletions #{order}")
         else
           order("pull_request_count #{order}")
         end
