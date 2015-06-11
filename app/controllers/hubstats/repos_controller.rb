@@ -25,6 +25,19 @@ module Hubstats
       pull_count = Hubstats::PullRequest.belonging_to_repo(@repo.id).updated_since(@timespan).count(:all)
       deploy_count = Hubstats::Deploy.belonging_to_repo(@repo.id).deployed_since(@timespan).count(:all)
       user_count = Hubstats::User.with_pulls_or_comments(@timespan,@repo.id).only_active.length
+
+      if Hubstats::PullRequest.merged_since(@timespan).belonging_to_repo(@repo.id).average(:additions).nil?
+        additions = 0
+      else
+        additions = Hubstats::PullRequest.merged_since(@timespan).belonging_to_repo(@repo.id).average(:additions).round.to_i
+      end
+
+      if Hubstats::PullRequest.merged_since(@timespan).belonging_to_repo(@repo.id).average(:deletions).nil?
+        deletions = 0
+      else
+        deletions = Hubstats::PullRequest.merged_since(@timespan).belonging_to_repo(@repo.id).average(:deletions).round.to_i
+      end
+
       @stats_basics = {
         user_count: user_count,
         deploy_count: deploy_count,
@@ -32,8 +45,8 @@ module Hubstats
         comment_count: Hubstats::Comment.belonging_to_repo(@repo.id).created_since(@timespan).count(:all)
       }
       @stats_additions = {
-        avg_additions: Hubstats::PullRequest.merged_since(@timespan).belonging_to_repo(@repo.id).average(:additions).round.to_i,
-        avg_deletions: Hubstats::PullRequest.merged_since(@timespan).belonging_to_repo(@repo.id).average(:deletions).round.to_i,
+        avg_additions: additions,
+        avg_deletions: deletions,
         net_additions: Hubstats::PullRequest.merged_since(@timespan).belonging_to_repo(@repo.id).sum(:additions).to_i -
           Hubstats::PullRequest.merged_since(@timespan).belonging_to_repo(@repo.id).sum(:deletions).to_i
       }
@@ -42,7 +55,7 @@ module Hubstats
     def dashboard
       if params[:query] ## For select 2.
         @repos = Hubstats::Repo.where("name LIKE ?", "%#{params[:query]}%").order("name ASC")
-      elsif params[:id] ## 
+      elsif params[:id]
         @repos = Hubstats::Repo.where(id: params[:id].split(",")).order("name ASC")
       else
         @repos = Hubstats::Repo.with_all_metrics(@timespan)
@@ -57,7 +70,6 @@ module Hubstats
         pull_count: Hubstats::PullRequest.merged_since(@timespan).count(:all),
         comment_count: Hubstats::Comment.created_since(@timespan).count(:all)
       }
-
       @stats_additions = {
         avg_additions: Hubstats::PullRequest.merged_since(@timespan).average(:additions).round.to_i,
         avg_deletions: Hubstats::PullRequest.merged_since(@timespan).average(:deletions).round.to_i,
@@ -66,7 +78,7 @@ module Hubstats
       }
 
       respond_to do |format|
-        format.html # index.html.erb
+        format.html
         format.json { render :json => @repos}
       end
     end

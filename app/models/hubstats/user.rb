@@ -118,10 +118,6 @@ module Hubstats
           order("comment_count #{order}")
         when 'netadditions' # will order by additions - deletions instead of each separately
           order("additions - deletions #{order}")
-        # when 'additions'
-        #   order("additions #{order}")
-        # when 'deletions'
-        #   order("deletions #{order}")
         else
           order("pull_request_count #{order}")
         end

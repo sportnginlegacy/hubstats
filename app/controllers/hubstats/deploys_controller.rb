@@ -21,7 +21,7 @@ module Hubstats
 
     # show basic stats and pull requests from a single deploy
     def show
-      @deploy = Hubstats::Deploy.includes(:repo).includes(:pull_requests).find(params[:id])
+      @deploy = Hubstats::Deploy.includes(:repo, :pull_requests).find(params[:id])
       repo = @deploy.repo
       @pull_requests = @deploy.pull_requests
       pull_request_count = @pull_requests.length
@@ -79,7 +79,7 @@ module Hubstats
       pull_requests = deploy.pull_requests
       total_comments = 0
       pull_requests.each do |pull|
-          total_comments += Hubstats::Comment.belonging_to_pull_request(pull.id).includes(:user).created_since(@timespan).count(:all)
+          total_comments += Hubstats::Comment.belonging_to_pull_request(pull.id).created_since(@timespan).count(:all)
       end
       return total_comments
     end

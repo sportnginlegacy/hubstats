@@ -3,6 +3,7 @@ require 'spec_helper'
 module Hubstats
   describe DeploysController, :type => :controller do
     routes { Hubstats::Engine.routes }
+
     describe "#create" do
 
       before :each do
@@ -100,12 +101,8 @@ module Hubstats
     end
 
     describe "#index" do
-
-      before :each do
-        create(:repo, :full_name => "sportngin/ngin")
-      end
-
       it "should correctly order all of the deploys" do
+        repo = create(:repo, :full_name => "sportngin/ngin")
         deploy1 = create(:deploy, :git_revision => "c1a2b37",
                                   :repo_id => 101010,
                                   :deployed_at => "2009-02-03 03:00:00 -0500",
@@ -131,17 +128,16 @@ module Hubstats
     end
 
     describe "#show" do
-
-      before :each do
-        create(:repo, :full_name => "sportngin/ngin")
-      end
-
       it "should show the pull requests of the specific deploy" do
+        repo = create(:repo, :full_name => "sportngin/ngin")
         deploy = create(:deploy, :git_revision => "c1a2b37",
-                        :repo_id => 101010,
-                        :deployed_at => "2009-02-03 03:00:00 -0500")
+                                 :repo_id => 101010,
+                                 :deployed_at => "2009-02-03 03:00:00 -0500")
+        pull1 = create(:pull_request, :deploy_id => deploy.id, :repo => repo)
+        pull2 = create(:pull_request, :deploy_id => deploy.id, :repo => repo)
         get :show, id: deploy.id
         expect(assigns(:deploy)).to eq(deploy)
+        expect(assigns(:pull_requests)).to contain_exactly(pull1, pull2)
         expect(assigns(:deploy).repo_id).to eq(101010)
       end
     end
