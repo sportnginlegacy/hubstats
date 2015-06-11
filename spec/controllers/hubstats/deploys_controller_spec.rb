@@ -3,6 +3,48 @@ require 'spec_helper'
 module Hubstats
   describe DeploysController, :type => :controller do
     routes { Hubstats::Engine.routes }
+    
+    describe "#index" do
+      it "should correctly order all of the deploys" do
+        repo = create(:repo, :full_name => "sportngin/ngin")
+        deploy1 = create(:deploy, :git_revision => "c1a2b37",
+                                  :repo_id => 101010,
+                                  :deployed_at => "2009-02-03 03:00:00 -0500",
+                                  :user_id => 404040)
+        deploy2 = create(:deploy, :git_revision => "kd9c102",
+                                  :repo_id => 101010,
+                                  :deployed_at => "2015-02-03 03:00:00 -0500",
+                                  :user_id => 303030)
+        deploy3 = create(:deploy, :git_revision => "owk19sf",
+                                  :repo_id => 101010,
+                                  :deployed_at => "2011-02-03 03:00:00 -0500",
+                                  :user_id => 202020)
+        deploy4 = create(:deploy, :git_revision => "owk19sf",
+                                  :repo_id => 101010,
+                                  :deployed_at => "2011-02-03 03:00:00 -0500",
+                                  :user_id => nil)
+        deploys_ordered = [deploy2, deploy3, deploy1]
+        expect(Hubstats::Deploy).to receive_message_chain("group_by.order_with_timespan.paginate").and_return(deploys_ordered)
+        get :index
+        expect(response).to have_http_status(200)
+        expect(response).to render_template(:index)
+      end
+    end
+
+    describe "#show" do
+      it "should show the pull requests of the specific deploy" do
+        repo = create(:repo, :full_name => "sportngin/ngin")
+        deploy = create(:deploy, :git_revision => "c1a2b37",
+                                 :repo_id => 101010,
+                                 :deployed_at => "2009-02-03 03:00:00 -0500")
+        pull1 = create(:pull_request, :deploy_id => deploy.id, :repo => repo)
+        pull2 = create(:pull_request, :deploy_id => deploy.id, :repo => repo)
+        get :show, id: deploy.id
+        expect(assigns(:deploy)).to eq(deploy)
+        expect(assigns(:pull_requests)).to contain_exactly(pull1, pull2)
+        expect(assigns(:deploy).repo_id).to eq(101010)
+      end
+    end
 
     describe "#create" do
 
@@ -97,48 +139,6 @@ module Hubstats
                        "deployed_at" => "2009-02-03 03:00:00 -0500",
                        "pull_request_ids" => "77, 81, 92"})
         expect(response).to have_http_status(400)
-      end
-    end
-
-    describe "#index" do
-      it "should correctly order all of the deploys" do
-        repo = create(:repo, :full_name => "sportngin/ngin")
-        deploy1 = create(:deploy, :git_revision => "c1a2b37",
-                                  :repo_id => 101010,
-                                  :deployed_at => "2009-02-03 03:00:00 -0500",
-                                  :user_id => 404040)
-        deploy2 = create(:deploy, :git_revision => "kd9c102",
-                                  :repo_id => 101010,
-                                  :deployed_at => "2015-02-03 03:00:00 -0500",
-                                  :user_id => 303030)
-        deploy3 = create(:deploy, :git_revision => "owk19sf",
-                                  :repo_id => 101010,
-                                  :deployed_at => "2011-02-03 03:00:00 -0500",
-                                  :user_id => 202020)
-        deploy4 = create(:deploy, :git_revision => "owk19sf",
-                                  :repo_id => 101010,
-                                  :deployed_at => "2011-02-03 03:00:00 -0500",
-                                  :user_id => nil)
-        deploys_ordered = [deploy2, deploy3, deploy1]
-        expect(Hubstats::Deploy).to receive_message_chain("group_by.order_with_timespan.paginate").and_return(deploys_ordered)
-        get :index
-        expect(response).to have_http_status(200)
-        expect(response).to render_template(:index)
-      end
-    end
-
-    describe "#show" do
-      it "should show the pull requests of the specific deploy" do
-        repo = create(:repo, :full_name => "sportngin/ngin")
-        deploy = create(:deploy, :git_revision => "c1a2b37",
-                                 :repo_id => 101010,
-                                 :deployed_at => "2009-02-03 03:00:00 -0500")
-        pull1 = create(:pull_request, :deploy_id => deploy.id, :repo => repo)
-        pull2 = create(:pull_request, :deploy_id => deploy.id, :repo => repo)
-        get :show, id: deploy.id
-        expect(assigns(:deploy)).to eq(deploy)
-        expect(assigns(:pull_requests)).to contain_exactly(pull1, pull2)
-        expect(assigns(:deploy).repo_id).to eq(101010)
       end
     end
   end
