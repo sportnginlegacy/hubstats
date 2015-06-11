@@ -1,5 +1,24 @@
 <% if @repos.length > 0 %>
   <div class="repos">
+    <div class="row single-repo header">
+      <div class="col-lg-2 col-md-2 col-sm-2">
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2">
+        <a class="header desc" id="deploys"> Deploys <span class="octicon"></span> </a>
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2">
+        <a class="header desc" id="pulls"> Pulls <span class="octicon"></span> </a>
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2">
+        <a class="header desc" id="comments"> Comments <span class="octicon"></span></a>
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2">
+        <a class="header desc" id="additions"> Average Additions <span class="octicon"></span></a>
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2">
+        <a class="header desc" id="deletions"> Average Deletions <span class="octicon"></span></a>
+      </div>
+    </div>
     <%= render partial: 'hubstats/partials/repo', collection: @repos, as: :repo %>
   </div>
 <% else %>

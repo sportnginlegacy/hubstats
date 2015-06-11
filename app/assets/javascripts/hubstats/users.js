@@ -22,13 +22,13 @@ $(document).ready(function() {
     toggleOrder(queryParameters,$(this).attr('id'));
   });
 
-  // $("#additions").on("click", function(){
-  //   toggleOrder(queryParameters,$(this).attr('id'));
-  // });
+  $("#additions").on("click", function(){
+    toggleOrder(queryParameters,$(this).attr('id'));
+  });
 
-  // $("#deletions").on("click", function(){
-  //   toggleOrder(queryParameters,$(this).attr('id'));
-  // });
+  $("#deletions").on("click", function(){
+    toggleOrder(queryParameters,$(this).attr('id'));
+  });
 });
 
 function toggleOrder(queryParams, sort_by) {

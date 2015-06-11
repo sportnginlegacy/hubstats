@@ -1,21 +1,59 @@
 <div class="row single-repo">
-  <div class="repo-image-small col-lg-1 col-md-1 col-sm-1 col-xs-1" >
+<!--   <div class="repo-image-small col-lg-1 col-md-1 col-sm-1 col-xs-1" >
     <span class="repo-octicon-small mega-octicon octicon-repo"></span>
-  </div>
+  </div> -->
 
-  <div class="repo-info col-lg-10 col-md-10 col-sm-10 col-xs-8">
+  <div class="repo-info col-lg-2 col-md-2 col-sm-2 col-xs-8">
     <h4> 
       <%= link_to repo.name, repo_path(repo)%>
     </h4>
     updated <%= distance_of_time_in_words(DateTime.now,repo.updated_at) %> ago
+    <br>
+    <h4>
+      <a class="subtle" href=<%= repo.html_url %> > 
+        <span class="octicon octicon-mark-github"></span>
+        <span class="octicon octicon-logo-github"></span> 
+      </a>
+    </h4>
+  </div>
+
+  <div class="col-lg-2 col-md-2 col-sm-2">
+    <div class="text-center">
+      <span class="text-large"><%= repo.deploy_count %></span>
+      <span class="mega-octicon octicon-rocket"></span>
+    </div>
+  </div>
+  <div class="col-lg-2 col-md-2 col-sm-2">
+    <div class="text-center">
+      <span class="text-large"><%= repo.pull_request_count %></span>
+      <span class="mega-octicon octicon-git-pull-request"></span>
+    </div>
+  </div>
+  <div class="col-lg-2 col-md-2 col-sm-2">
+    <div class="text-center">
+      <span class="text-large"><%= repo.comment_count %></span>
+      <span class="mega-octicon octicon-comment"></span>
+    </div>
+  </div>
+  <div class="col-lg-2 col-md-2 col-sm-2">
+    <div class="text-center">
+      <span class="text-large"><%= repo.average_additions %></span>
+      <span class="mega-octicon octicon-plus"></span>
+    </div>
+  </div>
+  <div class="col-lg-2 col-md-2 col-sm-2">
+    <div class="text-center">
+      <span class="text-large"><%= repo.average_deletions %></span>
+      <span class="mega-octicon octicon-dash"></span>
+    </div>
   </div>
   
-  <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+  <!-- <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
     <div class="pull-right">
       <a class="subtle" href=<%= repo.html_url %> > 
         <span class="octicon octicon-mark-github"></span>
       </a>
       </span>
     </div>
-  </div>
+  </div> -->
 </div>
