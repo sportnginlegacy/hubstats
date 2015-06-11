@@ -59,8 +59,8 @@ module Hubstats
       }
 
       @stats_additions = {
-        avg_additions: Hubstats::PullRequest.merged_since(@timespan).average(:additions).to_i,
-        avg_deletions: Hubstats::PullRequest.merged_since(@timespan).average(:deletions).to_i,
+        avg_additions: Hubstats::PullRequest.merged_since(@timespan).average(:additions).round.to_i,
+        avg_deletions: Hubstats::PullRequest.merged_since(@timespan).average(:deletions).round.to_i,
         net_additions: Hubstats::PullRequest.merged_since(@timespan).sum(:additions).to_i - 
           Hubstats::PullRequest.merged_since(@timespan).sum(:deletions).to_i
       }
