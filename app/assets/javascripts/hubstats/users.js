@@ -17,6 +17,11 @@ $(document).ready(function() {
     toggleOrder(queryParameters,$(this).attr('id'));
   });
 
+// No longer using additions and deletions, but instead using net additions
+  $("#netadditions").on("click", function(){
+    toggleOrder(queryParameters,$(this).attr('id'));
+  });
+
   $("#additions").on("click", function(){
     toggleOrder(queryParameters,$(this).attr('id'));
   });
@@ -27,14 +32,14 @@ $(document).ready(function() {
 });
 
 function toggleOrder(queryParams, sort_by) {
-  if (queryParameters["order"] !== undefined) {
-    if (queryParameters["order"] === sort_by+"-desc" ) {
-      updateQueryStringParameter(queryParameters,"order",sort_by+"-asc");
+  if (queryParams["order"] !== undefined) {
+    if (queryParams["order"] === sort_by+"-desc" ) {
+      updateQueryStringParameter(queryParams,"order",sort_by+"-asc");
     } else {
-      updateQueryStringParameter(queryParameters,"order",sort_by+"-desc");
+      updateQueryStringParameter(queryParams,"order",sort_by+"-desc");
     }
   } else {
-    updateQueryStringParameter(queryParameters,"order",sort_by+"-asc");
+    updateQueryStringParameter(queryParams,"order",sort_by+"-asc");
   }
 }
 

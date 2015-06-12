@@ -21,43 +21,17 @@ module Hubstats
 
     # show basic stats and pull requests from a single deploy
     def show
-      @deploy = Hubstats::Deploy.includes(:repo).includes(:pull_requests).find(params[:id])
+      @deploy = Hubstats::Deploy.includes(:repo, :pull_requests).find(params[:id])
       repo = @deploy.repo
       @pull_requests = @deploy.pull_requests
       pull_request_count = @pull_requests.length
-      net_additions = find_net_additions(@deploy.id)
-      comment_count = find_comment_count(@deploy.id)
       @stats_basics = {
         pull_count: pull_request_count,
-        net_additions: net_additions,
-        comment_count: comment_count
+        net_additions: @deploy.find_net_additions,
+        comment_count: @deploy.find_comment_count,
+        additions: @deploy.total_changes(:additions),
+        deletions: @deploy.total_changes(:deletions)
       }
-    end
-
-    # finds all of the additions and deletions in all pull requests and then makes the net additions
-    def find_net_additions(deploy_id)
-      deploy = Hubstats::Deploy.find(deploy_id)
-      pull_requests = deploy.pull_requests
-      total_additions = 0
-      total_deletions = 0
-      pull_requests.each do |pull|
-        total_additions += pull.additions.to_i
-        total_deletions += pull.deletions.to_i
-      end
-      return total_additions - total_deletions
-    end
-
-    # returns the total amount of comments from all pull requests in a deploy
-    def find_comment_count(deploy_id)
-      deploy = Hubstats::Deploy.find(deploy_id)
-      pull_requests = deploy.pull_requests
-      total_comments = 0
-      pull_requests.each do |pull|
-        if pull.comments
-          total_comments += Hubstats::Comment.belonging_to_pull_request(pull.id).includes(:user).created_since(@timespan).count(:all)
-        end
-      end
-      return total_comments
     end
 
     # make a new deploy with all of the correct attributes

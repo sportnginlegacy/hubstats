@@ -42,10 +42,10 @@ module Hubstats
       .group("hubstats_users.id")
     }
 
-    scope :averages, lambda { |time|
+    scope :net_additions_count, lambda { |time|
       select("hubstats_users.id as user_id")
-      .select("ROUND(IFNULL(AVG(hubstats_pull_requests.additions),0)) AS average_additions")
-      .select("ROUND(IFNULL(AVG(hubstats_pull_requests.deletions),0)) AS average_deletions")
+      .select("SUM(IFNULL(hubstats_pull_requests.additions, 0)) AS additions")
+      .select("SUM(IFNULL(hubstats_pull_requests.deletions, 0)) AS deletions")
       .joins("LEFT JOIN hubstats_pull_requests ON hubstats_pull_requests.user_id = hubstats_users.id AND hubstats_pull_requests.created_at > '#{time}' AND hubstats_pull_requests.merged = '1'")
       .group("hubstats_users.id")
     }
@@ -65,8 +65,8 @@ module Hubstats
     }
 
     scope :with_all_metrics, lambda { |time|
-      select("hubstats_users.*, deploy_count, pull_request_count, comment_count, average_additions, average_deletions")
-      .joins("LEFT JOIN (#{averages(time).to_sql}) AS averages ON averages.user_id = hubstats_users.id")
+      select("hubstats_users.*, deploy_count, pull_request_count, comment_count, additions, deletions")
+      .joins("LEFT JOIN (#{net_additions_count(time).to_sql}) AS net_additions ON net_additions.user_id = hubstats_users.id")
       .joins("LEFT JOIN (#{pull_requests_count(time).to_sql}) AS pull_requests ON pull_requests.user_id = hubstats_users.id")
       .joins("LEFT JOIN (#{comments_count(time).to_sql}) AS comments ON comments.user_id = hubstats_users.id")
       .joins("LEFT JOIN (#{deploys_count(time).to_sql}) AS deploys ON deploys.user_id = hubstats_users.id")
@@ -116,10 +116,8 @@ module Hubstats
           order("pull_request_count #{order}")
         when 'comments'
           order("comment_count #{order}")
-        when 'additions'
-          order("average_additions #{order}")
-        when 'deletions'
-          order("average_deletions #{order}")
+        when 'netadditions' # will order by additions - deletions instead of each separately
+          order("additions - deletions #{order}")
         else
           order("pull_request_count #{order}")
         end
