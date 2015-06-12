@@ -22,10 +22,10 @@ module Hubstats
       pull_request_count = @pull_requests.length
       @stats_basics = {
         pull_count: pull_request_count,
-        net_additions: @deploy.find_net_additions(@deploy),
-        comment_count: @deploy.find_comment_count(@deploy),
-        additions: @deploy.total_changes(@deploy, "additions"),
-        deletions: @deploy.total_changes(@deploy, "deletions")
+        net_additions: @deploy.find_net_additions,
+        comment_count: @deploy.find_comment_count,
+        additions: @deploy.total_changes("additions"),
+        deletions: @deploy.total_changes("deletions")
       }
     end
 

@@ -60,6 +60,7 @@ module Hubstats
                               :full_name => "sportngin/goosey")
         expect(Hubstats::Repo).to receive_message_chain("with_id.custom_order.paginate").and_return([repo1, repo2, repo3, repo4])
         get :dashboard
+        expect(response).to have_http_status(200)
       end
     end
   end

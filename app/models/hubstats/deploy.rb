@@ -42,8 +42,8 @@ module Hubstats
     end
 
     # finds the total number of additions or deletions for all pull requests in this deploy
-    def total_changes(deploy, add)
-      pull_requests = deploy.pull_requests
+    def total_changes(add)
+      pull_requests = self.pull_requests
       total = 0
       pull_requests.each do |pull|
         if add == "additions"
@@ -56,8 +56,8 @@ module Hubstats
     end
 
     # finds all of the additions and deletions in all pull requests and then makes the net additions
-    def find_net_additions(deploy)
-      pull_requests = deploy.pull_requests
+    def find_net_additions
+      pull_requests = self.pull_requests
       total_additions = 0
       total_deletions = 0
       pull_requests.each do |pull|
@@ -68,8 +68,8 @@ module Hubstats
     end
 
     # returns the total amount of comments from all pull requests in a deploy
-    def find_comment_count(deploy)
-      pull_requests = deploy.pull_requests
+    def find_comment_count
+      pull_requests = self.pull_requests
       total_comments = 0
       pull_requests.each do |pull|
         total_comments += Hubstats::Comment.belonging_to_pull_request(pull.id).count(:all)
