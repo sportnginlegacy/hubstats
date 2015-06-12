@@ -10,11 +10,11 @@ module Hubstats
     end
 
     def grouping (group_request, group)
-  		if group_request == "user"
+      if group_request == "user"
         @groups = group.to_a.group_by(&:user_name)
       elsif group_request == "repo"
         @groups = group.to_a.group_by(&:repo_name)
       end
-  	end
+    end
   end
 end
