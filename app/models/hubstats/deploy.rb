@@ -46,9 +46,9 @@ module Hubstats
       pull_requests = self.pull_requests
       total = 0
       pull_requests.each do |pull|
-        if add == "additions"
+        if add == :additions
           total += pull.additions.to_i
-        elsif add == "deletions"
+        elsif add == :deletions
           total += pull.deletions.to_i
         end
       end

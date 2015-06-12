@@ -29,8 +29,8 @@ module Hubstats
         pull_count: pull_request_count,
         net_additions: @deploy.find_net_additions,
         comment_count: @deploy.find_comment_count,
-        additions: @deploy.total_changes("additions"),
-        deletions: @deploy.total_changes("deletions")
+        additions: @deploy.total_changes(:additions),
+        deletions: @deploy.total_changes(:deletions)
       }
     end
 
