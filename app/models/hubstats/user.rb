@@ -13,7 +13,7 @@ module Hubstats
     scope :pull_requests_and_comments_count_by_repo, lambda {|time, repo_id, data, began_time, name|
       select("hubstats_users.id as user_id")
       .select("IFNULL(COUNT(DISTINCT #{data}.id),0) AS #{name}_count")
-      .joins("LEFT JOIN #{data} ON #{data}.user_id = hubstats_users.id AND #{data}.#{began_time} > '#{time}' AND #{data}.repo_id = '#{repo_id}' AND #{data}.merged = '1'")
+      .joins("LEFT JOIN #{data} ON #{data}.user_id = hubstats_users.id AND #{data}.#{began_time} > '#{time}' AND #{data}.repo_id = '#{repo_id}'")
       .group("hubstats_users.id")
     }
 
@@ -54,13 +54,6 @@ module Hubstats
       .group("hubstats_users.id")
     }
 
-    scope :pull_and_comment_count_by_repo, lambda { |time,repo_id|
-      select("hubstats_users.*, pull_request_count, comment_count")
-      .joins("LEFT JOIN (#{pull_requests_count_by_repo(time,repo_id).to_sql}) AS pull_requests ON pull_requests.user_id = hubstats_users.id")
-      .joins("LEFT JOIN (#{comments_count_by_repo(time,repo_id).to_sql}) AS comments ON comments.user_id = hubstats_users.id")
-      .group("hubstats_users.id")
-    }
-
     scope :pull_and_comment_count, lambda { |time|
       select("hubstats_users.*, pull_request_count, comment_count")
       .joins("LEFT JOIN (#{pull_requests_count(time).to_sql}) AS pull_requests ON pull_requests.user_id = hubstats_users.id")
@@ -68,6 +61,12 @@ module Hubstats
       .group("hubstats_users.id")
     }
 
+    scope :pull_and_comment_count_by_repo, lambda { |time,repo_id|
+      select("hubstats_users.*, pull_request_count, comment_count")
+      .joins("LEFT JOIN (#{pull_requests_count_by_repo(time,repo_id).to_sql}) AS pull_requests ON pull_requests.user_id = hubstats_users.id")
+      .joins("LEFT JOIN (#{comments_count_by_repo(time,repo_id).to_sql}) AS comments ON comments.user_id = hubstats_users.id")
+      .group("hubstats_users.id")
+    }
     scope :with_all_metrics, lambda { |time|
       select("hubstats_users.*, deploy_count, pull_request_count, comment_count, additions, deletions")
       .joins("LEFT JOIN (#{net_additions_count(time).to_sql}) AS net_additions ON net_additions.user_id = hubstats_users.id")
