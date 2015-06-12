@@ -25,24 +25,27 @@ module Hubstats
       @user = Hubstats::User.where(login: params[:id]).first
       @pull_requests = Hubstats::PullRequest.belonging_to_user(@user.id).updated_since(@timespan).order("updated_at DESC").limit(20)
       @deploys = Hubstats::Deploy.belonging_to_user(@user.id).deployed_since(@timespan).order("deployed_at DESC").limit(20)
-      pull_count = Hubstats::PullRequest.belonging_to_user(@user.id).updated_since(@timespan).count(:all)
-      deploy_count = Hubstats::Deploy.belonging_to_user(@user.id).deployed_since(@timespan).count(:all)
-      comment_count = Hubstats::Comment.belonging_to_user(@user.id).created_since(@timespan).count(:all)
+      @pull_count = Hubstats::PullRequest.belonging_to_user(@user.id).updated_since(@timespan).count(:all)
+      @deploy_count = Hubstats::Deploy.belonging_to_user(@user.id).deployed_since(@timespan).count(:all)
+      @comment_count = Hubstats::Comment.belonging_to_user(@user.id).created_since(@timespan).count(:all)
+      @net_additions = Hubstats::PullRequest.merged_since(@timespan).belonging_to_user(@user.id).sum(:additions).to_i -
+                       Hubstats::PullRequest.merged_since(@timespan).belonging_to_user(@user.id).sum(:deletions).to_i
+      @additions = Hubstats::PullRequest.merged_since(@timespan).belonging_to_user(@user.id).average(:additions)
+      @deletions = Hubstats::PullRequest.merged_since(@timespan).belonging_to_user(@user.id).average(:deletions)
 
-      additions = Hubstats::PullRequest.merged_since(@timespan).belonging_to_user(@user.id).average(:additions)
-      additions ||= 0
+      stats
+    end
 
-      deletions = Hubstats::PullRequest.merged_since(@timespan).belonging_to_user(@user.id).average(:deletions)
-      deletions ||= 0
-
+    def stats
+      @additions ||= 0
+      @deletions ||= 0
       @stats_basics = {
-        pull_count: pull_count,
-        deploy_count: deploy_count,
-        comment_count: comment_count,
-        avg_additions: additions.round.to_i,
-        avg_deletions: deletions.round.to_i,
-        net_additions: Hubstats::PullRequest.merged_since(@timespan).belonging_to_user(@user.id).sum(:additions).to_i -
-          Hubstats::PullRequest.merged_since(@timespan).belonging_to_user(@user.id).sum(:deletions).to_i
+        pull_count: @pull_count,
+        deploy_count: @deploy_count,
+        comment_count: @comment_count,
+        avg_additions: @additions.round.to_i,
+        avg_deletions: @deletions.round.to_i,
+        net_additions: @net_additions
       }
     end
 
