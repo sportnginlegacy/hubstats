@@ -38,13 +38,18 @@ module Hubstats
         @deploy.deployed_at = params[:deployed_at]
         @deploy.git_revision = params[:git_revision]
         @repo = Hubstats::Repo.where(full_name: params[:repo_name])
+
         if !valid_repo(@repo)
           render text: "Repository name is invalid.", :status => 400 and return
+        else
+          @deploy.repo_id = @repo.first.id.to_i
         end
 
         @pull_request_id_array = params[:pull_request_ids].split(",").map {|i| i.strip.to_i}
         if !valid_pr_ids
           render text: "No pull request ids given.", :status => 400 and return
+        else
+          @deploy.pull_requests = Hubstats::PullRequest.where(repo_id: @deploy.repo_id).where(number: @pull_request_id_array)
         end
 
         if !valid_pulls
@@ -60,30 +65,18 @@ module Hubstats
     end
 
     def valid_repo(repo)
-      if !repo.empty?
-        @deploy.repo_id = repo.first.id.to_i
-        return true
-      end
-      return false
+      return !repo.empty?
     end
 
     def valid_pr_ids
-      if !@pull_request_id_array.empty? && @pull_request_id_array != [0]
-        @deploy.pull_requests = Hubstats::PullRequest.where(repo_id: @deploy.repo_id).where(number: @pull_request_id_array)
-        return true
-      end
-      return false
+      return !@pull_request_id_array.empty? && @pull_request_id_array != [0]
     end
 
     def valid_pulls
-      if !@deploy.pull_requests.first.nil?
-        if @deploy.pull_requests.first.merged_by
-          @deploy.user_id = @deploy.pull_requests.first.merged_by
-          return true
-        end
-        return false
-      end
-      return false
+      pull = @deploy.pull_requests.first
+      return false if pull.nil? || pull.merged_by.nil?
+      @deploy.user_id = pull.merged_by
+      return true
     end
   end
  end
