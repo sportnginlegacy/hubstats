@@ -4,7 +4,7 @@ module Hubstats
     scope :with_recent_activity, lambda {|time| where("created_at > ?", time).order("updated_at DESC")}
     scope :with_id, lambda {|user_id| where(id: user_id.split(',')) if user_id}
 
-    scope :deploys_or_pull_requests_or_comments_count, lambda {|time, data, began_time, name|
+    scope :deploys_or_comments_count, lambda {|time, data, began_time, name|
       select("hubstats_repos.id as repo_id")
        .select("IFNULL(COUNT(DISTINCT #{data}.id),0) AS #{name}_count")
        .joins("LEFT JOIN #{data} ON #{data}.repo_id = hubstats_repos.id AND #{data}.#{began_time} > '#{time}'")
@@ -12,15 +12,18 @@ module Hubstats
     }
 
     scope :deploys_count, lambda {|time|
-      deploys_or_pull_requests_or_comments_count(time, "hubstats_deploys", "deployed_at", "deploy")
+      deploys_or_comments_count(time, "hubstats_deploys", "deployed_at", "deploy")
     }
 
     scope :comments_count, lambda {|time|
-      deploys_or_pull_requests_or_comments_count(time, "hubstats_comments", "created_at", "comment")
+      deploys_or_comments_count(time, "hubstats_comments", "created_at", "comment")
     }
  
-    scope :pull_requests_count, lambda{|time|
-      deploys_or_pull_requests_or_comments_count(time, "hubstats_pull_requests", "created_at", "pull_request")
+    scope :pull_requests_count, lambda {|time|
+      select("hubstats_repos.id as repo_id")
+      .select("IFNULL(COUNT(DISTINCT hubstats_pull_requests.id),0) AS pull_request_count")
+      .joins("LEFT JOIN hubstats_pull_requests ON hubstats_pull_requests.repo_id = hubstats_repos.id AND hubstats_pull_requests.created_at > '#{time}' AND hubstats_pull_requests.merged = '1'")
+      .group("hubstats_repos.id")
     }
 
     scope :averages, lambda { |time|
