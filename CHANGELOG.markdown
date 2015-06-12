@@ -1,3 +1,7 @@
+* Changed Metrics Page, Wrote New Tests, Fixed Little Bugs
+
+  > Emma Sax: Brian Bergstrom: https://github.com/sportngin/hubstats/pull/56
+
 #### v0.3.8
 #### v0.3.7
 #### v0.3.6
