@@ -30,24 +30,18 @@ module Hubstats
       deploy_count = Hubstats::Deploy.belonging_to_user(@user.id).deployed_since(@timespan).count(:all)
       comment_count = Hubstats::Comment.belonging_to_user(@user.id).created_since(@timespan).count(:all)
 
-      if Hubstats::PullRequest.merged_since(@timespan).belonging_to_user(@user.id).average(:additions).nil?
-        additions = 0
-      else
-        additions = Hubstats::PullRequest.merged_since(@timespan).belonging_to_user(@user.id).average(:additions).round.to_i
-      end
+      additions = Hubstats::PullRequest.merged_since(@timespan).belonging_to_user(@user.id).average(:additions)
+      additions ||= 0
 
-      if Hubstats::PullRequest.merged_since(@timespan).belonging_to_user(@user.id).average(:deletions).nil?
-        deletions = 0
-      else
-        deletions = Hubstats::PullRequest.merged_since(@timespan).belonging_to_user(@user.id).average(:deletions).round.to_i
-      end
+      deletions = Hubstats::PullRequest.merged_since(@timespan).belonging_to_user(@user.id).average(:deletions)
+      deletions ||= 0
 
       @stats_basics = {
         pull_count: pull_count,
         deploy_count: deploy_count,
         comment_count: comment_count,
-        avg_additions: additions,
-        avg_deletions: deletions,
+        avg_additions: additions.round.to_i,
+        avg_deletions: deletions.round.to_i,
         net_additions: Hubstats::PullRequest.merged_since(@timespan).belonging_to_user(@user.id).sum(:additions).to_i -
           Hubstats::PullRequest.merged_since(@timespan).belonging_to_user(@user.id).sum(:deletions).to_i
       }

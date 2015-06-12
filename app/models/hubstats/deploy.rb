@@ -41,5 +41,47 @@ module Hubstats
        end
     end
 
+    # finds the total number of deletions for all pull requests in this deploy
+    def total_deletions(deploy)
+      pull_requests = deploy.pull_requests
+      total_deletions = 0
+      pull_requests.each do |pull|
+        total_deletions += pull.deletions.to_i
+      end
+      return total_deletions
+    end
+
+    # finds the total number of additions for all pull requests in this deploy
+    def total_additions(deploy)
+      pull_requests = deploy.pull_requests
+      total_additions = 0
+      pull_requests.each do |pull|
+        total_additions += pull.additions.to_i
+      end
+      return total_additions
+    end
+
+    # finds all of the additions and deletions in all pull requests and then makes the net additions
+    def find_net_additions(deploy)
+      pull_requests = deploy.pull_requests
+      total_additions = 0
+      total_deletions = 0
+      pull_requests.each do |pull|
+        total_additions += pull.additions.to_i
+        total_deletions += pull.deletions.to_i
+      end
+      return total_additions - total_deletions
+    end
+
+    # returns the total amount of comments from all pull requests in a deploy
+    def find_comment_count(deploy)
+      pull_requests = deploy.pull_requests
+      total_comments = 0
+      pull_requests.each do |pull|
+        total_comments += Hubstats::Comment.belonging_to_pull_request(pull.id).count(:all)
+      end
+      return total_comments
+    end
+
   end
 end

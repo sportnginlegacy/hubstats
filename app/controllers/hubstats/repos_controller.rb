@@ -26,17 +26,11 @@ module Hubstats
       deploy_count = Hubstats::Deploy.belonging_to_repo(@repo.id).deployed_since(@timespan).count(:all)
       user_count = Hubstats::User.with_pulls_or_comments(@timespan,@repo.id).only_active.length
 
-      if Hubstats::PullRequest.merged_since(@timespan).belonging_to_repo(@repo.id).average(:additions).nil?
-        additions = 0
-      else
-        additions = Hubstats::PullRequest.merged_since(@timespan).belonging_to_repo(@repo.id).average(:additions).round.to_i
-      end
+      additions = Hubstats::PullRequest.merged_since(@timespan).belonging_to_repo(@repo.id).average(:additions)
+      additions ||= 0
 
-      if Hubstats::PullRequest.merged_since(@timespan).belonging_to_repo(@repo.id).average(:deletions).nil?
-        deletions = 0
-      else
-        deletions = Hubstats::PullRequest.merged_since(@timespan).belonging_to_repo(@repo.id).average(:deletions).round.to_i
-      end
+      deletions = Hubstats::PullRequest.merged_since(@timespan).belonging_to_repo(@repo.id).average(:deletions)
+      deletions ||= 0
 
       @stats_basics = {
         user_count: user_count,
@@ -45,8 +39,8 @@ module Hubstats
         comment_count: Hubstats::Comment.belonging_to_repo(@repo.id).created_since(@timespan).count(:all)
       }
       @stats_additions = {
-        avg_additions: additions,
-        avg_deletions: deletions,
+        avg_additions: additions.round.to_i,
+        avg_deletions: deletions.round.to_i,
         net_additions: Hubstats::PullRequest.merged_since(@timespan).belonging_to_repo(@repo.id).sum(:additions).to_i -
           Hubstats::PullRequest.merged_since(@timespan).belonging_to_repo(@repo.id).sum(:deletions).to_i
       }
@@ -64,17 +58,11 @@ module Hubstats
           .paginate(:page => params[:page], :per_page => 15)
       end
 
-      if Hubstats::PullRequest.merged_since(@timespan).average(:additions).nil?
-        additions = 0
-      else
-        additions = Hubstats::PullRequest.merged_since(@timespan).average(:additions).round.to_i
-      end
+      additions = Hubstats::PullRequest.merged_since(@timespan).average(:additions)
+      additions ||= 0
 
-      if Hubstats::PullRequest.merged_since(@timespan).average(:deletions).nil?
-        deletions = 0
-      else
-        deletions = Hubstats::PullRequest.merged_since(@timespan).average(:deletions).round.to_i
-      end
+      deletions = Hubstats::PullRequest.merged_since(@timespan).average(:deletions)
+      deletions ||= 0
       
       @stats_basics = {
         user_count: Hubstats::User.with_pulls_or_comments(@timespan).only_active.length,
@@ -83,8 +71,8 @@ module Hubstats
         comment_count: Hubstats::Comment.created_since(@timespan).count(:all)
       }
       @stats_additions = {
-        avg_additions: additions,
-        avg_deletions: deletions,
+        avg_additions: additions.round.to_i,
+        avg_deletions: deletions.round.to_i,
         net_additions: Hubstats::PullRequest.merged_since(@timespan).sum(:additions).to_i - 
           Hubstats::PullRequest.merged_since(@timespan).sum(:deletions).to_i
       }
