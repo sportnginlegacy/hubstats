@@ -1,7 +1,7 @@
 require_dependency "hubstats/application_controller"
 
 module Hubstats
-  class DeploysController < ApplicationController
+  class DeploysController < Hubstats::BaseController
 
     def index
       # sets to include user and repo, and sorts data
@@ -11,12 +11,7 @@ module Hubstats
         .order_with_timespan(@timespan, params[:order])
         .paginate(:page => params[:page], :per_page => 15)
 
-      # enables grouping by user or repo
-      if params[:group] == "user"
-        @groups = @deploys.to_a.group_by(&:user_name)
-      elsif params[:group] == "repo"
-        @groups = @deploys.to_a.group_by(&:repo_name)
-      end
+      grouping(params[:group], @deploys)
     end
 
     # show basic stats and pull requests from a single deploy
