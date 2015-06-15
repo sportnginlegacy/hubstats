@@ -1,7 +1,7 @@
 require_dependency "hubstats/application_controller"
 
 module Hubstats
-  class PullRequestsController < ApplicationController
+  class PullRequestsController < Hubstats::BaseController
 
     def index
       URI.decode(params[:label]) if params[:label]
@@ -9,7 +9,6 @@ module Hubstats
       pull_ids = Hubstats::PullRequest
         .belonging_to_users(params[:users])
         .belonging_to_repos(params[:repos])
-        .state_based_order(@timespan,params[:state],"ASC")
         .map(&:id)
 
       @labels = Hubstats::Label.with_a_pull_request(pull_ids).order("pull_request_count DESC")
@@ -20,12 +19,7 @@ module Hubstats
         .state_based_order(@timespan,params[:state],params[:order])
         .paginate(:page => params[:page], :per_page => 15)
 
-      if params[:group] == 'user'
-        @groups = @pull_requests.to_a.group_by(&:user_name)
-      elsif params[:group] == 'repo'
-        @groups = @pull_requests.to_a.group_by(&:repo_name)
-      end
-
+      grouping(params[:group], @pull_requests)
     end 
 
     def show

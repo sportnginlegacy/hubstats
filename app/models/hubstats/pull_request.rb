@@ -3,7 +3,7 @@ module Hubstats
     scope :closed_since, lambda {|time| where("hubstats_pull_requests.closed_at > ?", time) }
     scope :updated_since, lambda {|time| where("hubstats_pull_requests.updated_at > ?", time) }
     scope :opened_since, lambda {|time| where("hubstats_pull_requests.created_at > ?", time) }
-    scope :merged_since, lambda {|time| where("hubstats_pull_requests.merged").where("hubstats_pull_requests.created_at > ?", time) }
+    scope :merged_since, lambda {|time| where("hubstats_pull_requests.merged").where("hubstats_pull_requests.merged_at > ?", time) }
     scope :belonging_to_repo, lambda {|repo_id| where(repo_id: repo_id)}
     scope :belonging_to_user, lambda {|user_id| where(user_id: user_id)}
     scope :belonging_to_deploy, lambda {|deploy_id| where(deploy_id: deploy_id)}
@@ -64,7 +64,7 @@ module Hubstats
       order = ["ASC","DESC"].detect{|order_type| order_type.to_s == order.to_s.upcase } || "DESC"
       if state == "closed"
         with_state(state).updated_since(timespan).order("hubstats_pull_requests.closed_at #{order}")
-      else
+      else #state == "open"
         with_state(state).updated_since(timespan).order("hubstats_pull_requests.created_at #{order}")
       end
     end

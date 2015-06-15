@@ -8,6 +8,7 @@
   <!-- Show the git revision and when the deploy happened by whom -->
   <div class="deploy-info col-lg-6 col-md-6 col-sm-6 col-xs-5">
     <h4>
+      <%= link_to deploy.repo.name, repo_path(deploy.repo.name) %> /
       <%= link_to deploy.git_revision, deploy_path(deploy) %> 
     </h4>
     by 

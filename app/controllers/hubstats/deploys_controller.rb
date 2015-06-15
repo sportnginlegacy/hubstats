@@ -1,7 +1,7 @@
 require_dependency "hubstats/application_controller"
 
 module Hubstats
-  class DeploysController < ApplicationController
+  class DeploysController < Hubstats::BaseController
 
     def index
       # sets to include user and repo, and sorts data
@@ -11,12 +11,7 @@ module Hubstats
         .order_with_timespan(@timespan, params[:order])
         .paginate(:page => params[:page], :per_page => 15)
 
-      # enables grouping by user or repo
-      if params[:group] == "user"
-        @groups = @deploys.to_a.group_by(&:user_name)
-      elsif params[:group] == "repo"
-        @groups = @deploys.to_a.group_by(&:repo_name)
-      end
+      grouping(params[:group], @deploys)
     end
 
     # show basic stats and pull requests from a single deploy
@@ -43,29 +38,22 @@ module Hubstats
         @deploy.deployed_at = params[:deployed_at]
         @deploy.git_revision = params[:git_revision]
         @repo = Hubstats::Repo.where(full_name: params[:repo_name])
-        
-        # Check before assigning the repository
-        if @repo.empty?
+
+        if !valid_repo(@repo)
           render text: "Repository name is invalid.", :status => 400 and return
         else
           @deploy.repo_id = @repo.first.id.to_i
         end
 
-        # Check before assigning the pull requests
         @pull_request_id_array = params[:pull_request_ids].split(",").map {|i| i.strip.to_i}
-        if @pull_request_id_array.empty? || @pull_request_id_array == [0]
+        if !valid_pr_ids
           render text: "No pull request ids given.", :status => 400 and return
         else
           @deploy.pull_requests = Hubstats::PullRequest.where(repo_id: @deploy.repo_id).where(number: @pull_request_id_array)
         end
 
-        # Check before assigning the user_id
-        if @deploy.pull_requests.first.nil?
+        if !valid_pulls
           render text: "Pull requests not valid", :status => 400 and return
-        else
-          if @deploy.pull_requests.first.merged_by
-            @deploy.user_id = @deploy.pull_requests.first.merged_by
-          end
         end
 
         if @deploy.save
@@ -74,6 +62,21 @@ module Hubstats
           render :nothing => true, :status => 400 and return
         end
       end
+    end
+
+    def valid_repo(repo)
+      return !repo.empty?
+    end
+
+    def valid_pr_ids
+      return !@pull_request_id_array.empty? && @pull_request_id_array != [0]
+    end
+
+    def valid_pulls
+      pull = @deploy.pull_requests.first
+      return false if pull.nil? || pull.merged_by.nil?
+      @deploy.user_id = pull.merged_by
+      return true
     end
   end
  end

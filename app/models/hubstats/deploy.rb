@@ -41,7 +41,7 @@ module Hubstats
        end
     end
 
-        # finds the total number of additions or deletions for all pull requests in this deploy
+    # finds the total number of additions or deletions for all pull requests in this deploy
     def total_changes(add)
       pull_requests = self.pull_requests
       total = 0

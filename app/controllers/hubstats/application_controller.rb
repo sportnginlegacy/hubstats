@@ -8,6 +8,5 @@ module Hubstats
       cookies[:hubstats_index] ||= 2
       @timespan = TIMESPAN_ARRAY[cookies[:hubstats_index].to_i][:date].ago.to_date
     end
-
   end
 end

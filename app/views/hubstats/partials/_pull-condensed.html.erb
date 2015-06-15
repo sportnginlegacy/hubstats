@@ -5,11 +5,12 @@
 
   <div class="pull-info col-lg-9 col-md-9 col-sm-9 col-xs-8">
     <h4> 
+      <%= link_to pull.repo.name, repo_path(pull.repo.name) %> /
       <%= link_to pull.title, repo_pull_path({:repo => pull.repo.name, :id => pull.id}) %> 
     </h4>
     by <%= link_to pull.user.login, user_path(pull.user) %>
     <% if pull.merged == '1'%>
-      <%= "merged #{time_ago_in_words(pull.created_at)} ago "%>
+      <%= "merged #{time_ago_in_words(pull.merged_at)} ago "%>
     <% elsif pull.state == 'closed' %>
       <%= "closed #{time_ago_in_words(pull.closed_at)} ago "%>
     <% else %> 
