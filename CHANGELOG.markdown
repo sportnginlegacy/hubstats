@@ -1,3 +1,12 @@
+#### v0.3.10
+* Fixed bug with PR counts
+
+  > Emma Sax: Brian Bergstrom: https://github.com/sportngin/hubstats/pull/58
+
+* Fixed bug with PR counts
+
+  > Emma Sax: Brian Bergstrom: https://github.com/sportngin/hubstats/pull/58
+
 #### v0.3.9
 * Refactored Main Parts of Code
 
