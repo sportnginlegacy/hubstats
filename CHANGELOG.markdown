@@ -1,3 +1,8 @@
+#### v0.3.11
+* Trying to fix potential bug that makes commissioner run out of memory
+
+  > Emma Sax: Brian Bergstrom: https://github.com/sportngin/hubstats/pull/59
+
 #### v0.3.10
 * Fixed bug with PR counts
 
