@@ -4,4 +4,4 @@ languages:
   PHP: true
   Python: true
 exclude_paths:
-- "app/assets/javascripts/hubstats/boostrap.js"
+- "app/assets/javascripts/hubstats/bootstrap.js"
