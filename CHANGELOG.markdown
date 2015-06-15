@@ -1,3 +1,7 @@
+* Adding 2 lines to code climate yml
+
+  > Emma Sax: Brian Bergstrom: https://github.com/sportngin/hubstats/pull/61
+
 * Add a codeclimate yml file to ignore bootstrap.js
 
   > Emma Sax: : https://github.com/sportngin/hubstats/pull/60
