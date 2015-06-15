@@ -1,7 +1,7 @@
 module Hubstats
   class Repo < ActiveRecord::Base
 
-    scope :with_recent_activity, lambda {|time| where("created_at > ?", time).order("updated_at DESC")}
+    scope :with_recent_activity, lambda {|time| where("updated_at > ?", time).order("updated_at DESC")}
     scope :with_id, lambda {|user_id| where(id: user_id.split(',')) if user_id}
 
     scope :deploys_or_comments_count, lambda {|time, data, began_time, name|

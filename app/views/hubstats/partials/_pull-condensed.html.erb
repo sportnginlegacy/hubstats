@@ -9,7 +9,7 @@
     </h4>
     by <%= link_to pull.user.login, user_path(pull.user) %>
     <% if pull.merged == '1'%>
-      <%= "merged #{time_ago_in_words(pull.created_at)} ago "%>
+      <%= "merged #{time_ago_in_words(pull.merged_at)} ago "%>
     <% elsif pull.state == 'closed' %>
       <%= "closed #{time_ago_in_words(pull.closed_at)} ago "%>
     <% else %> 

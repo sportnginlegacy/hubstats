@@ -24,9 +24,8 @@ module Hubstats
     def show
       @user = Hubstats::User.where(login: params[:id]).first
       @pull_requests = Hubstats::PullRequest.belonging_to_user(@user.id).merged_since(@timespan).order("updated_at DESC").limit(20)
-      @comments = Hubstats::Comment.belonging_to_user(@user.id).created_since(@timespan).order("created_at DESC").limit(20)
-      @deploys = Hubstats::Deploy.belonging_to_user(@user.id).deployed_since(@timespan).order("deployed_at DESC").limit(20)
       @pull_count = Hubstats::PullRequest.belonging_to_user(@user.id).merged_since(@timespan).count(:all)
+      @deploys = Hubstats::Deploy.belonging_to_user(@user.id).deployed_since(@timespan).order("deployed_at DESC").limit(20)
       @deploy_count = Hubstats::Deploy.belonging_to_user(@user.id).deployed_since(@timespan).count(:all)
       @comment_count = Hubstats::Comment.belonging_to_user(@user.id).created_since(@timespan).count(:all)
       @net_additions = Hubstats::PullRequest.merged_since(@timespan).belonging_to_user(@user.id).sum(:additions).to_i -
