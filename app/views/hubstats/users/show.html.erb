@@ -8,7 +8,7 @@
     <div class="col-lg-6 col-md-5 col-sm-5 col-xs-5">
       <h3> Pull Requests</h3> 
       <%= render 'hubstats/tables/pulls-condensed' %>
-      <% if @pull_requests.length > 20 %>
+      <% if @pull_count > 20 %>
         <p class="pull-right"><%= link_to "View All", pulls_path(:users => @user.id) %></p>
       <% end %>
     </div>
@@ -17,7 +17,7 @@
     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
       <h3> Deploys </h3>
       <%= render 'hubstats/tables/deploys-condensed' %>
-      <% if @deploys.length > 20 %>
+      <% if @deploy_count > 20 %>
         <p class="pull-right"><%= link_to "View All", deploys_path(:users => @user.id) %></p>
       <% end %>
     </div>
