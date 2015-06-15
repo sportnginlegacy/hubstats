@@ -181,13 +181,15 @@ module Hubstats
     end
 
     def self.route(object, kind, repo_name = nil)
-      repo = Hubstats::Repo.where(full_name: repo_name).first
       if kind == "pulls/comments"
-        create_or_update(object, repo, "PullRequest")
+        repo = Hubstats::Repo.where(full_name: repo_name).first
+        Hubstats::Comment.create_or_update(HubHelper.comment_setup(object,repo.id,"PullRequest"))
       elsif kind == "issues/comments"
-        create_or_update(object, repo, "Issue")
+        repo = Hubstats::Repo.where(full_name: repo_name).first
+        Hubstats::Comment.create_or_update(HubHelper.comment_setup(object,repo.id,"Issue"))
       elsif kind == "comments"
-        create_or_update(object, repo, "Commit")
+        repo = Hubstats::Repo.where(full_name: repo_name).first
+        Hubstats::Comment.create_or_update(HubHelper.comment_setup(object,repo.id,"Commit"))
       elsif kind == "pulls"
         Hubstats::PullRequest.create_or_update(HubHelper.pull_setup(object))
       elsif kind == "issues"
@@ -197,10 +199,6 @@ module Hubstats
           pull_request.add_labels(object[:labels])
         end
       end
-    end
-
-    def create_or_update (object, repo, item)
-      Hubstats::Comment.create_or_update(HubHelper.comment_setup(object, repo.id, item))
     end
   end
 end
