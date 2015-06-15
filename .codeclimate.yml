@@ -1,5 +1,7 @@
 languages:
   Ruby: true
   JavaScript: true
+  PHP: true
+  Python: true
 exclude_paths:
 - "app/assets/javascripts/hubstats/boostrap.js"
