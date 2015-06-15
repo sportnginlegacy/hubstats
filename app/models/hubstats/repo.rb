@@ -22,7 +22,7 @@ module Hubstats
     scope :pull_requests_count, lambda {|time|
       select("hubstats_repos.id as repo_id")
       .select("IFNULL(COUNT(DISTINCT hubstats_pull_requests.id),0) AS pull_request_count")
-      .joins("LEFT JOIN hubstats_pull_requests ON hubstats_pull_requests.repo_id = hubstats_repos.id AND hubstats_pull_requests.created_at > '#{time}' AND hubstats_pull_requests.merged = '1'")
+      .joins("LEFT JOIN hubstats_pull_requests ON hubstats_pull_requests.repo_id = hubstats_repos.id AND hubstats_pull_requests.merged_at > '#{time}' AND hubstats_pull_requests.merged = '1'")
       .group("hubstats_repos.id")
     }
 

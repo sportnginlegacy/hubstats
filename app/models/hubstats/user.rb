@@ -21,7 +21,7 @@ module Hubstats
     scope :pull_requests_count, lambda {|time|
       select("hubstats_users.id as user_id")
       .select("IFNULL(COUNT(DISTINCT hubstats_pull_requests.id),0) AS pull_request_count")
-      .joins("LEFT JOIN hubstats_pull_requests ON hubstats_pull_requests.user_id = hubstats_users.id AND hubstats_pull_requests.created_at > '#{time}' AND hubstats_pull_requests.merged = '1'")
+      .joins("LEFT JOIN hubstats_pull_requests ON hubstats_pull_requests.user_id = hubstats_users.id AND hubstats_pull_requests.merged_at > '#{time}' AND hubstats_pull_requests.merged = '1'")
       .group("hubstats_users.id")
     }
 
