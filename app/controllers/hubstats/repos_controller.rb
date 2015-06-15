@@ -20,10 +20,8 @@ module Hubstats
     def show
       @repo = Hubstats::Repo.where(name: params[:repo]).first
       @pull_requests = Hubstats::PullRequest.belonging_to_repo(@repo.id).merged_since(@timespan).order("updated_at DESC").limit(20)
-      # @pull_requests_all = Hubstats::PullRequest.belonging_to_repo(@repo.id).merged_since(@timespan).order("updated_at DESC")
       @pull_count = Hubstats::PullRequest.belonging_to_repo(@repo.id).merged_since(@timespan).count(:all)
-      @deploys = Hubstats::Deploy.belonging_to_repo(@repo.id).deployed_since(@timespan).order("deployed_at DESC").limit(20)   
-      # @deploys_all = Hubstats::Deploy.belonging_to_repo(@repo.id).deployed_since(@timespan).order("updated_at DESC")
+      @deploys = Hubstats::Deploy.belonging_to_repo(@repo.id).deployed_since(@timespan).order("deployed_at DESC").limit(20)
       @deploy_count = Hubstats::Deploy.belonging_to_repo(@repo.id).deployed_since(@timespan).count(:all)
       @comment_count = Hubstats::Comment.belonging_to_repo(@repo.id).created_since(@timespan).count(:all)
       @user_count = Hubstats::User.with_pulls_or_comments(@timespan,@repo.id).only_active.length
