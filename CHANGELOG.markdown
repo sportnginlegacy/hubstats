@@ -1,3 +1,8 @@
+#### v0.3.9
+* Refactored Main Parts of Code
+
+  > Emma Sax: Brian Bergstrom: https://github.com/sportngin/hubstats/pull/57
+
 * Changed Metrics Page, Wrote New Tests, Fixed Little Bugs
 
   > Emma Sax: Brian Bergstrom: https://github.com/sportngin/hubstats/pull/56
