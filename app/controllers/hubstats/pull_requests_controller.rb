@@ -11,7 +11,6 @@ module Hubstats
         .belonging_to_repos(params[:repos])
         .state_based_order(@timespan,params[:state],"ASC")
         .pluck(:id)
-        # .map(&:id)
 
       @labels = Hubstats::Label.with_a_pull_request(pull_ids).order("pull_request_count DESC")
 
