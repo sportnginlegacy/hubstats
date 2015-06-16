@@ -9,6 +9,7 @@ module Hubstats
       pull_ids = Hubstats::PullRequest
         .belonging_to_users(params[:users])
         .belonging_to_repos(params[:repos])
+        .state_based_order(@timespan,params[:state],"ASC")
         .map(&:id)
 
       @labels = Hubstats::Label.with_a_pull_request(pull_ids).order("pull_request_count DESC")
