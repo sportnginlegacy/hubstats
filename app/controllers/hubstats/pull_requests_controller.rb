@@ -6,7 +6,8 @@ module Hubstats
     def index
       URI.decode(params[:label]) if params[:label]
 
-      @labels = Hubstats::Label.with_a_pull_request(params, @timespan).order("pull_request_count DESC")
+      pull_requests = PullRequest.all_filtered(params, @timespan)
+      @labels = Hubstats::Label.count_by_pull_requests(pull_requests).order("pull_request_count DESC")
 
       @pull_requests = Hubstats::PullRequest.includes(:user, :repo)
         .belonging_to_users(params[:users]).belonging_to_repos(params[:repos])
