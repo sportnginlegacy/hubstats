@@ -15,6 +15,11 @@ module Hubstats
     scope :distinct, select("DISTINCT hubstats_pull_requests.*")
     scope :with_repo_name, select('DISTINCT hubstats_repos.name as repo_name, hubstats_pull_requests.*').joins("LEFT JOIN hubstats_repos ON hubstats_repos.id = hubstats_pull_requests.repo_id")
     scope :with_user_name, select('DISTINCT hubstats_users.login as user_name, hubstats_pull_requests.*').joins("LEFT JOIN hubstats_users ON hubstats_users.id = hubstats_pull_requests.user_id")
+    scope :ids, lambda {|user_id, repo_id|
+      select("hubstats_pull_requests.id FROM hubstats_pull_requests")
+      .where(repo_id: repo_id.split(',')) if repo_id
+      .where(user_id: user_id.split(',')) if user_id
+    }
 
     attr_accessible :id, :url, :html_url, :diff_url, :patch_url, :issue_url, :commits_url,
       :review_comments_url, :review_comment_url, :comments_url, :statuses_url, :number,
