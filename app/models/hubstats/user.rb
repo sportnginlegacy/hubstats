@@ -80,6 +80,8 @@ module Hubstats
 
     scope :only_active, having("comment_count > 0 OR pull_request_count > 0")
     scope :weighted_sort, order("(pull_request_count)*2 + (comment_count) DESC")
+    # scope :contributed_to_repos, lambda {|repos, timespan| where("with_pulls_or_comments(timespan, #{repos}) > 0")}
+    # {|repo_id| where(repo_id: repo_id.split(',')) if repo_id}
 
     attr_accessible :login, :id, :avatar_url, :gravatar_id, :url, :html_url, :followers_url,
       :following_url, :gists_url, :starred_url, :subscriptions_url, :organizations_url,
@@ -110,6 +112,14 @@ module Hubstats
         pull_and_comment_count(time).weighted_sort
       end
     end
+
+    # def self.contributed_to(time, repo_id = nil)
+    #   if repo_id
+    #     return pull_and_comment_count_by_repo(time,repo_id) > 0
+    #   else
+    #     return pull_and_comment_count(time) > 0
+    #   end
+    # end
 
     def self.custom_order(order_params)
       if order_params

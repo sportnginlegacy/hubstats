@@ -13,6 +13,7 @@ module Hubstats
       end
 
       respond_to do |format|
+        format.html
         format.json { render :json => @repos}
       end
     end

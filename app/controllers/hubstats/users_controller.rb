@@ -13,6 +13,7 @@ module Hubstats
             .with_id(params[:users])
             .custom_order(params[:order])
             .paginate(:page => params[:page], :per_page => 15)
+            # .where(Hubstats::User.contributed_to(@timespan, params[:repos]))
       end
       
       respond_to do |format|
