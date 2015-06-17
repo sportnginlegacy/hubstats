@@ -18,10 +18,10 @@ module Hubstats
     def show
       @deploy = Hubstats::Deploy.includes(:repo, :pull_requests).find(params[:id])
       repo = @deploy.repo
-      @pull_requests = @deploy.pull_requests
-      pull_request_count = @pull_requests.length
+      @pull_requests = @deploy.pull_requests.limit(20)
+      @pull_request_count = @pull_requests.length
       @stats_basics = {
-        pull_count: pull_request_count,
+        pull_count: @pull_request_count,
         net_additions: @deploy.find_net_additions,
         comment_count: @deploy.find_comment_count,
         additions: @deploy.total_changes(:additions),
