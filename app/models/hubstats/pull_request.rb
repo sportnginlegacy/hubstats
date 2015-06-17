@@ -60,14 +60,6 @@ module Hubstats
       self.labels = labels
     end
 
-    def self.filter_based_on_timespan(timespan, state)
-      if state == "closed"
-        with_state(state).updated_since(timespan)
-      else #state == "open"
-        with_state(state).updated_since(timespan)
-      end
-    end
-
     def self.state_based_order(timespan,state,order)
       order = ["ASC","DESC"].detect{|order_type| order_type.to_s == order.to_s.upcase } || "DESC"
       if state == "closed"
