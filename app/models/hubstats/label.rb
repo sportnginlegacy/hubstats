@@ -1,10 +1,10 @@
 module Hubstats
   class Label < ActiveRecord::Base
 
-  scope :with_a_pull_request, lambda { |params|
+  scope :with_a_pull_request, lambda { |params, timespan|
     select("hubstats_labels.*")
     .select("COUNT(hubstats_labels_pull_requests.pull_request_id) AS pull_request_count")
-    .joins(:pull_requests).merge(Hubstats::PullRequest.with_state(params[:state])
+    .joins(:pull_requests).merge(Hubstats::PullRequest.filter_based_on_timespan(timespan, params[:state])
                                                       .belonging_to_users(params[:users])
                                                       .belonging_to_repos(params[:repos]))
     .having("pull_request_count > 0")
