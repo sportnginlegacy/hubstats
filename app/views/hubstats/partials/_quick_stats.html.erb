@@ -9,7 +9,7 @@
 <% if @stats_basics.has_key? :deploy_count %>
 	<div class="col col-lg-2 col-md-3 col-sm-3 col-xs-3 text-center">
 	  <h1> <%= @stats_basics[:deploy_count] %> </h1>
-	  <h4> Deploys </h4>
+	  <h4> Deployments </h4>
 	</div>
 <% end %>
 <% if @stats_basics.has_key? :pull_count %>
@@ -39,13 +39,13 @@
 <% if @stats_basics.has_key? :avg_additions %>
 	<div class="col col-lg-2 col-md-3 col-sm-3 col-xs-3 text-center">
 	  <h1> <%= @stats_basics[:avg_additions] %> </h1>
-	  <h4> Average Additions per Pull </h4>
+	  <h4> Average Additions per Pull Request </h4>
 	</div>
 <% end %>
 <% if @stats_basics.has_key? :avg_deletions%>
 	<div class="col col-lg-2 col-md-3 col-sm-3 col-xs-3 text-center">
 	  <h1><%= @stats_basics[:avg_deletions] %> </h1>
-	  <h4> Average Deletions per Pull </h4>
+	  <h4> Average Deletions per Pull Request </h4>
 	</div>
 <% end %>
 <% if @stats_basics.has_key? :additions %>
