@@ -1,3 +1,8 @@
+#### v0.3.12
+* Solving the server bug
+
+  > Emma Sax: Andy Fleener, Nick LaMuro: https://github.com/sportngin/hubstats/pull/63
+
 * Adding 2 lines to code climate yml
 
   > Emma Sax: Brian Bergstrom: https://github.com/sportngin/hubstats/pull/61
