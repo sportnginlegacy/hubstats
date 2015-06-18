@@ -5,10 +5,10 @@
         <a class="header desc" id="name"> Repository Name <span class="octicon"></span> </a>
       </div>
       <div class="col-lg-2 col-md-2 col-sm-2">
-        <a class="header desc" id="deploys"> Deploys <span class="octicon"></span> </a>
+        <a class="header desc" id="deploys"> Deployments <span class="octicon"></span> </a>
       </div>
       <div class="col-lg-2 col-md-2 col-sm-2">
-        <a class="header desc" id="pulls"> Pulls <span class="octicon"></span> </a>
+        <a class="header desc" id="pulls"> Pull Requests <span class="octicon"></span> </a>
       </div>
       <div class="col-lg-2 col-md-2 col-sm-2">
         <a class="header desc" id="comments"> Comments <span class="octicon"></span></a>
@@ -23,6 +23,6 @@
     <%= render partial: 'hubstats/partials/repo', collection: @repos, as: :repo %>
   </div>
 <% else %>
-  <p> No repos to show </p>
+  <p> No repositories to show </p>
 <% end %>
 

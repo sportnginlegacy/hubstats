@@ -1,14 +1,14 @@
 module Hubstats
   class Label < ActiveRecord::Base
 
-  def self.count_by_pull_requests(pull_requests)
-    select("hubstats_labels.*")
-    .select("COUNT(hubstats_labels_pull_requests.pull_request_id) AS pull_request_count")
-    .joins(:pull_requests).merge(pull_requests)
-    .having("pull_request_count > 0")
-    .group("hubstats_labels.id")
-    .order("pull_request_count DESC")
-end
+    def self.count_by_pull_requests(pull_requests)
+      select("hubstats_labels.*")
+       .select("COUNT(hubstats_labels_pull_requests.pull_request_id) AS pull_request_count")
+       .joins(:pull_requests).merge(pull_requests)
+       .having("pull_request_count > 0")
+       .group("hubstats_labels.id")
+       .order("pull_request_count DESC")
+    end
 
     scope :with_ids, lambda { |pull_ids| (where("hubstats_labels_pull_requests.pull_request_id" => pull_ids)) }
 

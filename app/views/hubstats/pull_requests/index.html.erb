@@ -1,7 +1,6 @@
 <div class="container" %>
   <div class="row" %>
     <div class="col col-lg-3 col-md-3 col-sm-3">
-
       <div class="form-group">
         <input class="select2-control" id="repos">
         </input>
@@ -10,8 +9,9 @@
         <input class="select2-control" id="users">
         </input>
       </div>
-
+      
       <hr>
+      
       <h4> Labels </h4>
       <div id="labels-container">
         <% @labels.each do |label| %>
@@ -22,10 +22,9 @@
           </a>
         <% end %>
       </div>
-
     </div>
-    <div class="col col-lg-9 col-md-9 col-sm-9">
 
+    <div class="col col-lg-9 col-md-9 col-sm-9">
       <div id="state-group" class="btn-group" data-toggle="buttons">
         <label class="btn btn-default" id="all">
           <input type="radio" name="state"> All
@@ -54,11 +53,10 @@
       </select>
 
       <%= render 'hubstats/tables/grouped_pulls' %>
-  
+
       <div class="text-center">
         <%= will_paginate @pull_requests, renderer: BootstrapPagination::Rails %>
       </div>
-
     </div>
   </div>
 </div>
