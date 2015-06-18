@@ -1,3 +1,8 @@
+#### v0.3.13
+* Adding the nagivation bar highlights
+
+  > Emma Sax: Nick LaMuro: https://github.com/sportngin/hubstats/pull/64
+
 #### v0.3.12
 * Solving the server bug
 
