@@ -123,6 +123,8 @@ module Hubstats
           order("comment_count #{order}")
         when 'netadditions'
           order("additions - deletions #{order}")
+        when 'name'
+          order("login #{order}")
         else
           order("pull_request_count #{order}")
         end

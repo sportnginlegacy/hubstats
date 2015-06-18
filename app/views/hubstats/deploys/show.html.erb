@@ -18,6 +18,9 @@
     <div class="row">
       <h4> Pull Requests </h4>
       <%= render 'hubstats/tables/pulls-condensed' %>
+      <% if @pull_request_count > 20 %>
+        <p class="pull-right"><%= link_to "View All", pulls_path(:deploys => @deploy.id) %></p>
+      <% end %>
     </div>
   </div>
 

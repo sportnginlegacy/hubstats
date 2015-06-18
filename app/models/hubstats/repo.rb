@@ -83,6 +83,8 @@ module Hubstats
           order("average_additions #{order}")
         when 'deletions'
           order("average_deletions #{order}")
+        when 'name'
+          order("name #{order}")
         else
           order("pull_request_count #{order}")
         end

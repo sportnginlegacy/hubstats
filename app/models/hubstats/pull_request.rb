@@ -60,6 +60,16 @@ module Hubstats
       self.labels = labels
     end
 
+    def self.all_filtered(params, timespan)
+      filter_based_on_timespan(timespan, params[:state])
+      .belonging_to_users(params[:users])
+      .belonging_to_repos(params[:repos])
+    end
+
+    def self.filter_based_on_timespan(timespan, state)
+      with_state(state).updated_since(timespan)
+    end
+
     def self.state_based_order(timespan,state,order)
       order = ["ASC","DESC"].detect{|order_type| order_type.to_s == order.to_s.upcase } || "DESC"
       if state == "closed"
