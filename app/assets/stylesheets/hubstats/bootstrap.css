@@ -3667,6 +3667,12 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 .navbar-collapse.in {
   overflow-y: auto;
 }
+.navbar-active {
+  font-weight: bold;
+  color: #E0E0E0;
+  background-color: #E0E0E0;
+  border-color: #E0E0E0;
+}
 @media (min-width: 768px) {
   .navbar-collapse {
     width: auto;
