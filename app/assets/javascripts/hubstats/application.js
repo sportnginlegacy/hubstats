@@ -19,18 +19,18 @@
 
 
 $(document).ready( function() {
-  setTimespan()
+  setDateRange()
 });
 
-$(document).on("focus", "[data-behaviour~='datepicker']", function(e){
-  $(this).datepicker({
-    "format": "yyyy-mm-dd",
-    "weekStart": 1,
-    "autoclose": true,
-    "todayHighlight": true})
-});
+// $(document).on("focus", "[data-behaviour~='datepicker']", function(e){
+//   $(this).datepicker({
+//     "format": "yyyy-mm-dd",
+//     "weekStart": 1,
+//     "autoclose": true,
+//     "todayHighlight": true})
+// });
 
-function setTimespan() {
+function setDateRange() {
   var index = readCookie("hubstats_index") || 2;
   var timer = document.getElementById("time-select");
 

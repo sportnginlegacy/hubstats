@@ -31,13 +31,14 @@ module Hubstats
         pull = create(:pull_request, :user => user,
                                      :repo => repo,
                                      :deploy_id => 404040)
-        comment1 = create(:comment, :pull_request_id => pull.id)
-        comment2 = create(:comment, :pull_request_id => pull.id)
-        comment3 = create(:comment, :pull_request_id => pull.id)
+        comment1 = create(:comment, :pull_request_id => pull.id, :created_at => "2015-06-16")
+        comment2 = create(:comment, :pull_request_id => pull.id, :created_at => "2015-06-16")
+        comment3 = create(:comment, :pull_request_id => pull.id, :created_at => "2015-06-16")
         get :show, repo: repo, id: pull.id
         expect(assigns(:pull_request)).to eq(pull)
         expect(assigns(:pull_request).repo_id).to eq(101010)
         expect(assigns(:pull_request).deploy_id).to eq(404040)
+        # Below test could potentially fail if the date range changes
         expect(assigns(:comments)).to contain_exactly(comment1, comment2, comment3)
         expect(assigns(:pull_request).user_id).to eq(user.id)
       end

@@ -9,7 +9,7 @@ module Hubstats
       elsif params[:id]
         @users = Hubstats::User.where(id: params[:id].split(",")).order("login ASC")
       else
-        @users = Hubstats::User.only_active.with_all_metrics(@timespan)
+        @users = Hubstats::User.only_active.with_all_metrics(@start_time, @end_time)
             .with_id(params[:users])
             .custom_order(params[:order])
             .paginate(:page => params[:page], :per_page => 15)
@@ -23,15 +23,15 @@ module Hubstats
 
     def show
       @user = Hubstats::User.where(login: params[:id]).first
-      @pull_requests = Hubstats::PullRequest.belonging_to_user(@user.id).merged_since(@timespan).order("updated_at DESC").limit(20)
-      @pull_count = Hubstats::PullRequest.belonging_to_user(@user.id).merged_since(@timespan).count(:all)
-      @deploys = Hubstats::Deploy.belonging_to_user(@user.id).deployed_since(@timespan).order("deployed_at DESC").limit(20)
-      @deploy_count = Hubstats::Deploy.belonging_to_user(@user.id).deployed_since(@timespan).count(:all)
-      @comment_count = Hubstats::Comment.belonging_to_user(@user.id).created_since(@timespan).count(:all)
-      @net_additions = Hubstats::PullRequest.merged_since(@timespan).belonging_to_user(@user.id).sum(:additions).to_i -
-                       Hubstats::PullRequest.merged_since(@timespan).belonging_to_user(@user.id).sum(:deletions).to_i
-      @additions = Hubstats::PullRequest.merged_since(@timespan).belonging_to_user(@user.id).average(:additions)
-      @deletions = Hubstats::PullRequest.merged_since(@timespan).belonging_to_user(@user.id).average(:deletions)
+      @pull_requests = Hubstats::PullRequest.belonging_to_user(@user.id).merged_since(@start_time, @end_time).order("updated_at DESC").limit(20)
+      @pull_count = Hubstats::PullRequest.belonging_to_user(@user.id).merged_since(@start_time, @end_time).count(:all)
+      @deploys = Hubstats::Deploy.belonging_to_user(@user.id).deployed_since(@start_time, @end_time).order("deployed_at DESC").limit(20)
+      @deploy_count = Hubstats::Deploy.belonging_to_user(@user.id).deployed_since(@start_time, @end_time).count(:all)
+      @comment_count = Hubstats::Comment.belonging_to_user(@user.id).created_since(@start_time, @end_time).count(:all)
+      @net_additions = Hubstats::PullRequest.merged_since(@start_time, @end_time).belonging_to_user(@user.id).sum(:additions).to_i -
+                       Hubstats::PullRequest.merged_since(@start_time, @end_time).belonging_to_user(@user.id).sum(:deletions).to_i
+      @additions = Hubstats::PullRequest.merged_since(@start_time, @end_time).belonging_to_user(@user.id).average(:additions)
+      @deletions = Hubstats::PullRequest.merged_since(@start_time, @end_time).belonging_to_user(@user.id).average(:deletions)
 
       stats
     end

@@ -8,7 +8,7 @@ module Hubstats
       .group("hubstats_comments.user_id")
     }
 
-    scope :created_since, lambda {|time| where("created_at > ?", time) }
+    scope :created_since, lambda {|start_time, end_time| where("hubstats_comments.created_at > ? AND hubstats_comments.created_at < ?", start_time, end_time)}
     scope :belonging_to_pull_request, lambda {|pull_request_id| where(pull_request_id: pull_request_id)}
     scope :belonging_to_user, lambda {|user_id| where(user_id: user_id)}
     scope :belonging_to_repo, lambda {|repo_id| where(repo_id: repo_id)}

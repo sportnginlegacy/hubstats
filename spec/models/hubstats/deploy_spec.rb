@@ -16,7 +16,7 @@ module Hubstats
       expect(deploy.user_id).to eq(202020)
     end
 
-    it 'should order deploys based on timespan ASC' do
+    it 'should order deploys based on date range ASC' do
       repo = build(:repo)
       deploy1 = Deploy.create(git_revision: "c1a2b37",
                               repo_id: repo.id, 
@@ -28,19 +28,19 @@ module Hubstats
                               user_id: 202020)
       deploy3 = Deploy.create(git_revision: "k10d8as",
                               repo_id: repo.id, 
-                              deployed_at: "2015-08-21 12:00:00", 
+                              deployed_at: "2015-03-21 12:00:00", 
                               user_id: 202020)
       deploy4 = Deploy.create(git_revision: "917d9ss",
                               repo_id: repo.id, 
                               deployed_at: "2014-12-19 08:00:00", 
                               user_id: 202020)
       deploys_ordered = [deploy1, deploy2, deploy4, deploy3]
-      new_ordered_deploys = Deploy.order_with_timespan(520.weeks, "ASC")
+      new_ordered_deploys = Deploy.order_with_date_range("2005-07-01", "2015-06-19", "ASC")
       expect(Deploy.count).to eq(4)
       expect(new_ordered_deploys).to eq(deploys_ordered)
     end
 
-    it 'should order deploys based on timespan DESC' do
+    it 'should order deploys based on date range DESC' do
       repo = build(:repo)
       deploy1 = Deploy.create(git_revision: "c1a2b37",
                               repo_id: repo.id, 
@@ -52,14 +52,14 @@ module Hubstats
                               user_id: 202020)
       deploy3 = Deploy.create(git_revision: "k10d8as",
                               repo_id: repo.id, 
-                              deployed_at: "2015-08-21 12:00:00", 
+                              deployed_at: "2015-03-21 12:00:00", 
                               user_id: 202020)
       deploy4 = Deploy.create(git_revision: "917d9ss",
                               repo_id: repo.id, 
                               deployed_at: "2014-12-19 08:00:00", 
                               user_id: 202020)
       deploys_ordered = [deploy3, deploy4, deploy2, deploy1]
-      new_ordered_deploys = Deploy.order_with_timespan(520.weeks, "DESC")
+      new_ordered_deploys = Deploy.order_with_date_range("2005-07-01", "2015-06-19", "DESC")
       expect(Deploy.count).to eq(4)
       expect(new_ordered_deploys).to eq(deploys_ordered)
     end

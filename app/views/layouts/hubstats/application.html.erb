@@ -7,10 +7,8 @@
   <%= csrf_meta_tags %>
 </head>
 <body>
+	
 <%= render 'hubstats/partials/header' %>
-<% if @timespan == "Select date range" %>
-  <%= render 'hubstats/partials/select_date_range' %>
-<% end %>
 <%= yield %>
 
 </body>

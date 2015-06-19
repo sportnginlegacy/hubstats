@@ -8,7 +8,7 @@ require "hubstats/config"
 
 module Hubstats
 
-  TIMESPAN_ARRAY = [
+  DATE_RANGE_ARRAY = [
     {
       display_value: "Today",
       date: 1.day
@@ -30,8 +30,6 @@ module Hubstats
     },{
       display_value: "All Time",
       date: 520.weeks
-    },{
-      display_value: "Select date range"
     }
   ]
 

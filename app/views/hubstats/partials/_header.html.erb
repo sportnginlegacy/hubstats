@@ -24,12 +24,14 @@
               <%= link_to "Users", users_path%></li>
           <li>
             <select class="form-control push-down" id="time-select">
-              <% Hubstats::TIMESPAN_ARRAY.each do |timespan| %>
-                <option value=<%= timespan[:date] %>><%=timespan[:display_value]%></option>
+              <% Hubstats::DATE_RANGE_ARRAY.each do |date| %>
+                <option value=<%= date[:date] %>><%=date[:display_value]%></option>
               <% end %>
             </select>
           </li>
         </ul>
+        Start time: <%=@start_time%>
+        End time: <%=@end_time%>
       </div>
     </div>
   </nav>

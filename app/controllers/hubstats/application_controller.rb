@@ -6,11 +6,8 @@ module Hubstats
     private
     def set_time
       cookies[:hubstats_index] ||= 2
-      if TIMESPAN_ARRAY[cookies[:hubstats_index].to_i][:display_value] != "Select date range"
-      	@timespan = TIMESPAN_ARRAY[cookies[:hubstats_index].to_i][:date].ago.to_date
-      else
-      	@timespan = "Select date range"
-      end
+      @start_time = DATE_RANGE_ARRAY[cookies[:hubstats_index].to_i][:date].ago.to_date
+      @end_time = Time.now
     end
   end
 end
