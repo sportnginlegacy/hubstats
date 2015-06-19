@@ -30,6 +30,8 @@ module Hubstats
     },{
       display_value: "All Time",
       date: 520.weeks
+    },{
+      display_value: "Select date range"
     }
   ]
 

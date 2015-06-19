@@ -12,20 +12,6 @@
         <%= link_to "Hubstats", root_path, {:data => {:repo_path => repos_path(), :user_path => users_path()}, :class => "navbar-brand title", :id =>"brand"} %>
       </div>
 
-      <input type="text" class='datepicker' id="start">
-      <script type="text/javascript">
-        $(document).ready(function(){
-          $('.datepicker').datepicker();
-        });
-      </script>
-      to
-      <input type="text" class='datepicker' id="end">
-      <script type="text/javascript">
-        $(document).ready(function(){
-          $('.datepicker').datepicker();
-        });
-      </script>
-
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav navbar-right">
           <li class="<%='navbar-active' if params[:controller] == 'hubstats/deploys'%>">
