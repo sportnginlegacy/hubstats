@@ -3,78 +3,78 @@ module Hubstats
 
     scope :with_id, lambda {|user_id| where(id: user_id.split(',')) if user_id}
 
-    scope :deploys_or_comments_count, lambda {|start_time, end_time, data, began_time, name|
+    scope :deploys_or_comments_count, lambda {|start_date, end_date, data, began_time, name|
       select("hubstats_users.id as user_id")
        .select("IFNULL(COUNT(DISTINCT #{data}.id),0) AS #{name}_count")
-       .joins("LEFT JOIN #{data} ON #{data}.user_id = hubstats_users.id AND #{data}.#{began_time} > '#{start_time}' AND #{data}.#{began_time} < '#{end_time}'")
+       .joins("LEFT JOIN #{data} ON #{data}.user_id = hubstats_users.id AND #{data}.#{began_time} > '#{start_date}' AND #{data}.#{began_time} < '#{end_date}'")
        .group("hubstats_users.id")
     }
 
-    scope :deploys_count, lambda {|start_time, end_time|
-      deploys_or_comments_count(start_time, end_time, "hubstats_deploys", "deployed_at", "deploy")
+    scope :deploys_count, lambda {|start_date, end_date|
+      deploys_or_comments_count(start_date, end_date, "hubstats_deploys", "deployed_at", "deploy")
     }
 
-    scope :comments_count, lambda {|start_time, end_time|
-      deploys_or_comments_count(start_time, end_time, "hubstats_comments", "created_at", "comment")
+    scope :comments_count, lambda {|start_date, end_date|
+      deploys_or_comments_count(start_date, end_date, "hubstats_comments", "created_at", "comment")
     }
  
-    scope :pull_requests_count, lambda {|start_time, end_time|
+    scope :pull_requests_count, lambda {|start_date, end_date|
       select("hubstats_users.id as user_id")
       .select("IFNULL(COUNT(DISTINCT hubstats_pull_requests.id),0) AS pull_request_count")
-      .joins("LEFT JOIN hubstats_pull_requests ON hubstats_pull_requests.user_id = hubstats_users.id AND hubstats_pull_requests.merged_at > '#{start_time}' AND hubstats_pull_requests.merged_at < '#{end_time}' AND hubstats_pull_requests.merged = '1'")
+      .joins("LEFT JOIN hubstats_pull_requests ON hubstats_pull_requests.user_id = hubstats_users.id AND hubstats_pull_requests.merged_at > '#{start_date}' AND hubstats_pull_requests.merged_at < '#{end_date}' AND hubstats_pull_requests.merged = '1'")
       .group("hubstats_users.id")
     }
 
-    scope :pull_requests_count_by_repo, lambda {|start_time, end_time,repo_id|
+    scope :pull_requests_count_by_repo, lambda {|start_date, end_date,repo_id|
       select("hubstats_users.id as user_id")
       .select("IFNULL(COUNT(DISTINCT hubstats_pull_requests.id),0) AS pull_request_count")
-      .joins("LEFT JOIN hubstats_pull_requests ON hubstats_pull_requests.user_id = hubstats_users.id AND hubstats_pull_requests.created_at > '#{start_time}' AND  hubstats_pull_requests.created_at < '#{end_time}' AND hubstats_pull_requests.repo_id = '#{repo_id}' AND hubstats_pull_requests.merged = '1'")
+      .joins("LEFT JOIN hubstats_pull_requests ON hubstats_pull_requests.user_id = hubstats_users.id AND hubstats_pull_requests.created_at > '#{start_date}' AND  hubstats_pull_requests.created_at < '#{end_date}' AND hubstats_pull_requests.repo_id = '#{repo_id}' AND hubstats_pull_requests.merged = '1'")
       .group("hubstats_users.id")
     }
 
-    scope :comments_count_by_repo, lambda {|start_time, end_time, repo_id|
+    scope :comments_count_by_repo, lambda {|start_date, end_date, repo_id|
       select("hubstats_users.id as user_id")
       .select("COUNT(DISTINCT hubstats_comments.id) AS comment_count")
-      .joins("LEFT JOIN hubstats_comments ON hubstats_comments.user_id = hubstats_users.id AND hubstats_comments.created_at > '#{start_time}' and hubstats_comments.created_at <'#{end_time}' AND hubstats_comments.repo_id = '#{repo_id}'")
+      .joins("LEFT JOIN hubstats_comments ON hubstats_comments.user_id = hubstats_users.id AND hubstats_comments.created_at > '#{start_date}' and hubstats_comments.created_at <'#{end_date}' AND hubstats_comments.repo_id = '#{repo_id}'")
       .group("hubstats_users.id")
     }
 
-    scope :pulls_reviewed_count, lambda {|start_time, end_time|
+    scope :pulls_reviewed_count, lambda {|start_date, end_date|
       select("hubstats_users.id as user_id")
       .select("COUNT(DISTINCT hubstats_pull_requests.id) as reviews_count")
-      .joins("LEFT JOIN hubstats_comments ON hubstats_comments.user_id = hubstats_users.id AND hubstats_comments.created_at > '#{start_time}' AND hubstats_comments.created_at < '#{end_time}'")
-      .joins("LEFT JOIN hubstats_pull_requests ON hubstats_pull_requests.id = hubstats_comments.pull_request_id AND hubstats_pull_requests.closed_at > '#{start_time}' AND hubstats_pull_requests.closed_at < '#{end_time}'")
+      .joins("LEFT JOIN hubstats_comments ON hubstats_comments.user_id = hubstats_users.id AND hubstats_comments.created_at > '#{start_date}' AND hubstats_comments.created_at < '#{end_date}'")
+      .joins("LEFT JOIN hubstats_pull_requests ON hubstats_pull_requests.id = hubstats_comments.pull_request_id AND hubstats_pull_requests.closed_at > '#{start_date}' AND hubstats_pull_requests.closed_at < '#{end_date}'")
       .where("hubstats_pull_requests.user_id != hubstats_users.id")
       .group("hubstats_users.id")
     }
     
-    scope :net_additions_count, lambda {|start_time, end_time|
+    scope :net_additions_count, lambda {|start_date, end_date|
       select("hubstats_users.id as user_id")
       .select("SUM(IFNULL(hubstats_pull_requests.additions, 0)) AS additions")
       .select("SUM(IFNULL(hubstats_pull_requests.deletions, 0)) AS deletions")
-      .joins("LEFT JOIN hubstats_pull_requests ON hubstats_pull_requests.user_id = hubstats_users.id AND hubstats_pull_requests.created_at > '#{start_time}' AND hubstats_pull_requests.created_at < '#{end_time}' AND hubstats_pull_requests.merged = '1'")
+      .joins("LEFT JOIN hubstats_pull_requests ON hubstats_pull_requests.user_id = hubstats_users.id AND hubstats_pull_requests.created_at > '#{start_date}' AND hubstats_pull_requests.created_at < '#{end_date}' AND hubstats_pull_requests.merged = '1'")
       .group("hubstats_users.id")
     }
 
-    scope :pull_and_comment_count, lambda {|start_time, end_time|
+    scope :pull_and_comment_count, lambda {|start_date, end_date|
       select("hubstats_users.*, pull_request_count, comment_count")
-      .joins("LEFT JOIN (#{pull_requests_count(start_time, end_time).to_sql}) AS pull_requests ON pull_requests.user_id = hubstats_users.id")
-      .joins("LEFT JOIN (#{comments_count(start_time, end_time).to_sql}) AS comments ON comments.user_id = hubstats_users.id")
+      .joins("LEFT JOIN (#{pull_requests_count(start_date, end_date).to_sql}) AS pull_requests ON pull_requests.user_id = hubstats_users.id")
+      .joins("LEFT JOIN (#{comments_count(start_date, end_date).to_sql}) AS comments ON comments.user_id = hubstats_users.id")
       .group("hubstats_users.id")
     }
 
-    scope :pull_and_comment_count_by_repo, lambda {|start_time, end_time, repo_id|
+    scope :pull_and_comment_count_by_repo, lambda {|start_date, end_date, repo_id|
       select("hubstats_users.*, pull_request_count, comment_count")
-      .joins("LEFT JOIN (#{pull_requests_count_by_repo(start_time, end_time, repo_id).to_sql}) AS pull_requests ON pull_requests.user_id = hubstats_users.id")
-      .joins("LEFT JOIN (#{comments_count_by_repo(start_time, end_time, repo_id).to_sql}) AS comments ON comments.user_id = hubstats_users.id")
+      .joins("LEFT JOIN (#{pull_requests_count_by_repo(start_date, end_date, repo_id).to_sql}) AS pull_requests ON pull_requests.user_id = hubstats_users.id")
+      .joins("LEFT JOIN (#{comments_count_by_repo(start_date, end_date, repo_id).to_sql}) AS comments ON comments.user_id = hubstats_users.id")
       .group("hubstats_users.id")
     }
-    scope :with_all_metrics, lambda {|start_time, end_time|
+    scope :with_all_metrics, lambda {|start_date, end_date|
       select("hubstats_users.*, deploy_count, pull_request_count, comment_count, additions, deletions")
-      .joins("LEFT JOIN (#{net_additions_count(start_time, end_time).to_sql}) AS net_additions ON net_additions.user_id = hubstats_users.id")
-      .joins("LEFT JOIN (#{pull_requests_count(start_time, end_time).to_sql}) AS pull_requests ON pull_requests.user_id = hubstats_users.id")
-      .joins("LEFT JOIN (#{comments_count(start_time, end_time).to_sql}) AS comments ON comments.user_id = hubstats_users.id")
-      .joins("LEFT JOIN (#{deploys_count(start_time, end_time).to_sql}) AS deploys ON deploys.user_id = hubstats_users.id")
+      .joins("LEFT JOIN (#{net_additions_count(start_date, end_date).to_sql}) AS net_additions ON net_additions.user_id = hubstats_users.id")
+      .joins("LEFT JOIN (#{pull_requests_count(start_date, end_date).to_sql}) AS pull_requests ON pull_requests.user_id = hubstats_users.id")
+      .joins("LEFT JOIN (#{comments_count(start_date, end_date).to_sql}) AS comments ON comments.user_id = hubstats_users.id")
+      .joins("LEFT JOIN (#{deploys_count(start_date, end_date).to_sql}) AS deploys ON deploys.user_id = hubstats_users.id")
       .group("hubstats_users.id")
     }
 
@@ -103,11 +103,11 @@ module Hubstats
       Rails.logger.warn user.errors.inspect
     end
 
-    def self.with_pulls_or_comments(start_time, end_time, repo_id = nil)
+    def self.with_pulls_or_comments(start_date, end_date, repo_id = nil)
       if repo_id
-        pull_and_comment_count_by_repo(start_time, end_time, repo_id).weighted_sort
+        pull_and_comment_count_by_repo(start_date, end_date, repo_id).weighted_sort
       else
-        pull_and_comment_count(start_time, end_time).weighted_sort
+        pull_and_comment_count(start_date, end_date).weighted_sort
       end
     end
 

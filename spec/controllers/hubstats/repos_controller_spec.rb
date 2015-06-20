@@ -8,17 +8,22 @@ module Hubstats
       it "should list all of the repos" do        
         repo1 = create(:repo, :id => 101010,
                               :name => "silly",
-                              :full_name => "sportngin/silly")
+                              :full_name => "sportngin/silly",
+                              :updated_at => "2015-06-16")
         repo2 = create(:repo, :id => 202020,
                               :name => "funny",
-                              :full_name => "sportngin/funny")
+                              :full_name => "sportngin/funny",
+                              :updated_at => "2015-06-16")
         repo3 = create(:repo, :id => 303030,
                               :name => "loosey",
-                              :full_name => "sportngin/loosey")
+                              :full_name => "sportngin/loosey",
+                              :updated_at => "2015-06-16")
         repo4 = create(:repo, :id => 404040,
                               :name => "goosey",
-                              :full_name => "sportngin/goosey")
+                              :full_name => "sportngin/goosey",
+                              :updated_at => "2015-06-16")
         get :index
+        # Below test could potentially fail if the date range changes
         expect(assigns(:repos)).to contain_exactly(repo2, repo1, repo3, repo4)
       end
     end

@@ -6,8 +6,8 @@ module Hubstats
     private
     def set_time
       cookies[:hubstats_index] ||= 2
-      @start_time = DATE_RANGE_ARRAY[cookies[:hubstats_index].to_i][:date].ago.to_date
-      @end_time = Time.now
+      @start_date = DATE_RANGE_ARRAY[cookies[:hubstats_index].to_i][:date].ago.to_date
+      @end_date = Time.now
     end
   end
 end

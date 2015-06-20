@@ -8,7 +8,7 @@ module Hubstats
         self.deployed_at = Time.now.getutc if deployed_at.nil?
     end
 
-    scope :deployed_since, lambda {|start_time, end_time| where("hubstats_deploys.deployed_at > ? AND hubstats_deploys.deployed_at < ?", start_time, end_time)}
+    scope :deployed_since, lambda {|start_date, end_date| where("hubstats_deploys.deployed_at > ? AND hubstats_deploys.deployed_at < ?", start_date, end_date)}
     scope :group, lambda {|group| group_by(:repo_id) if group }
     scope :belonging_to_repo, lambda {|repo_id| where(repo_id: repo_id)}
     scope :belonging_to_user, lambda {|user_id| where(user_id: user_id)}
@@ -25,9 +25,9 @@ module Hubstats
     has_many :pull_requests
 
     # Order the data in a given date range in a given order
-    def self.order_with_date_range(start_time, end_time, order)
+    def self.order_with_date_range(start_date, end_date, order)
       order = ["ASC", "DESC"].detect{|order_type| order_type.to_s == order.to_s.upcase } || "DESC"
-      deployed_since(start_time, end_time).order("hubstats_deploys.deployed_at #{order}")
+      deployed_since(start_date, end_date).order("hubstats_deploys.deployed_at #{order}")
     end
 
     # Sorts based on whether data is being grouped by user or repo
