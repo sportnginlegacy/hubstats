@@ -14,7 +14,6 @@
 //= require jquery_ujs
 //= require select2
 //= require hubstats/bootstrap
-//= require bootstrap-datepicker
 //= require_tree .
 
 $(document).ready( function() {
