@@ -14,21 +14,20 @@
 //= require jquery_ujs
 //= require select2
 //= require hubstats/bootstrap
+//= require bootstrap-datepicker
 //= require_tree .
 
-
 $(document).ready( function() {
-  setTimespan()
+  setDateRange()
 });
 
-function setTimespan() {
+function setDateRange() {
   var index = readCookie("hubstats_index") || 2;
   var timer = document.getElementById("time-select");
 
   timer.selectedIndex = index;
 
   timer.onchange = function() {
-
     createCookie("hubstats_index",this.selectedIndex,1);
     window.location.reload();
   };

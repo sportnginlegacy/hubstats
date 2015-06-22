@@ -8,7 +8,7 @@ require "hubstats/config"
 
 module Hubstats
 
-  TIMESPAN_ARRAY = [
+  DATE_RANGE_ARRAY = [
     {
       display_value: "Today",
       date: 1.day

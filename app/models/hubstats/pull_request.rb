@@ -1,9 +1,9 @@
 module Hubstats
   class PullRequest < ActiveRecord::Base
-    scope :closed_since, lambda {|time| where("hubstats_pull_requests.closed_at > ?", time) }
-    scope :updated_since, lambda {|time| where("hubstats_pull_requests.updated_at > ?", time) }
-    scope :opened_since, lambda {|time| where("hubstats_pull_requests.created_at > ?", time) }
-    scope :merged_since, lambda {|time| where("hubstats_pull_requests.merged").where("hubstats_pull_requests.merged_at > ?", time) }
+    scope :closed_in_date_range, lambda {|start_date, end_date| where("hubstats_pull_requests.closed_at BETWEEN ? AND ?", start_date, end_date)}
+    scope :updated_in_date_range, lambda {|start_date, end_date| where("hubstats_pull_requests.updated_at BETWEEN ? AND ?", start_date, end_date)}
+    scope :created_in_date_range, lambda {|start_date, end_date| where("hubstats_pull_requests.created_at BETWEEN ? AND ?", start_date, end_date)}
+    scope :merged_in_date_range, lambda {|start_date, end_date| where("hubstats_pull_requests.merged").where("hubstats_pull_requests.merged_at BETWEEN ? AND ?", start_date, end_date)}
     scope :belonging_to_repo, lambda {|repo_id| where(repo_id: repo_id)}
     scope :belonging_to_user, lambda {|user_id| where(user_id: user_id)}
     scope :belonging_to_deploy, lambda {|deploy_id| where(deploy_id: deploy_id)}
@@ -11,12 +11,12 @@ module Hubstats
     scope :belonging_to_users, lambda {|user_id| where(user_id: user_id.split(',')) if user_id}
     scope :group, lambda {|group| group_by(:repo_id) if group }
     scope :with_state, lambda {|state| (where(state: state) unless state == 'all') if state}
-    scope :with_label, lambda { |label_name| ({ :joins => :labels, :conditions => {:hubstats_labels => {name: label_name.split(',')} } }) if label_name }
+    scope :with_label, lambda {|label_name| joins(:labels).where(hubstats_labels: {name: label_name.split(',')}) if label_name}
     scope :distinct, select("DISTINCT hubstats_pull_requests.*")
     scope :with_repo_name, select('DISTINCT hubstats_repos.name as repo_name, hubstats_pull_requests.*').joins("LEFT JOIN hubstats_repos ON hubstats_repos.id = hubstats_pull_requests.repo_id")
     scope :with_user_name, select('DISTINCT hubstats_users.login as user_name, hubstats_pull_requests.*').joins("LEFT JOIN hubstats_users ON hubstats_users.id = hubstats_pull_requests.user_id")
 
-    attr_accessible :id, :url, :html_url, :diff_url, :patch_url, :issue_url, :commits_url,
+     attr_accessible :id, :url, :html_url, :diff_url, :patch_url, :issue_url, :commits_url,
       :review_comments_url, :review_comment_url, :comments_url, :statuses_url, :number,
       :state, :title, :body, :created_at, :updated_at, :closed_at, :merged_at, 
       :merge_commit_sha, :merged, :mergeable, :comments, :commits, :additions,
@@ -56,26 +56,26 @@ module Hubstats
     end
 
     def add_labels(labels)
-      labels.map!{ |label| Hubstats::Label.first_or_create(label) }
+      labels.map!{|label| Hubstats::Label.first_or_create(label) }
       self.labels = labels
     end
 
-    def self.all_filtered(params, timespan)
-      filter_based_on_timespan(timespan, params[:state])
+    def self.all_filtered(params, start_date, end_date)
+      filter_based_on_date_range(start_date, end_date, params[:state])
        .belonging_to_users(params[:users])
        .belonging_to_repos(params[:repos])
     end
 
-    def self.filter_based_on_timespan(timespan, state)
-      with_state(state).updated_since(timespan)
+    def self.filter_based_on_date_range(start_date, end_date, state)
+      with_state(state).updated_in_date_range(start_date, end_date)
     end
 
-    def self.state_based_order(timespan,state,order)
+    def self.state_based_order(start_date, end_date, state, order)
       order = ["ASC","DESC"].detect{|order_type| order_type.to_s == order.to_s.upcase } || "DESC"
       if state == "closed"
-        with_state(state).updated_since(timespan).order("hubstats_pull_requests.closed_at #{order}")
+        with_state(state).updated_in_date_range(start_date, end_date).order("hubstats_pull_requests.closed_at #{order}")
       else #state == "open"
-        with_state(state).updated_since(timespan).order("hubstats_pull_requests.created_at #{order}")
+        with_state(state).updated_in_date_range(start_date, end_date).order("hubstats_pull_requests.created_at #{order}")
       end
     end
 

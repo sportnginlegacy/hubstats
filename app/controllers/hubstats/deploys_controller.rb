@@ -8,7 +8,7 @@ module Hubstats
       @deploys = Hubstats::Deploy.includes(:repo, :pull_requests, :user)
         .belonging_to_users(params[:users]).belonging_to_repos(params[:repos])
         .group_by(params[:group])
-        .order_with_timespan(@timespan, params[:order])
+        .order_with_date_range(@start_date, @end_date, params[:order])
         .paginate(:page => params[:page], :per_page => 15)
 
       grouping(params[:group], @deploys)

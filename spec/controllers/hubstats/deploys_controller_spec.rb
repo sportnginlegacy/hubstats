@@ -24,7 +24,7 @@ module Hubstats
                                   :deployed_at => "2011-02-03 03:00:00 -0500",
                                   :user_id => nil)
         deploys_ordered = [deploy2, deploy3, deploy1]
-        expect(Hubstats::Deploy).to receive_message_chain("group_by.order_with_timespan.paginate").and_return(deploys_ordered)
+        expect(Hubstats::Deploy).to receive_message_chain("group_by.order_with_date_range.paginate").and_return(deploys_ordered)
         get :index
         expect(response).to have_http_status(200)
         expect(response).to render_template(:index)

@@ -1,32 +1,32 @@
 module Hubstats
   class Repo < ActiveRecord::Base
 
-    scope :with_recent_activity, lambda {|time| where("updated_at > ?", time).order("updated_at DESC")}
-    scope :with_id, lambda {|user_id| where(id: user_id.split(',')) if user_id}
+    scope :with_recent_activity, lambda {|start_date, end_date| where("hubstats_repos.updated_at BETWEEN ? AND ?", start_date, end_date).order("updated_at DESC")}
+    scope :with_id, lambda {|repo_id| where(id: repo_id.split(',')) if repo_id}
 
-    scope :deploys_or_comments_count, lambda {|time, data, began_time, name|
+    scope :deploys_count, lambda {|start_date, end_date|
       select("hubstats_repos.id as repo_id")
-       .select("IFNULL(COUNT(DISTINCT #{data}.id),0) AS #{name}_count")
-       .joins("LEFT JOIN #{data} ON #{data}.repo_id = hubstats_repos.id AND #{data}.#{began_time} > '#{time}'")
+       .select("IFNULL(COUNT(DISTINCT hubstats_deploys.id),0) AS deploy_count")
+       .joins(sanitize_sql_array(["LEFT JOIN hubstats_deploys ON hubstats_deploys.repo_id = hubstats_repos.id AND (hubstats_deploys.deployed_at BETWEEN ? AND ?)", start_date, end_date]))
        .group("hubstats_repos.id")
     }
 
-    scope :deploys_count, lambda {|time|
-      deploys_or_comments_count(time, "hubstats_deploys", "deployed_at", "deploy")
-    }
-
-    scope :comments_count, lambda {|time|
-      deploys_or_comments_count(time, "hubstats_comments", "created_at", "comment")
+    scope :comments_count, lambda {|start_date, end_date|
+      select("hubstats_repos.id as repo_id")
+       .select("IFNULL(COUNT(DISTINCT hubstats_comments.id),0) AS comment_count")
+       .joins(sanitize_sql_array(["LEFT JOIN hubstats_comments ON hubstats_comments.repo_id = hubstats_repos.id AND (hubstats_comments.created_at BETWEEN ? AND ?)", start_date, end_date]))
+       .group("hubstats_repos.id")
     }
  
-    scope :pull_requests_count, lambda {|time|
+    scope :pull_requests_count, lambda {|start_date, end_date|
       select("hubstats_repos.id as repo_id")
       .select("IFNULL(COUNT(DISTINCT hubstats_pull_requests.id),0) AS pull_request_count")
-      .joins("LEFT JOIN hubstats_pull_requests ON hubstats_pull_requests.repo_id = hubstats_repos.id AND hubstats_pull_requests.merged_at > '#{time}' AND hubstats_pull_requests.merged = '1'")
+      .joins(sanitize_sql_array(["LEFT JOIN hubstats_pull_requests ON hubstats_pull_requests.repo_id = hubstats_repos.id AND (hubstats_pull_requests.merged_at BETWEEN ? AND ?)", start_date, end_date]))
+      .where("hubstats_pull_requests.merged = '1'")
       .group("hubstats_repos.id")
     }
 
-    scope :averages, lambda { |time|
+    scope :averages, lambda {|start_date, end_date|
       select("hubstats_repos.id as repo_id")
       .select("ROUND(IFNULL(AVG(hubstats_pull_requests.additions),0)) AS average_additions")
       .select("ROUND(IFNULL(AVG(hubstats_pull_requests.deletions),0)) AS average_deletions")
@@ -34,12 +34,12 @@ module Hubstats
       .group("hubstats_repos.id")
     }
 
-    scope :with_all_metrics, lambda { |time|
+    scope :with_all_metrics, lambda {|start_date, end_date|
       select("hubstats_repos.*, deploy_count, pull_request_count, comment_count, average_additions, average_deletions")
-      .joins("LEFT JOIN (#{averages(time).to_sql}) AS averages ON averages.repo_id = hubstats_repos.id")
-      .joins("LEFT JOIN (#{pull_requests_count(time).to_sql}) AS pull_requests ON pull_requests.repo_id = hubstats_repos.id")
-      .joins("LEFT JOIN (#{comments_count(time).to_sql}) AS comments ON comments.repo_id = hubstats_repos.id")
-      .joins("LEFT JOIN (#{deploys_count(time).to_sql}) AS deploys ON deploys.repo_id = hubstats_repos.id")
+      .joins("LEFT JOIN (#{averages(start_date, end_date).to_sql}) AS averages ON averages.repo_id = hubstats_repos.id")
+      .joins("LEFT JOIN (#{pull_requests_count(start_date, end_date).to_sql}) AS pull_requests ON pull_requests.repo_id = hubstats_repos.id")
+      .joins("LEFT JOIN (#{comments_count(start_date, end_date).to_sql}) AS comments ON comments.repo_id = hubstats_repos.id")
+      .joins("LEFT JOIN (#{deploys_count(start_date, end_date).to_sql}) AS deploys ON deploys.repo_id = hubstats_repos.id")
       .group("hubstats_repos.id")
     }
 
@@ -53,6 +53,7 @@ module Hubstats
 
     has_many :pull_requests
     has_many :deploys
+    has_many :comments
     belongs_to :owner, :class_name => "User", :foreign_key => "id"
 
     def self.create_or_update(github_repo)
