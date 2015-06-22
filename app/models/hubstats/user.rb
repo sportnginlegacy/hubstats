@@ -25,11 +25,11 @@ module Hubstats
       .group("hubstats_users.id")
     }
 
-    scope :pull_requests_count_by_repo, lambda {|start_date, end_date,repo_id|
+    scope :pull_requests_count_by_repo, lambda {|start_date, end_date, repo_id|
       select("hubstats_users.id as user_id")
       .select("IFNULL(COUNT(DISTINCT hubstats_pull_requests.id),0) AS pull_request_count")
       .joins(sanitize_sql_array(["LEFT JOIN hubstats_pull_requests ON hubstats_pull_requests.user_id = hubstats_users.id AND (hubstats_pull_requests.created_at BETWEEN ? AND ?)", start_date, end_date]))
-      .where("hubstats_pull_requests.repo_id = '#{repo_id}' AND hubstats_pull_requests.merged = '1'")
+      .where("hubstats_pull_requests.repo_id = ? AND hubstats_pull_requests.merged = '1'", repo_id)
       .group("hubstats_users.id")
     }
 
@@ -37,7 +37,7 @@ module Hubstats
       select("hubstats_users.id as user_id")
       .select("COUNT(DISTINCT hubstats_comments.id) AS comment_count")
       .joins(sanitize_sql_array(["LEFT JOIN hubstats_comments ON hubstats_comments.user_id = hubstats_users.id AND (hubstats_comments.created_at BETWEEN ? AND ?)", start_date, end_date]))
-      .where("hubstats_comments.repo_id = '#{repo_id}'")
+      .where("hubstats_comments.repo_id = ?", repo_id)
       .group("hubstats_users.id")
     }
 
