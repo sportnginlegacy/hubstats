@@ -1,3 +1,8 @@
+#### v0.3.14
+* Replacing timespan with a start date and an end date
+
+  > Emma Sax: Andy Fleener: https://github.com/sportngin/hubstats/pull/65
+
 #### v0.3.13
 * Adding the nagivation bar highlights
 
