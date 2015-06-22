@@ -11,12 +11,12 @@ module Hubstats
     scope :belonging_to_users, lambda {|user_id| where(user_id: user_id.split(',')) if user_id}
     scope :group, lambda {|group| group_by(:repo_id) if group }
     scope :with_state, lambda {|state| (where(state: state) unless state == 'all') if state}
-    scope :with_label, lambda {|label_name| ({ :joins => :labels, :conditions => {:hubstats_labels => {name: label_name.split(',')} } }) if label_name }
+    scope :with_label, lambda {|label_name| joins(:labels).where(hubstats_labels: {name: label_name.split(',')}) if label_name}
     scope :distinct, select("DISTINCT hubstats_pull_requests.*")
     scope :with_repo_name, select('DISTINCT hubstats_repos.name as repo_name, hubstats_pull_requests.*').joins("LEFT JOIN hubstats_repos ON hubstats_repos.id = hubstats_pull_requests.repo_id")
     scope :with_user_name, select('DISTINCT hubstats_users.login as user_name, hubstats_pull_requests.*').joins("LEFT JOIN hubstats_users ON hubstats_users.id = hubstats_pull_requests.user_id")
 
-    attr_accessible :id, :url, :html_url, :diff_url, :patch_url, :issue_url, :commits_url,
+     attr_accessible :id, :url, :html_url, :diff_url, :patch_url, :issue_url, :commits_url,
       :review_comments_url, :review_comment_url, :comments_url, :statuses_url, :number,
       :state, :title, :body, :created_at, :updated_at, :closed_at, :merged_at, 
       :merge_commit_sha, :merged, :mergeable, :comments, :commits, :additions,
