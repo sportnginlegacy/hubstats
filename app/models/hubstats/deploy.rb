@@ -8,7 +8,7 @@ module Hubstats
         self.deployed_at = Time.now.getutc if deployed_at.nil?
     end
 
-    scope :deployed_in_date_range, lambda {|start_date, end_date| where("hubstats_deploys.deployed_at BETWEEN ? AND?", start_date, end_date)}
+    scope :deployed_in_date_range, lambda {|start_date, end_date| where("hubstats_deploys.deployed_at BETWEEN ? AND ?", start_date, end_date)}
     scope :group, lambda {|group| group_by(:repo_id) if group }
     scope :belonging_to_repo, lambda {|repo_id| where(repo_id: repo_id)}
     scope :belonging_to_user, lambda {|user_id| where(user_id: user_id)}
