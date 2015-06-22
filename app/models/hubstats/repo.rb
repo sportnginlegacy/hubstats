@@ -1,28 +1,27 @@
 module Hubstats
   class Repo < ActiveRecord::Base
 
-    scope :with_recent_activity, lambda {|start_date, end_date| where("hubstats_repos.updated_at > ? AND hubstats_repos.updated_at < ?", start_date, end_date).order("updated_at DESC")}
-    scope :with_id, lambda {|user_id| where(id: user_id.split(',')) if user_id}
+    scope :with_recent_activity, lambda {|start_date, end_date| where("hubstats_repos.updated_at BETWEEN ? AND ?", start_date, end_date).order("updated_at DESC")}
+    scope :with_id, lambda {|repo_id| where(id: repo_id.split(',')) if repo_id}
 
-    scope :deploys_or_comments_count, lambda {|start_date, end_date, data, began_time, name|
+    scope :deploys_count, lambda {|start_date, end_date|
       select("hubstats_repos.id as repo_id")
-       .select("IFNULL(COUNT(DISTINCT #{data}.id),0) AS #{name}_count")
-       .joins("LEFT JOIN #{data} ON #{data}.repo_id = hubstats_repos.id AND #{data}.#{began_time} > '#{start_date}' AND #{data}.#{began_time} < '#{end_date}'")
+       .select("IFNULL(COUNT(DISTINCT hubstats_deploys.id),0) AS deploy_count")
+       .joins("LEFT JOIN hubstats_deploys ON hubstats_deploys.repo_id = hubstats_repos.id AND (hubstats_deploys.deployed_at BETWEEN '#{start_date}' AND '#{end_date}')")
        .group("hubstats_repos.id")
     }
 
-    scope :deploys_count, lambda {|start_date, end_date|
-      deploys_or_comments_count(start_date, end_date, "hubstats_deploys", "deployed_at", "deploy")
-    }
-
     scope :comments_count, lambda {|start_date, end_date|
-      deploys_or_comments_count(start_date, end_date, "hubstats_comments", "created_at", "comment")
+      select("hubstats_repos.id as repo_id")
+       .select("IFNULL(COUNT(DISTINCT hubstats_comments.id),0) AS comment_count")
+       .joins("LEFT JOIN hubstats_comments ON hubstats_comments.repo_id = hubstats_repos.id AND (hubstats_comments.created_at BETWEEN '#{start_date}' AND '#{end_date}')")
+       .group("hubstats_repos.id")
     }
  
     scope :pull_requests_count, lambda {|start_date, end_date|
       select("hubstats_repos.id as repo_id")
       .select("IFNULL(COUNT(DISTINCT hubstats_pull_requests.id),0) AS pull_request_count")
-      .joins("LEFT JOIN hubstats_pull_requests ON hubstats_pull_requests.repo_id = hubstats_repos.id AND hubstats_pull_requests.merged_at > '#{start_date}'AND hubstats_pull_requests.merged_at < '#{end_date}' AND hubstats_pull_requests.merged = '1'")
+      .joins("LEFT JOIN hubstats_pull_requests ON hubstats_pull_requests.repo_id = hubstats_repos.id AND (hubstats_pull_requests.merged_at BETWEEN '#{start_date}' AND '#{end_date}') AND hubstats_pull_requests.merged = '1'")
       .group("hubstats_repos.id")
     }
 
@@ -53,9 +52,10 @@ module Hubstats
 
     has_many :pull_requests
     has_many :deploys
+    has_many :comments
     belongs_to :owner, :class_name => "User", :foreign_key => "id"
 
-    def self.create_or_update (github_repo)
+    def self.create_or_update(github_repo)
       github_repo = github_repo.to_h.with_indifferent_access if github_repo.respond_to? :to_h
       repo_data = github_repo.slice(*column_names.map(&:to_sym))
 
@@ -69,7 +69,7 @@ module Hubstats
       Rails.logger.warn repo.errors.inspect
     end
 
-    def self.custom_order (order_params)
+    def self.custom_order(order_params)
       if order_params
         order = order_params.include?('asc') ? "ASC" : "DESC"
         case order_params.split('-').first

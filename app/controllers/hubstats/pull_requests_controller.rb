@@ -24,6 +24,7 @@ module Hubstats
       @comments = Hubstats::Comment.belonging_to_pull_request(params[:id]).created_in_date_range(@start_date, @end_date).limit(20)
       comment_count = Hubstats::Comment.belonging_to_pull_request(params[:id]).created_in_date_range(@start_date, @end_date).count(:all)
       @deploys = Hubstats::Deploy.where(id: @pull_request.deploy_id).order("deployed_at DESC")
+
       @stats_basics = {
         comment_count: comment_count,
         net_additions: @pull_request.additions.to_i - @pull_request.deletions.to_i,
