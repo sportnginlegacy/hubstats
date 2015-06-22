@@ -92,7 +92,7 @@ module Hubstats
     has_many :pull_requests
     has_many :deploys
 
-    def self.create_or_update(github_user)
+    def self.create_or_update (github_user)
       github_user[:role] = github_user.delete :type  ##changing :type in to :role
       github_user = github_user.to_h.with_indifferent_access unless github_user.is_a? Hash
 
@@ -103,7 +103,7 @@ module Hubstats
       Rails.logger.warn user.errors.inspect
     end
 
-    def self.with_pulls_or_comments(start_date, end_date, repo_id = nil)
+    def self.with_pulls_or_comments (start_date, end_date, repo_id = nil)
       if repo_id
         pull_and_comment_count_by_repo(start_date, end_date, repo_id).weighted_sort
       else
@@ -111,7 +111,7 @@ module Hubstats
       end
     end
 
-    def self.custom_order(order_params)
+    def self.custom_order (order_params)
       if order_params
         order = order_params.include?('asc') ? "ASC" : "DESC"
         case order_params.split('-').first

@@ -17,7 +17,6 @@
 //= require bootstrap-datepicker
 //= require_tree .
 
-
 $(document).ready( function() {
   setDateRange()
 });
@@ -37,7 +36,6 @@ function setDateRange() {
   timer.selectedIndex = index;
 
   timer.onchange = function() {
-
     createCookie("hubstats_index",this.selectedIndex,1);
     window.location.reload();
   };

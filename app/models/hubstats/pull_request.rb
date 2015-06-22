@@ -1,9 +1,9 @@
 module Hubstats
   class PullRequest < ActiveRecord::Base
-    scope :closed_since, lambda {|start_date, end_date| where("hubstats_pull_requests.closed_at > ? AND hubstats_pull_requests.closed_at < ?", start_date, end_date)}
-    scope :updated_since, lambda {|start_date, end_date| where("hubstats_pull_requests.updated_at > ? AND hubstats_pull_requests.updated_at < ?", start_date, end_date)}
-    scope :opened_since, lambda {|start_date, end_date| where("hubstats_pull_requests.created_at > ? AND hubstats_pull_requests.created_at < ?", start_date, end_date)}
-    scope :merged_since, lambda {|start_date, end_date| where("hubstats_pull_requests.merged").where("hubstats_pull_requests.merged_at > ? AND hubstats_pull_requests.merged_at < ?", start_date, end_date)}
+    scope :closed_in_date_range, lambda {|start_date, end_date| where("hubstats_pull_requests.closed_at > ? AND hubstats_pull_requests.closed_at < ?", start_date, end_date)}
+    scope :updated_in_date_range, lambda {|start_date, end_date| where("hubstats_pull_requests.updated_at > ? AND hubstats_pull_requests.updated_at < ?", start_date, end_date)}
+    scope :created_in_date_range, lambda {|start_date, end_date| where("hubstats_pull_requests.created_at > ? AND hubstats_pull_requests.created_at < ?", start_date, end_date)}
+    scope :merged_in_date_range, lambda {|start_date, end_date| where("hubstats_pull_requests.merged").where("hubstats_pull_requests.merged_at > ? AND hubstats_pull_requests.merged_at < ?", start_date, end_date)}
     scope :belonging_to_repo, lambda {|repo_id| where(repo_id: repo_id)}
     scope :belonging_to_user, lambda {|user_id| where(user_id: user_id)}
     scope :belonging_to_deploy, lambda {|deploy_id| where(deploy_id: deploy_id)}
@@ -55,31 +55,31 @@ module Hubstats
       Rails.logger.warn pull.errors.inspect
     end
 
-    def add_labels(labels)
+    def add_labels (labels)
       labels.map!{|label| Hubstats::Label.first_or_create(label) }
       self.labels = labels
     end
 
-    def self.all_filtered(params, start_date, end_date)
+    def self.all_filtered (params, start_date, end_date)
       filter_based_on_date_range(start_date, end_date, params[:state])
        .belonging_to_users(params[:users])
        .belonging_to_repos(params[:repos])
     end
 
-    def self.filter_based_on_date_range(start_date, end_date, state)
-      with_state(state).updated_since(start_date, end_date)
+    def self.filter_based_on_date_range (start_date, end_date, state)
+      with_state(state).updated_in_date_range(start_date, end_date)
     end
 
-    def self.state_based_order(start_date, end_date , state, order)
+    def self.state_based_order (start_date, end_date, state, order)
       order = ["ASC","DESC"].detect{|order_type| order_type.to_s == order.to_s.upcase } || "DESC"
       if state == "closed"
-        with_state(state).updated_since(start_date, end_date).order("hubstats_pull_requests.closed_at #{order}")
+        with_state(state).updated_in_date_range(start_date, end_date).order("hubstats_pull_requests.closed_at #{order}")
       else #state == "open"
-        with_state(state).updated_since(start_date, end_date).order("hubstats_pull_requests.created_at #{order}")
+        with_state(state).updated_in_date_range(start_date, end_date).order("hubstats_pull_requests.created_at #{order}")
       end
     end
 
-    def self.group_by(group)
+    def self.group_by (group)
       if group == 'user'
         with_user_name.order("user_name ASC")
       elsif group == 'repo'

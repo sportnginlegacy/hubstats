@@ -4,7 +4,7 @@ module Hubstats
   class ReposController < ApplicationController
 
     def index
-      if params[:query]
+      if params[:query] ## For select 2
         @repos = Hubstats::Repo.where("name LIKE ?", "%#{params[:query]}%").order("name ASC")
       elsif params[:id]
         @repos = Hubstats::Repo.where(id: params[:id].split(",")).order("name ASC")
@@ -19,22 +19,22 @@ module Hubstats
 
     def show
       @repo = Hubstats::Repo.where(name: params[:repo]).first
-      @pull_requests = Hubstats::PullRequest.belonging_to_repo(@repo.id).merged_since(@start_date, @end_date).order("updated_at DESC").limit(20)
-      @pull_count = Hubstats::PullRequest.belonging_to_repo(@repo.id).merged_since(@start_date, @end_date).count(:all)
-      @deploys = Hubstats::Deploy.belonging_to_repo(@repo.id).deployed_since(@start_date, @end_date).order("deployed_at DESC").limit(20)
-      @deploy_count = Hubstats::Deploy.belonging_to_repo(@repo.id).deployed_since(@start_date, @end_date).count(:all)
-      @comment_count = Hubstats::Comment.belonging_to_repo(@repo.id).created_since(@start_date, @end_date).count(:all)
+      @pull_requests = Hubstats::PullRequest.belonging_to_repo(@repo.id).merged_in_date_range(@start_date, @end_date).order("updated_at DESC").limit(20)
+      @pull_count = Hubstats::PullRequest.belonging_to_repo(@repo.id).merged_in_date_range(@start_date, @end_date).count(:all)
+      @deploys = Hubstats::Deploy.belonging_to_repo(@repo.id).deployed_in_date_range(@start_date, @end_date).order("deployed_at DESC").limit(20)
+      @deploy_count = Hubstats::Deploy.belonging_to_repo(@repo.id).deployed_in_date_range(@start_date, @end_date).count(:all)
+      @comment_count = Hubstats::Comment.belonging_to_repo(@repo.id).created_in_date_range(@start_date, @end_date).count(:all)
       @user_count = Hubstats::User.with_pulls_or_comments(@start_date, @end_date, @repo.id).only_active.length
-      @net_additions = Hubstats::PullRequest.merged_since(@start_date, @end_date).belonging_to_repo(@repo.id).sum(:additions).to_i -
-                       Hubstats::PullRequest.merged_since(@start_date, @end_date).belonging_to_repo(@repo.id).sum(:deletions).to_i
-      @additions = Hubstats::PullRequest.merged_since(@start_date, @end_date).belonging_to_repo(@repo.id).average(:additions)
-      @deletions = Hubstats::PullRequest.merged_since(@start_date, @end_date).belonging_to_repo(@repo.id).average(:deletions)
+      @net_additions = Hubstats::PullRequest.merged_in_date_range(@start_date, @end_date).belonging_to_repo(@repo.id).sum(:additions).to_i -
+                       Hubstats::PullRequest.merged_in_date_range(@start_date, @end_date).belonging_to_repo(@repo.id).sum(:deletions).to_i
+      @additions = Hubstats::PullRequest.merged_in_date_range(@start_date, @end_date).belonging_to_repo(@repo.id).average(:additions)
+      @deletions = Hubstats::PullRequest.merged_in_date_range(@start_date, @end_date).belonging_to_repo(@repo.id).average(:deletions)
       
       stats
     end
 
     def dashboard
-      if params[:query] ## For select 2.
+      if params[:query] ## For select 2
         @repos = Hubstats::Repo.where("name LIKE ?", "%#{params[:query]}%").order("name ASC")
       elsif params[:id]
         @repos = Hubstats::Repo.where(id: params[:id].split(",")).order("name ASC")
@@ -46,13 +46,13 @@ module Hubstats
       end
 
       @user_count = Hubstats::User.with_pulls_or_comments(@start_date, @end_date).only_active.length
-      @deploy_count = Hubstats::Deploy.deployed_since(@start_date, @end_date).count(:all)
-      @pull_count = Hubstats::PullRequest.merged_since(@start_date, @end_date).count(:all)
-      @comment_count = Hubstats::Comment.created_since(@start_date, @end_date).count(:all)
-      @net_additions = Hubstats::PullRequest.merged_since(@start_date, @end_date).sum(:additions).to_i - 
-                       Hubstats::PullRequest.merged_since(@start_date, @end_date).sum(:deletions).to_i
-      @additions = Hubstats::PullRequest.merged_since(@start_date, @end_date).average(:additions)
-      @deletions = Hubstats::PullRequest.merged_since(@start_date, @end_date).average(:deletions)
+      @deploy_count = Hubstats::Deploy.deployed_in_date_range(@start_date, @end_date).count(:all)
+      @pull_count = Hubstats::PullRequest.merged_in_date_range(@start_date, @end_date).count(:all)
+      @comment_count = Hubstats::Comment.created_in_date_range(@start_date, @end_date).count(:all)
+      @net_additions = Hubstats::PullRequest.merged_in_date_range(@start_date, @end_date).sum(:additions).to_i - 
+                       Hubstats::PullRequest.merged_in_date_range(@start_date, @end_date).sum(:deletions).to_i
+      @additions = Hubstats::PullRequest.merged_in_date_range(@start_date, @end_date).average(:additions)
+      @deletions = Hubstats::PullRequest.merged_in_date_range(@start_date, @end_date).average(:deletions)
 
       stats
 

@@ -23,15 +23,15 @@ module Hubstats
 
     def show
       @user = Hubstats::User.where(login: params[:id]).first
-      @pull_requests = Hubstats::PullRequest.belonging_to_user(@user.id).merged_since(@start_date, @end_date).order("updated_at DESC").limit(20)
-      @pull_count = Hubstats::PullRequest.belonging_to_user(@user.id).merged_since(@start_date, @end_date).count(:all)
-      @deploys = Hubstats::Deploy.belonging_to_user(@user.id).deployed_since(@start_date, @end_date).order("deployed_at DESC").limit(20)
-      @deploy_count = Hubstats::Deploy.belonging_to_user(@user.id).deployed_since(@start_date, @end_date).count(:all)
-      @comment_count = Hubstats::Comment.belonging_to_user(@user.id).created_since(@start_date, @end_date).count(:all)
-      @net_additions = Hubstats::PullRequest.merged_since(@start_date, @end_date).belonging_to_user(@user.id).sum(:additions).to_i -
-                       Hubstats::PullRequest.merged_since(@start_date, @end_date).belonging_to_user(@user.id).sum(:deletions).to_i
-      @additions = Hubstats::PullRequest.merged_since(@start_date, @end_date).belonging_to_user(@user.id).average(:additions)
-      @deletions = Hubstats::PullRequest.merged_since(@start_date, @end_date).belonging_to_user(@user.id).average(:deletions)
+      @pull_requests = Hubstats::PullRequest.belonging_to_user(@user.id).merged_in_date_range(@start_date, @end_date).order("updated_at DESC").limit(20)
+      @pull_count = Hubstats::PullRequest.belonging_to_user(@user.id).merged_in_date_range(@start_date, @end_date).count(:all)
+      @deploys = Hubstats::Deploy.belonging_to_user(@user.id).deployed_in_date_range(@start_date, @end_date).order("deployed_at DESC").limit(20)
+      @deploy_count = Hubstats::Deploy.belonging_to_user(@user.id).deployed_in_date_range(@start_date, @end_date).count(:all)
+      @comment_count = Hubstats::Comment.belonging_to_user(@user.id).created_in_date_range(@start_date, @end_date).count(:all)
+      @net_additions = Hubstats::PullRequest.merged_in_date_range(@start_date, @end_date).belonging_to_user(@user.id).sum(:additions).to_i -
+                       Hubstats::PullRequest.merged_in_date_range(@start_date, @end_date).belonging_to_user(@user.id).sum(:deletions).to_i
+      @additions = Hubstats::PullRequest.merged_in_date_range(@start_date, @end_date).belonging_to_user(@user.id).average(:additions)
+      @deletions = Hubstats::PullRequest.merged_in_date_range(@start_date, @end_date).belonging_to_user(@user.id).average(:deletions)
 
       stats
     end

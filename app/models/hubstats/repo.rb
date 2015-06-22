@@ -55,7 +55,7 @@ module Hubstats
     has_many :deploys
     belongs_to :owner, :class_name => "User", :foreign_key => "id"
 
-    def self.create_or_update(github_repo)
+    def self.create_or_update (github_repo)
       github_repo = github_repo.to_h.with_indifferent_access if github_repo.respond_to? :to_h
       repo_data = github_repo.slice(*column_names.map(&:to_sym))
 
@@ -69,7 +69,7 @@ module Hubstats
       Rails.logger.warn repo.errors.inspect
     end
 
-    def self.custom_order(order_params)
+    def self.custom_order (order_params)
       if order_params
         order = order_params.include?('asc') ? "ASC" : "DESC"
         case order_params.split('-').first

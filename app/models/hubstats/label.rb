@@ -10,7 +10,7 @@ module Hubstats
        .order("pull_request_count DESC")
     end
 
-    scope :with_ids, lambda {|pull_ids| (where("hubstats_labels_pull_requests.pull_request_id" => pull_ids)) }
+    scope :with_ids, lambda {|pull_ids| (where("hubstats_labels_pull_requests.pull_request_id" => pull_ids))}
 
     scope :with_state, lambda {|state| (where(state: state) unless state == 'all') if state}
 
