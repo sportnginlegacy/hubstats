@@ -20,6 +20,18 @@
   text-align: center;
 }
 
+.middle {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.apply-date-range-button {
+  float: right;
+  color: #333;
+  background-color: #fff;
+  border-color: #ccc;
+}
+
 #header {
   padding-top: 5px; 
 }
@@ -50,7 +62,6 @@
 .single-deploy > .user-image-small {
   padding: 5px;
 }
-
 
 .user-image > img,
 .repo-image {

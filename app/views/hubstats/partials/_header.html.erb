@@ -15,30 +15,26 @@
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav navbar-right">
           <li class="<%='navbar-active' if params[:controller] == 'hubstats/deploys'%>">
-              <%= link_to "Deployments", deploys_path%></li>
+            <%= link_to "Deployments", deploys_path%></li>
           <li class="<%='navbar-active' if params[:controller] == 'hubstats/repos'%>">
-              <%= link_to "Metrics", metrics_path%></li>
+            <%= link_to "Metrics", metrics_path%></li>
           <li class="<%='navbar-active' if params[:controller] == 'hubstats/pull_requests'%>">
-              <%= link_to "Pull Requests", root_path%></li>
+            <%= link_to "Pull Requests", root_path%></li>
           <li class="<%='navbar-active' if params[:controller] == 'hubstats/users'%>">
-              <%= link_to "Users", users_path%></li>
+            <%= link_to "Users", users_path%></li>
+          <li style="width: 245px">
+            <div class="middle">
+            <div class="input-daterange input-group" id="datepicker">
+              <input type="text" class="input-small form-control" data-behavior="datepicker" name="start" placeholder="Start Date"/>
+              <span class="input-group-addon">to</span>
+              <input type="text" class="input-small form-control" data-behavior="datepicker" name="end" placeholder="End Date"/>
+            </div>
+            </div>
+          </li>
           <li>
-            <select class="form-control push-down" id="time-select">
-              <% Hubstats::DATE_RANGE_ARRAY.each do |date| %>
-                <option value=<%= date[:date] %>><%=date[:display_value]%></option>
-              <% end %>
-            </select>
+            <button style="float: right" type="button" class="btn btn-default" id="submitDateRange">Apply</button>
           </li>
         </ul>
-        Current Start Date: <%=@start_date%>
-        Current End Date: <%=@end_date%>
-        <div class="input-daterange input-group" id="datepicker">
-          <input type="text" class="input-sm form-control" data-behavior="datepicker" name="start" placeholder="Start Date"/>
-          <span class="input-group-addon">to</span>
-          <input type="text" class="input-sm form-control" data-behavior="datepicker" name="end" placeholder="End Date"/>
-        </div>
-        <!-- <%= button_to "Edit Date Range", :method => "someButton" %> -->
-        <button type="button" class="btn btn-default" id="submitDateRange">Edit Date Range</button>
       </div>
     </div>
   </nav>

@@ -33,19 +33,18 @@ $(document).on("focus", "[data-behavior~='datepicker']", function(e){
 });
 
 function setDateRange() {
-  // var index = readCookie("hubstats_index") || 2;
-  // var timer = document.getElementById("time-select");
-  var index = readCookie("hubstats_index");
-  var timer = document.getElementById("submitDateRange");
+  if (readCookie("hubstats_index") === "null~~null") {
+    var index = getDefaultDateRange();
+  } else {
+    var index = readCookie("hubstats_index")
+  }
 
-  // timer.selectedIndex = index;
-  console.log(index);
+  var timer = document.getElementById("submitDateRange");
   dates = index.split("~~")
   $('.input-daterange').find('[name="start"]').datepicker('update', new Date(dates[0]));
   $('.input-daterange').find('[name="end"]').datepicker('update', new Date(dates[1]));
 
   timer.onclick = function() {
-    // createCookie("hubstats_index",this.selectedIndex,1);
     start_date = $('.input-daterange').find('[name="start"]').datepicker('getDate');
     end_date = $('.input-daterange').find('[name="end"]').datepicker('getDate');
     createCookie("hubstats_index", start_date, end_date, 1);
@@ -53,27 +52,47 @@ function setDateRange() {
   };
 };
 
-function createCookie(name,value,value2,days) {
-    if (days) {
-        var date = new Date();
-        date.setTime(date.getTime()+(days*24*60*60*1000));
-        var expires = "; expires="+date.toGMTString();
-    }
-    else var expires = "";
-    document.cookie = name+"="+value+"~~"+value2+expires+"; path=/";
+function createCookie(name,value1,value2,days) {
+  if (days) {
+    var date = new Date();
+    date.setTime(date.getTime()+(days*24*60*60*1000));
+    var expires = "; expires="+date.toGMTString();
+  }
+  else var expires = "";
+  document.cookie = name+"="+value1+"~~"+value2+expires+"; path=/";
 };
 
 function readCookie(name) {
-    var nameEQ = name + "=";
-    var ca = document.cookie.split(';');
-    for(var i=0;i < ca.length;i++) {
-        var c = ca[i];
-        while (c.charAt(0)==' ') c = c.substring(1,c.length);
-        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
-    }
-    return null;
+  var nameEQ = name + "=";
+  var ca = document.cookie.split(';');
+  for(var i=0;i < ca.length;i++) {
+    var c = ca[i];
+    while (c.charAt(0)==' ') c = c.substring(1,c.length);
+    if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+  }
+  return null;
 };
 
 function eraseCookie(name) {
     createCookie(name,"",-1);
 };
+
+function getDefaultDateRange() {
+  var today = new Date();
+  var dd = today.getDate();
+  var mm = today.getMonth() + 1; //January is 0!
+  var yyyy = today.getFullYear();
+
+  if(dd < 10) {
+    dd = '0' + dd
+  } 
+
+  if(mm < 10) {
+    mm = '0' + mm
+  } 
+
+  today = mm + '/' + dd + '/' + yyyy;
+  twoWeeksAgo = new Date(today);
+  twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
+  return twoWeeksAgo + '~~' + today;
+}
