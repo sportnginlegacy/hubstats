@@ -1,3 +1,8 @@
+#### v0.3.16
+* Fixing date to not go by midnight, but current time
+
+  > Emma Sax: Brian Bergstrom: https://github.com/sportngin/hubstats/pull/66
+
 #### v0.3.15
 #### v0.3.14
 * Replacing timespan with a start date and an end date
