@@ -30,8 +30,13 @@
             </select>
           </li>
         </ul>
-        <!-- Start time: <%=@start_date%>
-        End time: <%=@end_date%> -->
+        Current Start Date: <%=@start_date%>
+        Current End Date: <%=@end_date%>
+        <div class="input-daterange input-group" id="datepicker">
+          <input type="text" class="input-sm form-control" data-behavior="datepicker" name="start" placeholder="Start Date" />
+          <span class="input-group-addon">to</span>
+          <input type="text" class="input-sm form-control" data-behavior="datepicker" name="end" placeholder="End Date" />
+        </div>
       </div>
     </div>
   </nav>

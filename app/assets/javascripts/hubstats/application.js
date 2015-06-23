@@ -14,11 +14,22 @@
 //= require jquery_ujs
 //= require select2
 //= require hubstats/bootstrap
+//= require bootstrap-datepicker
 //= require_tree .
 
 $(document).ready( function() {
   setDateRange()
 });
+
+$(document).on("focus", "[data-behavior~='datepicker']", function(e){
+  $('.input-daterange').datepicker({
+    "format": "yyyy-mm-dd",
+    "autoclose": true,
+    "todayHighlight": true,
+    "multidate": false,
+    "endDate": "-d"
+  })
+})
 
 function setDateRange() {
   var index = readCookie("hubstats_index") || 2;
