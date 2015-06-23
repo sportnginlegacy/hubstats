@@ -27,30 +27,40 @@ $(document).on("focus", "[data-behavior~='datepicker']", function(e){
     "autoclose": true,
     "todayHighlight": true,
     "multidate": false,
-    "endDate": "-d"
-  })
-})
+    "endDate": "-d",
+    "todayBtn": "linked"
+  });
+});
 
 function setDateRange() {
-  var index = readCookie("hubstats_index") || 2;
-  var timer = document.getElementById("time-select");
+  // var index = readCookie("hubstats_index") || 2;
+  // var timer = document.getElementById("time-select");
+  var index = readCookie("hubstats_index");
+  var timer = document.getElementById("submitDateRange");
 
-  timer.selectedIndex = index;
+  // timer.selectedIndex = index;
+  console.log(index);
+  dates = index.split("~~")
+  $('.input-daterange').find('[name="start"]').datepicker('update', new Date(dates[0]));
+  $('.input-daterange').find('[name="end"]').datepicker('update', new Date(dates[1]));
 
-  timer.onchange = function() {
-    createCookie("hubstats_index",this.selectedIndex,1);
+  timer.onclick = function() {
+    // createCookie("hubstats_index",this.selectedIndex,1);
+    start_date = $('.input-daterange').find('[name="start"]').datepicker('getDate');
+    end_date = $('.input-daterange').find('[name="end"]').datepicker('getDate');
+    createCookie("hubstats_index", start_date, end_date, 1);
     window.location.reload();
   };
 };
 
-function createCookie(name,value,days) {
+function createCookie(name,value,value2,days) {
     if (days) {
         var date = new Date();
         date.setTime(date.getTime()+(days*24*60*60*1000));
         var expires = "; expires="+date.toGMTString();
     }
     else var expires = "";
-    document.cookie = name+"="+value+expires+"; path=/";
+    document.cookie = name+"="+value+"~~"+value2+expires+"; path=/";
 };
 
 function readCookie(name) {

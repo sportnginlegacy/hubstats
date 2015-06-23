@@ -33,10 +33,12 @@
         Current Start Date: <%=@start_date%>
         Current End Date: <%=@end_date%>
         <div class="input-daterange input-group" id="datepicker">
-          <input type="text" class="input-sm form-control" data-behavior="datepicker" name="start" placeholder="Start Date" />
+          <input type="text" class="input-sm form-control" data-behavior="datepicker" name="start" placeholder="Start Date"/>
           <span class="input-group-addon">to</span>
-          <input type="text" class="input-sm form-control" data-behavior="datepicker" name="end" placeholder="End Date" />
+          <input type="text" class="input-sm form-control" data-behavior="datepicker" name="end" placeholder="End Date"/>
         </div>
+        <!-- <%= button_to "Edit Date Range", :method => "someButton" %> -->
+        <button type="button" class="btn btn-default" id="submitDateRange">Edit Date Range</button>
       </div>
     </div>
   </nav>
