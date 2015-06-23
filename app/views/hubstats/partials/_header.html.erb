@@ -23,12 +23,10 @@
           <li class="<%='navbar-active' if params[:controller] == 'hubstats/users'%>">
             <%= link_to "Users", users_path%></li>
           <li style="width: 245px">
-            <div class="middle">
             <div class="input-daterange input-group" id="datepicker">
               <input type="text" class="input-small form-control" data-behavior="datepicker" name="start" placeholder="Start Date"/>
               <span class="input-group-addon">to</span>
               <input type="text" class="input-small form-control" data-behavior="datepicker" name="end" placeholder="End Date"/>
-            </div>
             </div>
           </li>
           <li>
@@ -36,6 +34,8 @@
           </li>
         </ul>
       </div>
+      Current Start Date: <%=@start_date%>
+      Current End Date: <%=@end_date%>
     </div>
   </nav>
 </div>

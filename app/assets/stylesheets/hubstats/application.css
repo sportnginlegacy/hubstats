@@ -20,11 +20,6 @@
   text-align: center;
 }
 
-.middle {
-  display: table-cell;
-  vertical-align: middle;
-}
-
 .apply-date-range-button {
   float: right;
   color: #333;
