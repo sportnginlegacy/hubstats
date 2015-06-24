@@ -28,13 +28,7 @@ module Hubstats
       display_value: "Six Months",
       date: 24.weeks
     },{
-      display_value: "One Year",
-      date: 52.weeks
-    },{
-      display_value: "Five Years",
-      date: 260.weeks
-    },{
-      display_value: "Ten Years",
+      display_value: "All Time",
       date: 520.weeks
     }
   ]
