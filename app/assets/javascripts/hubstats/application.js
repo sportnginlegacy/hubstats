@@ -27,23 +27,30 @@ $(document).ready( function() {
 });
 
 function setDateRange() {
-  var dates = null;
-  if ((readCookie("hubstats_index") === "null~~null") || (readCookie("hubstats_index") === null)) {
+  var dates;
+  var timer;
+  var datesArray = [];
+
+  if ((readCookie("hubstats_dates") === "null~~null") || (readCookie("hubstats_dates") === null)) {
     dates = getDefaultDateRange();
   } else {
-    dates = readCookie("hubstats_index")
+    dates = readCookie("hubstats_dates")
   }
 
-  console.log(index)
-  var timer = document.getElementById("submitDateRange");
+  console.log(dates)
+
+  timer = document.getElementById("submitDateRange");
   datesArray = dates.split("~~")
+
   $('.input-daterange').find('[name="start"]').datepicker('update', new Date(datesArray[0]));
   $('.input-daterange').find('[name="end"]').datepicker('update', new Date(datesArray[1]));
 
   timer.onclick = function() {
+    var start_date;
+    var end_date;
     start_date = $('.input-daterange').find('[name="start"]').datepicker('getDate');
     end_date = $('.input-daterange').find('[name="end"]').datepicker('getDate');
-    createCookie("hubstats_index", start_date, end_date, 1);
+    createCookie("hubstats_dates", start_date, end_date, 1);
     window.location.reload();
   };
 };
