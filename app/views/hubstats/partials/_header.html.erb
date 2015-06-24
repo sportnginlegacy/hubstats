@@ -12,8 +12,8 @@
         <%= link_to "Hubstats", root_path, {:data => {:repo_path => repos_path(), :user_path => users_path()}, :class => "navbar-brand title", :id =>"brand"} %>
       </div>
 
- <!-- Current Start Date: <%=@start_date%>
-      Current End Date: <%=@end_date%> -->
+ Current Start Date: <%=@start_date%>
+      Current End Date: <%=@end_date%>
 
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav navbar-right">
@@ -25,7 +25,7 @@
             <%= link_to "Pull Requests", root_path%></li>
           <li class="<%='navbar-active' if params[:controller] == 'hubstats/users'%>">
             <%= link_to "Users", users_path%></li>
-          <li style="width: 245px; top: 8px;">
+          <li>
             <div class="input-daterange input-group" id="datepicker">
               <input type="text" class="input-small form-control" name="start" placeholder="Start Date"/>
               <span class="input-group-addon">to</span>
@@ -33,7 +33,7 @@
             </div>
           </li>
           <li>
-            <button style="float: right; margin-top: 8px;" type="button" class="btn btn-default" id="submitDateRange">Apply</button>
+            <button type="button" class="btn btn-default" id="submitDateRange">Apply</button>
           </li>
         </ul>
       </div>

@@ -16,6 +16,16 @@
  *= require_tree .
  */
 
+.btn-default {
+  float: right;
+  margin-top: 8px;
+}
+
+.input-daterange {
+  width: 245px;
+  top: 8px;
+}
+
 .numeric, .title {
   text-align: center;
 }

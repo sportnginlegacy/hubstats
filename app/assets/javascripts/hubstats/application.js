@@ -18,29 +18,27 @@
 //= require_tree .
 
 $(document).ready( function() {
-  defaultDateRange()
-  setDateRange()
-});
-
-function defaultDateRange() {
   $('.input-daterange').datepicker({
     "todayHighlight": true,
     "endDate": "Today",
     "todayBtn": true
   });
-};
+  setDateRange()
+});
 
 function setDateRange() {
+  var dates = null;
   if ((readCookie("hubstats_index") === "null~~null") || (readCookie("hubstats_index") === null)) {
-    var index = getDefaultDateRange();
+    dates = getDefaultDateRange();
   } else {
-    var index = readCookie("hubstats_index")
+    dates = readCookie("hubstats_index")
   }
 
+  console.log(index)
   var timer = document.getElementById("submitDateRange");
-  dates = index.split("~~")
-  $('.input-daterange').find('[name="start"]').datepicker('update', new Date(dates[0]));
-  $('.input-daterange').find('[name="end"]').datepicker('update', new Date(dates[1]));
+  datesArray = dates.split("~~")
+  $('.input-daterange').find('[name="start"]').datepicker('update', new Date(datesArray[0]));
+  $('.input-daterange').find('[name="end"]').datepicker('update', new Date(datesArray[1]));
 
   timer.onclick = function() {
     start_date = $('.input-daterange').find('[name="start"]').datepicker('getDate');
