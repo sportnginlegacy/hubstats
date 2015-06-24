@@ -16,9 +16,16 @@
  *= require_tree .
  */
 
-.btn-default {
+.apply {
   float: right;
   margin-top: 8px;
+}
+
+.navbar-active {
+  font-weight: bold;
+  color: #E0E0E0;
+  background-color: #E0E0E0;
+  border-color: #E0E0E0;
 }
 
 .input-daterange {

@@ -30,6 +30,8 @@ function setDateRange() {
   var dates;
   var timer;
   var datesArray = [];
+  var start_datepicker;
+  var end_datepicker;
 
   if ((readCookie("hubstats_dates") === "null~~null") || (readCookie("hubstats_dates") === null)) {
     dates = getDefaultDateRange();
@@ -37,29 +39,35 @@ function setDateRange() {
     dates = readCookie("hubstats_dates")
   }
 
-  timer = document.getElementById("submitDateRange");
+  console.log(dates)
+
+  submitButton = document.getElementById("submitDateRange");
   datesArray = dates.split("~~")
 
-  $('.input-daterange').find('[name="start"]').datepicker('update', new Date(datesArray[0]));
-  $('.input-daterange').find('[name="end"]').datepicker('update', new Date(datesArray[1]));
+  start_datepicker = $('.input-daterange').find('[name="start"]')
+  end_datepicker = $('.input-daterange').find('[name="end"]')
 
-  timer.onclick = function() {
+  start_date.datepicker('update', new Date(datesArray[0]));
+  end_date.datepicker('update', new Date(datesArray[1]));
+
+  submitButton.onclick = function() {
     var start_date;
     var end_date;
-    var date;
-    start_date = $('.input-daterange').find('[name="start"]').datepicker('getDate');
-    end_date = $('.input-daterange').find('[name="end"]').datepicker('getDate');
-    
-    date = new Date();
-    date.setTime(date.getTime()+(24*60*60*1000));
-    var expires = "; expires="+date.toGMTString();
-    createCookie("hubstats_dates=" + start_date + "~~" + end_date + expires + "; path=/");
+    start_date = start_datepicker.datepicker('getDate');
+    end_date = end_datepicker.datepicker('getDate');
+    createCookie("hubstats_dates", start_date + "~~" + end_date, 1);
     window.location.reload();
   };
 };
 
-function createCookie(str) {
-  document.cookie = str;
+function createCookie(name, value, days) {
+  if (days) {
+    var date = new Date();
+    date.setTime(date.getTime()+(days*24*60*60*1000));
+    var expires = "; expires="+date.toGMTString();
+  }
+  else var expires = "";
+  document.cookie = name+"="+value+expires+"; path=/";
 };
 
 function readCookie(name) {
@@ -78,10 +86,10 @@ function eraseCookie(name) {
 };
 
 function getDefaultDateRange() {
-  var currentDate = new Date();
-  var dd = currentDate.getDate();
-  var mm = currentDate.getMonth() + 1; //January is 0!
-  var yyyy = currentDate.getFullYear();
+  var today = new Date();
+  var dd = today.getDate();
+  var mm = today.getMonth() + 1; //January is 0!
+  var yyyy = today.getFullYear();
 
   if(dd < 10) {
     dd = '0' + dd
@@ -89,10 +97,11 @@ function getDefaultDateRange() {
 
   if(mm < 10) {
     mm = '0' + mm
-  }
+  } 
 
-  todaysDate = new Date(mm + '/' + dd + '/' + yyyy);
-  twoWeeksAgo = new Date(todaysDate);
+  today = mm + '/' + dd + '/' + yyyy;
+  twoWeeksAgo = new Date(today);
   twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
-  return twoWeeksAgo + '~~' + todaysDate;
+  console.log(twoWeeksAgo)
+  return twoWeeksAgo + '~~' + today;
 };
