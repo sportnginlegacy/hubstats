@@ -28,7 +28,7 @@ $(document).ready( function() {
 
 function setDateRange() {
   var dates;
-  var timer;
+  var submitButton;
   var datesArray = [];
   var start_input;
   var end_input;
@@ -38,8 +38,6 @@ function setDateRange() {
   } else {
     dates = readCookie("hubstats_dates")
   }
-
-  console.log(dates)
 
   submitButton = document.getElementById("submitDateRange");
   datesArray = dates.split("~~")
@@ -86,7 +84,9 @@ function eraseCookie(name) {
 };
 
 function getDefaultDateRange() {
-  var today = new Date();
+  var today;
+  var twoWeeksAgo;
+  today = new Date();
   today.setHours(0,0,0,0);
   twoWeeksAgo = new Date(today);
   twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
