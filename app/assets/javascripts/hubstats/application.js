@@ -35,7 +35,7 @@ function setDateRange() {
     dates = getDefaultDateRange();
   } else {
     dates = readCookie("hubstats_dates")
-  }
+  }console.log(dates);
 
   timer = document.getElementById("submitDateRange");
   datesArray = dates.split("~~")
@@ -78,10 +78,10 @@ function eraseCookie(name) {
 };
 
 function getDefaultDateRange() {
-  var today = new Date();
-  var dd = today.getDate();
-  var mm = today.getMonth() + 1; //January is 0!
-  var yyyy = today.getFullYear();
+  var currentDate = new Date();
+  var dd = currentDate.getDate();
+  var mm = currentDate.getMonth() + 1; //January is 0!
+  var yyyy = currentDate.getFullYear();
 
   if(dd < 10) {
     dd = '0' + dd
@@ -89,10 +89,10 @@ function getDefaultDateRange() {
 
   if(mm < 10) {
     mm = '0' + mm
-  } 
+  }
 
-  today = mm + '/' + dd + '/' + yyyy;
-  twoWeeksAgo = new Date(today);
+  todaysDate = new Date(mm + '/' + dd + '/' + yyyy);
+  twoWeeksAgo = new Date(todaysDate);
   twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
-  return twoWeeksAgo + '~~' + today;
+  return twoWeeksAgo + '~~' + todaysDate;
 };
