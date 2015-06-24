@@ -18,19 +18,17 @@
 //= require_tree .
 
 $(document).ready( function() {
+  defaultDateRange()
   setDateRange()
 });
 
-$(document).on("focus", "[data-behavior~='datepicker']", function(e){
+function defaultDateRange() {
   $('.input-daterange').datepicker({
-    "format": "yyyy-mm-dd",
-    "autoclose": true,
     "todayHighlight": true,
-    "multidate": false,
-    "endDate": "-d",
-    "todayBtn": "linked"
+    "endDate": "Today",
+    "todayBtn": true
   });
-});
+};
 
 function setDateRange() {
   if ((readCookie("hubstats_index") === "null~~null") || (readCookie("hubstats_index") === null)) {
@@ -95,4 +93,4 @@ function getDefaultDateRange() {
   twoWeeksAgo = new Date(today);
   twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
   return twoWeeksAgo + '~~' + today;
-}
+};
