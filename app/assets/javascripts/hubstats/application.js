@@ -33,7 +33,7 @@ $(document).on("focus", "[data-behavior~='datepicker']", function(e){
 });
 
 function setDateRange() {
-  if (readCookie("hubstats_index") === "null~~null") {
+  if ((readCookie("hubstats_index") === "null~~null") || (readCookie("hubstats_index") === null)) {
     var index = getDefaultDateRange();
   } else {
     var index = readCookie("hubstats_index")

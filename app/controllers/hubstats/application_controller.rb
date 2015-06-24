@@ -5,7 +5,7 @@ module Hubstats
 
     private
     def set_time
-    	if cookies[:hubstats_index] == "null~~null"
+    	if cookies[:hubstats_index] == "null~~null" || cookies[:hubstats_index] == nil
     		times = "#{Date.today - 14}~~#{Date.today}"
       else
         times = cookies[:hubstats_index]
