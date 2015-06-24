@@ -35,7 +35,7 @@ function setDateRange() {
     dates = getDefaultDateRange();
   } else {
     dates = readCookie("hubstats_dates")
-  }console.log(dates);
+  }
 
   timer = document.getElementById("submitDateRange");
   datesArray = dates.split("~~")
