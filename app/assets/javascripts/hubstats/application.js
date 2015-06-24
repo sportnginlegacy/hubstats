@@ -30,8 +30,8 @@ function setDateRange() {
   var dates;
   var timer;
   var datesArray = [];
-  var start_datepicker;
-  var end_datepicker;
+  var start_input;
+  var end_input;
 
   if ((readCookie("hubstats_dates") === "null~~null") || (readCookie("hubstats_dates") === null)) {
     dates = getDefaultDateRange();
@@ -44,17 +44,17 @@ function setDateRange() {
   submitButton = document.getElementById("submitDateRange");
   datesArray = dates.split("~~")
 
-  start_datepicker = $('.input-daterange').find('[name="start"]')
-  end_datepicker = $('.input-daterange').find('[name="end"]')
+  start_input = $('.input-daterange').find('[name="start"]')
+  end_input = $('.input-daterange').find('[name="end"]')
 
-  start_date.datepicker('update', new Date(datesArray[0]));
-  end_date.datepicker('update', new Date(datesArray[1]));
+  start_input.datepicker('update', new Date(datesArray[0]));
+  end_input.datepicker('update', new Date(datesArray[1]));
 
   submitButton.onclick = function() {
     var start_date;
     var end_date;
-    start_date = start_datepicker.datepicker('getDate');
-    end_date = end_datepicker.datepicker('getDate');
+    start_date = start_input.datepicker('getDate');
+    end_date = end_input.datepicker('getDate');
     createCookie("hubstats_dates", start_date + "~~" + end_date, 1);
     window.location.reload();
   };
