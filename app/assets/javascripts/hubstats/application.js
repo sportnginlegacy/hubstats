@@ -48,36 +48,35 @@ function setDateRange() {
   timer.onclick = function() {
     var start_date;
     var end_date;
+    var date;
     start_date = $('.input-daterange').find('[name="start"]').datepicker('getDate');
     end_date = $('.input-daterange').find('[name="end"]').datepicker('getDate');
-    createCookie("hubstats_dates", start_date, end_date, 1);
+    
+    date = new Date();
+    date.setTime(date.getTime()+(24*60*60*1000));
+    var expires = "; expires="+date.toGMTString();
+    createCookie("hubstats_dates=" + start_date + "~~" + end_date + expires + "; path=/");
     window.location.reload();
   };
 };
 
-function createCookie(name,value1,value2,days) {
-  if (days) {
-    var date = new Date();
-    date.setTime(date.getTime()+(days*24*60*60*1000));
-    var expires = "; expires="+date.toGMTString();
-  }
-  else var expires = "";
-  document.cookie = name+"="+value1+"~~"+value2+expires+"; path=/";
+function createCookie(str) {
+  document.cookie = str;
 };
 
 function readCookie(name) {
-  var nameEQ = name + "=";
-  var ca = document.cookie.split(';');
-  for(var i=0;i < ca.length;i++) {
-    var c = ca[i];
+  var cookieName = name + "=";
+  var cookieData = document.cookie.split(';');
+  for(var i=0;i < cookieData.length;i++) {
+    var c = cookieData[i];
     while (c.charAt(0)==' ') c = c.substring(1,c.length);
-    if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+    if (c.indexOf(cookieName) == 0) return c.substring(cookieName.length,c.length);
   }
   return null;
 };
 
 function eraseCookie(name) {
-    createCookie(name,"",-1);
+  createCookie(name,"",-1);
 };
 
 function getDefaultDateRange() {

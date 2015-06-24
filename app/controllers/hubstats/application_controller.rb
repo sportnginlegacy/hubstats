@@ -6,13 +6,12 @@ module Hubstats
     private
     def set_time
       if cookies[:hubstats_index] == "null~~null" || cookies[:hubstats_index] == nil
-        times = "#{Date.today - 14}~~#{Date.today}"
+        @start_date = Date.today - 14
+        @end_date = Date.today + 1
       else
-        times = cookies[:hubstats_index]
+        @start_date = cookies[:hubstats_index].split("~~").first.to_date
+        @end_date = cookies[:hubstats_index].split("~~").last.to_date + 1
       end
-      
-      @start_date = times.split("~~").first.to_date
-      @end_date = times.split("~~").last.to_date + 1
     end
   end
 end
