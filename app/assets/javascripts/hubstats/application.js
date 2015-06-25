@@ -38,16 +38,13 @@ function setDateRange() {
   if (cookie === null || cookie.indexOf("null") > -1) {
     dates = getDefaultDateRange();
   } else {
-    dates = readCookie("hubstats_dates")
+    dates = readCookie("hubstats_dates");
   }
-
-  console.log(dates);
-
   submitButton = document.getElementById("submitDateRange");
-  datesArray = dates.split("~~")
+  datesArray = dates.split("~~");
 
-  start_input = $('.input-daterange').find('[name="start"]')
-  end_input = $('.input-daterange').find('[name="end"]')
+  start_input = $('.input-daterange').find('[name="start"]');
+  end_input = $('.input-daterange').find('[name="end"]');
 
   start_input.datepicker('update', new Date(datesArray[0]));
   end_input.datepicker('update', new Date(datesArray[1]));
