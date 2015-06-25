@@ -23,7 +23,7 @@ $(document).ready( function() {
     "endDate": "Today",
     "todayBtn": true
   });
-  setDateRange()
+  setDateRange();
 });
 
 function setDateRange() {
