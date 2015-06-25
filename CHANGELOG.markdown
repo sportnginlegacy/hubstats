@@ -1,3 +1,8 @@
+#### v0.3.17
+* Adding migration to fix datetimes versus strings
+
+  > Emma Sax: Brian Bergstrom: https://github.com/sportngin/hubstats/pull/68
+
 #### v0.3.16
 * Fixing date to not go by midnight, but current time
 
