@@ -12,22 +12,28 @@
         <%= link_to "Hubstats", root_path, {:data => {:repo_path => repos_path(), :user_path => users_path()}, :class => "navbar-brand title", :id =>"brand"} %>
       </div>
 
+<!--  Current Start Date: <%=@start_date%>
+      Current End Date: <%=@end_date%> -->
+
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav navbar-right">
           <li class="<%='navbar-active' if params[:controller] == 'hubstats/deploys'%>">
-              <%= link_to "Deployments", deploys_path%></li>
+            <%= link_to "Deployments", deploys_path%></li>
           <li class="<%='navbar-active' if params[:controller] == 'hubstats/repos'%>">
-              <%= link_to "Metrics", metrics_path%></li>
+            <%= link_to "Metrics", metrics_path%></li>
           <li class="<%='navbar-active' if params[:controller] == 'hubstats/pull_requests'%>">
-              <%= link_to "Pull Requests", root_path%></li>
+            <%= link_to "Pull Requests", root_path%></li>
           <li class="<%='navbar-active' if params[:controller] == 'hubstats/users'%>">
-              <%= link_to "Users", users_path%></li>
+            <%= link_to "Users", users_path%></li>
           <li>
-            <select class="form-control push-down" id="time-select">
-              <% Hubstats::DATE_RANGE_ARRAY.each do |date| %>
-                <option value=<%= date[:date] %>><%=date[:display_value]%></option>
-              <% end %>
-            </select>
+            <div class="input-daterange input-group" id="datepicker">
+              <input type="text" class="input-small form-control" name="start" placeholder="Start Date"/>
+              <span class="input-group-addon">to</span>
+              <input type="text" class="input-small form-control" name="end" placeholder="End Date"/>
+            </div>
+          </li>
+          <li>
+            <button type="button" class="btn apply btn-default" id="submitDateRange">Apply</button>
           </li>
         </ul>
       </div>
