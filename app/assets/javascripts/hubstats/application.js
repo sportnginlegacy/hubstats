@@ -27,12 +27,13 @@ $(document).ready( function() {
 });
 
 function setDateRange() {
+  var dates;
   var cookie = readCookie("hubstats_dates");
 
   if (cookie === null || cookie.indexOf("null") > -1) {
-    var dates = getDefaultDateRange();
+    dates = getDefaultDateRange();
   } else {
-    var dates = readCookie("hubstats_dates");
+    dates = readCookie("hubstats_dates");
   }
   var submitButton = document.getElementById("submitDateRange");
   var datesArray = dates.split("~~");
