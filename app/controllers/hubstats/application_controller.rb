@@ -5,7 +5,8 @@ module Hubstats
 
     private
     def set_time
-      if cookies[:hubstats_dates] == "null~~null" || cookies[:hubstats_dates] == nil
+      cookie = cookies[:hubstats_dates]
+      if cookie == nil || cookie.include?("null")
         @start_date = Date.today - 14
         @end_date = Date.today + 1
       else

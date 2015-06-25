@@ -33,11 +33,15 @@ function setDateRange() {
   var start_input;
   var end_input;
 
-  if ((readCookie("hubstats_dates") === "null~~null") || (readCookie("hubstats_dates") === null)) {
+  var cookie = readCookie("hubstats_dates");
+
+  if (cookie === null || cookie.indexOf("null") > -1) {
     dates = getDefaultDateRange();
   } else {
     dates = readCookie("hubstats_dates")
   }
+
+  console.log(dates);
 
   submitButton = document.getElementById("submitDateRange");
   datesArray = dates.split("~~")
