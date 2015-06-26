@@ -5,7 +5,6 @@ module Hubstats
     validates :git_revision, :deployed_at, :repo_id, presence: true
 
     # check_time
-    #
     # Checks if there is a deployed_at for a new deploy; if there isn't, then assign it the current time.
     def check_time
         self.deployed_at = Time.now.getutc if deployed_at.nil?
@@ -29,7 +28,6 @@ module Hubstats
 
     # order_with_date_range
     # params: start_date, end_date, order
-    #
     # Orders the deploys within the start_date and end_date with by a given order.
     def self.order_with_date_range(start_date, end_date, order)
       order = ["ASC", "DESC"].detect{|order_type| order_type.to_s == order.to_s.upcase } || "DESC"
@@ -38,7 +36,6 @@ module Hubstats
 
     # group_by
     # params: group (string)
-    #
     # Groups the deploys based on the string passed in: 'user' or 'repo'.
     def self.group_by(group)
        if group == "user"
@@ -52,7 +49,6 @@ module Hubstats
 
     # total_changes
     # params: add (symbol)
-    #
     # Gathers all PRs for a deploy, and then either finds all of the additions or all of the deletions, depending on the symbol
     # passed in.
     def total_changes(add)
@@ -69,7 +65,6 @@ module Hubstats
     end
 
     # find_net_additions
-    #
     # Gathers all PRs for a deploy, and then finds all of the additions and all of the deletions, then subtracts them to find
     # the number of net additions.
     def find_net_additions
@@ -84,7 +79,6 @@ module Hubstats
     end
 
     # find_comment_count
-    #
     # Gathers all of the PRs and then counts all of the comments that are assigned to each PR.
     def find_comment_count
       pull_requests = self.pull_requests

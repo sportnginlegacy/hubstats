@@ -4,7 +4,6 @@ module Hubstats
   class UsersController < ApplicationController
 
     # index
-    #
     # Shows all of the users in either alphabetical order, by filter params, or that have done things in
     # github between the selected @start_date and @end_date.
     def index 
@@ -26,7 +25,6 @@ module Hubstats
     end
 
     # show
-    #
     # Will show the specific user along with the basic stats about that user, including all deploys
     # and merged PRs they've done within the @start_date and @end_date.
     def show
@@ -45,7 +43,6 @@ module Hubstats
     end
 
     # stats
-    #
     # Shows the basic stats for both the user show page.
     def stats
       @additions ||= 0

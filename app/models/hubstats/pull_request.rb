@@ -31,7 +31,6 @@ module Hubstats
 
     # create_or_update
     # params: github_pull
-    #
     # Makes a new pull request from a GitHub webhook. Finds user_id and repo_id based on users and repos that are already in the
     # Hubstats database. Also updates the user_id of a deploy if the pull request has been merged in a deploy.
     def self.create_or_update(github_pull)
@@ -63,7 +62,6 @@ module Hubstats
 
     # add_labels
     # params: labels
-    #
     # Adds any labels to the db if the labels passed in aren't already in the database.
     def add_labels(labels)
       labels.map!{|label| Hubstats::Label.first_or_create(label) }

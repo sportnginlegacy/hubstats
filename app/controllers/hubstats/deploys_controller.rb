@@ -4,7 +4,6 @@ module Hubstats
   class DeploysController < Hubstats::BaseController
 
     # index
-    #
     # Will list the deploys that correspond with selected repos, users, orders, and groupings. Only shows
     # deploys within the @start_date and @end_date.
     def index
@@ -18,7 +17,6 @@ module Hubstats
     end
 
     # show
-    #
     # Shows the single deploy and all of the stats and pull requests about that deploy. Stats and PRs only
     # include info that happened between @start_date and @end_date.
     def show
@@ -36,9 +34,8 @@ module Hubstats
     end
 
     # create
-    #
     # Creates a new deploy with the git_revision. Passed in the repo name and a string of PR ids
-    # that are then used to find the repo_id, PR id array. The user_id is updated from the PR side.
+    # that are then used to find the repo_id, PR id array. The user_id is found through one of the pull requests.
     def create
       if params[:git_revision].nil? || params[:repo_name].nil? || params[:pull_request_ids].nil?
         render text: "Missing a necessary parameter: git revision, pull request ids, or repository name.", :status => 400 and return
@@ -55,7 +52,7 @@ module Hubstats
         end
 
         @pull_request_id_array = params[:pull_request_ids].split(",").map {|i| i.strip.to_i}
-        if !valid_pr_ids
+        if !valid_pr_ids(pull_request_id_array)
           render text: "No pull request ids given.", :status => 400 and return
         else
           @deploy.pull_requests = Hubstats::PullRequest.where(repo_id: @deploy.repo_id).where(number: @pull_request_id_array)
@@ -73,14 +70,23 @@ module Hubstats
       end
     end
 
+    # valid_repo
+    # params: repo
+    # Checks if the repo that's passed in is empty.
     def valid_repo(repo)
       return !repo.empty?
     end
 
-    def valid_pr_ids
-      return !@pull_request_id_array.empty? && @pull_request_id_array != [0]
+    # valid_pr_ids
+    # params: pull_request_id_array
+    # Checks if the array is empty or if the ids in the array are invalid.
+    def valid_pr_ids(pull_request_id_array)
+      return !pull_request_id_array.empty? && pull_request_id_array != [0]
     end
 
+    # valid_pulls
+    # Checks if the first pull assigned to the new deploy is nil, if the merged_by part is nil. If nothing is nil, it will set
+    # the user_id of the deploy to be the merged_by of the pull.
     def valid_pulls
       pull = @deploy.pull_requests.first
       return false if pull.nil? || pull.merged_by.nil?

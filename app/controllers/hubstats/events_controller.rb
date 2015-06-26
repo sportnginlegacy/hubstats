@@ -4,7 +4,6 @@ module Hubstats
   class EventsController < ApplicationController
 
     # handler
-    #
     # Verifies that the request we're receiving is a new event, and then will handle it and route
     # it to the correct place.
     def handler
@@ -20,7 +19,6 @@ module Hubstats
 
     # verify_signature
     # params: request
-    #
     # Will check that the request passed is a valid signature.
     private
     def verify_signature(request)

@@ -90,7 +90,10 @@ $(document).ready(function() {
   }).select2('val', []);
 });
 
-
+/* getPath
+ * @params - model (string)
+ * Returns the user or repo bath, based on whether the string passed in is 'repo' or 'user'.
+ */
 function getPath (model) {
   if (model == 'user') {
     return $("#brand").attr('data-user-path');}

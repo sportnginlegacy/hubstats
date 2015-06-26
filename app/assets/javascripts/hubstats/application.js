@@ -31,7 +31,6 @@ $(document).ready(function() {
 });
 
 /* setDateRange
- *
  * Reads the current cookie (which is currently set as a string with two dates),
  * and sets the dates in the corresponding datepicker.
  */
@@ -66,7 +65,6 @@ function setDateRange() {
 
 /* createCookie
  * @params - name, value, days
- *
  * Takes a name, value, and number of days and will make a cookie out of those parameters.
  */
 function createCookie(name, value, days) {
@@ -81,7 +79,6 @@ function createCookie(name, value, days) {
 
 /* readCookie
  * @params - name
- *
  * Takes in the name of a cookie, and will read that cookie, returning either the data
  * from the cookie or null if there is no cookie with that name.
  */
@@ -98,7 +95,6 @@ function readCookie(name) {
 
 /* eraseCookie
  * @params - name
- *
  * Creates a new blank cookie.
  */
 function eraseCookie(name) {
@@ -106,7 +102,6 @@ function eraseCookie(name) {
 };
 
 /* getDefaultDateRange
- *
  * Returns a string that is the date two weeks ago, '~~', and today's date with all hours
  * set at midnight.
  */

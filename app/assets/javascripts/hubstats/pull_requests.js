@@ -37,9 +37,9 @@ $(document).ready(function() {
   });
 });
 
-/* updateQueryStringParameter
+/**
+ * updateQueryStringParameter
  * @params - queryParameters, key, value
- *
  * Updates the string paramters based on the specifications in the URL.
  */
 function updateQueryStringParameter(queryParameters, key, value) {
@@ -60,7 +60,6 @@ function updateQueryStringParameter(queryParameters, key, value) {
 }
 
 /* getUrlVars
- *
  * Gets all of the variables that are in the URL.
  */
 function getUrlVars() {
@@ -79,7 +78,6 @@ function getUrlVars() {
 
 /* setDefaults
  * @params - queryParameters
- *
  * Sets the state, order, and grouping to be 'default', or all, descending, and non-grouped.
  */
 function setDefaults(queryParameters) {
@@ -99,7 +97,6 @@ function setDefaults(queryParameters) {
 
 /* initLabels
  * @params - queryParameters
- *
  * Takes the query parameters and if there are labels as a parameter, then assigns 
  * the background colors to the labels that are highlighted.
  */
@@ -119,7 +116,6 @@ function initLabels (queryParameters) {
 }
 
 /* changeColors
- *
  * Adds the colors to the labels on the list of labels and when labeling the pull requests.
  */
 function changeColors () {
@@ -136,7 +132,6 @@ function changeColors () {
 }
 
 /* activeLabels
- *
  * Shows only the labels that are assigned to a pull request that is currently being shown;
  * whether a PR is being shown is dependent on what state (closed, open, or all) the data is showing.
  */
@@ -157,7 +152,6 @@ function activeLabels () {
 
 /* isDark
  * @params - color
- * 
  * Edits the color of the text if the label color is dark.
  */
 function isDark(color) {

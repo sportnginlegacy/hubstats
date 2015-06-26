@@ -4,7 +4,6 @@ module Hubstats
   class ReposController < Hubstats::BaseController
 
     # index
-    #
     # Lists all of the repos, either in alphabetical order, by query params, or with activity in between
     # @start_date and @end_date.
     def index
@@ -22,7 +21,6 @@ module Hubstats
     end
 
     # show
-    #
     # Shows the selected repository and all of the basic stats associated with that repository, including
     # all deploys and merged PRs in that repo within @start_date and @end_date.
     def show
@@ -42,7 +40,6 @@ module Hubstats
     end
 
     # dashboard
-    #
     # Shows all of the repositories with individual stats for each repo. Also shows the stats for all of
     # the repositories within @start_date and @end_date.
     def dashboard
@@ -75,7 +72,6 @@ module Hubstats
     end
 
     # stats
-    #
     # Will assign all of the stats for both the show page and the dashboard page.
     def stats
       @additions ||= 0

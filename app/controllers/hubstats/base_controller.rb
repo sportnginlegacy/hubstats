@@ -5,7 +5,6 @@ module Hubstats
 
     # grouping
     # params: group_request, group
-    #
     # If the group is being asked to be grouped by user or repo, will make an array and group the data
     # by either username or repo name.
     def grouping (group_request, group)

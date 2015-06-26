@@ -7,7 +7,6 @@ module Hubstats
 
     # deploys_count
     # params: start_date, end_date
-    #
     # Counts all of the deploys for selected repo that occurred between the start_date and end_date.
     scope :deploys_count, lambda {|start_date, end_date|
       select("hubstats_repos.id as repo_id")
@@ -18,7 +17,6 @@ module Hubstats
 
     # comments_count
     # params: start_date, end_date
-    #
     # Counts all of the comments for selected repo that occurred between the start_date and end_date.
     scope :comments_count, lambda {|start_date, end_date|
       select("hubstats_repos.id as repo_id")
@@ -29,7 +27,6 @@ module Hubstats
  
     # pull_requests_count
     # params: start_date, end_date
-    #
     # Counts all of the merged pull requests for selected repo that occurred between the start_date and end_date.
     scope :pull_requests_count, lambda {|start_date, end_date|
       select("hubstats_repos.id as repo_id")
@@ -39,7 +36,6 @@ module Hubstats
     }
 
     # averages
-    #
     # Averages all of the additions and deletions of the merged PRs for selected repo.
     scope :averages, lambda {
       select("hubstats_repos.id as repo_id")
@@ -51,7 +47,6 @@ module Hubstats
 
     # with_all_metrics
     # params: start_date, end_date
-    #
     # Joins all of the metrics together for selected repository: average additions and deletions, comments, pull requests, and deploys.
     scope :with_all_metrics, lambda {|start_date, end_date|
       select("hubstats_repos.*, deploy_count, pull_request_count, comment_count, average_additions, average_deletions")
@@ -77,7 +72,6 @@ module Hubstats
 
     # create_or_update
     # params: github_repo
-    #
     # Makes a new repository based on a GitHub webhook. Sets a user (owner) based on users that are already in the database.
     def self.create_or_update(github_repo)
       github_repo = github_repo.to_h.with_indifferent_access if github_repo.respond_to? :to_h
@@ -95,7 +89,6 @@ module Hubstats
 
     # custom_order
     # params: order_params
-    #
     # Designed so that the list of repositories can be ordered based on deploys, pulls, comments, additions, deletions, or name.
     # if none of these are selected, then the default is to order by pull request count in descending order.
     def self.custom_order(order_params)
@@ -123,7 +116,6 @@ module Hubstats
     end
     
     # to_param
-    #
     # Designed to make a path for the show page when a repository is selected.
     def to_param
       self.name

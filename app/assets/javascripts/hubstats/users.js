@@ -41,7 +41,6 @@ $(document).ready(function() {
 
 /* toggleOrder
  * @params - queryParams, sort_by
- *
  * Will toggle the order that the data is sorted by (highest first or lowest first).
  */
 function toggleOrder(queryParams, sort_by) {
@@ -58,7 +57,6 @@ function toggleOrder(queryParams, sort_by) {
 
 /* setUserDefaults
  * @params - queryParameters
- *
  * Sets the arrow next to what piece of data is being sorted.
  */
 function setUserDefaults(queryParams) {

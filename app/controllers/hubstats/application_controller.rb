@@ -3,7 +3,6 @@ module Hubstats
     before_filter :set_time
 
     # set_time
-    #
     # Reads the cookie, and then either sets @start_date and @end_date to be the cookie's values
     # or sets them to be today + 1 and two weeks ago.
     private
