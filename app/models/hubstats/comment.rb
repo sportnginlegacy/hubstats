@@ -1,5 +1,9 @@
 module Hubstats
   class Comment < ActiveRecord::Base
+
+    # pull_reviews_count
+    #
+    # Gets the number of PRs that a user commented on that were not their own PR.
     scope :pull_reviews_count, lambda {
       select("hubstats_comments.user_id")
       .select("COUNT(DISTINCT hubstats_pull_requests.id) as total")
@@ -8,6 +12,7 @@ module Hubstats
       .group("hubstats_comments.user_id")
     }
 
+    # Various checks that can be used to filter and find info about comments.
     scope :created_in_date_range, lambda {|start_date, end_date| where("hubstats_comments.created_at BETWEEN ? AND ?", start_date, end_date)}
     scope :belonging_to_pull_request, lambda {|pull_request_id| where(pull_request_id: pull_request_id)}
     scope :belonging_to_user, lambda {|user_id| where(user_id: user_id)}
@@ -22,6 +27,10 @@ module Hubstats
     belongs_to :pull_request
     belongs_to :repo
    
+    # create_or_update
+    # params: github_comment
+    #
+    # Makes a new comment based on a GitHub webhook occurring. Assigns the user and PR.
     def self.create_or_update(github_comment)
       github_comment = github_comment.to_h.with_indifferent_access if github_comment.respond_to? :to_h
 

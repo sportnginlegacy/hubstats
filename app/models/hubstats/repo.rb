@@ -1,9 +1,14 @@
 module Hubstats
   class Repo < ActiveRecord::Base
 
+    # Various checks that can be used to filter and find info about repos.
     scope :with_recent_activity, lambda {|start_date, end_date| where("hubstats_repos.updated_at BETWEEN ? AND ?", start_date, end_date).order("updated_at DESC")}
     scope :with_id, lambda {|repo_id| where(id: repo_id.split(',')) if repo_id}
 
+    # deploys_count
+    # params: start_date, end_date
+    #
+    # Counts all of the deploys for selected repo that occurred between the start_date and end_date.
     scope :deploys_count, lambda {|start_date, end_date|
       select("hubstats_repos.id as repo_id")
        .select("IFNULL(COUNT(DISTINCT hubstats_deploys.id),0) AS deploy_count")
@@ -11,6 +16,10 @@ module Hubstats
        .group("hubstats_repos.id")
     }
 
+    # comments_count
+    # params: start_date, end_date
+    #
+    # Counts all of the comments for selected repo that occurred between the start_date and end_date
     scope :comments_count, lambda {|start_date, end_date|
       select("hubstats_repos.id as repo_id")
        .select("IFNULL(COUNT(DISTINCT hubstats_comments.id),0) AS comment_count")

@@ -3,8 +3,11 @@ require_dependency "hubstats/application_controller"
 module Hubstats
   class DeploysController < Hubstats::BaseController
 
+    # index
+    #
+    # Will list the deploys that correspond with selected repos, users, orders, and groupings. Only shows
+    # deploys within the @start_date and @end_date.
     def index
-      # sets to include user and repo, and sorts data
       @deploys = Hubstats::Deploy.includes(:repo, :pull_requests, :user)
         .belonging_to_users(params[:users]).belonging_to_repos(params[:repos])
         .group_by(params[:group])
@@ -14,7 +17,10 @@ module Hubstats
       grouping(params[:group], @deploys)
     end
 
-    # show basic stats and pull requests from a single deploy
+    # show
+    #
+    # Shows the single deploy and all of the stats and pull requests about that deploy. Stats and PRs only
+    # include info that happened between @start_date and @end_date.
     def show
       @deploy = Hubstats::Deploy.includes(:repo, :pull_requests).find(params[:id])
       repo = @deploy.repo
@@ -29,7 +35,10 @@ module Hubstats
       }
     end
 
-    # make a new deploy with all of the correct attributes
+    # create
+    #
+    # Creates a new deploy with the git_revision. Passed in the repo name and a string of PR ids
+    # that are then used to find the repo_id, PR id array. The user_id is updated from the PR side.
     def create
       if params[:git_revision].nil? || params[:repo_name].nil? || params[:pull_request_ids].nil?
         render text: "Missing a necessary parameter: git revision, pull request ids, or repository name.", :status => 400 and return

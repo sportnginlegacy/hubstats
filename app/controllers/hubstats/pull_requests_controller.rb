@@ -3,6 +3,11 @@ require_dependency "hubstats/application_controller"
 module Hubstats
   class PullRequestsController < Hubstats::BaseController
 
+    # index
+    #
+    # Will correctly add the labels to the side of the page based on which PRs are showing, and will
+    # come up with the list of PRs to show, based on users, repos, grouping, labels, and order. Only shows
+    # PRs within @start_date and @end_date.
     def index
       URI.decode(params[:label]) if params[:label]
 
@@ -18,13 +23,16 @@ module Hubstats
       grouping(params[:group], @pull_requests)
     end 
 
+    # show
+    #
+    # Will show the particular pull request selected, including all of the basic stats, deploy (only if 
+    # PR is closed), and comments associated with that PR within the @start_date and @end_date.
     def show
       @repo = Hubstats::Repo.where(name: params[:repo]).first
       @pull_request = Hubstats::PullRequest.belonging_to_repo(@repo.id).where(id: params[:id]).first
       @comments = Hubstats::Comment.belonging_to_pull_request(params[:id]).created_in_date_range(@start_date, @end_date).limit(20)
       comment_count = Hubstats::Comment.belonging_to_pull_request(params[:id]).created_in_date_range(@start_date, @end_date).count(:all)
       @deploys = Hubstats::Deploy.where(id: @pull_request.deploy_id).order("deployed_at DESC")
-
       @stats_basics = {
         comment_count: comment_count,
         net_additions: @pull_request.additions.to_i - @pull_request.deletions.to_i,
