@@ -1,3 +1,7 @@
+/* This is for the filters in the top left corner of the Deploys and Pull Requests pages.
+ * This allows the user of Hubstats to filter by an entire list of the repos/users, and then
+ * on selection only show data for that choice.
+ */
 $(document).ready(function() { 
   usersIDs = queryParameters["users"] ? queryParameters["users"].replace("%2C", ",") : "";
   reposIDs = queryParameters["repos"] ? queryParameters["repos"].replace("%2C", ",") : "";

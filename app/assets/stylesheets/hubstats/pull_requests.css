@@ -2,6 +2,8 @@
   Place all the styles related to the matching controller here.
   They will automatically be included in application.css.
 */
+
+/*For the filter boxes on the left side of the Pull Requests page*/
 .select2-container{
   width: 100%;
 }

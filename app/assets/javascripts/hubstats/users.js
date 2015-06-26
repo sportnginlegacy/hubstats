@@ -1,6 +1,11 @@
 // Place all the behaviors and hooks related to the matching controller here.
 // All this logic will automatically be available in application.js.
 
+/* This function is run whenever the Metrics page or the Users page is opened or refreshed. It will
+ * sort all of the repos/users sorted by count of (or alphabetically by) name, number of deploys,
+ * number of merged pull requests, number of comments, net additions, average additions, or average
+ * deletions.
+ */
 $(document).ready(function() {
   queryParameters = getUrlVars();
   setUserDefaults(queryParameters);
@@ -21,7 +26,6 @@ $(document).ready(function() {
     toggleOrder(queryParameters,$(this).attr('id'));
   });
 
-// No longer using additions and deletions, but instead using net additions
   $("#netadditions").on("click", function(){
     toggleOrder(queryParameters,$(this).attr('id'));
   });
@@ -35,6 +39,11 @@ $(document).ready(function() {
   });
 });
 
+/* toggleOrder
+ * @params - queryParams, sort_by
+ *
+ * Will toggle the order that the data is sorted by (highest first or lowest first).
+ */
 function toggleOrder(queryParams, sort_by) {
   if (queryParams["order"] !== undefined) {
     if (queryParams["order"] === sort_by+"-desc" ) {
@@ -47,10 +56,15 @@ function toggleOrder(queryParams, sort_by) {
   }
 }
 
-function setUserDefaults(queryParameters) {
-  if (queryParameters["order"]) {
-    sort_by = queryParameters["order"].split("-")[0];
-    order = queryParameters["order"].split("-")[1];
+/* setUserDefaults
+ * @params - queryParameters
+ *
+ * Sets the arrow next to what piece of data is being sorted.
+ */
+function setUserDefaults(queryParams) {
+  if (queryParams["order"]) {
+    sort_by = queryParams["order"].split("-")[0];
+    order = queryParams["order"].split("-")[1];
     if (order === 'asc') {
       $('#'+sort_by+' .octicon').addClass('octicon-arrow-up');
     } else {
