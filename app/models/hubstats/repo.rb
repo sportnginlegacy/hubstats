@@ -19,7 +19,7 @@ module Hubstats
     # comments_count
     # params: start_date, end_date
     #
-    # Counts all of the comments for selected repo that occurred between the start_date and end_date
+    # Counts all of the comments for selected repo that occurred between the start_date and end_date.
     scope :comments_count, lambda {|start_date, end_date|
       select("hubstats_repos.id as repo_id")
        .select("IFNULL(COUNT(DISTINCT hubstats_comments.id),0) AS comment_count")
@@ -27,6 +27,10 @@ module Hubstats
        .group("hubstats_repos.id")
     }
  
+    # pull_requests_count
+    # params: start_date, end_date
+    #
+    # Counts all of the merged pull requests for selected repo that occurred between the start_date and end_date.
     scope :pull_requests_count, lambda {|start_date, end_date|
       select("hubstats_repos.id as repo_id")
       .select("IFNULL(COUNT(DISTINCT hubstats_pull_requests.id),0) AS pull_request_count")
@@ -34,7 +38,10 @@ module Hubstats
       .group("hubstats_repos.id")
     }
 
-    scope :averages, lambda {|start_date, end_date|
+    # averages
+    #
+    # Averages all of the additions and deletions of the merged PRs for selected repo.
+    scope :averages, lambda {
       select("hubstats_repos.id as repo_id")
       .select("ROUND(IFNULL(AVG(hubstats_pull_requests.additions),0)) AS average_additions")
       .select("ROUND(IFNULL(AVG(hubstats_pull_requests.deletions),0)) AS average_deletions")
@@ -42,9 +49,13 @@ module Hubstats
       .group("hubstats_repos.id")
     }
 
+    # with_all_metrics
+    # params: start_date, end_date
+    #
+    # Joins all of the metrics together for selected repository: average additions and deletions, comments, pull requests, and deploys.
     scope :with_all_metrics, lambda {|start_date, end_date|
       select("hubstats_repos.*, deploy_count, pull_request_count, comment_count, average_additions, average_deletions")
-      .joins("LEFT JOIN (#{averages(start_date, end_date).to_sql}) AS averages ON averages.repo_id = hubstats_repos.id")
+      .joins("LEFT JOIN (#{averages.to_sql}) AS averages ON averages.repo_id = hubstats_repos.id")
       .joins("LEFT JOIN (#{pull_requests_count(start_date, end_date).to_sql}) AS pull_requests ON pull_requests.repo_id = hubstats_repos.id")
       .joins("LEFT JOIN (#{comments_count(start_date, end_date).to_sql}) AS comments ON comments.repo_id = hubstats_repos.id")
       .joins("LEFT JOIN (#{deploys_count(start_date, end_date).to_sql}) AS deploys ON deploys.repo_id = hubstats_repos.id")
@@ -64,6 +75,10 @@ module Hubstats
     has_many :comments
     belongs_to :owner, :class_name => "User", :foreign_key => "id"
 
+    # create_or_update
+    # params: github_repo
+    #
+    # Makes a new repository based on a GitHub webhook. Sets a user (owner) based on users that are already in the database.
     def self.create_or_update(github_repo)
       github_repo = github_repo.to_h.with_indifferent_access if github_repo.respond_to? :to_h
       repo_data = github_repo.slice(*column_names.map(&:to_sym))
@@ -78,6 +93,11 @@ module Hubstats
       Rails.logger.warn repo.errors.inspect
     end
 
+    # custom_order
+    # params: order_params
+    #
+    # Designed so that the list of repositories can be ordered based on deploys, pulls, comments, additions, deletions, or name.
+    # if none of these are selected, then the default is to order by pull request count in descending order.
     def self.custom_order(order_params)
       if order_params
         order = order_params.include?('asc') ? "ASC" : "DESC"
@@ -102,6 +122,9 @@ module Hubstats
       end
     end
     
+    # to_param
+    #
+    # Designed to make a path for the show page when a repository is selected.
     def to_param
       self.name
     end
