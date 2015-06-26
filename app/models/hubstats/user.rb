@@ -4,7 +4,7 @@ module Hubstats
     # Various checks that can be used to filter and find info about users.
     scope :with_id, lambda {|user_id| where(id: user_id.split(',')) if user_id}
     scope :only_active, having("comment_count > 0 OR pull_request_count > 0")
-    scope :weighted_sort, order("(pull_request_count)*2 + (comment_count) DESC")
+    scope :with_contributions, lambda {|repo_id| pull_and_comment_count_by_repo(@start_date, @end_date, repo_id.split(',')) if repo_id}
 
     # deploys_count
     # params: start_date, end_date
@@ -36,6 +36,16 @@ module Hubstats
       .group("hubstats_users.id")
     }
 
+    # pull_and_comment_count
+    # params: start_date, end_date
+    # Counts all of the merged pull requests and comments that occurred between the start_date and end_date.
+    scope :pull_and_comment_count, lambda {|start_date, end_date|
+      select("hubstats_users.*, pull_request_count, comment_count")
+      .joins("LEFT JOIN (#{pull_requests_count(start_date, end_date).to_sql}) AS pull_requests ON pull_requests.user_id = hubstats_users.id")
+      .joins("LEFT JOIN (#{comments_count(start_date, end_date).to_sql}) AS comments ON comments.user_id = hubstats_users.id")
+      .group("hubstats_users.id")
+    }
+
     # comments_count_by_repo
     # params: start_date, end_date, repo_id
     # Counts all commetns that belong to a specific repository that have been created between the start_date and end_date for
@@ -55,16 +65,6 @@ module Hubstats
       select("hubstats_users.id as user_id")
       .select("IFNULL(COUNT(DISTINCT hubstats_pull_requests.id),0) AS pull_request_count")
       .joins(sanitize_sql_array(["LEFT JOIN hubstats_pull_requests ON hubstats_pull_requests.user_id = hubstats_users.id AND (hubstats_pull_requests.merged_at BETWEEN ? AND ?) AND hubstats_pull_requests.repo_id = ? AND hubstats_pull_requests.merged = '1'", start_date, end_date, repo_id]))
-      .group("hubstats_users.id")
-    }
-
-    # pull_and_comment_count
-    # params: start_date, end_date
-    # Counts all of the merged pull requests and comments that occurred between the start_date and end_date.
-    scope :pull_and_comment_count, lambda {|start_date, end_date|
-      select("hubstats_users.*, pull_request_count, comment_count")
-      .joins("LEFT JOIN (#{pull_requests_count(start_date, end_date).to_sql}) AS pull_requests ON pull_requests.user_id = hubstats_users.id")
-      .joins("LEFT JOIN (#{comments_count(start_date, end_date).to_sql}) AS comments ON comments.user_id = hubstats_users.id")
       .group("hubstats_users.id")
     }
 
@@ -145,10 +145,14 @@ module Hubstats
     # and end_date. If no repo_id is provided, will still sort, just considering all PRs and comments within the two dates.
     def self.with_pulls_or_comments(start_date, end_date, repo_id = nil)
       if repo_id
-        pull_and_comment_count_by_repo(start_date, end_date, repo_id).weighted_sort
+        pull_and_comment_count_by_repo(start_date, end_date, repo_id)
       else
-        pull_and_comment_count(start_date, end_date).weighted_sort
+        pull_and_comment_count(start_date, end_date)
       end
+    end
+
+    def self.with_additions_to_repos(start_date, end_date, repos)
+      pull_and_comment_count_by_repo(start_date, end_date, repos.split(','))
     end
 
     # custom_order

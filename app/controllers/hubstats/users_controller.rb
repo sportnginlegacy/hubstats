@@ -4,6 +4,7 @@ module Hubstats
   class UsersController < ApplicationController
 
     # index
+    #
     # Shows all of the users in either alphabetical order, by filter params, or that have done things in
     # github between the selected @start_date and @end_date.
     def index 
@@ -12,7 +13,7 @@ module Hubstats
       elsif params[:id]
         @users = Hubstats::User.where(id: params[:id].split(",")).order("login ASC")
       else
-        @users = Hubstats::User.only_active.with_all_metrics(@start_date, @end_date)
+        @users = Hubstats::User.only_active.with_all_metrics(@start_date, @end_date).with_contributions(params[:repos])
             .with_id(params[:users])
             .custom_order(params[:order])
             .paginate(:page => params[:page], :per_page => 15)
@@ -25,6 +26,7 @@ module Hubstats
     end
 
     # show
+    #
     # Will show the specific user along with the basic stats about that user, including all deploys
     # and merged PRs they've done within the @start_date and @end_date.
     def show
@@ -43,6 +45,7 @@ module Hubstats
     end
 
     # stats
+    #
     # Shows the basic stats for both the user show page.
     def stats
       @additions ||= 0
