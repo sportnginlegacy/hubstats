@@ -1,6 +1,12 @@
 // Place all the behaviors and hooks related to the matching controller here.
 // All this logic will automatically be available in application.js.
 
+/* This will be run whenever the Pull Requests page is opened or refreshed.
+ * It will automatically call of the below functions on all of the variables
+ * that are in the URL of the page. The below pieces are all about sorting
+ * the data on the page based on state (open or closed), order (newest first
+ * or oldest first), and the grouping (by repo or user).
+ */
 $(document).ready(function() {
   queryParameters = getUrlVars();
   setDefaults(queryParameters);
@@ -31,7 +37,10 @@ $(document).ready(function() {
   });
 });
 
-
+/* updateQueryStringParameter
+ * Takes in the queryParamters, a key, and a value and updates the string paramters
+ * based on the specifications in the URL.
+ */
 function updateQueryStringParameter(queryParameters, key, value) {
   var uri = document.location.pathname;
   if (!queryParameters[key])
@@ -49,6 +58,9 @@ function updateQueryStringParameter(queryParameters, key, value) {
   document.location.href = uri
 }
 
+/* getUrlVars
+ * Gets all of the variables that are in the URL.
+ */
 function getUrlVars() {
   var vars = [], hash;
   if (window.location.href.indexOf('?') > 0) {
@@ -63,6 +75,10 @@ function getUrlVars() {
   return vars;
 }
 
+/* setDefaults
+ * Takes in the query parameters and sets the state, order, and grouping to be 'default', or
+ * all, descending, and non-grouped.
+ */
 function setDefaults(queryParameters) {
   if (queryParameters["state"])
     $('#' + queryParameters["state"]).addClass('active');

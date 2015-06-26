@@ -17,7 +17,11 @@
 //= require bootstrap-datepicker
 //= require_tree .
 
-$(document).ready( function() {
+/* Below function will run automatically upon refresh. It will do two things:
+ *  - format the datepicker settings
+ *  - call setDateRange on the datepicker
+ */
+$(document).ready(function() {
   $('.input-daterange').datepicker({
     "todayHighlight": true,
     "endDate": "Today",
@@ -26,6 +30,10 @@ $(document).ready( function() {
   setDateRange();
 });
 
+/* setDateRange
+ * Reads the current cookie (which is currently set as a string with two dates),
+ * and sets the dates in the corresponding datepicker.
+ */
 function setDateRange() {
   var dates;
   var cookie = readCookie("hubstats_dates");
@@ -44,6 +52,9 @@ function setDateRange() {
   start_input.datepicker('update', new Date(datesArray[0]));
   end_input.datepicker('update', new Date(datesArray[1]));
 
+  /* When the 'Apply' button is pressed for the datepicker, this function will
+   * read the datepicker values, assign them to the cookie, and reload the page.
+   */
   submitButton.onclick = function() {
     var start_date = start_input.datepicker('getDate');
     var end_date = end_input.datepicker('getDate');
@@ -52,31 +63,45 @@ function setDateRange() {
   };
 };
 
+/* createCookie
+ * Takes a name, value, and number of days and will make a cookie out of those parameters.
+ */
 function createCookie(name, value, days) {
   if (days) {
     var date = new Date();
-    date.setTime(date.getTime()+(days*24*60*60*1000));
-    var expires = "; expires="+date.toGMTString();
+    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+    var expires = "; expires=" + date.toGMTString();
   }
   else var expires = "";
-  document.cookie = name+"="+value+expires+"; path=/";
+  document.cookie = name + "=" + value + expires + "; path=/";
 };
 
+/* readCookie
+ * Takes in the name of a cookie, and will read that cookie, returning either the data
+ * from the cookie or null if there is no cookie with that name.
+ */
 function readCookie(name) {
   var cookieName = name + "=";
   var cookieData = document.cookie.split(';');
-  for(var i=0;i < cookieData.length;i++) {
+  for(var i = 0; i < cookieData.length ; i++) {
     var c = cookieData[i];
-    while (c.charAt(0)==' ') c = c.substring(1,c.length);
-    if (c.indexOf(cookieName) == 0) return c.substring(cookieName.length,c.length);
+    while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+    if (c.indexOf(cookieName) == 0) return c.substring(cookieName.length, c.length);
   }
   return null;
 };
 
+/* eraseCookie
+ * Creates a new blank cookie.
+ */
 function eraseCookie(name) {
-  createCookie(name,"",-1);
+  createCookie(name, "" , -1);
 };
 
+/* getDefaultDateRange
+ * Returns a string that is the date two weeks ago, '~~', and today's date with all hours
+ * set at midnight.
+ */
 function getDefaultDateRange() {
   var today = new Date();
   today.setHours(0,0,0,0);
