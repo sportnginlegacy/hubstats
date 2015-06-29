@@ -3,9 +3,10 @@ require_dependency "hubstats/application_controller"
 module Hubstats
   class UsersController < ApplicationController
 
-    # index
-    # Shows all of the users in either alphabetical order, by filter params, or that have done things in
+    # Public - Shows all of the users in either alphabetical order, by filter params, or that have done things in
     # github between the selected @start_date and @end_date.
+    #
+    # Returns - the user data
     def index 
       if params[:query] ## For select 2
         @users = Hubstats::User.where("login LIKE ?", "%#{params[:query]}%").order("login ASC")
@@ -24,9 +25,10 @@ module Hubstats
       end
     end
 
-    # show
-    # Will show the specific user along with the basic stats about that user, including all deploys
+    # Public - Will show the specific user along with the basic stats about that user, including all deploys
     # and merged PRs they've done within the @start_date and @end_date.
+    #
+    # Returns - the data of the specific user
     def show
       @user = Hubstats::User.where(login: params[:id]).first
       @pull_requests = Hubstats::PullRequest.belonging_to_user(@user.id).merged_in_date_range(@start_date, @end_date).order("updated_at DESC").limit(20)

@@ -4,8 +4,9 @@ module Hubstats
     before_validation :check_time, on: :create
     validates :git_revision, :deployed_at, :repo_id, presence: true
 
-    # check_time
-    # Checks if there is a deployed_at for a new deploy; if there isn't, then assign it the current time.
+    # Public - Checks if there is a deployed_at for a new deploy; if there isn't, then assign it the current time.
+    #
+    # Returns - the current time or the actual deployed_at time
     def check_time
         self.deployed_at = Time.now.getutc if deployed_at.nil?
     end
@@ -26,17 +27,23 @@ module Hubstats
     belongs_to :repo
     has_many :pull_requests
 
-    # order_with_date_range
-    # params: start_date, end_date, order
-    # Orders the deploys within the start_date and end_date with by a given order.
+    # Public - Orders the deploys within the start_date and end_date with by a given order.
+    # 
+    # start_date - the start of the date range
+    # end_date - the end of the data range
+    # order - the designated order to sort the data 
+    #
+    # Returns - the deploy data ordered
     def self.order_with_date_range(start_date, end_date, order)
       order = ["ASC", "DESC"].detect{|order_type| order_type.to_s == order.to_s.upcase } || "DESC"
       deployed_in_date_range(start_date, end_date).order("hubstats_deploys.deployed_at #{order}")
     end
 
-    # group_by
-    # params: group (string)
-    # Groups the deploys based on the string passed in: 'user' or 'repo'.
+    # Public - Groups the deploys based on the string passed in: 'user' or 'repo'.
+    # 
+    # group - string that is the designated grouping
+    #
+    # Returns - the data grouped
     def self.group_by(group)
        if group == "user"
          with_user_name.order("user_name ASC")
@@ -47,10 +54,12 @@ module Hubstats
        end
     end
 
-    # total_changes
-    # params: add (symbol)
-    # Gathers all PRs for a deploy, and then either finds all of the additions or all of the deletions, depending on the symbol
-    # passed in.
+    # Public - Gathers all PRs for a deploy, and then either finds all of the additions or all of the 
+    # deletions, depending on the symbol passed in.
+    #
+    # add - symbol that reflects the type of data we want to add up
+    #
+    # Returns - the total amount that has been added; either deletions or additions 
     def total_changes(add)
       pull_requests = self.pull_requests
       total = 0
@@ -64,9 +73,10 @@ module Hubstats
       return total
     end
 
-    # find_net_additions
-    # Gathers all PRs for a deploy, and then finds all of the additions and all of the deletions, then subtracts them to find
-    # the number of net additions.
+    # Public - Gathers all PRs for a deploy, and then finds all of the additions and all of the deletions,
+    # then subtracts them to find the number of net additions.
+    #
+    # Returns - the total number of deletions subtracted from the total number of additions
     def find_net_additions
       pull_requests = self.pull_requests
       total_additions = 0
@@ -78,8 +88,9 @@ module Hubstats
       return total_additions - total_deletions
     end
 
-    # find_comment_count
-    # Gathers all of the PRs and then counts all of the comments that are assigned to each PR.
+    # Public - Gathers all of the PRs and then counts all of the comments that are assigned to each PR.
+    #
+    # Returns the total amount of comments that all PRs to a deploy has
     def find_comment_count
       pull_requests = self.pull_requests
       total_comments = 0
@@ -88,6 +99,5 @@ module Hubstats
       end
       return total_comments
     end
-
   end
 end

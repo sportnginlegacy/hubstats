@@ -7,8 +7,9 @@ module Hubstats
     scope :belonging_to_user, lambda {|user_id| where(user_id: user_id)}
     scope :belonging_to_repo, lambda {|repo_id| where(repo_id: repo_id)}
 
-    # pull_reviews_count
-    # Gets the number of PRs that a user commented on that were not their own PR.
+    # Public - Gets the number of PRs that a user commented on that were not their own PR.
+    #
+    # Returns - the number of PRs that a specific user has reviewed
     scope :pull_reviews_count, lambda {
       select("hubstats_comments.user_id")
       .select("COUNT(DISTINCT hubstats_pull_requests.id) as total")
@@ -26,9 +27,9 @@ module Hubstats
     belongs_to :pull_request
     belongs_to :repo
    
-    # create_or_update
-    # params: github_comment
-    # Makes a new comment based on a GitHub webhook occurring. Assigns the user and PR.
+    # Public - Makes a new comment based on a GitHub webhook occurrence. Assigns the user and the PR.
+    #
+    # github_comment - the information from Github about the comment
     def self.create_or_update(github_comment)
       github_comment = github_comment.to_h.with_indifferent_access if github_comment.respond_to? :to_h
 

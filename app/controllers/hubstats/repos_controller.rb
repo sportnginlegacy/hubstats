@@ -3,9 +3,10 @@ require_dependency "hubstats/application_controller"
 module Hubstats
   class ReposController < Hubstats::BaseController
 
-    # index
-    # Lists all of the repos, either in alphabetical order, by query params, or with activity in between
+    # Public - Lists all of the repos, either in alphabetical order, by query params, or with activity in between
     # @start_date and @end_date.
+    #
+    # Returns - the repository data
     def index
       if params[:query] ## For select 2
         @repos = Hubstats::Repo.where("name LIKE ?", "%#{params[:query]}%").order("name ASC")
@@ -20,9 +21,10 @@ module Hubstats
       end
     end
 
-    # show
-    # Shows the selected repository and all of the basic stats associated with that repository, including
+    # Public - Shows the selected repository and all of the basic stats associated with that repository, including
     # all deploys and merged PRs in that repo within @start_date and @end_date.
+    #
+    # Returns - the specific repository data
     def show
       @repo = Hubstats::Repo.where(name: params[:repo]).first
       @pull_requests = Hubstats::PullRequest.belonging_to_repo(@repo.id).merged_in_date_range(@start_date, @end_date).order("updated_at DESC").limit(20)
@@ -39,9 +41,10 @@ module Hubstats
       stats
     end
 
-    # dashboard
-    # Shows all of the repositories with individual stats for each repo. Also shows the stats for all of
+    # Public - Shows all of the repositories with individual stats for each repo. Also shows the stats for all of
     # the repositories within @start_date and @end_date.
+    #
+    # Returns - the stats for the entirety of Hubstats and all repos
     def dashboard
       if params[:query] ## For select 2
         @repos = Hubstats::Repo.where("name LIKE ?", "%#{params[:query]}%").order("name ASC")
