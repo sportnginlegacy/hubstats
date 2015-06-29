@@ -26,9 +26,11 @@ deploy_list = [
   ["c92k102", "sportngin/passenger", "2015-05-27 12:00:00 -0500", 9447923, "25449231"]
 ]
 
-# replace_name_with_id
-# params: repo_name
-# Looks into the repo database to return the id of the repo that matches the repo name.
+# Public - Looks into the repo database to return the id of the repo that matches the repo name.
+#
+# repo_name - the name of the repo
+#
+# Returns - the id of the repo 
 def replace_name_with_id (repo_name)
   return Hubstats::Repo.where(full_name: repo_name).first.id.to_i
 end

@@ -90,7 +90,7 @@ module Hubstats
 
     # Public - Gathers all of the PRs and then counts all of the comments that are assigned to each PR.
     #
-    # Returns the total amount of comments that all PRs to a deploy has
+    # Returns - the total amount of comments that all PRs to a deploy has
     def find_comment_count
       pull_requests = self.pull_requests
       total_comments = 0
