@@ -3,6 +3,7 @@
     <img src= <%= pull.user.avatar_url%> alt= <%= pull.user.login %> >
   </div>
 
+  <!-- Show the repo name and the title of the PR, labels, and who made it when -->
   <div class="pull-info col-lg-9 col-md-9 col-sm-9">
     <h4> 
       <%= link_to pull.repo.name, repo_path(pull.repo.name) %> / 
@@ -22,6 +23,7 @@
     <% end %>
   </div>
 
+  <!-- Show the PR number and a link to the github PR -->
   <div class="col-lg-2 col-md-2 col-sm-2" >
     <div class="pull-right">
       <%= pull.number %> 

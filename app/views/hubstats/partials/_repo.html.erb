@@ -1,5 +1,6 @@
 <div class="row single-repo">
 
+  <!-- Show the repo name and the date that it was last updated, with a link to the github repo -->
   <div class="repo-info col-lg-2 col-md-2 col-sm-2 col-xs-8">
     <h4> 
       <%= link_to repo.name, repo_path(repo)%>
@@ -14,6 +15,7 @@
     </h4>
   </div>
 
+  <!-- Show all of the stats for the individual repo -->
   <div class="col-lg-2 col-md-2 col-sm-2">
     <div class="text-center">
       <span class="text-large"><%= repo.deploy_count %></span>
