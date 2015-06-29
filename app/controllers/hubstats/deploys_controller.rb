@@ -51,11 +51,11 @@ module Hubstats
           @deploy.repo_id = @repo.first.id.to_i
         end
 
-        @pull_request_id_array = params[:pull_request_ids].split(",").map {|i| i.strip.to_i}
+        pull_request_id_array = params[:pull_request_ids].split(",").map {|i| i.strip.to_i}
         if !valid_pr_ids(pull_request_id_array)
           render text: "No pull request ids given.", :status => 400 and return
         else
-          @deploy.pull_requests = Hubstats::PullRequest.where(repo_id: @deploy.repo_id).where(number: @pull_request_id_array)
+          @deploy.pull_requests = Hubstats::PullRequest.where(repo_id: @deploy.repo_id).where(number: pull_request_id_array)
         end
 
         if !valid_pulls
@@ -78,10 +78,10 @@ module Hubstats
     end
 
     # valid_pr_ids
-    # params: pull_request_id_array
+    # params: pull_id_array
     # Checks if the array is empty or if the ids in the array are invalid.
-    def valid_pr_ids(pull_request_id_array)
-      return !pull_request_id_array.empty? && pull_request_id_array != [0]
+    def valid_pr_ids(pull_id_array)
+      return !pull_id_array.empty? && pull_id_array != [0]
     end
 
     # valid_pulls
