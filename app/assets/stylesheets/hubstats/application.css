@@ -12,8 +12,26 @@
  *= require hubstats/bootstrap
  *= require select2
  *= require select2-bootstrap
+ *= require bootstrap-datepicker
  *= require_tree .
  */
+
+.apply {
+  float: right;
+  margin-top: 8px;
+}
+
+.navbar-active {
+  font-weight: bold;
+  color: #E0E0E0;
+  background-color: #E0E0E0;
+  border-color: #E0E0E0;
+}
+
+.input-daterange {
+  width: 245px;
+  top: 8px;
+}
 
 .numeric, .title {
   text-align: center;
@@ -49,7 +67,6 @@
 .single-deploy > .user-image-small {
   padding: 5px;
 }
-
 
 .user-image > img,
 .repo-image {

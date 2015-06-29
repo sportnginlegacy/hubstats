@@ -21,8 +21,7 @@ module Hubstats
     scope :pull_requests_count, lambda {|start_date, end_date|
       select("hubstats_repos.id as repo_id")
       .select("IFNULL(COUNT(DISTINCT hubstats_pull_requests.id),0) AS pull_request_count")
-      .joins(sanitize_sql_array(["LEFT JOIN hubstats_pull_requests ON hubstats_pull_requests.repo_id = hubstats_repos.id AND (hubstats_pull_requests.merged_at BETWEEN ? AND ?)", start_date, end_date]))
-      .where("hubstats_pull_requests.merged = '1'")
+      .joins(sanitize_sql_array(["LEFT JOIN hubstats_pull_requests ON hubstats_pull_requests.repo_id = hubstats_repos.id AND (hubstats_pull_requests.merged_at BETWEEN ? AND ?) AND hubstats_pull_requests.merged = '1'", start_date, end_date]))
       .group("hubstats_repos.id")
     }
 
