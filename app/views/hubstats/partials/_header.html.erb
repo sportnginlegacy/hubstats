@@ -2,6 +2,7 @@
   <nav class="navbar navbar-default" role="navigation">
     <div class="container-fluid">
 
+      <!-- Show the Hubstats name in navbar along with a link to the PR page -->
       <div class="navbar-header">
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
           <span class="sr-only">Toggle navigation</span>
@@ -9,12 +10,11 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <%= link_to "Hubstats", root_path, {:data => {:repo_path => repos_path(), :user_path => users_path()}, :class => "navbar-brand title", :id =>"brand"} %>
+        <%= link_to "Hubstats", root_path(:state => "open", :label => "deployable", :group => "repo"),
+            {:data => {:repo_path => repos_path(), :user_path => users_path()}, :class => "navbar-brand title", :id =>"brand"}%>
       </div>
 
-<!--  Current Start Date: <%=@start_date%>
-      Current End Date: <%=@end_date%> -->
-
+      <!-- Show all of the pagees in tab form -->
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav navbar-right">
           <li class="<%='navbar-active' if params[:controller] == 'hubstats/deploys'%>">
@@ -26,6 +26,7 @@
           <li class="<%='navbar-active' if params[:controller] == 'hubstats/users'%>">
             <%= link_to "Users", users_path%></li>
           <li>
+            <!-- Show the datepicker -->
             <div class="input-daterange input-group" id="datepicker">
               <input type="text" class="input-small form-control" name="start" placeholder="Start Date"/>
               <span class="input-group-addon">to</span>
@@ -33,6 +34,7 @@
             </div>
           </li>
           <li>
+            <!-- Show the apply button for the datepicker -->
             <button type="button" class="btn apply btn-default" id="submitDateRange">Apply</button>
           </li>
         </ul>
