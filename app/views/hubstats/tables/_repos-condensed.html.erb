@@ -1,3 +1,4 @@
+<!-- Show the repos or say there are no repositories -->
 <% if @repos.length > 0 %>
   <div class="repos">
     <%= render partial: 'hubstats/partials/repo-condensed', collection: @repos, as: :repo %>
