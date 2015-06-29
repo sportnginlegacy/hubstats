@@ -32,7 +32,7 @@ module Hubstats
       @deploys = Hubstats::Deploy.belonging_to_repo(@repo.id).deployed_in_date_range(@start_date, @end_date).order("deployed_at DESC").limit(20)
       @deploy_count = Hubstats::Deploy.belonging_to_repo(@repo.id).deployed_in_date_range(@start_date, @end_date).count(:all)
       @comment_count = Hubstats::Comment.belonging_to_repo(@repo.id).created_in_date_range(@start_date, @end_date).count(:all)
-      @user_count = Hubstats::User.with_pulls_or_comments(@start_date, @end_date, @repo.id).only_active.length
+      @user_count = Hubstats::User.with_pulls_or_comments_or_deploys(@start_date, @end_date, @repo.id).only_active.length
       @net_additions = Hubstats::PullRequest.merged_in_date_range(@start_date, @end_date).belonging_to_repo(@repo.id).sum(:additions).to_i -
                        Hubstats::PullRequest.merged_in_date_range(@start_date, @end_date).belonging_to_repo(@repo.id).sum(:deletions).to_i
       @additions = Hubstats::PullRequest.merged_in_date_range(@start_date, @end_date).belonging_to_repo(@repo.id).average(:additions)
@@ -57,7 +57,7 @@ module Hubstats
           .paginate(:page => params[:page], :per_page => 15)
       end
 
-      @user_count = Hubstats::User.with_pulls_or_comments(@start_date, @end_date).only_active.length
+      @user_count = Hubstats::User.with_pulls_or_comments_or_deploys(@start_date, @end_date).only_active.length
       @deploy_count = Hubstats::Deploy.deployed_in_date_range(@start_date, @end_date).count(:all)
       @pull_count = Hubstats::PullRequest.merged_in_date_range(@start_date, @end_date).count(:all)
       @comment_count = Hubstats::Comment.created_in_date_range(@start_date, @end_date).count(:all)
