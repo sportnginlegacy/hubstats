@@ -47,7 +47,6 @@ module Hubstats
     end
 
     describe "#create" do
-
       before :each do
         create(:pull_request, :number => 33364992, :merged_by => 202020)
       end

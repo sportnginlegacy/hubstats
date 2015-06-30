@@ -1,3 +1,4 @@
+# Generates fake deploy data we can use to test with
 FactoryGirl.define do
   factory :deploy, :class => Hubstats::Deploy do
     git_revision "3dis01"

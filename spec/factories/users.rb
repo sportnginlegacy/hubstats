@@ -1,3 +1,4 @@
+# Generates fake user data we can use to test with
 FactoryGirl.define do
   factory :user, :class => Hubstats::User do
     login { Faker::Internet.user_name }

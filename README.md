@@ -48,7 +48,7 @@ Hubstats needs to know what repos for it to watch. You can set it to watch eithe
 
 ## Testing
 
-All of the automated tests are written in RSpec. Since hubstats is a plugin, not an application, we need to install the plugin into a Rails application to run. The `test` directory is a dummy rails application for manually testing the UI by serving hubstats locally. When developing and using the `test/dummy` locally, then the test will automatically sync with any updated code, so it doesn't need to be re-served when changes are made with the normal Rails application. When in the development process, one just needs to run `rails s` once from the command line (while in `test/dummy`) to serve the plugin. http://guides.rubyonrails.org/plugins.html will give more information on the implementation of a Rails plugin. 
+All of the automated tests are written in RSpec. Since hubstats is a plugin, not an application, we need to install the plugin into a Rails application to run. The `test` directory is a dummy rails application for manually testing the UI by serving hubstats locally. When developing and using the `test/dummy` locally, then the test will automatically sync with any updated code, so it doesn't need to be re-served when changes are made with the normal Rails application. When in the development process, one just needs to run `bundle exec rails s` once from the command line (while in `test/dummy`) to serve the plugin. http://guides.rubyonrails.org/plugins.html will give more information on the implementation of a Rails plugin. 
 
 ## TL:DR
 
