@@ -73,23 +73,28 @@ module Hubstats
       end
     end
 
-    # valid_repo
-    # params: repo
-    # Checks if the repo that's passed in is empty.
+    # Public - Checks if the repo that's passed in is empty.
+    #
+    # repo - the repository
+    #
+    # Returns - true if the repo is valid 
     def valid_repo(repo)
       return !repo.empty?
     end
 
-    # valid_pr_ids
-    # params: pull_id_array
-    # Checks if the array is empty or if the ids in the array are invalid.
+    # Public - Checks if the array is empty or if the ids in the array are invalid.
+    #
+    # pull_id_array - the array of pull request ids
+    #
+    # Returns - returns true if the array neither is empty nor comes out to [0]
     def valid_pr_ids(pull_id_array)
       return !pull_id_array.empty? && pull_id_array != [0]
     end
 
-    # valid_pulls
-    # Checks if the first pull assigned to the new deploy is nil, if the merged_by part is nil. If nothing is nil, it will set
-    # the user_id of the deploy to be the merged_by of the pull.
+    # Public - Checks if the first pull assigned to the new deploy is nil, if the merged_by part is nil. If nothing is
+    # nil, it will set the user_id of the deploy to be the merged_by of the pull.
+    #
+    # Returns - true and changes the user_id of deploy, else returns false
     def valid_pulls
       pull = @deploy.pull_requests.first
       return false if pull.nil? || pull.merged_by.nil?
