@@ -1,5 +1,4 @@
 module HubHelper
-module HubHelper
 
   # Public - Gets the PR number from the comment
   #
