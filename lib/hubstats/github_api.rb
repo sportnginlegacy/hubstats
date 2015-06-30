@@ -48,7 +48,7 @@ module Hubstats
       end.each{|v| route(v,kind,repo_name)}.clear
     end
 
-    # Public -Gets repos found in configuration file
+    # Public - Gets repos found in configuration file
     #
     # Returns - an array of github repo objects
     def self.get_repos
