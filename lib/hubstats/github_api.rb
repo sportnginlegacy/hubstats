@@ -4,7 +4,12 @@ module Hubstats
 
     cattr_accessor :auth_info
 
-    def self.configure(options={})
+    # Public - configures the information needed to receive webhooks from GitHub
+    #
+    # options - the options to be passed in or an empty hash
+    #
+    # Returns - the configured auth_info
+    def self.configure(options = {})
       @@auth_info = {}
       if access_token = ENV['GITHUB_API_TOKEN'] || options["access_token"]
         @@auth_info[:access_token] = access_token
@@ -15,30 +20,35 @@ module Hubstats
       @@auth_info
     end
 
-    def self.client(options={})
+    # Public - Checks that the options passed in are valid and configured correctly
+    #
+    # options - the options to be checked or an empty hash
+    #
+    # Returns - the new configured info
+    def self.client(options = {})
       configure(Hubstats.config.github_auth) if @@auth_info.nil?
       ent = Octokit::Client.new(@@auth_info.merge(options))
       ent.user #making sure it was configured properly
       return ent
     end
 
-    # Public: Gets all of a specific kind from a repo, and processes them.
+    # Public - Gets all of a specific kind from a repo, and processes them.
     #
     # repo_name - the name of a repo
     # kind - a kind of object (pull,comment)
     # options - any possible option a particular kind of object
     #
     # Returns an array of that particular kind
-    def self.inline(repo_name, kind, options={})
+    def self.inline(repo_name, kind, options = {})
       path = ["repos",repo_name,kind].join('/')
-      octo = client({:auto_paginate => true })
+      octo = client({:auto_paginate => true})
       octo.paginate(path, options) do |data, last_response|
         last_response.data.each{|v| route(v,kind,repo_name)}.clear
         wait_limit(1,octo.rate_limit)
       end.each{|v| route(v,kind,repo_name)}.clear
     end
 
-    # Public: Gets repos found in configuration file
+    # Public -Gets repos found in configuration file
     #
     # Returns - an array of github repo objects
     def self.get_repos
@@ -53,7 +63,9 @@ module Hubstats
       repos
     end
 
-    # Public: Gets extra information on pull requests, e.g size, additions ...
+    # Public - Gets extra information on pull requests, e.g size, additions ...
+    #
+    # Returns - nothing
     def self.update_pulls
       grab_size = 250
       begin
@@ -66,7 +78,6 @@ module Hubstats
             pr = client.pull_request(repo.full_name, pull.number)
             Hubstats::PullRequest.create_or_update(HubHelper.pull_setup(pr))
           end
-
           wait_limit(grab_size,client.rate_limit)
         end
         puts "All Pull Requests are up to date"
@@ -76,6 +87,11 @@ module Hubstats
       end
     end
 
+    # Public - Makes a new webhook from a repository
+    #
+    # repo - the repository that is attempting to have a hook made with
+    #
+    # Returns - the hook and a message (or just a message and no hook)
     def self.create_hook(repo)
       begin
         client.create_hook(
@@ -106,7 +122,7 @@ module Hubstats
       end
     end
 
-    # Public: Delete webhook from github repository
+    # Public - Delete webhook from github repository
     #
     # repo - a repo github object
     # old_endpoint - A string of the previous endpoint
@@ -125,7 +141,7 @@ module Hubstats
       end
     end
 
-    # Public: updates a hook if it exists, otherwise creates one
+    # Public - updates a hook if it exists, otherwise creates one
     #
     # repo - a repo github object
     # old_endpoint - A string of the previous endpoint
@@ -136,7 +152,7 @@ module Hubstats
       create_hook(repo)
     end
 
-    # Public: gets labels for a particular label
+    # Public - gets labels for a particular label
     #
     # repo - a repo github object
     #
@@ -153,7 +169,7 @@ module Hubstats
       labels
     end
 
-    # Public: gets the label for a given pull request
+    # Public - gets the label for a given pull request
     #
     # repo_name - a the repo_name
     # pull_request_number - the number of the pull_request you want labels of
@@ -164,7 +180,7 @@ module Hubstats
       issue[:labels]
     end
 
-    # Public: Gets all the labels for a repo, adds all labels to a pull
+    # Public - Gets all the labels for a repo, adds all labels to a pull
     #
     # repo - the particular repository, you want to add labels to
     def self.add_labels(repo)
@@ -173,13 +189,26 @@ module Hubstats
       end
     end
 
-    def self.wait_limit(grab_size,rate_limit)
+    # Public - Puts the process to sleep if there is a "timeout" before continuing
+    #
+    # grab_size - the amount of data that is being attempted to grab
+    # rate_limit - the amount of time to wait to grab data
+    #
+    # Returns - nothing
+    def self.wait_limit(grab_size, rate_limit)
       if rate_limit.remaining < grab_size
         puts "Hit Github rate limit, waiting #{Time.at(rate_limit.resets_in).utc.strftime("%H:%M:%S")} to get more"
         sleep(rate_limit.resets_in)
       end
     end
 
+    # Public - Routes to the correst setup methods to be used to update or create comments or PRs
+    #
+    # object - the new thing to be updated or created
+    # kind - the type of thing (pull comment, issue comment, normal comment, pull, or issue)
+    # repo_name - the name of the repository to which object belongs (optional)
+    #
+    # Returns - nothing, but does update the object
     def self.route(object, kind, repo_name = nil)
       if kind == "pulls/comments"
         repo = Hubstats::Repo.where(full_name: repo_name).first
@@ -202,4 +231,3 @@ module Hubstats
     end
   end
 end
-    

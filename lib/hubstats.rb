@@ -5,6 +5,5 @@ require "hubstats/events_handler"
 require "active_support/core_ext/numeric"
 require "hubstats/config"
 
-
 module Hubstats
 end
