@@ -30,7 +30,7 @@ Hubstats can also use OAUTH access tokens stored in ENV["GITHUB_API_TOKEN"] or f
 
 ### Webhooks
 
-Hubstats uses GitHub webhooks to keep itself update. It requires you to set a secret as well as an endpoint to push to.
+Hubstats uses GitHub webhooks to keep itself updated. It requires you to set a secret as well as an endpoint to push to.
 
 To generate a secret run:
 
