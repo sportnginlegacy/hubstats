@@ -1,5 +1,15 @@
 module Hubstats
   class Comment < ActiveRecord::Base
+
+    # Various checks that can be used to filter and find info about comments.
+    scope :created_in_date_range, lambda {|start_date, end_date| where("hubstats_comments.created_at BETWEEN ? AND ?", start_date, end_date)}
+    scope :belonging_to_pull_request, lambda {|pull_request_id| where(pull_request_id: pull_request_id)}
+    scope :belonging_to_user, lambda {|user_id| where(user_id: user_id)}
+    scope :belonging_to_repo, lambda {|repo_id| where(repo_id: repo_id)}
+
+    # Public - Gets the number of PRs that a user commented on that were not their own PR.
+    #
+    # Returns - the number of PRs that a specific user has reviewed
     scope :pull_reviews_count, lambda {
       select("hubstats_comments.user_id")
       .select("COUNT(DISTINCT hubstats_pull_requests.id) as total")
@@ -7,11 +17,6 @@ module Hubstats
       .where("hubstats_pull_requests.user_id != hubstats_comments.user_id")
       .group("hubstats_comments.user_id")
     }
-
-    scope :created_in_date_range, lambda {|start_date, end_date| where("hubstats_comments.created_at BETWEEN ? AND ?", start_date, end_date)}
-    scope :belonging_to_pull_request, lambda {|pull_request_id| where(pull_request_id: pull_request_id)}
-    scope :belonging_to_user, lambda {|user_id| where(user_id: user_id)}
-    scope :belonging_to_repo, lambda {|repo_id| where(repo_id: repo_id)}
 
     attr_accessible :id, :html_url, :url, :pull_request_url, :diff_hunk, :path,
       :position, :original_position, :line, :commit_id, :original_commit_id,
@@ -22,6 +27,9 @@ module Hubstats
     belongs_to :pull_request
     belongs_to :repo
    
+    # Public - Makes a new comment based on a GitHub webhook occurrence. Assigns the user and the PR.
+    #
+    # github_comment - the information from Github about the comment
     def self.create_or_update(github_comment)
       github_comment = github_comment.to_h.with_indifferent_access if github_comment.respond_to? :to_h
 

@@ -1,3 +1,4 @@
+# Generates fake pull request data we can use to test with
 FactoryGirl.define do
   factory :pull_request, :class => Hubstats::PullRequest do
     user

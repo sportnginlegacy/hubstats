@@ -1,3 +1,4 @@
+# A variety of commands that can be used to populate the database information
 namespace :hubstats do 
   namespace :populate do
 

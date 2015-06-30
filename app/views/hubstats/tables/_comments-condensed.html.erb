@@ -1,3 +1,4 @@
+<!-- Show the comments or say there are no comments -->
 <% if @comments.length > 0 %>
   <div class="comments">
     <%= render partial: 'hubstats/partials/comment-condensed', collection: @comments, as: :comment %>

@@ -1,5 +1,7 @@
 <div class="container" id="splash">
   <div class="row text-center">
+
+    <!-- Show all of the statistics about all of the repositories and users within time frame -->
     <%= render 'hubstats/partials/quick_stats' %>
     <br>
     <br>
@@ -10,14 +12,14 @@
     <%= render 'hubstats/partials/quick_addition_stats' %>
   </div>
   
+  <!-- Show all of the repositories with their individual stats -->
   <div class="row">
     <div class="col col-lg-12">
       <h3> Repositories </h3>       
       <%= render 'hubstats/tables/repos' %>
+      <div class="text-center">
+        <%= will_paginate @repo, renderer: BootstrapPagination::Rails %>
+      </div>
     </div>
   </div>
-</div>
-
-<div class="text-center">
-  <%= will_paginate @repo, renderer: BootstrapPagination::Rails %>
 </div>

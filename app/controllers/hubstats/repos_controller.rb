@@ -1,8 +1,12 @@
 require_dependency "hubstats/application_controller"
 
 module Hubstats
-  class ReposController < ApplicationController
+  class ReposController < Hubstats::BaseController
 
+    # Public - Lists all of the repos, either in alphabetical order, by query params, or with activity in between
+    # @start_date and @end_date.
+    #
+    # Returns - the repository data
     def index
       if params[:query] ## For select 2
         @repos = Hubstats::Repo.where("name LIKE ?", "%#{params[:query]}%").order("name ASC")
@@ -17,6 +21,10 @@ module Hubstats
       end
     end
 
+    # Public - Shows the selected repository and all of the basic stats associated with that repository, including
+    # all deploys and merged PRs in that repo within @start_date and @end_date.
+    #
+    # Returns - the specific repository data
     def show
       @repo = Hubstats::Repo.where(name: params[:repo]).first
       @pull_requests = Hubstats::PullRequest.belonging_to_repo(@repo.id).merged_in_date_range(@start_date, @end_date).order("updated_at DESC").limit(20)
@@ -24,7 +32,7 @@ module Hubstats
       @deploys = Hubstats::Deploy.belonging_to_repo(@repo.id).deployed_in_date_range(@start_date, @end_date).order("deployed_at DESC").limit(20)
       @deploy_count = Hubstats::Deploy.belonging_to_repo(@repo.id).deployed_in_date_range(@start_date, @end_date).count(:all)
       @comment_count = Hubstats::Comment.belonging_to_repo(@repo.id).created_in_date_range(@start_date, @end_date).count(:all)
-      @user_count = Hubstats::User.with_pulls_or_comments(@start_date, @end_date, @repo.id).only_active.length
+      @user_count = Hubstats::User.with_pulls_or_comments_or_deploys(@start_date, @end_date, @repo.id).only_active.length
       @net_additions = Hubstats::PullRequest.merged_in_date_range(@start_date, @end_date).belonging_to_repo(@repo.id).sum(:additions).to_i -
                        Hubstats::PullRequest.merged_in_date_range(@start_date, @end_date).belonging_to_repo(@repo.id).sum(:deletions).to_i
       @additions = Hubstats::PullRequest.merged_in_date_range(@start_date, @end_date).belonging_to_repo(@repo.id).average(:additions)
@@ -33,6 +41,10 @@ module Hubstats
       stats
     end
 
+    # Public - Shows all of the repositories with individual stats for each repo. Also shows the stats for all of
+    # the repositories within @start_date and @end_date.
+    #
+    # Returns - the stats for the entirety of Hubstats and all repos
     def dashboard
       if params[:query] ## For select 2
         @repos = Hubstats::Repo.where("name LIKE ?", "%#{params[:query]}%").order("name ASC")
@@ -45,7 +57,7 @@ module Hubstats
           .paginate(:page => params[:page], :per_page => 15)
       end
 
-      @user_count = Hubstats::User.with_pulls_or_comments(@start_date, @end_date).only_active.length
+      @user_count = Hubstats::User.with_pulls_or_comments_or_deploys(@start_date, @end_date).only_active.length
       @deploy_count = Hubstats::Deploy.deployed_in_date_range(@start_date, @end_date).count(:all)
       @pull_count = Hubstats::PullRequest.merged_in_date_range(@start_date, @end_date).count(:all)
       @comment_count = Hubstats::Comment.created_in_date_range(@start_date, @end_date).count(:all)
@@ -62,6 +74,8 @@ module Hubstats
       end
     end
 
+    # stats
+    # Will assign all of the stats for both the show page and the dashboard page.
     def stats
       @additions ||= 0
       @deletions ||= 0

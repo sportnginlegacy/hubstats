@@ -1,3 +1,4 @@
+<!-- Show the users or say there are no users -->
 <% if @users.length > 0 %>
   <div class="users">
     <%= render partial: 'hubstats/partials/user-condensed', collection: @users, as: :user %>

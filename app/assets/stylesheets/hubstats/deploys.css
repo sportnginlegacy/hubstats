@@ -1,7 +1,9 @@
+/*For the filter boxes on the left side of the Deploys page*/
 .select2-container{
   width: 100%;
 }
 
+/*To align the right-side octicon and pull requests numbers on the Deploys index page*/
 .deploy-right {
   float: right !important;
 }

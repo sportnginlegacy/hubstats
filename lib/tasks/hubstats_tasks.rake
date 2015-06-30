@@ -1,3 +1,4 @@
+# A variety of commands that can be used to populate the database information
 namespace :hubstats do
 
   desc "Create the database, load the schema, and pull data from Github (use hubstats:reset to also drop the db first)"

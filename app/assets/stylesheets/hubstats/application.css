@@ -12,8 +12,41 @@
  *= require hubstats/bootstrap
  *= require select2
  *= require select2-bootstrap
+ *= require bootstrap-datepicker
  *= require_tree .
  */
+
+/*For the 'Apply' button*/
+.apply {
+  float: right;
+  margin-top: 8px;
+}
+
+/*For the active tab on the navigation bar*/
+.navbar-active {
+  font-weight: bold;
+  color: #E0E0E0;
+  background-color: #E0E0E0;
+  border-color: #E0E0E0;
+}
+
+/*For the datepicker*/
+.input-daterange {
+  width: 245px;
+  top: 8px;
+}
+
+.footer-main-text {
+  font-size: 18px;
+  color: #B0B0B0;
+  text-align: center;
+}
+
+.footer-text {
+  font-size: 12px;
+  color: #A0A0A0;
+  line-height: 20px;
+}
 
 .numeric, .title {
   text-align: center;
@@ -50,12 +83,13 @@
   padding: 5px;
 }
 
-
 .user-image > img,
 .repo-image {
   width: 55px;
   height: 55px;
 }
+
+/*For the various images of the repos, octicons, deploys, etc*/
 
 .repo-octicon-small {
   font-size: 36px !important;
@@ -70,6 +104,8 @@
   width: 36px;
   height: 36px;
 }
+
+/*For the lists of repos, pull requests, deploys, comments, and users*/
 
 .pulls, .comments, .users, .repos, .deploys {
   margin: 15px 0px 15px 0px;
@@ -122,6 +158,8 @@
 .deploy-info > h4 {
   margin: 0px;
 }
+
+/*Other extraneous bits that format the UI*/
 
 .push-down {
   margin-top: 8px;

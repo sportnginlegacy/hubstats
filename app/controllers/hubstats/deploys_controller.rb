@@ -3,8 +3,11 @@ require_dependency "hubstats/application_controller"
 module Hubstats
   class DeploysController < Hubstats::BaseController
 
+    # Public - Will list the deploys that correspond with selected repos, users, orders, and groupings. Only shows
+    # deploys within the @start_date and @end_date.
+    #
+    # Returns - the deploy data
     def index
-      # sets to include user and repo, and sorts data
       @deploys = Hubstats::Deploy.includes(:repo, :pull_requests, :user)
         .belonging_to_users(params[:users]).belonging_to_repos(params[:repos])
         .group_by(params[:group])
@@ -14,7 +17,10 @@ module Hubstats
       grouping(params[:group], @deploys)
     end
 
-    # show basic stats and pull requests from a single deploy
+    # Public - Shows the single deploy and all of the stats and pull requests about that deploy. Stats and PRs only
+    # include info that happened between @start_date and @end_date.
+    #
+    # Returns - the stats and data of the deploy
     def show
       @deploy = Hubstats::Deploy.includes(:repo, :pull_requests).find(params[:id])
       repo = @deploy.repo
@@ -29,7 +35,10 @@ module Hubstats
       }
     end
 
-    # make a new deploy with all of the correct attributes
+    # Public - Creates a new deploy with the git_revision. Passed in the repo name and a string of PR ids
+    # that are then used to find the repo_id, PR id array. The user_id is found through one of the pull requests.
+    #
+    # Returns - nothing, but makes a new deploy
     def create
       if params[:git_revision].nil? || params[:repo_name].nil? || params[:pull_request_ids].nil?
         render text: "Missing a necessary parameter: git revision, pull request ids, or repository name.", :status => 400 and return
@@ -45,11 +54,11 @@ module Hubstats
           @deploy.repo_id = @repo.first.id.to_i
         end
 
-        @pull_request_id_array = params[:pull_request_ids].split(",").map {|i| i.strip.to_i}
-        if !valid_pr_ids
+        pull_request_id_array = params[:pull_request_ids].split(",").map {|i| i.strip.to_i}
+        if !valid_pr_ids(pull_request_id_array)
           render text: "No pull request ids given.", :status => 400 and return
         else
-          @deploy.pull_requests = Hubstats::PullRequest.where(repo_id: @deploy.repo_id).where(number: @pull_request_id_array)
+          @deploy.pull_requests = Hubstats::PullRequest.where(repo_id: @deploy.repo_id).where(number: pull_request_id_array)
         end
 
         if !valid_pulls
@@ -64,14 +73,23 @@ module Hubstats
       end
     end
 
+    # valid_repo
+    # params: repo
+    # Checks if the repo that's passed in is empty.
     def valid_repo(repo)
       return !repo.empty?
     end
 
-    def valid_pr_ids
-      return !@pull_request_id_array.empty? && @pull_request_id_array != [0]
+    # valid_pr_ids
+    # params: pull_id_array
+    # Checks if the array is empty or if the ids in the array are invalid.
+    def valid_pr_ids(pull_id_array)
+      return !pull_id_array.empty? && pull_id_array != [0]
     end
 
+    # valid_pulls
+    # Checks if the first pull assigned to the new deploy is nil, if the merged_by part is nil. If nothing is nil, it will set
+    # the user_id of the deploy to be the merged_by of the pull.
     def valid_pulls
       pull = @deploy.pull_requests.first
       return false if pull.nil? || pull.merged_by.nil?

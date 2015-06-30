@@ -1,6 +1,12 @@
 // Place all the behaviors and hooks related to the matching controller here.
 // All this logic will automatically be available in application.js.
 
+/* This will be run whenever the Pull Requests page or Deploy page (for some functionality)
+ * is opened or refreshed. It will automatically call of the below functions on all of the
+ * variables that are in the URL of the page. The below pieces are all about sorting
+ * the data on the page based on state (open or closed), order (newest first
+ * or oldest first), and the grouping (by repo or user).
+ */
 $(document).ready(function() {
   queryParameters = getUrlVars();
   setDefaults(queryParameters);
@@ -31,7 +37,11 @@ $(document).ready(function() {
   });
 });
 
-
+/**
+ * updateQueryStringParameter
+ * @params - queryParameters, key, value
+ * Updates the string paramters based on the specifications in the URL.
+ */
 function updateQueryStringParameter(queryParameters, key, value) {
   var uri = document.location.pathname;
   if (!queryParameters[key])
@@ -49,6 +59,9 @@ function updateQueryStringParameter(queryParameters, key, value) {
   document.location.href = uri
 }
 
+/* getUrlVars
+ * Gets all of the variables that are in the URL.
+ */
 function getUrlVars() {
   var vars = [], hash;
   if (window.location.href.indexOf('?') > 0) {
@@ -63,6 +76,10 @@ function getUrlVars() {
   return vars;
 }
 
+/* setDefaults
+ * @params - queryParameters
+ * Sets the state, order, and grouping to be 'default', or all, descending, and non-grouped.
+ */
 function setDefaults(queryParameters) {
   if (queryParameters["state"])
     $('#' + queryParameters["state"]).addClass('active');
@@ -78,6 +95,11 @@ function setDefaults(queryParameters) {
     $('#group-by').val(queryParameters["group"]);
 }
 
+/* initLabels
+ * @params - queryParameters
+ * Takes the query parameters and if there are labels as a parameter, then assigns 
+ * the background colors to the labels that are highlighted.
+ */
 function initLabels (queryParameters) {
   if (queryParameters["label"]) {
     var labels = queryParameters["label"].split(',');
@@ -93,6 +115,9 @@ function initLabels (queryParameters) {
   }
 }
 
+/* changeColors
+ * Adds the colors to the labels on the list of labels and when labeling the pull requests.
+ */
 function changeColors () {
   $(".color-label").each( function() {
     var color = '#' + $(this)[0].title;
@@ -104,9 +129,12 @@ function changeColors () {
     var color = '#' + $(this).data("color");
     $(this).children().eq(0).css('background-color',color);
   });
-
 }
 
+/* activeLabels
+ * Shows only the labels that are assigned to a pull request that is currently being shown;
+ * whether a PR is being shown is dependent on what state (closed, open, or all) the data is showing.
+ */
 function activeLabels () {
   $("#labels-container .btn-label").click(function () {
     $(this).toggleClass("active");
@@ -122,7 +150,11 @@ function activeLabels () {
   });
 }
 
-function isDark( color ) {
+/* isDark
+ * @params - color
+ * Edits the color of the text if the label color is dark.
+ */
+function isDark(color) {
     var match = /rgb\((\d+).*?(\d+).*?(\d+)\)/.exec(color);
     return parseFloat(match[1])
          + parseFloat(match[2])
