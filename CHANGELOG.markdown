@@ -1,3 +1,4 @@
+#### v0.4.1
 #### v0.4.0
 * Cleaning up code; fixing bug with repo filter; adding pretty footer
 
