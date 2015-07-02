@@ -1,3 +1,12 @@
+#### v0.4.0
+* Cleaning up code; fixing bug with repo filter; adding pretty footer
+
+  > Emma Sax: Luke Ludwig, Nick LaMuro: https://github.com/sportngin/hubstats/pull/70
+
+* Cleaning up code; fixing bug with repo filter; adding pretty footer
+
+  > Emma Sax: Luke Ludwig, Nick LaMuro: https://github.com/sportngin/hubstats/pull/70
+
 #### v0.3.17
 * Adding migration to fix datetimes versus strings
 
