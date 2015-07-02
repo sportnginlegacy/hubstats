@@ -1,3 +1,12 @@
+#### v0.4.2
+* Fixing bugs that made counts different in show pages and indices
+
+  > Emma Sax: Nick LaMuro: https://github.com/sportngin/hubstats/pull/71
+
+* Fixing bugs that made counts different in show pages and indices
+
+  > Emma Sax: Nick LaMuro: https://github.com/sportngin/hubstats/pull/71
+
 #### v0.4.1
 #### v0.4.0
 * Cleaning up code; fixing bug with repo filter; adding pretty footer
