@@ -1,3 +1,7 @@
+/* This is for the filters in the top left corner of the Deploys and Pull Requests pages.
+ * This allows the user of Hubstats to filter by an entire list of the repos/users, and then
+ * on selection only show data for that choice.
+ */
 $(document).ready(function() { 
   usersIDs = queryParameters["users"] ? queryParameters["users"].replace("%2C", ",") : "";
   reposIDs = queryParameters["repos"] ? queryParameters["repos"].replace("%2C", ",") : "";
@@ -86,7 +90,10 @@ $(document).ready(function() {
   }).select2('val', []);
 });
 
-
+/* getPath
+ * @params - model (string)
+ * Returns the user or repo bath, based on whether the string passed in is 'repo' or 'user'.
+ */
 function getPath (model) {
   if (model == 'user') {
     return $("#brand").attr('data-user-path');}

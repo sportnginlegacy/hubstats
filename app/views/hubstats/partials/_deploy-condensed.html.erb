@@ -5,7 +5,7 @@
     <% end %>
   </div>
   
-  <!-- Show the git revision and when the deploy happened by whom -->
+  <!-- Show the repo name, git revision, and who deployed it when -->
   <div class="deploy-info col-lg-6 col-md-6 col-sm-6 col-xs-5">
     <h4>
       <%= link_to deploy.repo.name, repo_path(deploy.repo.name) %> /
@@ -20,7 +20,7 @@
     <%= "#{time_ago_in_words(deploy.deployed_at)} ago "%>
   </div>
 
-  <!-- Show all of the pull requests linked to the github PR -->
+  <!-- Show a list of links with all the pull requests in the deploy -->
   <div class="col-lg-5 col-md-5 col-sm-5">
     <div class="deploy-right">
       <% deploy.pull_requests.each_with_index do |pull_request, index| %>

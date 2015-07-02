@@ -31,10 +31,8 @@
         <option value="repo">Repo</option>
       </select>
 
-      <!-- Show all of the deploys -->
+      <!-- Show and paginate all of the deploys -->
       <%= render 'hubstats/tables/grouped_deploys' %>
-
-      <!--Contains the pagination so that only 15 deploys show per page-->
       <div class="text-center">
         <%= will_paginate @deploy, renderer: BootstrapPagination::Rails %>
       </div>

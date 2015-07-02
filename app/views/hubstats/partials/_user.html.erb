@@ -1,4 +1,6 @@
 <div class="row single-user">
+
+  <!-- Show the avatar of the githuber user and the user's username -->
   <div class="user-image col-lg-1 col-md-1 col-sm-1" >
     <img src= <%= user.avatar_url%> alt= <%= user.login %> >
   </div>
@@ -14,7 +16,8 @@
       </a>
     </h4>
   </div>
-  <!-- Show the total number of deploys for this user -->
+
+  <!-- Show the basic stats for this user for this user -->
   <div class="col-lg-2 col-md-2 col-sm-2">
     <div class="text-center">
       <span class="text-large"><%= user.deploy_count %></span>
@@ -33,7 +36,6 @@
       <span class="mega-octicon octicon-comment"></span>
     </div>
   </div>
-  <!-- Show the net additions using the average_additions and the average_deletions -->
   <div class="col-lg-2 col-md-2 col-sm-2">
     <div class="text-center">
       <span class="text-large"><%= user.additions - user.deletions %></span>

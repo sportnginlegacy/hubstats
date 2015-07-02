@@ -1,3 +1,4 @@
+<!-- Either say there are no users to show, or show all of the stat titles along with the stats/users -->
 <% if @users.length > 0 %>
   <div class="users">
     <div class="row single-user header">
@@ -13,7 +14,6 @@
       <div class="col-lg-2 col-md-2 col-sm-2">
         <a class="header desc" id="comments"> Comments <span class="octicon"></span></a>
       </div>
-      <!-- Show the net additions instead of the additions and deletions separately -->
       <div class="col-lg-2 col-md-2 col-sm-2">
         <a class="header desc" id="netadditions"> Net Additions <span class="octicon"></span></a>
       </div>

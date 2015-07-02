@@ -1,3 +1,4 @@
+# Generates fake comment data we can use to test with
 FactoryGirl.define do
   factory :comment, :class => Hubstats::Comment do
     user

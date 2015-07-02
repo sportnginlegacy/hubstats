@@ -1,3 +1,4 @@
+# Generates fake repo data we can use to test with
 FactoryGirl.define do
   factory :repo, :class => Hubstats::Repo do
     id 101010

@@ -1,3 +1,4 @@
+<!-- Show the deploys or say there are no deploys -->
 <% if @deploys.length > 0 %>
   <div class="deploys">
     <%= render partial: 'hubstats/partials/deploy', collection: @deploys, as: :deploy %>

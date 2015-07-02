@@ -1,5 +1,7 @@
 <div class="container" %>
   <div class="row" %>
+
+    <!-- Allow for filtering by repository or user -->
     <div class="col col-lg-3 col-md-3 col-sm-3">
       <div class="form-group">
         <input class="select2-control" id="repos">
@@ -24,6 +26,7 @@
       </div>
     </div>
 
+    <!-- Allow viewing pull requests by all, open, or closed PRs only -->
     <div class="col col-lg-9 col-md-9 col-sm-9">
       <div id="state-group" class="btn-group" data-toggle="buttons">
         <label class="btn btn-default" id="all">
@@ -37,6 +40,7 @@
         </label>
       </div>
 
+      <!-- Allow viewing pull requests by newest first or oldest first -->
       <div id="sort-group" class="btn-group" data-toggle="buttons">
         <label class="btn btn-default" id="desc">
           <input type="radio" name="sort"> Newest
@@ -46,14 +50,15 @@
         </label>
       </div>
 
+      <!-- Allow to group by repository and user -->
       <select id="group-by" class="form-control pull-right" style="width: 100px; display: inline; ">
         <option value="">Group By</option>
         <option value="user">User</option>
         <option value="repo">Repo</option>
       </select>
 
+      <!-- Show and paginate all of the pull requests -->
       <%= render 'hubstats/tables/grouped_pulls' %>
-
       <div class="text-center">
         <%= will_paginate @pull_requests, renderer: BootstrapPagination::Rails %>
       </div>

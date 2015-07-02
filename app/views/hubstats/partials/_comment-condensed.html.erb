@@ -1,8 +1,11 @@
 <div class="row single-comment">
+
+  <!-- Show the avatar of the user who made the PR -->
   <div class="user-image-small col-lg-1 col-md-1 col-sm-2 col-xs-2">
     <img src= <%= comment.user.avatar_url%> alt= <%= comment.user.login %> >
   </div>
 
+  <!-- Show the comment, who it was by, and when it was made -->
   <div class="comment-info col-lg-10 col-md-10 col-sm-8 col-xs-8">
     <%= link_to comment.user.login, user_path(comment.user) %> commented
     <%= "#{time_ago_in_words(comment.created_at)} ago "%> <br>
