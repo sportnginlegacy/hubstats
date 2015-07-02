@@ -2,7 +2,7 @@
 namespace :hubstats do 
   namespace :populate do
 
-    desc "Pull repos from Github save to database"
+    desc "Pull repos from Github saves in database"
     task :setup_repos => :environment do
       Hubstats::GithubAPI.get_repos.each do |repo|
         Rake::Task["hubstats:populate:setup_repo"].execute({repo: repo})
