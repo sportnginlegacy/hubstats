@@ -50,11 +50,11 @@ module Hubstats
     # end_date - the end of the data range
     # 
     # Returns - the average additions and deletions
-    scope :averages, lambda {
+    scope :averages, lambda {|start_date, end_date|
       select("hubstats_repos.id as repo_id")
       .select("ROUND(IFNULL(AVG(hubstats_pull_requests.additions),0)) AS average_additions")
       .select("ROUND(IFNULL(AVG(hubstats_pull_requests.deletions),0)) AS average_deletions")
-      .joins("LEFT JOIN hubstats_pull_requests ON hubstats_pull_requests.repo_id = hubstats_repos.id AND hubstats_pull_requests.merged = '1'")
+      .joins(sanitize_sql_array(["LEFT JOIN hubstats_pull_requests ON hubstats_pull_requests.repo_id = hubstats_repos.id AND hubstats_pull_requests.merged = '1' AND (hubstats_pull_requests.merged_at BETWEEN ? AND ?)", start_date, end_date]))
       .group("hubstats_repos.id")
     }
 
@@ -66,7 +66,7 @@ module Hubstats
     # Returns - all of the stats about the repo
     scope :with_all_metrics, lambda {|start_date, end_date|
       select("hubstats_repos.*, deploy_count, pull_request_count, comment_count, average_additions, average_deletions")
-      .joins("LEFT JOIN (#{averages.to_sql}) AS averages ON averages.repo_id = hubstats_repos.id")
+      .joins("LEFT JOIN (#{averages(start_date, end_date).to_sql}) AS averages ON averages.repo_id = hubstats_repos.id")
       .joins("LEFT JOIN (#{pull_requests_count(start_date, end_date).to_sql}) AS pull_requests ON pull_requests.repo_id = hubstats_repos.id")
       .joins("LEFT JOIN (#{comments_count(start_date, end_date).to_sql}) AS comments ON comments.repo_id = hubstats_repos.id")
       .joins("LEFT JOIN (#{deploys_count(start_date, end_date).to_sql}) AS deploys ON deploys.repo_id = hubstats_repos.id")

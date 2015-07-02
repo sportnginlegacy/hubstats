@@ -124,7 +124,7 @@ module Hubstats
       select("hubstats_users.id as user_id")
       .select("SUM(IFNULL(hubstats_pull_requests.additions, 0)) AS additions")
       .select("SUM(IFNULL(hubstats_pull_requests.deletions, 0)) AS deletions")
-      .joins(sanitize_sql_array(["LEFT JOIN hubstats_pull_requests ON hubstats_pull_requests.user_id = hubstats_users.id AND (hubstats_pull_requests.created_at BETWEEN ? AND ?) AND hubstats_pull_requests.merged = '1'", start_date, end_date]))
+      .joins(sanitize_sql_array(["LEFT JOIN hubstats_pull_requests ON hubstats_pull_requests.user_id = hubstats_users.id AND (hubstats_pull_requests.merged_at BETWEEN ? AND ?) AND hubstats_pull_requests.merged = '1'", start_date, end_date]))
       .group("hubstats_users.id")
     }
 
