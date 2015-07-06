@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150625165035) do
+ActiveRecord::Schema.define(:version => 20150706210701) do
 
   create_table "hubstats_comments", :force => true do |t|
     t.string   "kind"
@@ -131,6 +131,17 @@ ActiveRecord::Schema.define(:version => 20150625165035) do
   end
 
   add_index "hubstats_repos", ["owner_id"], :name => "index_hubstats_repos_on_owner_id"
+
+  create_table "hubstats_teams", :force => true do |t|
+    t.string  "name"
+    t.string  "description"
+    t.boolean "hubstats"
+  end
+
+  create_table "hubstats_teams_users", :force => true do |t|
+    t.integer "user_id"
+    t.integer "team_id"
+  end
 
   create_table "hubstats_users", :force => true do |t|
     t.string   "login"

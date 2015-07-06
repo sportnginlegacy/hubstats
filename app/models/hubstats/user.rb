@@ -169,6 +169,7 @@ module Hubstats
     has_many :repos, :class_name => "Repo"
     has_many :pull_requests
     has_many :deploys
+    has_and_belongs_to_many :teams, :join_table => 'hubstats_teams_users'
 
     # Public - Creates a new user form a GitHub webhook.
     #
@@ -201,6 +202,13 @@ module Hubstats
       else
         pull_comment_deploy_count(start_date, end_date)
       end
+    end
+
+    # Public - Gets the teams where the user is belongs to and where hubstats bool is true.
+    #
+    # Returns - the first team that the user belongs to where hubstats bool is true
+    def find_dev_team(user)
+      return self.teams.where(hubstats: true).first
     end
 
     # Public - Designed so that the list of users can be ordered based on deploys, pulls, comments, net additions, or name.
