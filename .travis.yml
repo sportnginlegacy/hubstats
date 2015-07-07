@@ -9,7 +9,14 @@ env:
   - RAILS_VERSION=3.2
 rvm:
   - 1.9.3
-  - 2.0.0
+  - 2.0
+  - 2.1
+  - 2.2
+matrix:
+  exclude:
+  - rvm: 1.9.3
+         env: RAILS_VERSION=4.0
+
 script: bundle exec rspec
 before_script:
   - bundle exec rake app:db:create
