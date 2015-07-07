@@ -6,4 +6,7 @@ require "active_support/core_ext/numeric"
 require "hubstats/config"
 
 module Hubstats
+  def self.config
+    @@config ||= Hubstats::Config.parse
+  end
 end
