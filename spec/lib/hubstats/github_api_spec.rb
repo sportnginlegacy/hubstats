@@ -60,10 +60,10 @@ module Hubstats
         end
 
         # If this test begins to fail, it is because there are so many repeated calls to Octokit; just comment out
-        it 'should fail to initialize at all' do
-         Hubstats::GithubAPI.configure()
-         expect{Hubstats::GithubAPI.client}.to raise_error Octokit::Unauthorized
-        end
+        # it 'should fail to initialize at all' do
+        #  Hubstats::GithubAPI.configure()
+        #  expect{Hubstats::GithubAPI.client}.to raise_error Octokit::Unauthorized
+        # end
       end
     end
 
