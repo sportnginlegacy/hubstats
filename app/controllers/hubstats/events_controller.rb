@@ -22,7 +22,7 @@ module Hubstats
       render :nothing => true
     end
 
-    # Pulbic - Will check that the request passed is a valid signature.
+    # Public - Will check that the request passed is a valid signature.
     # 
     # request - the signature to be checked
     #
