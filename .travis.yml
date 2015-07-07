@@ -9,7 +9,7 @@ env:
   - RAILS_VERSION=3.2
 rvm:
   - 1.9.3
-  - 2
+  - 2.0.0
 
 script: bundle exec rspec
 before_script:
