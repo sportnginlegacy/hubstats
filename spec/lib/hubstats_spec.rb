@@ -11,7 +11,7 @@ describe Hubstats
       subject.config
     end
 
-    it "memoizes the config object" do
+    it "memorizes the config object" do
       expect(Hubstats::Config).to receive(:parse).once { double(:config) }
       subject.config
       subject.config
