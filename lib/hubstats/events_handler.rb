@@ -1,3 +1,5 @@
+# I shall add a single comment
+
 module Hubstats
   class EventsHandler
 

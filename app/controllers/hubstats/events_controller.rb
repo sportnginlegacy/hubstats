@@ -1,5 +1,7 @@
 require_dependency "hubstats/application_controller"
 
+# I shall add a single comment
+
 module Hubstats
   class EventsController < ApplicationController
 
