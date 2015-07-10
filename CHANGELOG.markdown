@@ -1,3 +1,4 @@
+#### v0.4.4
 #### v0.4.3
 * Fixes a bug introduced in v0.4.1 that removed the config method from Hubstats
 
