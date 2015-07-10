@@ -6,4 +6,12 @@ require "active_support/core_ext/numeric"
 require "hubstats/config"
 
 module Hubstats
+  # Public - Sets the config for the webhook to correctly receive and match the signatures
+  #
+  # DO NOT DELETE
+  #
+  # Returns - nothing
+  def self.config
+    @@config ||= Hubstats::Config.parse
+  end
 end

@@ -39,12 +39,12 @@ module Hubstats
         end
       end
 
-      context "with application authentication" do 
-        before do 
+      context "with application authentication" do
+        before do
           allow(ENV).to receive(:[]).and_return(nil)
           allow(ENV).to receive(:[]).with("CLIENT_ID").and_return("client_id")
           allow(ENV).to receive(:[]).with("CLIENT_SECRET").and_return("client_secret")
-        end 
+        end
 
         it 'should intialize client with client-id environment variables' do
           Hubstats::GithubAPI.configure()
@@ -55,11 +55,11 @@ module Hubstats
 
       context "with wrong credentials" do
         before do
-          allow(client).to receive(:user).and_return( nil )
-          allow(ENV).to receive(:[]).and_return(nil)
+          allow(client).to receive(:user).and_return( 'test' )
+          allow(ENV).to receive(:[]).and_return('creds')
+          allow(Octokit::Client).to receive(:new).with({:access_token=>"creds"}).and_raise(Octokit::Unauthorized)
         end
 
-        # If this test begins to fail, it is because there are so many repeated calls to Octokit; just comment out
         it 'should fail to initialize at all' do
          Hubstats::GithubAPI.configure()
          expect{Hubstats::GithubAPI.client}.to raise_error Octokit::Unauthorized
