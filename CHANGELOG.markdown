@@ -1,3 +1,9 @@
+#### v0.4.4
+#### v0.4.3
+* Fixes a bug introduced in v0.4.1 that removed the config method from Hubstats
+
+  > Andy Fleener, Emma Sax: : https://github.com/sportngin/hubstats/pull/73
+
 #### v0.4.2
 * Fixing bugs that made counts different in show pages and indices
 
