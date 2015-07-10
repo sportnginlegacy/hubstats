@@ -151,7 +151,6 @@ ActiveRecord::Schema.define(:version => 20150706210701) do
     t.string   "repos_url"
     t.string   "events_url"
     t.string   "received_events_url"
-    t.integer  "team_id"
   end
 
 end
