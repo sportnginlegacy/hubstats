@@ -2,7 +2,6 @@ module Hubstats
   class Team < ActiveRecord::Base
 
     scope :with_id, lambda {|user_id| where(id: user_id.split(',')) if user_id}
-
     attr_accessible :name, :description, :hubstats
     has_and_belongs_to_many :users, :join_table => 'hubstats_teams_users'
 
@@ -21,18 +20,18 @@ module Hubstats
       end
     end
 
-    # Public - Designed so that the list of users can be ordered based on deploys, pulls, comments, net additions, or name.
+    # Public - Designed so that the list of teams can be ordered based on users, pulls, comments, net additions, or name.
     # if none of these are selected, then the default is to order by pull request count in descending order.
     #
     # order_params - the param of what the users should be sorted by
     #
-    # Returns - the user data ordered
+    # Returns - the team data ordered
     def self.custom_order(order_params)
       if order_params
         order = order_params.include?('asc') ? "ASC" : "DESC"
         case order_params.split('-').first
-        when 'deploys'
-          order("deploy_count #{order}")
+        when 'users'
+          order("user_count #{order}")
         when 'pulls'
           order("pull_request_count #{order}")
         when 'comments'
