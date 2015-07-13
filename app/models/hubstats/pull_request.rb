@@ -27,6 +27,7 @@ module Hubstats
     belongs_to :user
     belongs_to :repo
     belongs_to :deploy
+    belongs_to :team
     has_and_belongs_to_many :labels, :join_table => "hubstats_labels_pull_requests"
 
     # Public - Makes a new pull request from a GitHub webhook. Finds user_id and repo_id based on users and repos 
@@ -57,6 +58,14 @@ module Hubstats
             deploy.save!
           end
       end
+
+      # user_dev_team = Hubstats::User.find_dev_team(github_pull[:user])
+
+      # puts user_dev_team.inspect
+
+      # if user_dev_team != nil
+      #   pull_data[:team_id] = user_dev_team
+      # end
 
       return pull if pull.update_attributes(pull_data)
       Rails.logger.warn pull.errors.inspect

@@ -204,11 +204,12 @@ module Hubstats
       end
     end
 
-    # Public - Gets the teams where the user is belongs to and where hubstats bool is true.
+    # Public - Gets the first team where the user is belongs to and where hubstats bool is true.
     #
-    # Returns - the first team that the user belongs to where hubstats bool is true
-    def find_dev_team(user)
-      return self.teams.where(hubstats: true).first
+    # Returns - the first team that the user belongs to where hubstats bool is true, if nothing
+    # meets these qualifications, nil is returned
+    def team
+      teams.where(hubstats: true).first
     end
 
     # Public - Designed so that the list of users can be ordered based on deploys, pulls, comments, net additions, or name.
