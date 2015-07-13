@@ -17,6 +17,8 @@
       <!-- Show all of the pages in tab form -->
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav navbar-right">
+          <li class="<%='navbar-active' if params[:controller] == 'hubstats/teams'%>">
+            <%= link_to "Teams", teams_path%></li>
           <li class="<%='navbar-active' if params[:controller] == 'hubstats/deploys'%>">
             <%= link_to "Deployments", deploys_path%></li>
           <li class="<%='navbar-active' if params[:controller] == 'hubstats/repos'%>">

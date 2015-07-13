@@ -5,6 +5,7 @@ module Hubstats
     scope :created_in_date_range, lambda {|start_date, end_date| where("hubstats_comments.created_at BETWEEN ? AND ?", start_date, end_date)}
     scope :belonging_to_pull_request, lambda {|pull_request_id| where(pull_request_id: pull_request_id)}
     scope :belonging_to_user, lambda {|user_id| where(user_id: user_id)}
+    scope :belonging_to_team, lambda {|team_id| where(team_id: team_id)}
     scope :belonging_to_repo, lambda {|repo_id| where(repo_id: repo_id)}
 
     # Public - Gets the number of PRs that a user commented on that were not their own PR.
