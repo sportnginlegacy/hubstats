@@ -13,5 +13,4 @@ FactoryGirl.define do
 
     initialize_with { attributes } 
   end
-
 end

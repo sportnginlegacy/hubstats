@@ -28,7 +28,7 @@ module Hubstats
     end
 
     it 'should find first team that this user belongs to' do
-      team1 = create(:team)
+      team1 = create(:team, name: "sad")
       team2 = create(:team, name: "happy")
       user = create(:user, login: 'janedoe', id: 11)
       team1.users << user

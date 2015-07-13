@@ -41,5 +41,25 @@ module Hubstats
       expect(deploy.user_id).to eq(nil)
       expect(pull_request.deploy.user_id).to eq(202020)
     end
+
+    it "should track the team_id when making a pull request" do
+      user_hash = {login: 'name', id: '12345'}
+      user = User.create(user_hash)
+      team = create(:team, id: 1010)
+      team.users << user
+      pull = build(:pull_request_hash, :user => user_hash)
+      pull_request = PullRequest.create_or_update(pull)
+      expect(pull_request.user_id).to eq(user[:id])
+      expect(pull_request.team_id).to eq(team[:id])
+    end
+
+    it "should leave the team_id of a pull request blank if user is not part of a team" do
+      user_hash = {login: 'name', id: '12345'}
+      user = User.create(user_hash)
+      pull = build(:pull_request_hash, :user => user_hash)
+      pull_request = PullRequest.create_or_update(pull)
+      expect(pull_request.user_id).to eq(user[:id])
+      expect(pull_request.team_id).to eq(nil)
+    end
   end
 end

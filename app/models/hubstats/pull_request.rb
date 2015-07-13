@@ -22,7 +22,7 @@ module Hubstats
       :review_comments_url, :review_comment_url, :comments_url, :statuses_url, :number,
       :state, :title, :body, :created_at, :updated_at, :closed_at, :merged_at, 
       :merge_commit_sha, :merged, :mergeable, :comments, :commits, :additions,
-      :deletions, :changed_files, :user_id, :repo_id, :merged_by
+      :deletions, :changed_files, :user_id, :repo_id, :merged_by, :team_id
 
     belongs_to :user
     belongs_to :repo
@@ -31,7 +31,9 @@ module Hubstats
     has_and_belongs_to_many :labels, :join_table => "hubstats_labels_pull_requests"
 
     # Public - Makes a new pull request from a GitHub webhook. Finds user_id and repo_id based on users and repos 
-    # that are already in the Hubstats database. Also updates the user_id of a deploy if the pull request has been merged in a deploy.
+    # that are already in the Hubstats database. Updates the user_id of a deploy if the pull request has been merged in a deploy.
+    # If the user who makes the PR has a team, then it will update the team_id of the PR to match the team the user
+    # belongs to.
     #
     # github_pull - the info that is from Github about the new or updated pull request
     #
@@ -59,13 +61,9 @@ module Hubstats
           end
       end
 
-      # user_dev_team = Hubstats::User.find_dev_team(github_pull[:user])
-
-      # puts user_dev_team.inspect
-
-      # if user_dev_team != nil
-      #   pull_data[:team_id] = user_dev_team
-      # end
+      if user.team && user.team.id
+        pull_data[:team_id] = user.team.id
+      end
 
       return pull if pull.update_attributes(pull_data)
       Rails.logger.warn pull.errors.inspect
