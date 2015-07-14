@@ -14,7 +14,4 @@ Hubstats::Engine.routes.draw do
   scope "/:repo", :as => :repo do
     get '/pull/:id' => "pull_requests#show", :as => :pull # routes to the specific repo's pull id
   end
-  
-  
-  
 end
