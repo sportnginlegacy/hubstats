@@ -1,18 +1,21 @@
-<!-- Either say there are no users to show, or show all of the stat titles along with the stats/users -->
+<!-- Either say there are no teams to show, or show all of the stat titles along with the stats/teams -->
 <% if @teams.length > 0 %>
-  <div class="users">
+  <div class="teams">
     <div class="row single-user header">
-      <div class="col-lg-4 col-md-4 col-sm-4">
-        <a class="header desc" id="name"> GitHub Username <span class="octicon"></span> </a>
+      <div class="col-lg-2 col-md-2 col-sm-2">
+        <a class="header desc" id="name"> Team Name <span class="octicon"></span> </a>
       </div>
       <div class="col-lg-2 col-md-2 col-sm-2">
-        <a class="header desc" id="deploys"> Deployments <span class="octicon"></span> </a>
+        <a class="header desc" id="usercount"> Users <span class="octicon"></span> </a>
       </div>
       <div class="col-lg-2 col-md-2 col-sm-2">
         <a class="header desc" id="pulls"> Pull Requests <span class="octicon"></span> </a>
       </div>
       <div class="col-lg-2 col-md-2 col-sm-2">
         <a class="header desc" id="comments"> Comments <span class="octicon"></span></a>
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2">
+        <a class="header desc" id="repocount"> Repositories <span class="octicon"></span></a>
       </div>
       <div class="col-lg-2 col-md-2 col-sm-2">
         <a class="header desc" id="netadditions"> Net Additions <span class="octicon"></span></a>

@@ -40,6 +40,5 @@ module Hubstats
         deletions: @pull_request.deletions.to_i
       }
     end
-
   end
 end

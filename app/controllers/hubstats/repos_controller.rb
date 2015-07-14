@@ -46,16 +46,10 @@ module Hubstats
     #
     # Returns - the stats for the entirety of Hubstats and all repos
     def dashboard
-      if params[:query] ## For select 2
-        @repos = Hubstats::Repo.where("name LIKE ?", "%#{params[:query]}%").order("name ASC")
-      elsif params[:id]
-        @repos = Hubstats::Repo.where(id: params[:id].split(",")).order("name ASC")
-      else
-        @repos = Hubstats::Repo.with_all_metrics(@start_date, @end_date)
-          .with_id(params[:repos])
-          .custom_order(params[:order])
-          .paginate(:page => params[:page], :per_page => 15)
-      end
+      @repos = Hubstats::Repo.with_all_metrics(@start_date, @end_date)
+        .with_id(params[:repos])
+        .custom_order(params[:order])
+        .paginate(:page => params[:page], :per_page => 15)
 
       @user_count = Hubstats::User.with_pulls_or_comments_or_deploys(@start_date, @end_date).only_active.length
       @deploy_count = Hubstats::Deploy.deployed_in_date_range(@start_date, @end_date).count(:all)
@@ -74,8 +68,9 @@ module Hubstats
       end
     end
 
-    # stats
-    # Will assign all of the stats for both the show page and the dashboard page.
+    # Public - Will assign all of the stats for both the show page and the dashboard page.
+    #
+    # Returns - the data in two hashes
     def stats
       @additions ||= 0
       @deletions ||= 0

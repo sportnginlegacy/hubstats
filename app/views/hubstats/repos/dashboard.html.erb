@@ -15,7 +15,7 @@
   <!-- Show all of the repositories with their individual stats -->
   <div class="row">
     <div class="col col-lg-12">
-      <h3> Repositories </h3>       
+      <h3> Repositories </h3>
       <%= render 'hubstats/tables/repos' %>
       <div class="text-center">
         <%= will_paginate @repo, renderer: BootstrapPagination::Rails %>

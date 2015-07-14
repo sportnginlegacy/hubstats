@@ -3,29 +3,32 @@ require_dependency "hubstats/application_controller"
 module Hubstats
   class TeamsController < Hubstats::BaseController
 
+    # Public - Shows all of the teams by filter params.
+    #
+    # Returns - the team data
     def index
-      # if params[:query]
-      #   @teams = Hubstats::Team.where("name LIKE ?", "%#{params[:query]}%").order("name ASC")
-      # elsif params[:id]
-      #   @teams = Hubstats::Team.where(id: params[:id].split(",")).order("name ASC")
-      # else
-      @teams = Hubstats::Team.with_id(params[:teams])
-          .paginate(:page => params[:page], :per_page => 15)
-      # end
-      
+      @teams = Hubstats::Team.with_all_metrics(@start_date, @end_date)
+        .with_id(params[:teams])
+        .custom_order(params[:order])
+        .paginate(:page => params[:page], :per_page => 15)
+        
       respond_to do |format|
         format.html # index.html.erb
         format.json { render :json => @teams}
       end
     end
 
+    # Public - Will show the specific team along with the basic stats about that team, including all users
+    # and merged PRs a team member has done within the @start_date and @end_date.
+    #
+    # Returns - the data of the specific team
     def show
-      @team = Hubstats::Team.where(name: params[:team]).first
+      @team = Hubstats::Team.where(id: params[:id]).first
       @pull_requests = Hubstats::PullRequest.belonging_to_team(@team.id).merged_in_date_range(@start_date, @end_date).order("updated_at DESC").limit(20)
       @pull_count = Hubstats::PullRequest.belonging_to_team(@team.id).merged_in_date_range(@start_date, @end_date).count(:all)
-      @comment_count = Hubstats::Comment.belonging_to_team(@team.id).created_in_date_range(@start_date, @end_date).count(:all)
-      @users = Hubstats::User.team(@team.id)
-      @user_count = Hubstats::User.team(@team.id).length
+      @users = @team.users.updated_in_date_range(@start_date, @end_date).limit(20)
+      @user_count = @team.users.updated_in_date_range(@start_date, @end_date).length
+      @comment_count = Hubstats::Comment.belonging_to_team(@users.pluck(:id)).created_in_date_range(@start_date, @end_date).count(:all)
       @net_additions = Hubstats::PullRequest.merged_in_date_range(@start_date, @end_date).belonging_to_team(@team.id).sum(:additions).to_i -
                        Hubstats::PullRequest.merged_in_date_range(@start_date, @end_date).belonging_to_team(@team.id).sum(:deletions).to_i
       @additions = Hubstats::PullRequest.merged_in_date_range(@start_date, @end_date).belonging_to_team(@team.id).average(:additions)
@@ -34,17 +37,16 @@ module Hubstats
       stats
     end
 
-    # stats
-    # Will assign all of the stats for both the show page and the dashboard page.
+    # Public - Shows the basic stats for the teams show page.
+    #
+    # Returns - the data in two hashes
     def stats
       @additions ||= 0
       @deletions ||= 0
       @stats_basics = {
-        user_count: @user_count,
         pull_count: @pull_count,
-        comment_count: @comment_count
-      }
-      @stats_additions = {
+        user_count: @user_count,
+        comment_count: @comment_count,
         avg_additions: @additions.round.to_i,
         avg_deletions: @deletions.round.to_i,
         net_additions: @net_additions

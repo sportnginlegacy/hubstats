@@ -2,17 +2,10 @@
   <div class="row">
 
     <!-- Title with the team's name -->
-    <h1 class="title text-center"><a href=<%=@user.html_url%>> <%= @team.name %></a> </h1>
+    <h1 class="title text-center"><%= @team.name %></a> </h1>
 
     <!-- Show all of the stats about the team -->
-    <%= render 'hubstats/partials/quick_stats' %>    
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <%= render 'hubstats/partials/quick_addition_stats' %>
+    <%= render 'hubstats/partials/quick_stats' %>
   </div>
 
   <div class="row">

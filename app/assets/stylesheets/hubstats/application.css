@@ -36,12 +36,14 @@
   top: 8px;
 }
 
+/*For the footer*/
 .footer-main-text {
   font-size: 18px;
   color: #B0B0B0;
   text-align: center;
 }
 
+/*For the footer*/
 .footer-text {
   font-size: 12px;
   color: #A0A0A0;
@@ -107,7 +109,7 @@
 
 /*For the lists of repos, pull requests, deploys, comments, and users*/
 
-.pulls, .comments, .users, .repos, .deploys {
+.pulls, .comments, .users, .repos, .teams, .deploys {
   margin: 15px 0px 15px 0px;
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -125,6 +127,7 @@
 .row .single-comment,
 .row .single-user,
 .row .single-repo,
+.row .single-team,
 .row .single-deploy {
   padding:5px;
   margin: 0px;
@@ -148,6 +151,7 @@
 .single-pull > .pull-info,
 .single-user > .user-info,
 .single-repo > .repo-info,
+.single-team > .team-info,
 .single-deploy > .deploy-info, {
   padding: 0px;
 }
