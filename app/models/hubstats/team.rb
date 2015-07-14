@@ -13,26 +13,35 @@ module Hubstats
       select("hubstats_teams.id as team_id")
        .select("COUNT(hubstats_teams_users.user_id) AS user_count")
        .joins(:users)
-       .where("hubstats_users.updated_at BETWEEN ? AND ?", start_date, end_date)
        .group("hubstats_teams.id")
     }
 
-    # # Public - Counts all of the comments a selected team's members have written that occurred between the start_date and end_date.
-    # # 
-    # # start_date - the start of the date range
-    # # end_date - the end of the data range
-    # # 
-    # # Returns - count of comments
-    # scope :comments_count, lambda {|start_date, end_date|
-    #   select("hubstats_teams.id as team_id")
-    #    .select("IFNULL(COUNT(DISTINCT hubstats_comments.id),0) AS comment_count")
-    #    .joins(sanitize_sql_array(["LEFT JOIN hubstats_comments ON hubstats_comments.team_id = hubstats_repos.id AND (hubstats_comments.created_at BETWEEN ? AND ?)", start_date, end_date]))
-    #    .group("hubstats_teams.id")
-    # }
+    # Public - Counts all of the comments a selected team's members have written that occurred between the start_date and end_date.
+    # 
+    # start_date - the start of the date range
+    # end_date - the end of the data range
+    # user_id_array - an array of all of the user ids in selected team
+    # 
+    # Returns - count of comments
+    scope :comments_count, lambda {|start_date, end_date|
+      select("IFNULL(COUNT(DISTINCT hubstats_comments.id),0) AS comment_count, hubstats_teams.id as team_id")
+       .joins("LEFT OUTER JOIN hubstats_teams_users ON hubstats_teams.id = hubstats_teams_users.team_id")
+       .joins(sanitize_sql_array(["LEFT JOIN hubstats_comments ON (hubstats_comments.user_id = hubstats_teams_users.user_id) AND (hubstats_comments.created_at BETWEEN ? AND ?)", start_date, end_date]))
+       .group("hubstats_teams.id")
+    }
 
-    # scope :repos_count, lambda {|start_date, end_date|
-    #   select("Hubstats_")
-    # }
+    # Public - Counts all of the repos a selected team's members have made PRs or comments on.
+    # 
+    # start_date - the start of the date range
+    # end_date - the end of the data range
+    # 
+    # Returns - count of repos
+    scope :repos_count, lambda {|start_date, end_date|
+      select("hubstats_teams.id as team_id")
+       .select("IFNULL(COUNT(DISTINCT hubstats_pull_requests.repo_id),0) AS repo_count")
+       .joins(sanitize_sql_array(["LEFT JOIN hubstats_pull_requests ON hubstats_pull_requests.team_id = hubstats_teams.id AND (hubstats_pull_requests.merged_at BETWEEN ? AND ?) AND hubstats_pull_requests.merged = '1'", start_date, end_date]))
+       .group("hubstats_teams.id")
+    }
 
     # Public - Counts all of the merged pull requests for selected team's users that occurred between the start_date and end_date.
     # 
@@ -68,22 +77,14 @@ module Hubstats
     # end_date - the end of the data range
     # 
     # Returns - all of the stats about the team
-    # scope :with_all_metrics, lambda {|start_date, end_date|
-    #   select("hubstats_teams.*, user_count, pull_request_count, repo_count, comment_count, additions, deletions")
-    #   .joins("LEFT JOIN (#{net_additions_count(start_date, end_date).to_sql}) AS net_additions ON net_additions.team_id = hubstats_teams.id")
-    #   .joins("LEFT JOIN (#{pull_requests_count(start_date, end_date).to_sql}) AS pull_requests ON pull_requests.team_id = hubstats_teams.id")
-    #   .joins("LEFT JOIN (#{repos_count(start_date, end_date).to_sql}) AS repos ON repos.team_id = hubstats_teams.id")
-    #   .joins("LEFT JOIN (#{comments_count(start_date, end_date).to_sql}) AS comments ON comments.team_id = hubstats_teams.id")
-    #   .joins("LEFT JOIN (#{users_count(start_date, end_date).to_sql}) AS users ON users.team_id = hubstats_teams.id")
-    #   .group("hubstats_teams.id")
-    # }
-
     scope :with_all_metrics, lambda {|start_date, end_date|
-      select("hubstats_teams.*, user_count, pull_request_count, additions, deletions")
-      .joins("LEFT JOIN (#{net_additions_count(start_date, end_date).to_sql}) AS net_additions ON net_additions.team_id = hubstats_teams.id")
-      .joins("LEFT JOIN (#{pull_requests_count(start_date, end_date).to_sql}) AS pull_requests ON pull_requests.team_id = hubstats_teams.id")
-      .joins("LEFT JOIN (#{users_count(start_date, end_date).to_sql}) AS users ON users.team_id = hubstats_teams.id")
-      .group("hubstats_teams.id")
+      select("hubstats_teams.*, user_count, pull_request_count, comment_count, repo_count,additions, deletions")
+       .joins("LEFT JOIN (#{net_additions_count(start_date, end_date).to_sql}) AS net_additions ON net_additions.team_id = hubstats_teams.id")
+       .joins("LEFT JOIN (#{pull_requests_count(start_date, end_date).to_sql}) AS pull_requests ON pull_requests.team_id = hubstats_teams.id")
+       .joins("LEFT JOIN (#{comments_count(start_date, end_date).to_sql}) AS comments ON comments.team_id = hubstats_teams.id")
+       .joins("LEFT JOIN (#{repos_count(start_date, end_date).to_sql}) AS repos ON repos.team_id = hubstats_teams.id")
+       .joins("LEFT JOIN (#{users_count(start_date, end_date).to_sql}) AS users ON users.team_id = hubstats_teams.id")
+       .group("hubstats_teams.id")
     }
 
     attr_accessible :name, :description, :hubstats
@@ -103,6 +104,7 @@ module Hubstats
         Team.new(name: team[:name], description: team[:description], hubstats: false)
       end
     end
+
 
     # Public - Designed so that the list of teams can be ordered based on users, pulls, comments, net additions, or name.
     # if none of these are selected, then the default is to order by pull request count in descending order.

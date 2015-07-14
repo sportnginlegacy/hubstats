@@ -7,7 +7,7 @@ module Hubstats
     #
     # Returns - the team data
     def index
-      @teams = Hubstats::Team.with_all_metrics(@start_date, @end_date)
+      @teams = Hubstats::Team.with_all_metrics(@start_date, @end_date) # where(hubstats: true)
         .with_id(params[:teams])
         .custom_order(params[:order])
         .paginate(:page => params[:page], :per_page => 15)
@@ -26,8 +26,8 @@ module Hubstats
       @team = Hubstats::Team.where(id: params[:id]).first
       @pull_requests = Hubstats::PullRequest.belonging_to_team(@team.id).merged_in_date_range(@start_date, @end_date).order("updated_at DESC").limit(20)
       @pull_count = Hubstats::PullRequest.belonging_to_team(@team.id).merged_in_date_range(@start_date, @end_date).count(:all)
-      @users = @team.users.updated_in_date_range(@start_date, @end_date).limit(20)
-      @user_count = @team.users.updated_in_date_range(@start_date, @end_date).length
+      @users = @team.users.limit(20)
+      @user_count = @team.users.length
       @comment_count = Hubstats::Comment.belonging_to_team(@users.pluck(:id)).created_in_date_range(@start_date, @end_date).count(:all)
       @net_additions = Hubstats::PullRequest.merged_in_date_range(@start_date, @end_date).belonging_to_team(@team.id).sum(:additions).to_i -
                        Hubstats::PullRequest.merged_in_date_range(@start_date, @end_date).belonging_to_team(@team.id).sum(:deletions).to_i
