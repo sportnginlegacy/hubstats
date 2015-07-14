@@ -3,6 +3,11 @@
 
     <!-- Title with the team's name -->
     <h1 class="title text-center"><%= @team.name %></a> </h1>
+    
+    <!-- Show the date/time that the deploy was deployed -->
+    <h4 class="text-center">
+      <%= @team.description %>
+    </h4>
 
     <!-- Show all of the stats about the team -->
     <%= render 'hubstats/partials/quick_stats' %>
@@ -23,9 +28,6 @@
     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
       <h3> Users </h3>
       <%= render 'hubstats/tables/users-condensed' %>
-      <% if @user_count > 20 %>
-        <p class="pull-right"><%= link_to "View All", users_path(:teams => @team.id) %></p>
-      <% end %>
     </div>
   </div>
 </div>
