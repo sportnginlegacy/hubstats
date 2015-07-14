@@ -8,6 +8,7 @@
     <h4> 
       <%= link_to user.login, user_path(user) %>
     </h4>
+    updated <%= distance_of_time_in_words(DateTime.now,user.updated_at) %> ago
     <br>
     <h4>
       <a class="subtle" href=<%= user.html_url %> > 
