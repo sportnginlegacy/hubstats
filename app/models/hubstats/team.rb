@@ -125,7 +125,7 @@ module Hubstats
         when 'netadditions'
           order("additions - deletions #{order}")
         when 'repocount'
-          order("repos_count #{order}")
+          order("repo_count #{order}")
         when 'name'
           order("name #{order}")
         else
