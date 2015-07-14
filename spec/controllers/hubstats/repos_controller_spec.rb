@@ -45,6 +45,7 @@ module Hubstats
         expect(assigns(:repo).pull_requests).to contain_exactly(pull1, pull2)
         expect(assigns(:repo).deploys).to contain_exactly(deploy1, deploy2)
         expect(assigns(:repo).owner_id).to eq(user.id)
+        expect(response).to have_http_status(200)
       end
     end
 
