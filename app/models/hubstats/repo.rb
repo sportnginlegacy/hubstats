@@ -134,13 +134,6 @@ module Hubstats
         order("pull_request_count DESC")
       end
     end
-    
-    # Public - Designed to make a path for the show page when a repository is selected.
-    #
-    # Returns - the show page of self.name
-    def to_param
-      self.name
-    end
 
   end
 end

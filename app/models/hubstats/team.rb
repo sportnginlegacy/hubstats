@@ -136,5 +136,12 @@ module Hubstats
       end
     end
 
+    # Public - Designed to make a path for the show page when a team is selected.
+    #
+    # Returns - the show page of self.name
+    # def to_param
+    #   self.name
+    # end
+
   end
 end

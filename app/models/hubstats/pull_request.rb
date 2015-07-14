@@ -11,6 +11,7 @@ module Hubstats
     scope :belonging_to_user, lambda {|user_id| where(user_id: user_id)}
     scope :belonging_to_deploy, lambda {|deploy_id| where(deploy_id: deploy_id)}
     scope :belonging_to_repos, lambda {|repo_id| where(repo_id: repo_id.split(',')) if repo_id}
+    scope :belonging_to_teams, lambda {|team_id| where(team_id: team_id.split(',')) if team_id}
     scope :belonging_to_users, lambda {|user_id| where(user_id: user_id.split(',')) if user_id}
     scope :group, lambda {|group| group_by(:repo_id) if group }
     scope :with_state, lambda {|state| (where(state: state) unless state == 'all') if state}
@@ -92,6 +93,7 @@ module Hubstats
       filter_based_on_date_range(start_date, end_date, params[:state])
        .belonging_to_users(params[:users])
        .belonging_to_repos(params[:repos])
+       .belonging_to_teams(params[:teams])
     end
 
     # Public - Finds all of the PRs with the current state, and then filters to ones that have been updated in

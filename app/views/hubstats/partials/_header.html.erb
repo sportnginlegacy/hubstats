@@ -11,7 +11,7 @@
           <span class="icon-bar"></span>
         </button>
         <%= link_to "Hubstats", root_path(:state => "open", :label => "deployable", :group => "repo"),
-            {:data => {:repo_path => repos_path(), :user_path => users_path()}, :class => "navbar-brand title", :id =>"brand"}%>
+            {:data => {:repo_path => repos_path(), :user_path => users_path(), :team_path => teams_path()}, :class => "navbar-brand title", :id =>"brand"}%>
       </div>
 
       <!-- Show all of the pages in tab form -->

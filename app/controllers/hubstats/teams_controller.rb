@@ -3,15 +3,21 @@ require_dependency "hubstats/application_controller"
 module Hubstats
   class TeamsController < Hubstats::BaseController
 
-    # Public - Shows all of the teams by filter params.
+    # Public - Shows all of the teams by filter params lists them with metrics between the start date and end date.
     #
     # Returns - the team data
     def index
-      @teams = Hubstats::Team.with_all_metrics(@start_date, @end_date) # where(hubstats: true)
-        .with_id(params[:teams])
-        .custom_order(params[:order])
-        .paginate(:page => params[:page], :per_page => 15)
-        
+      if params[:query] ## For select 2
+        @teams = Hubstats::Team.where("name LIKE ?", "%#{params[:query]}%").order("name ASC")
+      elsif params[:id]
+        @teams = Hubstats::Team.where(id: params[:id].split(",")).order("name ASC")
+      else
+        @teams = Hubstats::Team.where(hubstats: true).with_all_metrics(@start_date, @end_date)
+          .with_id(params[:teams])
+          .custom_order(params[:order])
+          .paginate(:page => params[:page], :per_page => 15)
+      end
+
       respond_to do |format|
         format.html # index.html.erb
         format.json { render :json => @teams}
