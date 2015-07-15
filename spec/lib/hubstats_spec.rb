@@ -3,9 +3,11 @@ require 'spec_helper'
 describe Hubstats
   context ".config" do
     subject { Hubstats }
+    
     before do
-      Hubstats.remove_class_variable(:@@config)
+      Hubstats.class_variable_set(:@@config, nil)
     end
+    
     it "creates a new config object" do
       expect(Hubstats::Config).to receive(:parse).at_least(:once) { double(:config) }
       subject.config

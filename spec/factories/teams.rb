@@ -8,7 +8,7 @@ FactoryGirl.define do
   factory :team_hash, class:Hash do
     association :user, factory: :user_hash, strategy: :build
     id {Faker::Number.number(6).to_i}
-    name "content-management" # currently set to this because this is one of the teams in our octokit.example.yml
+    name "Team One"
     hubstats true
     action "added"
     initialize_with { attributes } 

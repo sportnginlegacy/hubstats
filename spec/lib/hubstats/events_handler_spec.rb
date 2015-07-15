@@ -55,6 +55,7 @@ module Hubstats
       it 'should successfully process the team' do
         ehandler = Hubstats::EventsHandler.new()
         payload = build(:team_payload_hash)
+        allow(Hubstats).to receive_message_chain(:config, :github_config, :[]).with("team_list") { ["Team One", "Team Two", "Team Three"] }
         expect(Hubstats::Team).to receive(:create_or_update)
         ehandler.route(payload, payload[:type])
       end
@@ -62,6 +63,7 @@ module Hubstats
       it 'should successfully create_or_update the team' do
         ehandler = Hubstats::EventsHandler.new()
         payload = build(:team_payload_hash)
+        allow(Hubstats).to receive_message_chain(:config, :github_config, :[]).with("team_list") { ["Team One", "Team Two", "Team Three"] }
         expect(ehandler.route(payload, payload[:type]).class).to eq(Hubstats::Team)
       end
     end
