@@ -59,8 +59,7 @@ module Hubstats
       team[:action] = payload[:action]
       team[:user] = payload[:member]
       team_list = Hubstats.config.github_config["team_list"]
-      team[:hubstats] = team_list.include? team[:name]
-      if team[:hubstats]
+      if team_list.include? team[:name]
         Hubstats::Team.create_or_update(team.with_indifferent_access)
       end
     end

@@ -7,8 +7,10 @@ namespace :hubstats do
       Hubstats::GithubAPI.get_repos.each do |repo|
         Rake::Task["hubstats:populate:setup_repo"].execute({repo: repo})
       end
-      puts "Finished with initial population, grabing extra info about pull requests"
+      puts "Finished with initial population, grabbing extra info about pull requests"
       Rake::Task["hubstats:populate:update_pulls"].execute
+      puts "Finished grabbing info about pull requests, populating teams"
+      Rake::Task["hubstats:populate:teams"].execute
     end
 
     desc "Updates which repos hubstats tracks" 
@@ -20,6 +22,18 @@ namespace :hubstats do
       end
       puts "Finished with initial updating, grabbing extra info about pull requests"
       Rake::Task["hubstats:populate:update_pulls"].execute
+      puts "Finished grabbing info about pull requests, populating teams"
+      Rake::Task["hubstats:populate:teams"].execute
+    end
+
+    desc "Updates teams for past pull requests"
+    task :update_teams_in_pulls => :environment do
+      Rake::Task["hubstats:populate:update_pulls"].execute
+    end
+
+    desc "Updates the teams"
+    task :update_teams => :environment do
+      Rake::Task['hubstats:populate:teams'].execute
     end
 
     desc "Pulls in all information for an indivdual repo"
@@ -31,7 +45,7 @@ namespace :hubstats do
       Rake::Task["hubstats:populate:pulls"].execute({repo: repo})
       Rake::Task["hubstats:populate:comments"].execute({repo: repo})
       Rake::Task["hubstats:populate:labels"].execute({repo: repo})
-    end 
+    end
 
     desc "Pull members from Github saves in database"
     task :users, [:repo] => :environment do |t, args|
@@ -78,6 +92,11 @@ namespace :hubstats do
       Hubstats::Repo.all.each do |repo|
         Hubstats::GithubAPI.add_labels(repo)
       end
+    end
+
+    desc "indivdually gets and updates all of the teams"
+    task :teams => :environment do
+      Hubstats::GithubAPI.update_teams
     end
 
     desc "Updates WebHooks for all repos"

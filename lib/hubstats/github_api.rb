@@ -63,7 +63,7 @@ module Hubstats
       repos
     end
 
-    # Public - Gets extra information on pull requests, e.g size, additions ...
+    # Public - Gets extra information on pull requests, e.g. size, additions ...
     #
     # Returns - nothing
     def self.update_pulls
@@ -84,6 +84,39 @@ module Hubstats
       rescue Faraday::ConnectionFailed
         puts "Connection Timeout, restarting pull request updating"
         update_pulls
+      end
+    end
+
+    # Public - Gets information on teams, e.g. name
+    #
+    # Returns - nothing
+    def self.update_teams
+      grab_size = 250
+      puts "Initializing client"
+      begin
+        client = Hubstats::GithubAPI.client
+        incomplete = client.organization_teams("sportngin")
+        puts "Grabbed teams"
+
+        incomplete.each do |team|
+          team_list = Hubstats.config.github_config["team_list"]
+          puts "We've got teams to care about"
+          if team_list.include? team[:name]
+            puts "Getting users"
+            users = client.team_members(team[:id])
+            team[:action] = "added"
+            users.each do |user|
+              puts "Creating and updating team"
+              team[:user] = user
+              Hubstats::Team.create_or_update(team)
+            end
+          end
+        end
+        wait_limit(grab_size, client.rate_limit)
+        puts "All teams are up to date"
+      rescue
+        puts "Connection Timeout, restarting team updating"
+        update_teams
       end
     end
 

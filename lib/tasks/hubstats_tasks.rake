@@ -30,4 +30,16 @@ namespace :hubstats do
     Rake::Task['db:seed'].invoke
   end
 
+  desc "Updates the teams for past pull requests"
+  task :update_teams_in_pulls => :environment do
+    puts "Updating teams for past pull requests"
+    Rake::Task['hubstats:populate:update_teams_in_pulls'].invoke
+  end
+
+  desc "Updates the teams"
+  task :update_teams => :environment do
+    puts "Updating teams"
+    Rake::Task['hubstats:populate:update_teams'].invoke
+  end
+
 end

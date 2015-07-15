@@ -104,9 +104,9 @@ module Hubstats
       team = where(:id => team_data[:id]).first_or_create(team_data)
 
       if github_team[:action] == "added"
-        team.users << github[:user]
+        team.users << github_team[:user]
       elsif github_team[:action] == "removed"
-        team.users.delete(github[:user])
+        team.users.delete(github_team[:user])
       end
 
       return team if team.update_attributes(team_data)

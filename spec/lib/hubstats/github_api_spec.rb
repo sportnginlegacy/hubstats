@@ -67,6 +67,28 @@ module Hubstats
       end
     end
 
+    context '.update_teams' do
+      subject {Hubstats::GithubAPI}
+      let(:org) {'sportngin'}
+      let(:team1) {stub(build(:team_hash, :name => "Team One"))}
+      let(:team2) {stub(build(:team_hash, :name => "Team Four"))}
+      let(:team3) {stub(build(:team_hash, :name => "Team Five"))}
+      let(:user1) {stub(build(:user_hash))}
+      let(:user2) {stub(build(:user_hash))}
+      let(:user3) {stub(build(:user_hash))}
+      let(:access_token) { "access_token" }
+      let(:client) {double}
+
+      it 'should successfully update all teams' do
+        allow(subject).to receive(:organization_teams).with("org_name").and_return([team1])
+        allow(subject).to receive(:team_members).with(team1[:id]).and_return([user1, user2, user3])
+        allow(Hubstats).to receive_message_chain(:config, :github_config, :[]).with("team_list") { ["Team One", "Team Two", "Team Three"] }
+        allow(Hubstats).to receive(:github_auth).and_return(client)
+        expect(Hubstats::Team).to receive(:create_or_update)
+        subject.update_teams
+      end
+    end
+
     context ".update_hook" do
       subject {Hubstats::GithubAPI}
       let(:repo) {'hubstats'}
