@@ -17,7 +17,7 @@
 
     <!-- Show all of this team's merged pull requests in a "condensed" view -->
     <div class="col-lg-6 col-md-5 col-sm-5 col-xs-5">
-      <h3> Pull Requests</h3> 
+      <h3> Merged Pull Requests</h3> 
       <%= render 'hubstats/tables/pulls-condensed' %>
       <% if @pull_count > 20 %>
         <p class="pull-right"><%= link_to "View All", pulls_path(:teams => @team.id) %></p>
@@ -26,7 +26,7 @@
 
     <!-- Show all of this team's users in a "condensed" view -->
     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-      <h3> Users </h3>
+      <h3> Active Users </h3>
       <%= render 'hubstats/tables/users-condensed' %>
     </div>
   </div>
