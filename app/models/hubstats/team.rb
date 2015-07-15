@@ -94,40 +94,24 @@ module Hubstats
     # the specifications that are passed in. We are assuming that if it is not already existent,
     # then we probably don't really care about the team, so our hubstats boolean will be set to false.
     #
-    # team - the info that's passed in about the new team
+    # github_team - the info that's passed in about the new team
     #
     # Returns - the team 
-    def self.first_or_create(github_team)
+    def self.create_or_update(github_team)
       github_team = github_team.to_h.with_indifferent_access if github_team.respond_to? :to_h
 
-      if Hubstats::Team.where(name: github_team[:name]).first
-        
-      else
-        Team.new(name: github_team[:name], hubstats: false)
-        # add user to this team
+      team_data = github_team.slice(*Hubstats::Team.column_names.map(&:to_sym))
+      team = where(:id => team_data[:id]).first_or_create(team_data)
+
+      if github_team[:action] == "added"
+        team.users << github[:user]
+      elsif github_team[:action] == "removed"
+        team.users.delete(github[:user])
       end
 
       return team if team.update_attributes(team_data)
       Rails.logger.warn team.errors.inspect
     end
-
-    # github_comment = github_comment.to_h.with_indifferent_access if github_comment.respond_to? :to_h
-
-    #   user = Hubstats::User.create_or_update(github_comment[:user])
-    #   github_comment[:user_id] = user.id
-      
-    #   if github_comment[:pull_number]
-    #     pull_request = Hubstats::PullRequest.belonging_to_repo(github_comment[:repo_id]).where(number: github_comment[:pull_number]).first
-    #     if pull_request
-    #       github_comment[:pull_request_id] = pull_request.id
-    #     end
-    #   end
-
-    #   comment_data = github_comment.slice(*Hubstats::Comment.column_names.map(&:to_sym))
-
-    #   comment = where(:id => comment_data[:id]).first_or_create(comment_data)
-    #   return comment if comment.update_attributes(comment_data)
-    #   Rails.logger.warn comment.errors.inspect
 
     # Public - Designed so that the list of teams can be ordered based on users, pulls, comments, net additions, or name.
     # if none of these are selected, then the default is to order by pull request count in descending order.
