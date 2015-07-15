@@ -18,7 +18,7 @@ module Hubstats
       when "pull_request_review_comment", "PullRequestReviewCommentEvent"
         comment_processor(payload, "PullRequest")
       when "membership", "MembershipEvent"
-        team_processor(payload, "Membership")
+        team_processor(payload)
       end
     end
 
@@ -49,8 +49,16 @@ module Hubstats
       Hubstats::Comment.create_or_update(comment.with_indifferent_access)
     end
 
-    def team_processor(payload, kind)
-      team = payload[:scope]
+    # Public - Gets the information for the new team and updates it
+    #
+    # payload - the information that we will use to get the data off of
+    #
+    # Returns - nothing, but updates or makes the team
+    def team_processor(payload)
+      team[:name] = payload[:team][:name]
+      team[:description] = payload[:team][:slug]
+      team[:action] = payload[:action]
+      team[:user] = payload[:member]
       Hubstats::Team.create_or_update(team.with_indifferent_access)
     end
 

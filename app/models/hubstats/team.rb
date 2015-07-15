@@ -97,14 +97,37 @@ module Hubstats
     # team - the info that's passed in about the new team
     #
     # Returns - the team 
-    def self.first_or_create(team)
-      if exists = Hubstats::Team.where(name: team[:name]).first
+    def self.first_or_create(github_team)
+      github_team = github_team.to_h.with_indifferent_access if github_team.respond_to? :to_h
+
+      if exists = Hubstats::Team.where(name: github_team[:name]).first
         return exists
       else
-        Team.new(name: team[:name], description: team[:description], hubstats: false)
+        Team.new(name: github_team[:name], description: github_team[:description], hubstats: false)
+        # add user to this team
       end
+
+      return team if team.update_attributes(team_data)
+      Rails.logger.warn team.errors.inspect
     end
 
+    # github_comment = github_comment.to_h.with_indifferent_access if github_comment.respond_to? :to_h
+
+    #   user = Hubstats::User.create_or_update(github_comment[:user])
+    #   github_comment[:user_id] = user.id
+      
+    #   if github_comment[:pull_number]
+    #     pull_request = Hubstats::PullRequest.belonging_to_repo(github_comment[:repo_id]).where(number: github_comment[:pull_number]).first
+    #     if pull_request
+    #       github_comment[:pull_request_id] = pull_request.id
+    #     end
+    #   end
+
+    #   comment_data = github_comment.slice(*Hubstats::Comment.column_names.map(&:to_sym))
+
+    #   comment = where(:id => comment_data[:id]).first_or_create(comment_data)
+    #   return comment if comment.update_attributes(comment_data)
+    #   Rails.logger.warn comment.errors.inspect
 
     # Public - Designed so that the list of teams can be ordered based on users, pulls, comments, net additions, or name.
     # if none of these are selected, then the default is to order by pull request count in descending order.
