@@ -55,7 +55,6 @@ module Hubstats
       it 'should successfully process the team' do
         ehandler = Hubstats::EventsHandler.new()
         payload = build(:team_payload_hash)
-        # let(:payload) {build(:team_payload_hash)}
         expect(Hubstats::Team).to receive(:create_or_update)
         ehandler.route(payload, payload[:type])
       end

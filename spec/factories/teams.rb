@@ -5,12 +5,20 @@ FactoryGirl.define do
     hubstats true
   end
 
+  factory :team_hash, class:Hash do
+    association :user, factory: :user_hash, strategy: :build
+    id {Faker::Number.number(6).to_i}
+    name "content-management" # currently set to this because this is one of the teams in our octokit.example.yml
+    hubstats true
+    action "added"
+    initialize_with { attributes } 
+  end
+
   factory :team_payload_hash, class:Hash do 
     id {Faker::Number.number(6).to_i}
     type "MembershipEvent"
-    action "added"
-    name "content-management"
     association :user, factory: :user_hash, strategy: :build
+    association :team, factory: :team_hash, strategy: :build
     initialize_with { attributes } 
   end 
 end
