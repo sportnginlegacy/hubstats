@@ -93,22 +93,28 @@ module Hubstats
     def self.update_teams
       grab_size = 250
       begin
+        puts "Let's begin..."
         client = Hubstats::GithubAPI.client
         incomplete = client.organization_teams("sportngin")
+        team_list = Hubstats.config.github_config["team_list"]
+        
+        puts incomplete.inspect
 
         incomplete.each do |team|
-          team_list = Hubstats.config.github_config["team_list"]
           if team_list.include? team[:name]
             users = client.team_members(team[:id])
+            puts users.inspect
             team[:action] = "added"
             users.each do |user|
               team[:user] = user
+              puts team.inspect
               Hubstats::Team.create_or_update(team)
             end
           end
         end
+        wait_limit(grab_size,client.rate_limit)
         puts "All teams are up to date"
-      rescue
+      rescue Faraday::ConnectionFailed
         puts "Connection Timeout, restarting team updating"
         update_teams
       end

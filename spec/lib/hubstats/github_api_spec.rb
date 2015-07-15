@@ -87,6 +87,7 @@ module Hubstats
         allow(Hubstats).to receive_message_chain(:config, :github_config, :[]).with("team_list") { ["Team One", "Team Two", "Team Three"] }
         allow(Hubstats::GithubAPI).to receive(:client).and_return(client)
         allow(client).to receive(:rate_limit)
+        allow(client).to receive_message_chain(:rate_limit, :remaining).and_return(500)
         expect(Hubstats::Team).to receive(:create_or_update).at_least(:once)
         subject.update_teams
       end
