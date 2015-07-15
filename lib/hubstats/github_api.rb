@@ -97,17 +97,14 @@ module Hubstats
         client = Hubstats::GithubAPI.client
         incomplete = client.organization_teams("sportngin")
         team_list = Hubstats.config.github_config["team_list"]
-        
-        puts incomplete.inspect
 
         incomplete.each do |team|
           if team_list.include? team[:name]
             users = client.team_members(team[:id])
-            puts users.inspect
             team[:action] = "added"
             users.each do |user|
-              team[:user] = user
-              puts team.inspect
+              team[:current_user] = user
+              puts "Adding users to a team and/or making a team"
               Hubstats::Team.create_or_update(team)
             end
           end

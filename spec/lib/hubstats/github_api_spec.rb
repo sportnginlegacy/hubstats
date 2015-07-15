@@ -82,6 +82,7 @@ module Hubstats
       let(:client) { double(:user => user) }
 
       it 'should successfully update all teams' do
+        allow_message_expectations_on_nil
         allow(client).to receive(:organization_teams).with("sportngin").and_return([team1, team2, team3, team4])
         allow(client).to receive(:team_members).with(team1[:id]).and_return([user1, user2, user3])
         allow(Hubstats).to receive_message_chain(:config, :github_config, :[]).with("team_list") { ["Team One", "Team Two", "Team Three"] }
