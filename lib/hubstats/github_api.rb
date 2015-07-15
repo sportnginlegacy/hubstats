@@ -133,7 +133,7 @@ module Hubstats
         client.hooks(repo.full_name).each do |hook|
           if hook[:config][:url] == old_endpoint
             Hubstats::GithubAPI.client.remove_hook(repo.full_name, hook[:id])
-            puts "successfully deleted hook with id #{hook[:id]} and url #{hook[:config][:url]} from #{repo.full_name}"
+            puts "Successfully deleted hook with id #{hook[:id]} and url #{hook[:config][:url]} from #{repo.full_name}"
           end
         end
       rescue Octokit::NotFound

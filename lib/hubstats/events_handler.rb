@@ -17,6 +17,8 @@ module Hubstats
         pull_processor(payload)
       when "pull_request_review_comment", "PullRequestReviewCommentEvent"
         comment_processor(payload, "PullRequest")
+      when "membership", "MembershipEvent"
+        team_processor(payload, "Membership")
       end
     end
 
@@ -45,6 +47,11 @@ module Hubstats
       comment[:repo_id] = payload[:repository][:id]
       comment[:pull_number] = get_pull_number(payload)
       Hubstats::Comment.create_or_update(comment.with_indifferent_access)
+    end
+
+    def team_processor(payload, kind)
+      team = payload[:scope]
+      Hubstats::Team.create_or_update(team.with_indifferent_access)
     end
 
     # Public - Grabs the PR number off of any of the various places it can be
