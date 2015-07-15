@@ -135,7 +135,6 @@ ActiveRecord::Schema.define(:version => 20150713185100) do
 
   create_table "hubstats_teams", :force => true do |t|
     t.string  "name"
-    t.string  "description"
     t.boolean "hubstats"
   end
 

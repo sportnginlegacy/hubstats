@@ -3,11 +3,6 @@
 
     <!-- Title with the team's name -->
     <h1 class="title text-center"><%= @team.name %></a> </h1>
-    
-    <!-- Show the date/time that the deploy was deployed -->
-    <h4 class="text-center">
-      <%= @team.description %>
-    </h4>
 
     <!-- Show all of the stats about the team -->
     <%= render 'hubstats/partials/quick_stats' %>

@@ -46,5 +46,16 @@ module Hubstats
       end
     end
 
+    context "TeamEvent" do
+      it 'should successfully route the team' do
+      end
+
+      it 'should successfully process the team' do
+      end
+
+      it 'should successfully create_or_update the team' do
+      end
+    end
+
   end
 end

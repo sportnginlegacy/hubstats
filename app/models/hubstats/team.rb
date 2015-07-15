@@ -87,7 +87,7 @@ module Hubstats
        .group("hubstats_teams.id")
     }
 
-    attr_accessible :name, :description, :hubstats
+    attr_accessible :name, :hubstats
     has_and_belongs_to_many :users, :join_table => 'hubstats_teams_users'
     
     # Public - Checks if the team is currently existing, and if it isn't, then makes a new team with 
@@ -100,10 +100,10 @@ module Hubstats
     def self.first_or_create(github_team)
       github_team = github_team.to_h.with_indifferent_access if github_team.respond_to? :to_h
 
-      if exists = Hubstats::Team.where(name: github_team[:name]).first
-        return exists
+      if Hubstats::Team.where(name: github_team[:name]).first
+        
       else
-        Team.new(name: github_team[:name], description: github_team[:description], hubstats: false)
+        Team.new(name: github_team[:name], hubstats: false)
         # add user to this team
       end
 
