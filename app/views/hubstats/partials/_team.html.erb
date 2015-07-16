@@ -11,11 +11,7 @@
   <!-- Show all of the stats for the individual team -->
   <div class="col-lg-2 col-md-2 col-sm-2">
     <div class="text-center">
-      <span class="text-large"><% if team.user_count.nil? %>
-                                  0
-                               <% else %>
-                                 <%= team.user_count %>
-                               <% end %></span>
+      <span class="text-large"><%= team.user_count || 0 %></span>
     </div>
   </div>
   <div class="col-lg-2 col-md-2 col-sm-2">
