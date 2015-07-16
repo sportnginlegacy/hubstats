@@ -101,21 +101,23 @@ module Hubstats
     def self.create_or_update(github_team)
       github_team = github_team.to_h.with_indifferent_access if github_team.respond_to? :to_h
 
-      current_user = Hubstats::User.create_or_update(github_team[:current_user])
-
       team_data = github_team.slice(*Hubstats::Team.column_names.map(&:to_sym))
       team = where(:id => team_data[:id]).first_or_create(team_data)
-
-      if github_team[:action] == "added"
-        team.users << current_user
-      elsif github_team[:action] == "removed"
-        team.users.delete(current_user)
-      end
 
       team_data[:hubstats] = true
 
       return team if team.update_attributes(team_data)
       Rails.logger.warn team.errors.inspect
+    end
+
+    def self.update_members_in_team(team, user, action)
+      user = Hubstats::User.create_or_update(user)
+      if action == "added"
+        team.users << user
+      elsif action == "removed"
+        team.users.delete(user)
+      end
+      team.save!
     end
 
     # Public - Designed so that the list of teams can be ordered based on users, pulls, comments, net additions, or name.

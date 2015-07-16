@@ -74,6 +74,7 @@ module Hubstats
       let(:team2) {build(:team_hash, :name => "Team Four")}
       let(:team3) {build(:team_hash, :name => "Team Five")}
       let(:team4) {build(:team_hash, :name => "Team Six")}
+      let(:team) {build(:team)}
       let(:user1) {build(:user_hash)}
       let(:user2) {build(:user_hash)}
       let(:user3) {build(:user_hash)}
@@ -86,8 +87,11 @@ module Hubstats
         allow(client).to receive(:organization_teams).with("sportngin").and_return([team1, team2, team3, team4])
         allow(client).to receive(:team_members).with(team1[:id]).and_return([user1, user2, user3])
         allow(Hubstats).to receive_message_chain(:config, :github_config, :[]).with("team_list") { ["Team One", "Team Two", "Team Three"] }
+        allow(Hubstats).to receive_message_chain(:config, :github_config, :[]).with("org_name") {"sportngin"}
         allow(Hubstats::GithubAPI).to receive(:client).and_return(client)
         allow(client).to receive(:rate_limit)
+        allow(Hubstats::Team).to receive_message_chain(:where, :name).with("Team One")
+        allow(Hubstats::Team.where(name: "Team One")).to receive(:first).and_return(team)
         allow(client).to receive_message_chain(:rate_limit, :remaining).and_return(500)
         expect(Hubstats::Team).to receive(:create_or_update).at_least(:once)
         subject.update_teams
