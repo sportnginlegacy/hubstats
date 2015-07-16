@@ -20,7 +20,7 @@ The following setup is designed to only be used when integrating this plugin int
 Hubstats needs Github credentials to access your repositories, these can be setup in one of two ways:
 
 #### Configuring the `octokit.yml`
-Add your GitHub API token or ClientID and Secret to `octokit.yml`.
+Add your GitHub API token (called `access_token`) or ClientID and Secret to `octokit.yml`.
 
 #### Environment Variables
 Hubstats can also use OAUTH access tokens stored in ENV["GITHUB_API_TOKEN"] or for Application Authentication in ENV["CLIENT_ID"] and ENV["CLIENT_SECRET"], if for some reason you don't want to store them in `octokit.yml`.
@@ -61,6 +61,8 @@ team_list:
  - Team Two
  - Team Three
 ```
+
+Also, the GitHub API token in `octokit.yml` should be a member of all of the teams listed.
 
 ## Testing
 All of the automated tests are written in RSpec. To run these tests, run the following commands, assuming that there are two already existent local databases titled `hubstats_development` and `hubstats_test`:
