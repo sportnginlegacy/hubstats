@@ -5,7 +5,6 @@ module Hubstats
     scope :with_id, lambda {|user_id| where(id: user_id.split(',')) if user_id}
     scope :only_active, having("comment_count > 0 OR pull_request_count > 0 OR deploy_count > 0")
     scope :with_contributions, lambda {|start_date, end_date, repo_id| with_all_metrics_repos(start_date, end_date, repo_id) if repo_id}
-    scope :updated_in_date_range, lambda {|start_date, end_date| where("hubstats_users.updated_at BETWEEN ? AND ?", start_date, end_date)}
 
     # Public - Counts all of the deploys for selected user that occurred between the start_date and end_date.
     # 
