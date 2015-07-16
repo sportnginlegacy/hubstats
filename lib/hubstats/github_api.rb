@@ -52,13 +52,13 @@ module Hubstats
     #
     # Returns - an array of github repo objects
     def self.get_repos
-      if Hubstats.config.github_config.has_key?("org_name")
-        repos = client.organization_repositories(Hubstats.config.github_config["org_name"])
-      else
+      if Hubstats.config.github_config.has_key?("repo_list")
         repos = []
         Hubstats.config.github_config["repo_list"].each do |repo|
           repos << client.repository(repo)
         end
+      elsif Hubstats.config.github_config.has_key?("org_name")
+        repos = client.organization_repositories(Hubstats.config.github_config["org_name"])
       end
       repos
     end
@@ -138,8 +138,7 @@ module Hubstats
               'pull_request_review_comment',
               'commit_comment',
               'issues',
-              'issue_comment',
-              'member'
+              'issue_comment'
               ],
             :active => true
           }
@@ -149,6 +148,36 @@ module Hubstats
         puts "Hook on #{repo.full_name} already existed"
       rescue Octokit::NotFound
         puts "You don't have sufficient privileges to add an event hook to #{repo.full_name}"
+      end
+    end
+
+    # Public - Makes a new webhook from an organization
+    #
+    # org_name - the name of the organization that is attempting to have a hook made with
+    #
+    # Returns - the hook and a message (or just a message and no hook)
+    def self.create_org_hook(org_name)
+      begin
+        client.create_hook(
+          org_name,
+          'web',
+          {
+            :url => Hubstats.config.webhook_endpoint,
+            :content_type => 'json',
+            :secret => Hubstats.config.webhook_secret
+          },
+          {
+            :events => [
+              'membership'
+            ],
+            :active => true
+          }
+        )
+        puts "Hook on #{org_name} successfully created"
+      rescue Octokit::UnprocessableEntity
+        puts "Hook on #{org_name} already existed"
+      rescue Octokit::NotFound
+        puts "You don't have sufficient privileges to add an event hook to #{org_name}"
       end
     end
 

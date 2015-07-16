@@ -36,6 +36,15 @@ namespace :hubstats do
       Rake::Task['hubstats:populate:teams'].execute
     end
 
+    desc "Creates the webhook for the current org"
+    task :setup_teams => :environment do
+      Rake::Task['hubstats:populate:create_org_hook'].execute
+    end
+
+    task :create_org_hook => :environment do
+      Hubstats::GithubAPI.create_org_hook(config.github_config["org_name"])
+    end
+
     desc "Pulls in all information for an indivdual repo"
     task :setup_repo, [:repo] => :environment do |t, args|
       repo = args[:repo]

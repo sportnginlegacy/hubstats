@@ -140,5 +140,26 @@ module Hubstats
       end
     end
 
+    context ".create_org_hook" do
+      subject {Hubstats::GithubAPI}
+      let(:config) {double(:webhook_secret => 'a1b2c3d4', :webhook_endpoint => "hubstats.com")}
+      let(:client) {double}
+      let(:org) {double(:full_name => 'sportngin') }
+      before do
+        allow(Hubstats).to receive(:config) {config}
+        allow(subject).to receive(:client) {client}
+      end
+
+      it "should call octokit create_hook" do
+        expect(client).to receive(:create_hook)
+        subject.create_hook(org)
+      end
+
+      it "should rescue unprocessable entity" do
+        allow(client).to receive(:create_hook) { raise Octokit::UnprocessableEntity }
+        subject.create_hook(org)
+      end
+    end
+
   end
 end

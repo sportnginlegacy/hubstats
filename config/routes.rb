@@ -5,8 +5,6 @@ Hubstats::Engine.routes.draw do
   get "/pulls" => "pull_requests#index", :as => :pulls # routes to list of pulls
   resources :deploys, :only => [:create, :index, :show] # routes to index, show, and to create method
   resources :teams, :only => [:index, :show]
-  # get "/teams" => "teams#index", :as => :teams # routes to the list of teams and stats
-  # get "/team/:id" => "teams#show", :as => :team # routes to specific team's PRs and users
   get "/users" => "users#index", :as => :users # routes to list of users
   get "/user/:id" => "users#show", :as => :user # routes to specific user's contributions
   get "/metrics" => "repos#dashboard", :as => :metrics # routes to list of repos and stats
