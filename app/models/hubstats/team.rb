@@ -110,6 +110,13 @@ module Hubstats
       Rails.logger.warn team.errors.inspect
     end
 
+    # Public - Adds or removes a user from a team
+    #
+    # team - the team that we wish to edit the users of
+    # user - the user that we wish to remove or add to the team
+    # action - whether the user is to be removed or added (string)
+    #
+    # Returns - nothing
     def self.update_members_in_team(team, user, action)
       user = Hubstats::User.create_or_update(user)
       if action == "added"
