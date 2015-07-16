@@ -62,7 +62,7 @@ team_list:
  - Team Three
 ```
 
-Also, the GitHub API token in `octokit.yml` should be a member of all of the teams listed.
+Also, the GitHub API token in `octokit.yml` should be a member of all of the teams listed. Sport Ngin's dummy user is `hubstats`. Because of this, there are a couple places where the code takes this dummy user into account, all of which are noted.
 
 ## Testing
 All of the automated tests are written in RSpec. To run these tests, run the following commands, assuming that there are two already existent local databases titled `hubstats_development` and `hubstats_test`:
