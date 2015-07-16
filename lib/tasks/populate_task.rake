@@ -28,7 +28,7 @@ namespace :hubstats do
 
     desc "Updates teams for past pull requests"
     task :update_teams_in_pulls => :environment do
-      Rake::Task["hubstats:populate:update_pulls"].execute
+      Rake::Task["hubstats:populate:update_teams_in_prs"].execute
     end
 
     desc "Updates the teams"
@@ -97,6 +97,11 @@ namespace :hubstats do
     desc "indivdually gets and updates all of the teams"
     task :teams => :environment do
       Hubstats::GithubAPI.update_teams
+    end
+
+    desc "updates the teams for all pull requests from past year"
+    task :update_teams_in_prs => :environment do
+      Hubstats::PullRequest.update_teams_in_pulls
     end
 
     desc "Updates WebHooks for all repos"

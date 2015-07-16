@@ -93,7 +93,6 @@ module Hubstats
     def self.update_teams
       grab_size = 250
       begin
-        puts "Let's begin..."
         client = Hubstats::GithubAPI.client
         incomplete = client.organization_teams("sportngin")
         team_list = Hubstats.config.github_config["team_list"]

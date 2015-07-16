@@ -205,14 +205,6 @@ module Hubstats
       end
     end
 
-    # Public - Gets the first team where the user is belongs to and where hubstats bool is true.
-    #
-    # Returns - the first team that the user belongs to where hubstats bool is true, if nothing
-    # meets these qualifications, nil is returned
-    def team
-      teams.where(hubstats: true).first
-    end
-
     # Public - Designed so that the list of users can be ordered based on deploys, pulls, comments, net additions, or name.
     # if none of these are selected, then the default is to order by pull request count in descending order.
     #
@@ -239,6 +231,14 @@ module Hubstats
       else 
         order("pull_request_count DESC")
       end
+    end
+
+    # Public - Gets the first team where the user is belongs to and where hubstats bool is true.
+    #
+    # Returns - the first team that the user belongs to where hubstats bool is true, if nothing
+    # meets these qualifications, nil is returned
+    def team
+      teams.where(hubstats: true).first
     end
 
     # Public - Designed to make a path for the show page when a repository is selected.

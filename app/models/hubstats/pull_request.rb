@@ -6,6 +6,7 @@ module Hubstats
     scope :updated_in_date_range, lambda {|start_date, end_date| where("hubstats_pull_requests.updated_at BETWEEN ? AND ?", start_date, end_date)}
     scope :created_in_date_range, lambda {|start_date, end_date| where("hubstats_pull_requests.created_at BETWEEN ? AND ?", start_date, end_date)}
     scope :merged_in_date_range, lambda {|start_date, end_date| where("hubstats_pull_requests.merged").where("hubstats_pull_requests.merged_at BETWEEN ? AND ?", start_date, end_date)}
+    scope :created_in_past_year, lambda {|date| where("hubstats_pull_requests.created_at > ?", date)}
     scope :belonging_to_repo, lambda {|repo_id| where(repo_id: repo_id)}
     scope :belonging_to_team, lambda {|team_id| where(team_id: team_id)}
     scope :belonging_to_user, lambda {|user_id| where(user_id: user_id)}
@@ -69,6 +70,22 @@ module Hubstats
 
       return pull if pull.update_attributes(pull_data)
       Rails.logger.warn pull.errors.inspect
+    end
+
+    # Public - Updates the team_id for all pull requests from the past year
+    #
+    # Returns - nothing
+    def self.update_teams_in_pulls
+      puts "Gathering pulls from past year"
+      pulls = created_in_past_year(Date.today - 365)
+      pulls.each do |pull|
+        user = Hubstats::User.where(id: pull.user_id).first
+        if user.team && user.team.id
+          pull.team_id = user.team.id
+          pull.save!
+        end
+      end
+      puts "Finished updating teams for pull requests"
     end
 
     # Public - Adds any labels to the labels database if the labels passed in aren't already there.
