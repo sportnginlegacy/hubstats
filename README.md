@@ -17,7 +17,7 @@ The following setup is designed to only be used when integrating this plugin int
 
 ## Configuration
 ### Authentication
-Hubstats needs Github credentials to access your repos, these can be setup in one of two ways:
+Hubstats needs Github credentials to access your repositories, these can be setup in one of two ways:
 
 #### Configuring the `octokit.yml`
 Add your GitHub API token or ClientID and Secret to `octokit.yml`.
@@ -37,7 +37,7 @@ Set the endpoint to be:
  www.yourdomain.com/hubstats/handler
  
 ### Repositories 
-Hubstats needs to know what repositories for it to watch. You can set it to watch either an entire organization or a list of specific repos in `octokit.yml`. The list of repositories should look like either:
+Hubstats needs to know what repositories for it to watch. You can set it to watch either an entire organization or a list of specific repositories in `octokit.yml`. The list of repositories should look like either:
 
 ```
 repo_list:
