@@ -12,6 +12,7 @@ module Hubstats
     scope :users_count, lambda {|start_date, end_date|
       select("hubstats_teams.id as team_id")
        .select("COUNT(DISTINCT hubstats_teams_users.user_id) AS user_count")
+       .where("hubstats_users.login != 'hubstats'")
        .joins(:users)
        .group("hubstats_teams.id")
     }
@@ -94,7 +95,7 @@ module Hubstats
     # the specifications that are passed in. We are assuming that if it is not already existent,
     # then we probably don't really care about the team, so our hubstats boolean will be set to false.
     #
-    # github_team - the info that's passed in about the new team
+    # github_team - the info that's passed in about the new or updated team
     #
     # Returns - the team 
     def self.create_or_update(github_team)
