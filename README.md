@@ -53,7 +53,7 @@ org_name: sportngin
 ```
 
 ### Teams
-Hubstats is automatically set to check a hard-coded list in the `octokit.yml` to know whether a specific organization's team should be watched or not. Because of this, it would be useful to set a list of teams in the `octokit.yml`. The list of teams should look something like:
+Hubstats tracks teams that are whitelisted in the `octokit.yml`. It is recommended that you make teams dedicated for hubstats team based metrics so they are isolated from permissions focused teams.The list of teams should look something like:
 
 ```
 team_list:
