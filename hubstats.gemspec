@@ -17,7 +17,7 @@ Gem::Specification.new do |s|
   s.test_files    = s.files.grep(%r{^(test|spec|features)/})
 
   s.add_dependency "rails", "~> 3.2.18"
-  s.add_dependency "octokit", "~> 3.2"
+  s.add_dependency "octokit", "~> 4.0"
   s.add_dependency "will_paginate-bootstrap"
   s.add_dependency "select2-rails", "3.5.9"
   s.add_dependency "bootstrap-datepicker-rails", "~> 1.4.0"
