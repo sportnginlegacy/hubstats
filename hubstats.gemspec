@@ -26,4 +26,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency "shoulda-matchers", "~> 2.6"
   s.add_development_dependency "factory_girl_rails", "~> 4.4"
   s.add_development_dependency "faker", "~> 1.3"
+  s.add_development_dependency "test-unit", "~> 3.0"
 end
