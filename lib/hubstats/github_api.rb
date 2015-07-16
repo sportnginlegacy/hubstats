@@ -133,13 +133,7 @@ module Hubstats
             :secret => Hubstats.config.webhook_secret
           },
           {
-            :events => [
-              'pull_request',
-              'pull_request_review_comment',
-              'commit_comment',
-              'issues',
-              'issue_comment'
-              ],
+            :events => ['pull_request', 'pull_request_review_comment', 'commit_comment', 'issues', 'issue_comment'],
             :active => true
           }
         )
@@ -167,9 +161,7 @@ module Hubstats
             :secret => Hubstats.config.webhook_secret
           },
           {
-            :events => [
-              'membership'
-            ],
+            :events => ['membership'],
             :active => true
           }
         )
