@@ -89,7 +89,6 @@ $(document).ready(function() {
     }
   }).select2('val', []); 
 
-
   $("#users").select2({
     placeholder: "Users",
     multiple: true,
