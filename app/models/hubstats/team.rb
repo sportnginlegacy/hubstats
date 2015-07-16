@@ -11,7 +11,7 @@ module Hubstats
     # Returns - the count of users
     scope :users_count, lambda {|start_date, end_date|
       select("hubstats_teams.id as team_id")
-       .select("COUNT(hubstats_teams_users.user_id) AS user_count")
+       .select("COUNT(DISTINCT hubstats_teams_users.user_id) AS user_count")
        .joins(:users)
        .group("hubstats_teams.id")
     }
@@ -88,7 +88,7 @@ module Hubstats
     }
 
     attr_accessible :name, :hubstats
-    has_and_belongs_to_many :users, :join_table => 'hubstats_teams_users'
+    has_and_belongs_to_many :users, :join_table => 'hubstats_teams_users', :uniq => true
     
     # Public - Checks if the team is currently existing, and if it isn't, then makes a new team with 
     # the specifications that are passed in. We are assuming that if it is not already existent,

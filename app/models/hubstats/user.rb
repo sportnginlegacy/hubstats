@@ -170,7 +170,7 @@ module Hubstats
     has_many :repos, :class_name => "Repo"
     has_many :pull_requests
     has_many :deploys
-    has_and_belongs_to_many :teams, :join_table => 'hubstats_teams_users'
+    has_and_belongs_to_many :teams, :join_table => 'hubstats_teams_users', :uniq => true
 
     # Public - Creates a new user form a GitHub webhook.
     #

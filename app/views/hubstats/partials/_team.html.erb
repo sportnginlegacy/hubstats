@@ -11,7 +11,7 @@
   <!-- Show all of the stats for the individual team -->
   <div class="col-lg-2 col-md-2 col-sm-2">
     <div class="text-center">
-      <span class="text-large"><%= team.user_count || 0 %></span>
+      <span class="text-large"><%= team.user_count - 1 || 0 %></span> <!-- minus one for the user we're using as the access_token -->
     </div>
   </div>
   <div class="col-lg-2 col-md-2 col-sm-2">
