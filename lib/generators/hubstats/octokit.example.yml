@@ -7,6 +7,7 @@ github_config: # Must include either org_name || repo_list AND a list of teams
   # org_name: <ORGANIZATION NAME>
   # team_list: [<ARRAY OF TEAMS>]
   # repo_list: [<ARRAY OF REPOS>]
+  # ignore_users_list: [<ARRAY OF USERS TO IGNORE>]
 
 webhook_secret: #<40 CHARACTER ACCESS TOKEN >
 webhook_endpoint: #<url of webhook endpoint>
