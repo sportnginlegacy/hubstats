@@ -11,6 +11,7 @@ module Hubstats
         team3 = create(:team, :name => "Team Three", :hubstats => true)
         team4 = create(:team, :name => "Team Four", :hubstats => true)
         expect(Hubstats::Team).to receive_message_chain("with_id.custom_order.paginate").and_return([team1, team2, team3, team4])
+        allow(Hubstats).to receive_message_chain(:config, :github_config, :[]).with("ignore_users_list") { ["user"] }
         get :index
         expect(response).to have_http_status(200)
       end
@@ -25,8 +26,8 @@ module Hubstats
         team.users << user2
         pull1 = create(:pull_request, :user => user1, :id => 303030, :team => team)
         pull2 = create(:pull_request, :user => user2, :id => 404040, :team => team, :repo => pull1.repo)
-        get :show, id: 1
         allow(Hubstats).to receive_message_chain(:config, :github_config, :[]).with("ignore_users_list") { ["user"] }
+        get :show, id: 1
         expect(assigns(:team)).to eq(team)
         expect(pull1.team_id).to eq(team.id)
         expect(pull2.team_id).to eq(team.id)
