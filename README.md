@@ -44,18 +44,18 @@ org_list:
  - sportngin
  ```
  
-### Repositories 
-Hubstats needs to know what repositories for it to watch. You can set it to watch either an entire organization or a list of specific repositories in `octokit.yml`. The list of repositories should look like either:
+### Repositories
+If you only want Hubstats to watch certain repositories, you can set it to watch a list of specific repositories in `octokit.yml`. Otherwise, the default will be for Hubstats to watch an entire organization's list of repositories. The list of repositories should look like either:
 
 ```
 repo_list:
- - sportngin/hubstats
- - sportngin/active_zuora
- - sportngin/make-resourceful
+ - sportngin/repo_one
+ - sportngin/repo_two
+ - sportngin/repo_three
 ```
 
 ### Teams
-Hubstats tracks teams that are whitelisted in the `octokit.yml`. It is recommended that you make teams dedicated for hubstats team based metrics so they are isolated from permissions focused teams. The list of teams should look something like:
+If you want Hubstats to watch certain teams to give back GitHub team metrics, then you must whitelist a list of teams in the `octokit.yml`. If no list of teams is added, then there will be no team metrics. The list of teams should look something like:
 
 ```
 team_list:
@@ -64,7 +64,10 @@ team_list:
  - Team Three
 ```
 
-Also, the GitHub API token in `octokit.yml` must be a member of all of the teams listed. On the `app/views/hubstats/partials/_team.html.erb`, the dummy user is automatically accounted for by subtracting one from the user count. Otherwise, there is a section in the `octokit.yml` for any ignored users. The dummy user (and any others), can be placed here, and they won't show up on the list of users in a team.
+Also, the GitHub API token in `octokit.yml` must be a member of all of the teams listed in order to receive webhooks and populate team data.
+
+### Ignore Users List
+If there are specific users that should not show up on any lists or in any metrics, then they can be placed on the `ignore_users_list` part of the `octokit.yml`. This list is referenced when making the list of users in teams.
 
 ## Testing
 All of the automated tests are written in RSpec. To run these tests, run the following commands, assuming that there are two already existent local databases titled `hubstats_development` and `hubstats_test`:
