@@ -78,6 +78,7 @@ module Hubstats
       let(:user1) {build(:user_hash)}
       let(:user2) {build(:user_hash)}
       let(:user3) {build(:user_hash)}
+      let(:hubstats_user) {build(:user)}
       let(:access_token) { "access_token" }
       let(:user) { double }
       let(:client) { double(:user => user) }

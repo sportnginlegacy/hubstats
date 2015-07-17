@@ -112,13 +112,12 @@ module Hubstats
 
     # Public - Adds or removes a user from a team
     #
-    # team - the team that we wish to edit the users of
-    # user - the user that we wish to remove or add to the team
+    # team - a hubstats team that we wish to edit the users of
+    # user - a hubstats user that we wish to remove or add to the team
     # action - whether the user is to be removed or added (string)
     #
     # Returns - nothing
-    def self.update_members_in_team(team, user, action)
-      user = Hubstats::User.create_or_update(user)
+    def self.update_users_in_team(team, user, action)
       if action == "added"
         team.users << user
       elsif action == "removed"

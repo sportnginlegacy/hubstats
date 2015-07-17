@@ -62,7 +62,8 @@ module Hubstats
       if team_list.include? team[:name]
         Hubstats::Team.create_or_update(team.with_indifferent_access)
         hubstats_team = Hubstats::Team.where(name: team[:name]).first
-        Hubstats::Team.update_members_in_team(hubstats_team, team[:current_user], team[:action])
+        hubstats_user = Hubstats::User.create_or_update(team[:current_user])
+        Hubstats::Team.update_users_in_team(hubstats_team, hubstats_user, team[:action])
       end
     end
 

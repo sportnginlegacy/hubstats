@@ -10,5 +10,14 @@ module Hubstats
       expect(team.name).to eq("Team Tippy-Tappy-Toes")
       expect(team.hubstats).to eq(true)
     end
+
+    it 'should add a member to a team' do
+      user = build(:user)
+      action = "added"
+      team = build(:team)
+      Hubstats::Team.update_users_in_team(team, user, action)
+      expect(team.users).to eq([user])
+      expect(team.users.length).to eq(1)
+    end
   end
 end

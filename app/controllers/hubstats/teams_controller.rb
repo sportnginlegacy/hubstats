@@ -32,7 +32,7 @@ module Hubstats
       @team = Hubstats::Team.where(id: params[:id]).first
       @pull_requests = Hubstats::PullRequest.belonging_to_team(@team.id).merged_in_date_range(@start_date, @end_date).order("updated_at DESC").limit(20)
       @pull_count = Hubstats::PullRequest.belonging_to_team(@team.id).merged_in_date_range(@start_date, @end_date).count(:all)
-      @users = @team.users.where("login != ?", "hubstats") # the login of our access_token's user is "hubstats", so we don't want to see that user
+      @users = @team.users.where("login != ?", "hubstats").order("login ASC") # the login of our access_token's user is "hubstats", so we don't want to see that user
       @user_count = @users.length
       @comment_count = Hubstats::Comment.belonging_to_team(@users.pluck(:id)).created_in_date_range(@start_date, @end_date).count(:all)
       @net_additions = Hubstats::PullRequest.merged_in_date_range(@start_date, @end_date).belonging_to_team(@team.id).sum(:additions).to_i -

@@ -104,8 +104,9 @@ module Hubstats
             users = client.team_members(team[:id])
             users.each do |user|
               hubstats_team = Hubstats::Team.where(name: team[:name]).first
+              hubstats_user = Hubstats::User.create_or_update(user)
               puts "Adding a user to a team"
-              Hubstats::Team.update_members_in_team(hubstats_team, user, "added")
+              Hubstats::Team.update_users_in_team(hubstats_team, hubstats_user, "added")
             end
           end
         end
