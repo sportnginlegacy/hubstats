@@ -79,24 +79,8 @@ module Hubstats
       puts "Gathering pulls from past year"
       pulls = created_in_past_year # only update team_ids from PRs that were created in the past year, uncomment below line if wish to update all PRs
       # pulls = Hubstats::PullRequest.all
-      pulls.each do |pull|
-        user = Hubstats::User.where(id: pull.user_id).first
-        if user.team && user.team.id
-          pull.team_id = user.team.id
-          pull.save!
-        end
-      end
+      pulls.each { |pull| pull.assign_team_from_user }
       puts "Finished updating teams for pull requests"
-    end
-
-    # Public - Adds any labels to the labels database if the labels passed in aren't already there.
-    #
-    # labels - the labels to be added to the db
-    #
-    # Returns - the new labels
-    def add_labels(labels)
-      labels.map!{|label| Hubstats::Label.first_or_create(label) }
-      self.labels = labels
     end
 
     # Public - Filters all of the pull requests between start_date and end_date that are the given state
@@ -157,6 +141,28 @@ module Hubstats
       else
         scoped
       end
+    end
+
+    # Public - Assigns a team to a pull request based on the user's team
+    #
+    # Returns - nothing
+    def assign_team_from_user
+      puts self.inspect
+      user = Hubstats::User.where(id: self.user_id).first
+      if user.team && user.team.id
+        self.team_id = user.team.id
+        self.save!
+      end
+    end
+
+    # Public - Adds any labels to the labels database if the labels passed in aren't already there.
+    #
+    # labels - the labels to be added to the db
+    #
+    # Returns - the new labels
+    def add_labels(labels)
+      labels.map!{|label| Hubstats::Label.first_or_create(label) }
+      self.labels = labels
     end
   end
 end
