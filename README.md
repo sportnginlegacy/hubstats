@@ -67,7 +67,14 @@ team_list:
 Also, the GitHub API token in `octokit.yml` must be a member of all of the teams listed in order to receive webhooks and populate team data.
 
 ### Ignore Users List
-If there are specific users that should not show up on any lists or in any metrics, then they can be placed on the `ignore_users_list` part of the `octokit.yml`. This list is referenced when making the list of users in teams.
+If there are specific users that should not show up on any lists or in any metrics, then they can be placed on the `ignore_users_list` part of the `octokit.yml`. This list is referenced when making the list of users in teams. The list of users to ignore should look like:
+
+```
+ignore_users_list:
+ - user_login_one
+ - user_login_two
+ - user_login_three
+```
 
 ## Testing
 All of the automated tests are written in RSpec. To run these tests, run the following commands, assuming that there are two already existent local databases titled `hubstats_development` and `hubstats_test`:
