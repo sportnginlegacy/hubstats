@@ -61,5 +61,19 @@ module Hubstats
       expect(pull_request.user_id).to eq(user[:id])
       expect(pull_request.team_id).to eq(nil)
     end
+
+    it 'should update the team_ids in pull requests' do
+      team = build(:team)
+      repo = build(:repo)
+      user1 = build(:user)
+      user2 = build(:user, :id => 7)
+      team.users << user1
+      team.users << user2
+      pull1 = build(:pull_request, :created_at => Date.today - 250, :user => user1)
+      pull2 = build(:pull_request, :created_at => Date.today - 3, :repo => repo, :user => user2)
+      Hubstats::PullRequest.update_teams_in_pulls
+      expect(pull1.team_id).to eq(team.id)
+      expect(pull2.team_id).to eq(team.id)
+    end
   end
 end
