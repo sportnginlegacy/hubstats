@@ -35,8 +35,9 @@ To generate a secret run:
 Set the endpoint to be:
 
  www.yourdomain.com/hubstats/handler
-
-### Organization Name
+ 
+### Configuring Data to be Received from GitHub
+#### Organizations to Follow
 Hubstats tracks certain repositories and teams that are part of an organization. Therefore, you must whitelist the specific GitHub organization to track in `octokit.yml`. The list of organizations should look something like this:
 
 ```
@@ -44,7 +45,7 @@ org_list:
  - sportngin
  ```
  
-### Repositories
+#### Repositories to Follow
 If you only want Hubstats to watch certain repositories, you can set it to watch a list of specific repositories in `octokit.yml`. Otherwise, the default will be for Hubstats to watch an entire organization's list of repositories. The list of repositories should look like either:
 
 ```
@@ -54,7 +55,7 @@ repo_list:
  - sportngin/repo_three
 ```
 
-### Teams
+#### Teams to Follow
 If you want Hubstats to watch certain teams to give back GitHub team metrics, then you must whitelist a list of teams in the `octokit.yml`. If no list of teams is added, then there will be no team metrics. The list of teams should look something like:
 
 ```
@@ -66,7 +67,7 @@ team_list:
 
 Also, the GitHub API token in `octokit.yml` must be a member of all of the teams listed in order to receive webhooks and populate team data.
 
-### Ignore Users List
+#### Users to Ignore
 If there are specific users that should not show up on any lists or in any metrics, then they can be placed on the `ignore_users_list` part of the `octokit.yml`. This list is referenced when making the list of users in teams. The list of users to ignore should look like:
 
 ```
