@@ -74,9 +74,11 @@ module Hubstats
       let(:team2) {build(:team_hash, :name => "Team Four")}
       let(:team3) {build(:team_hash, :name => "Team Five")}
       let(:team4) {build(:team_hash, :name => "Team Six")}
+      let(:team) {build(:team)}
       let(:user1) {build(:user_hash)}
       let(:user2) {build(:user_hash)}
       let(:user3) {build(:user_hash)}
+      let(:hubstats_user) {build(:user)}
       let(:access_token) { "access_token" }
       let(:user) { double }
       let(:client) { double(:user => user) }
@@ -86,8 +88,11 @@ module Hubstats
         allow(client).to receive(:organization_teams).with("sportngin").and_return([team1, team2, team3, team4])
         allow(client).to receive(:team_members).with(team1[:id]).and_return([user1, user2, user3])
         allow(Hubstats).to receive_message_chain(:config, :github_config, :[]).with("team_list") { ["Team One", "Team Two", "Team Three"] }
+        allow(Hubstats).to receive_message_chain(:config, :github_config, :[]).with("org_name") {"sportngin"}
         allow(Hubstats::GithubAPI).to receive(:client).and_return(client)
         allow(client).to receive(:rate_limit)
+        allow(Hubstats::Team).to receive_message_chain(:where, :name).with("Team One")
+        allow(Hubstats::Team.where(name: "Team One")).to receive(:first).and_return(team)
         allow(client).to receive_message_chain(:rate_limit, :remaining).and_return(500)
         expect(Hubstats::Team).to receive(:create_or_update).at_least(:once)
         subject.update_teams
@@ -133,6 +138,27 @@ module Hubstats
       it "should rescue unprocessable entity" do
         allow(client).to receive(:create_hook) { raise Octokit::UnprocessableEntity }
         subject.create_hook(repo)
+      end
+    end
+
+    context ".create_org_hook" do
+      subject {Hubstats::GithubAPI}
+      let(:config) {double(:webhook_secret => 'a1b2c3d4', :webhook_endpoint => "hubstats.com")}
+      let(:client) {double}
+      let(:org) {double(:full_name => 'sportngin') }
+      before do
+        allow(Hubstats).to receive(:config) {config}
+        allow(subject).to receive(:client) {client}
+      end
+
+      it "should call octokit create_hook" do
+        expect(client).to receive(:create_hook)
+        subject.create_hook(org)
+      end
+
+      it "should rescue unprocessable entity" do
+        allow(client).to receive(:create_hook) { raise Octokit::UnprocessableEntity }
+        subject.create_hook(org)
       end
     end
 

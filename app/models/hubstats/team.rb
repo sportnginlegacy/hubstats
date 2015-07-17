@@ -12,6 +12,7 @@ module Hubstats
     scope :users_count, lambda {|start_date, end_date|
       select("hubstats_teams.id as team_id")
        .select("COUNT(DISTINCT hubstats_teams_users.user_id) AS user_count")
+       .where("hubstats_users.login != 'hubstats'")
        .joins(:users)
        .group("hubstats_teams.id")
     }
@@ -94,27 +95,35 @@ module Hubstats
     # the specifications that are passed in. We are assuming that if it is not already existent,
     # then we probably don't really care about the team, so our hubstats boolean will be set to false.
     #
-    # github_team - the info that's passed in about the new team
+    # github_team - the info that's passed in about the new or updated team
     #
     # Returns - the team 
     def self.create_or_update(github_team)
       github_team = github_team.to_h.with_indifferent_access if github_team.respond_to? :to_h
 
-      current_user = Hubstats::User.create_or_update(github_team[:current_user])
-
       team_data = github_team.slice(*Hubstats::Team.column_names.map(&:to_sym))
       team = where(:id => team_data[:id]).first_or_create(team_data)
-
-      if github_team[:action] == "added"
-        team.users << current_user
-      elsif github_team[:action] == "removed"
-        team.users.delete(current_user)
-      end
 
       team_data[:hubstats] = true
 
       return team if team.update_attributes(team_data)
       Rails.logger.warn team.errors.inspect
+    end
+
+    # Public - Adds or removes a user from a team
+    #
+    # team - a hubstats team that we wish to edit the users of
+    # user - a hubstats user that we wish to remove or add to the team
+    # action - whether the user is to be removed or added (string)
+    #
+    # Returns - nothing
+    def self.update_users_in_team(team, user, action)
+      if action == "added"
+        team.users << user
+      elsif action == "removed"
+        team.users.delete(user)
+      end
+      team.save!
     end
 
     # Public - Designed so that the list of teams can be ordered based on users, pulls, comments, net additions, or name.

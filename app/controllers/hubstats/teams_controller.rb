@@ -35,7 +35,7 @@ module Hubstats
       if Hubstats.config.github_config["ignore_users_list"].nil?
         @users = @team.users
       else
-        @users = @team.users.where("login != ?", Hubstats.config.github_config["ignore_users_list"])
+        @users = @team.users.where("login != ?", Hubstats.config.github_config["ignore_users_list"]).order("login ASC")
       end
       @user_count = @users.length
       @comment_count = Hubstats::Comment.belonging_to_team(@users.pluck(:id)).created_in_date_range(@start_date, @end_date).count(:all)

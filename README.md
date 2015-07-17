@@ -35,6 +35,14 @@ To generate a secret run:
 Set the endpoint to be:
 
  www.yourdomain.com/hubstats/handler
+
+### Organization Name
+Hubstats tracks certain repositories and teams that are part of an organization. Therefore, you must whitelist the specific GitHub organization to track in `octokit.yml`. The list of organizations should look something like this:
+
+```
+org_list:
+ - sportngin
+ ```
  
 ### Repositories 
 Hubstats needs to know what repositories for it to watch. You can set it to watch either an entire organization or a list of specific repositories in `octokit.yml`. The list of repositories should look like either:
@@ -46,14 +54,8 @@ repo_list:
  - sportngin/make-resourceful
 ```
 
-or 
-
-```
-org_name: sportngin
-```
-
 ### Teams
-Hubstats tracks teams that are whitelisted in the `octokit.yml`. It is recommended that you make teams dedicated for hubstats team based metrics so they are isolated from permissions focused teams.The list of teams should look something like:
+Hubstats tracks teams that are whitelisted in the `octokit.yml`. It is recommended that you make teams dedicated for hubstats team based metrics so they are isolated from permissions focused teams. The list of teams should look something like:
 
 ```
 team_list:
