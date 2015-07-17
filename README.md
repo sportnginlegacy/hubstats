@@ -5,8 +5,6 @@ Hubstats is a rails plugin which allows you to search and monitor pull requests 
 ## Setup
 The following setup is designed to only be used when integrating this plugin into a rails application.
 
- To add a new migration: `rails generate migration <migration-name>`
-
  Run `rails generate hubstats:install`.
  
  Configure `octokit.yml` with your GitHub information (see below).
