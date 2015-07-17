@@ -3,11 +3,13 @@
 Hubstats is a rails plugin which allows you to search and monitor pull requests made across a collection of repositories. It also gives extra statistics about users and pull requests not found on GitHub.
 
 ## Setup
-The following setup is designed to only be used when integrating this plugin into a rails application or for when adding new migrations.
+The following setup is designed to only be used when integrating this plugin into a rails application.
+
+ To add a new migration: `rails generate migration <migration-name>`
 
  Run `rails generate hubstats:install`.
  
- Configure `octokit.yml` with your GitHub information.
+ Configure `octokit.yml` with your GitHub information (see below).
 
  Run `rake hubstats:install:migrations`.
 
@@ -19,23 +21,12 @@ The following setup is designed to only be used when integrating this plugin int
 ### Authentication
 Hubstats needs GitHub credentials to access your repositories, these can be setup in one of two ways:
 
-#### Configuring the `octokit.yml`
+#### GitHub API Tokens
 Add your GitHub API token (called `access_token`) or ClientID and Secret to `octokit.yml`.
 
 #### Environment Variables
 Hubstats can also use OAUTH access tokens stored in ENV["GITHUB_API_TOKEN"] or for Application Authentication in ENV["CLIENT_ID"] and ENV["CLIENT_SECRET"], if for some reason you don't want to store them in `octokit.yml`.
 
-### Webhooks
-Hubstats uses GitHub webhooks to keep itself updated. It requires you to set a secret as well as an endpoint to push to.
-
-To generate a secret run:
- ```
- ruby -rsecurerandom -e 'puts SecureRandom.hex(20)'
- ``` 
-Set the endpoint to be:
-
- www.yourdomain.com/hubstats/handler
- 
 ### Configuring Data to be Received from GitHub
 #### Organizations to Follow
 Hubstats tracks certain repositories and teams that are part of an organization. Therefore, you must whitelist the specific GitHub organization to track in `octokit.yml`. The list of organizations should look something like this:
@@ -77,6 +68,17 @@ ignore_users_list:
  - user_login_three
 ```
 
+### Webhooks
+Hubstats uses GitHub webhooks to keep its data updated. It requires you to set a secret as well as an endpoint to push to.
+
+To generate a secret run:
+ ```
+ ruby -rsecurerandom -e 'puts SecureRandom.hex(20)'
+ ``` 
+Set the endpoint to be:
+
+ www.yourdomain.com/hubstats/handler
+
 ## Testing
 All of the automated tests are written in RSpec. To run these tests, run the following commands, assuming that there are two already existent local databases titled `hubstats_development` and `hubstats_test`:
 ```
@@ -94,7 +96,7 @@ to serve the plugin. http://guides.rubyonrails.org/plugins.html will give more i
 ## TL:DR
   Run `rails generate hubstats:install`.
   
-  Configure `octokit.yml` with your GitHub information.
+  Configure `octokit.yml` with your GitHub information (see above).
   
   Run `rake hubstats:install:migrations`.
   
