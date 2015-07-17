@@ -7,17 +7,17 @@ The following setup is designed to only be used when integrating this plugin int
 
  Run `rails generate hubstats:install`.
  
- Configure `octokit.yml` with your Github information.
+ Configure `octokit.yml` with your GitHub information.
 
  Run `rake hubstats:install:migrations`.
 
- Run `rake hubstats:setup` to run the necessary migrations and start pulling data from Github.
+ Run `rake hubstats:setup` to run the necessary migrations and start pulling data from GitHub.
 
  Add 'mount Hubstats::Engine => "/hubstats"' to your apps routes file.
 
 ## Configuration
 ### Authentication
-Hubstats needs Github credentials to access your repositories, these can be setup in one of two ways:
+Hubstats needs GitHub credentials to access your repositories, these can be setup in one of two ways:
 
 #### Configuring the `octokit.yml`
 Add your GitHub API token (called `access_token`) or ClientID and Secret to `octokit.yml`.
@@ -93,7 +93,7 @@ to serve the plugin. http://guides.rubyonrails.org/plugins.html will give more i
 ## TL:DR
   Run `rails generate hubstats:install`.
   
-  Configure `octokit.yml` with your Github information.
+  Configure `octokit.yml` with your GitHub information.
   
   Run `rake hubstats:install:migrations`.
   
