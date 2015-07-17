@@ -12,7 +12,7 @@ module Hubstats
     scope :users_count, lambda {|start_date, end_date|
       select("hubstats_teams.id as team_id")
        .select("COUNT(DISTINCT hubstats_teams_users.user_id) AS user_count")
-       .where("hubstats_users.login != ?", Hubstats.config.github_config["ignore_users_list"])
+       .where("hubstats_users.login NOT IN (?)", Hubstats.config.github_config["ignore_users_list"])
        .joins(:users)
        .group("hubstats_teams.id")
     }

@@ -58,7 +58,7 @@ module Hubstats
       team = payload[:team]
       team[:action] = payload[:action]
       team[:current_user] = payload[:member]
-      team_list = Hubstats.config.github_config["team_list"]
+      team_list = Hubstats.config.github_config["team_list"] || []
       if team_list.include? team[:name]
         Hubstats::Team.create_or_update(team.with_indifferent_access)
         hubstats_team = Hubstats::Team.where(name: team[:name]).first
