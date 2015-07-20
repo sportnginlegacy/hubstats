@@ -42,7 +42,7 @@ namespace :hubstats do
     end
 
     task :create_org_hook => :environment do
-      Hubstats::GithubAPI.create_org_hook(config.github_config["org_name"])
+      Hubstats::GithubAPI.create_org_hook(Hubstats.config.github_config["org_name"])
     end
 
     desc "Pulls in all information for an indivdual repo"

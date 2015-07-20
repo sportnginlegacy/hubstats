@@ -30,7 +30,7 @@ Hubstats can also use OAUTH access tokens stored in ENV["GITHUB_API_TOKEN"] or f
 Hubstats tracks certain repositories and teams that are part of an organization. Therefore, you must whitelist the specific GitHub organization to track in `octokit.yml`. The list of organizations should look something like this:
 
 ```
-org_list:
+org_name:
  - sportngin
  ```
  
