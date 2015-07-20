@@ -54,7 +54,7 @@ module Hubstats
     def self.get_repos
       if Hubstats.config.github_config.has_key?("org_name") == false
         begin
-          raise RuntimeError, "!!! Could not finish rake task! Organization name in .octokit.yml is required, but was not found."
+          raise RuntimeError, "COULD NOT COMPLETE RAKE TASK! Organization name in .octokit.yml is required, but was not found."
         rescue Exception => e
           puts e.message
           exit 1
