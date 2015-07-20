@@ -157,9 +157,8 @@ module Hubstats
     # Returns - the hook and a message (or just a message and no hook)
     def self.create_org_hook(org_name)
       begin
-        client.create_hook(
+        client.create_org_hook(
           org_name,
-          'web',
           {
             :url => Hubstats.config.webhook_endpoint,
             :content_type => 'json',
