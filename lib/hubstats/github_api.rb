@@ -54,7 +54,6 @@ module Hubstats
     def self.get_repos
       if Hubstats.config.github_config.has_key?("org_name") == false
         raise RuntimeError, "COULD NOT COMPLETE RAKE TASK! Organization name in .octokit.yml is required, but was not found."
-        exit 1
       end
 
       if Hubstats.config.github_config.has_key?("repo_list")
