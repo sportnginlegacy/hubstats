@@ -1,3 +1,8 @@
+#### v0.5.0
+* Adding teams and team commands, team sorting, and team metrics to Hubstats
+
+  > Emma Sax, Andy Fleener: Brian Bergstrom: https://github.com/sportngin/hubstats/pull/74
+
 #### v0.4.4
 #### v0.4.3
 * Fixes a bug introduced in v0.4.1 that removed the config method from Hubstats
