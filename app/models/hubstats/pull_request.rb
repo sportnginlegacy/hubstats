@@ -78,10 +78,8 @@ module Hubstats
     #
     # Returns - nothing
     def self.update_teams_in_pulls(days)
-      puts "Gathering pulls from past year"
       pulls = created_since(days)
       pulls.each {|pull| pull.assign_team_from_user}
-      puts "Finished updating teams for pull requests"
     end
 
     # Public - Filters all of the pull requests between start_date and end_date that are the given state
