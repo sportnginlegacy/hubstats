@@ -71,7 +71,7 @@ module Hubstats
       team.users << user2
       pull1 = build(:pull_request, :created_at => Date.today - 250, :user => user1)
       pull2 = build(:pull_request, :created_at => Date.today - 3, :repo => repo, :user => user2)
-      Hubstats::PullRequest.update_teams_in_pulls
+      Hubstats::PullRequest.update_teams_in_pulls(365)
       expect(pull1.team_id).to eq(team.id)
       expect(pull2.team_id).to eq(team.id)
     end

@@ -6,7 +6,7 @@ module Hubstats
     scope :updated_in_date_range, lambda {|start_date, end_date| where("hubstats_pull_requests.updated_at BETWEEN ? AND ?", start_date, end_date)}
     scope :created_in_date_range, lambda {|start_date, end_date| where("hubstats_pull_requests.created_at BETWEEN ? AND ?", start_date, end_date)}
     scope :merged_in_date_range, lambda {|start_date, end_date| where("hubstats_pull_requests.merged").where("hubstats_pull_requests.merged_at BETWEEN ? AND ?", start_date, end_date)}
-    scope :created_in_past_year, lambda {where("hubstats_pull_requests.created_at > ?", Date.today - 365)}
+    scope :created_since, lambda {|days| where("hubstats_pull_requests.created_at > ?", Date.today - days)}
     scope :belonging_to_repo, lambda {|repo_id| where(repo_id: repo_id)}
     scope :belonging_to_team, lambda {|team_id| where(team_id: team_id)}
     scope :belonging_to_user, lambda {|user_id| where(user_id: user_id)}
@@ -72,14 +72,15 @@ module Hubstats
       Rails.logger.warn pull.errors.inspect
     end
 
-    # Public - Updates the team_id for all pull requests from the past year
+    # Public - Takes days, a number, and updates all pull requests' team_ids that were created since that many days ago
+    #
+    # days - the amount of days ago that we wish to grab the number of pull requests since
     #
     # Returns - nothing
-    def self.update_teams_in_pulls
+    def self.update_teams_in_pulls(days)
       puts "Gathering pulls from past year"
-      pulls = created_in_past_year # only update team_ids from PRs that were created in the past year, uncomment below line if wish to update all PRs
-      # pulls = Hubstats::PullRequest.all
-      pulls.each { |pull| pull.assign_team_from_user }
+      pulls = created_since(days)
+      pulls.each {|pull| pull.assign_team_from_user}
       puts "Finished updating teams for pull requests"
     end
 
@@ -147,8 +148,7 @@ module Hubstats
     #
     # Returns - nothing
     def assign_team_from_user
-      puts self.inspect
-      user = Hubstats::User.where(id: self.user_id).first
+      user = Hubstats::User.find(self.user_id)
       if user.team && user.team.id
         self.team_id = user.team.id
         self.save!

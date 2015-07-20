@@ -130,12 +130,12 @@ module Hubstats
         allow(subject).to receive(:client) {client}
       end
 
-      it "should call octokit create_hook" do
+      it "should call octokit create_hook for repositories" do
         expect(client).to receive(:create_hook)
         subject.create_hook(repo)
       end
 
-      it "should rescue unprocessable entity" do
+      it "should rescue unprocessable entity from repo hook" do
         allow(client).to receive(:create_hook) { raise Octokit::UnprocessableEntity }
         subject.create_hook(repo)
       end
@@ -151,12 +151,12 @@ module Hubstats
         allow(subject).to receive(:client) {client}
       end
 
-      it "should call octokit create_hook" do
+      it "should call octokit create_hook for organizations" do
         expect(client).to receive(:create_hook)
         subject.create_hook(org)
       end
 
-      it "should rescue unprocessable entity" do
+      it "should rescue unprocessable entity from organization hook" do
         allow(client).to receive(:create_hook) { raise Octokit::UnprocessableEntity }
         subject.create_hook(org)
       end

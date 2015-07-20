@@ -108,9 +108,9 @@ namespace :hubstats do
       Hubstats::GithubAPI.update_teams
     end
 
-    desc "updates the teams for all pull requests from past year"
+    desc "updates the teams for all pull requests from past 365 days"
     task :update_teams_in_prs => :environment do
-      Hubstats::PullRequest.update_teams_in_pulls
+      Hubstats::PullRequest.update_teams_in_pulls(365)
     end
 
     desc "Updates WebHooks for all repos"
