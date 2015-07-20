@@ -1,3 +1,8 @@
+#### v0.5.1
+* adding hubstats; fixing little error in readme
+
+  > Emma Sax: Brian Bergstrom: https://github.com/sportngin/hubstats/pull/76
+
 #### v0.5.0
 * Adding teams and team commands, team sorting, and team metrics to Hubstats
 
