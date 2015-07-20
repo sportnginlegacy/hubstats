@@ -1,0 +1,10 @@
+<div class="container" id="team"%>
+  <div class="row">
+    <div class="col col-lg-12">
+      <%= render 'hubstats/tables/teams' %>
+      <div class="text-center">
+        <%= will_paginate @team, renderer: BootstrapPagination::Rails %>
+      </div>
+    </div>
+  </div>
+</div>

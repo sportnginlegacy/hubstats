@@ -18,5 +18,31 @@ module Hubstats
       expect(user2.login).to eq("johndoe")
       expect(user1.login).not_to eq("johnapplesdeed")
     end
+
+    it 'should find the team that this user belongs to' do
+      team = create(:team)
+      user = create(:user, login: 'janedoe', id: 11)
+      team.users << user
+      expect(user.login).to eq('janedoe')
+      expect(user.team).to eq(team)
+    end
+
+    it 'should find first team that this user belongs to' do
+      team1 = create(:team, name: "sad")
+      team2 = create(:team, name: "happy")
+      user = create(:user, login: 'janedoe', id: 11)
+      team1.users << user
+      team2.users << user
+      expect(user.login).to eq('janedoe')
+      expect(user.team).to eq(team1)
+    end
+
+    it 'should return no team if the hubstats bool is false' do
+      team = create(:team, hubstats: false)
+      user = create(:user, login: 'janedoe', id: 11)
+      team.users << user
+      expect(user.login).to eq('janedoe')
+      expect(user.team).to eq(nil)
+    end
   end
 end

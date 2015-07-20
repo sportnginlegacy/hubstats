@@ -4,23 +4,24 @@
   <div class="user-image-small col-lg-1 col-md-1 col-sm-1 col-xs-2" >
     <img src= <%= user.avatar_url%> alt= <%= user.login %> >
   </div>
-  <div class="user-info col-lg-3 col-md-3 col-sm-3 col-xs-3">
+  <div class="user-info col-lg-4 col-md-4 col-sm-4 col-xs-4">
     <h4> 
       <%= link_to user.login, user_path(user) %>
     </h4>
+    updated <%= distance_of_time_in_words(DateTime.now,user.updated_at) %> ago
   </div>
 
   <!-- Show the number of pull requests and comments -->
-  <div class="col-lg-3 col-lg-offset-1 col-md-3 col-sm-3 col-xs-3">
+  <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
     <div class="pull-right">
-      <span class="text-large"><%= user.pull_request_count %></span>
+      <span class="text-large"><%= Hubstats::PullRequest.belonging_to_user(user.id).merged_in_date_range(@start_date, @end_date).count(:all) %></span>
       <span class="mega-octicon octicon-git-pull-request"></span>
     </div>
   </div>
   <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
     <div class="pull-right">
-      <span class="text-large"><%= user.comment_count %></span>
-      <span class="mega-octicon octicon-comment"></span>
+      <span class="text-large"><%= Hubstats::Deploy.belonging_to_user(user.id).deployed_in_date_range(@start_date, @end_date).count(:all) %></span>
+      <span class="mega-octicon octicon-rocket"></span>
     </div>
   </div>
   <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">

@@ -9,7 +9,7 @@
         <a class="header desc" id="deploys"> Deployments <span class="octicon"></span> </a>
       </div>
       <div class="col-lg-2 col-md-2 col-sm-2">
-        <a class="header desc" id="pulls"> Pull Requests <span class="octicon"></span> </a>
+        <a class="header desc" id="pulls"> Merged Pull Requests <span class="octicon"></span> </a>
       </div>
       <div class="col-lg-2 col-md-2 col-sm-2">
         <a class="header desc" id="comments"> Comments <span class="octicon"></span></a>
@@ -21,5 +21,5 @@
     <%= render partial: 'hubstats/partials/user', collection: @users, as: :user %>
   </div>
 <% else %>
-  <p> No users to show </p>
+  <p> No user information available</p>
 <% end %>

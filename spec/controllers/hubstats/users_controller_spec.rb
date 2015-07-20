@@ -12,6 +12,7 @@ module Hubstats
         user4 = create(:user, :id => 404040, :login => "examplePerson4")
         expect(Hubstats::User).to receive_message_chain("with_id.custom_order.paginate").and_return([user2, user3, user1, user4])
         get :index
+        expect(response).to have_http_status(200)
       end
     end
 
@@ -29,6 +30,7 @@ module Hubstats
         expect(assigns(:user).pull_requests).to contain_exactly(pull1, pull2)
         expect(assigns(:user).deploys).to contain_exactly(deploy1, deploy2)
         expect(assigns(:user).comments).to contain_exactly(comment2, comment1)
+        expect(response).to have_http_status(200)
       end
     end
   end

@@ -35,6 +35,11 @@ $(document).ready(function() {
     var ids = $("#users").val();
     updateQueryStringParameter(queryParameters,"users",ids);
   });
+
+  $("#teams").change(function() {
+    var ids = $("#teams").val();
+    updateQueryStringParameter(queryParameters,"teams",ids);
+  });
 });
 
 /**

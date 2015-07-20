@@ -35,5 +35,5 @@ FactoryGirl.define do
     merged_by(:id => 202020)
 
     initialize_with { attributes } 
-  end 
+  end
 end

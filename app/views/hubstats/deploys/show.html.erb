@@ -7,8 +7,6 @@
       <%= @deploy.git_revision.titleize %>
     </h1>
 
-    <br>
-
     <!-- Show the date/time that the deploy was deployed -->
     <h4 class="text-center">
       Deployed at: <%= @deploy.deployed_at %>
@@ -21,12 +19,11 @@
   <!--Show all of the pull requests in a "condensed" view -->
   <div class="col col-lg-8 col-lg-offset-2">
     <div class="row">
-      <h4> Pull Requests </h4>
+      <h4> Merged Pull Requests </h4>
       <%= render 'hubstats/tables/pulls-condensed' %>
       <% if @pull_request_count > 20 %>
         <p class="pull-right"><%= link_to "View All", pulls_path(:deploys => @deploy.id) %></p>
       <% end %>
     </div>
   </div>
-
 </div>

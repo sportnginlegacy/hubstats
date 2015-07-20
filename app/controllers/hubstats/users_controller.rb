@@ -14,14 +14,14 @@ module Hubstats
         @users = Hubstats::User.where(id: params[:id].split(",")).order("login ASC")
       elsif params[:repos]
         @users = Hubstats::User.only_active.with_contributions(@start_date, @end_date, params[:repos])
-            .with_id(params[:users])
-            .custom_order(params[:order])
-            .paginate(:page => params[:page], :per_page => 15)
+          .with_id(params[:users])
+          .custom_order(params[:order])
+          .paginate(:page => params[:page], :per_page => 15)
       else
         @users = Hubstats::User.only_active.with_all_metrics(@start_date, @end_date)
-            .with_id(params[:users])
-            .custom_order(params[:order])
-            .paginate(:page => params[:page], :per_page => 15)
+          .with_id(params[:users])
+          .custom_order(params[:order])
+          .paginate(:page => params[:page], :per_page => 15)
       end
       
       respond_to do |format|
@@ -49,8 +49,9 @@ module Hubstats
       stats
     end
 
-    # stats
-    # Shows the basic stats for both the user show page.
+    # Public - Shows the basic stats for the user show page.
+    #
+    # Returns - the data in a hash
     def stats
       @additions ||= 0
       @deletions ||= 0

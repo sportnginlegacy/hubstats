@@ -144,7 +144,7 @@ module Hubstats
       .group("hubstats_users.id")
     }
 
-    # Public - Joins all of the metrics together for selected repository: average additions and deletions, comments, pull requests, and deploys.
+    # Public - Joins all of the metrics together for selected user: average additions and deletions, comments, pull requests, and deploys.
     # 
     # start_date - the start of the date range
     # end_date - the end of the data range
@@ -169,6 +169,7 @@ module Hubstats
     has_many :repos, :class_name => "Repo"
     has_many :pull_requests
     has_many :deploys
+    has_and_belongs_to_many :teams, :join_table => 'hubstats_teams_users', :uniq => true
 
     # Public - Creates a new user form a GitHub webhook.
     #
@@ -229,6 +230,14 @@ module Hubstats
       else 
         order("pull_request_count DESC")
       end
+    end
+
+    # Public - Gets the first team where the user is belongs to and where hubstats bool is true.
+    #
+    # Returns - the first team that the user belongs to where hubstats bool is true, if nothing
+    # meets these qualifications, nil is returned
+    def team
+      teams.where(hubstats: true).first
     end
 
     # Public - Designed to make a path for the show page when a repository is selected.

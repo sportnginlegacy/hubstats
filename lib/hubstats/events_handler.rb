@@ -17,6 +17,8 @@ module Hubstats
         pull_processor(payload)
       when "pull_request_review_comment", "PullRequestReviewCommentEvent"
         comment_processor(payload, "PullRequest")
+      when "membership", "MembershipEvent"
+        team_processor(payload)
       end
     end
 
@@ -45,6 +47,24 @@ module Hubstats
       comment[:repo_id] = payload[:repository][:id]
       comment[:pull_number] = get_pull_number(payload)
       Hubstats::Comment.create_or_update(comment.with_indifferent_access)
+    end
+
+    # Public - Gets the information for the new team and updates it
+    #
+    # payload - the information that we will use to get the data off of
+    #
+    # Returns - nothing, but updates or makes the team
+    def team_processor(payload)
+      team = payload[:team]
+      team[:action] = payload[:action]
+      team[:current_user] = payload[:member]
+      team_list = Hubstats.config.github_config["team_list"] || []
+      if team_list.include? team[:name]
+        Hubstats::Team.create_or_update(team.with_indifferent_access)
+        hubstats_team = Hubstats::Team.where(name: team[:name]).first
+        hubstats_user = Hubstats::User.create_or_update(team[:current_user])
+        Hubstats::Team.update_users_in_team(hubstats_team, hubstats_user, team[:action])
+      end
     end
 
     # Public - Grabs the PR number off of any of the various places it can be

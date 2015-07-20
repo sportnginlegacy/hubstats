@@ -2,7 +2,7 @@
   <nav class="navbar navbar-default" role="navigation">
     <div class="container-fluid">
 
-      <!-- Show the Hubstats name in navbar along with a link to the PR page -->
+      <!-- Show the Hubstats name in navbar along with a link to the PR page that shows current open and deployable PRs sorted by repo -->
       <div class="navbar-header">
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
           <span class="sr-only">Toggle navigation</span>
@@ -11,12 +11,14 @@
           <span class="icon-bar"></span>
         </button>
         <%= link_to "Hubstats", root_path(:state => "open", :label => "deployable", :group => "repo"),
-            {:data => {:repo_path => repos_path(), :user_path => users_path()}, :class => "navbar-brand title", :id =>"brand"}%>
+            {:data => {:repo_path => repos_path(), :user_path => users_path(), :team_path => teams_path()}, :class => "navbar-brand title", :id =>"brand"}%>
       </div>
 
-      <!-- Show all of the pages in tab form -->
+      <!-- Show all of the pages (Teams, Deployments, Metrics, Pull Requests, Users) in tab form -->
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav navbar-right">
+          <li class="<%='navbar-active' if params[:controller] == 'hubstats/teams'%>">
+            <%= link_to "Teams", teams_path%></li>
           <li class="<%='navbar-active' if params[:controller] == 'hubstats/deploys'%>">
             <%= link_to "Deployments", deploys_path%></li>
           <li class="<%='navbar-active' if params[:controller] == 'hubstats/repos'%>">

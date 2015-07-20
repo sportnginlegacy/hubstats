@@ -1,6 +1,6 @@
 <div class="row single-user">
 
-  <!-- Show the avatar of the githuber user and the user's username -->
+  <!-- Show the avatar of the githuber user and the user's username with a link to their github page -->
   <div class="user-image col-lg-1 col-md-1 col-sm-1" >
     <img src= <%= user.avatar_url%> alt= <%= user.login %> >
   </div>
@@ -8,6 +8,7 @@
     <h4> 
       <%= link_to user.login, user_path(user) %>
     </h4>
+    updated <%= distance_of_time_in_words(DateTime.now,user.updated_at) %> ago
     <br>
     <h4>
       <a class="subtle" href=<%= user.html_url %> > 

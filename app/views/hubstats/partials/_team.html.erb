@@ -1,0 +1,40 @@
+<div class="row single-team">
+
+  <!-- Show the team name and the date that it was last updated, with a link to the github team -->
+  <div class="team-info col-lg-2 col-md-2 col-sm-2 col-xs-8">
+    <h4> 
+      <%= link_to team.name, team_path(team)%>
+    </h4>
+    <br>
+  </div>
+
+  <!-- Show all of the stats for the individual team -->
+  <div class="col-lg-2 col-md-2 col-sm-2">
+    <div class="text-center">
+      <span class="text-large"><%= team.user_count || 0 %></span> <!-- minus one for the user we're using as the access_token -->
+    </div>
+  </div>
+  <div class="col-lg-2 col-md-2 col-sm-2">
+    <div class="text-center">
+      <span class="text-large"><%= team.pull_request_count %></span>
+      <span class="mega-octicon octicon-git-pull-request"></span>
+    </div>
+  </div>
+  <div class="col-lg-2 col-md-2 col-sm-2">
+    <div class="text-center">
+      <span class="text-large"><%= team.comment_count %></span>
+      <span class="mega-octicon octicon-comment"></span>
+    </div>
+  </div>
+  <div class="col-lg-2 col-md-2 col-sm-2">
+    <div class="text-center">
+      <span class="text-large"><%= team.repo_count %></span>
+      <span class="mega-octicon octicon-repo"></span>
+    </div>
+  </div>
+  <div class="col-lg-2 col-md-2 col-sm-2">
+    <div class="text-center">
+      <span class="text-large"><%= team.additions - team.deletions %></span>
+    </div>
+  </div>
+</div>

@@ -3,9 +3,11 @@ github_auth: # Must include either access_token || (client_id && client_secret)
   # client_id: <CLIENT ID>
   # client_secret: <CLIENT SECRET>
 
-github_config: # Must include either org_name || repo_list
+github_config: # Must include org_name. The repo_list, team_list, and ignore_users_list are optional.
   # org_name: <ORGANIZATION NAME>
+  # team_list: [<ARRAY OF TEAMS>]
   # repo_list: [<ARRAY OF REPOS>]
+  # ignore_users_list: [<ARRAY OF USERS' LOGINS TO IGNORE>]
 
 webhook_secret: #<40 CHARACTER ACCESS TOKEN >
 webhook_endpoint: #<url of webhook endpoint>

@@ -6,10 +6,13 @@ module Hubstats
     scope :updated_in_date_range, lambda {|start_date, end_date| where("hubstats_pull_requests.updated_at BETWEEN ? AND ?", start_date, end_date)}
     scope :created_in_date_range, lambda {|start_date, end_date| where("hubstats_pull_requests.created_at BETWEEN ? AND ?", start_date, end_date)}
     scope :merged_in_date_range, lambda {|start_date, end_date| where("hubstats_pull_requests.merged").where("hubstats_pull_requests.merged_at BETWEEN ? AND ?", start_date, end_date)}
+    scope :created_since, lambda {|days| where("hubstats_pull_requests.created_at > ?", Date.today - days)}
     scope :belonging_to_repo, lambda {|repo_id| where(repo_id: repo_id)}
+    scope :belonging_to_team, lambda {|team_id| where(team_id: team_id)}
     scope :belonging_to_user, lambda {|user_id| where(user_id: user_id)}
     scope :belonging_to_deploy, lambda {|deploy_id| where(deploy_id: deploy_id)}
     scope :belonging_to_repos, lambda {|repo_id| where(repo_id: repo_id.split(',')) if repo_id}
+    scope :belonging_to_teams, lambda {|team_id| where(team_id: team_id.split(',')) if team_id}
     scope :belonging_to_users, lambda {|user_id| where(user_id: user_id.split(',')) if user_id}
     scope :group, lambda {|group| group_by(:repo_id) if group }
     scope :with_state, lambda {|state| (where(state: state) unless state == 'all') if state}
@@ -22,15 +25,18 @@ module Hubstats
       :review_comments_url, :review_comment_url, :comments_url, :statuses_url, :number,
       :state, :title, :body, :created_at, :updated_at, :closed_at, :merged_at, 
       :merge_commit_sha, :merged, :mergeable, :comments, :commits, :additions,
-      :deletions, :changed_files, :user_id, :repo_id, :merged_by
+      :deletions, :changed_files, :user_id, :repo_id, :merged_by, :team_id
 
     belongs_to :user
     belongs_to :repo
     belongs_to :deploy
+    belongs_to :team
     has_and_belongs_to_many :labels, :join_table => "hubstats_labels_pull_requests"
 
     # Public - Makes a new pull request from a GitHub webhook. Finds user_id and repo_id based on users and repos 
-    # that are already in the Hubstats database. Also updates the user_id of a deploy if the pull request has been merged in a deploy.
+    # that are already in the Hubstats database. Updates the user_id of a deploy if the pull request has been merged in a deploy.
+    # If the user who makes the PR has a team, then it will update the team_id of the PR to match the team the user
+    # belongs to.
     #
     # github_pull - the info that is from Github about the new or updated pull request
     #
@@ -58,18 +64,22 @@ module Hubstats
           end
       end
 
+      if user.team && user.team.id
+        pull_data[:team_id] = user.team.id
+      end
+
       return pull if pull.update_attributes(pull_data)
       Rails.logger.warn pull.errors.inspect
     end
 
-    # Public - Adds any labels to the labels database if the labels passed in aren't already there.
+    # Public - Takes days, a number, and updates all pull requests' team_ids that were created since that many days ago
     #
-    # labels - the labels to be added to the db
+    # days - the amount of days ago that we wish to grab the number of pull requests since
     #
-    # Returns - the new labels
-    def add_labels(labels)
-      labels.map!{|label| Hubstats::Label.first_or_create(label) }
-      self.labels = labels
+    # Returns - nothing
+    def self.update_teams_in_pulls(days)
+      pulls = created_since(days)
+      pulls.each {|pull| pull.assign_team_from_user}
     end
 
     # Public - Filters all of the pull requests between start_date and end_date that are the given state
@@ -84,6 +94,7 @@ module Hubstats
       filter_based_on_date_range(start_date, end_date, params[:state])
        .belonging_to_users(params[:users])
        .belonging_to_repos(params[:repos])
+       .belonging_to_teams(params[:teams])
     end
 
     # Public - Finds all of the PRs with the current state, and then filters to ones that have been updated in
@@ -129,6 +140,27 @@ module Hubstats
       else
         scoped
       end
+    end
+
+    # Public - Assigns a team to a pull request based on the user's team
+    #
+    # Returns - nothing
+    def assign_team_from_user
+      user = Hubstats::User.find(self.user_id)
+      if user.team && user.team.id
+        self.team_id = user.team.id
+        self.save!
+      end
+    end
+
+    # Public - Adds any labels to the labels database if the labels passed in aren't already there.
+    #
+    # labels - the labels to be added to the db
+    #
+    # Returns - the new labels
+    def add_labels(labels)
+      labels.map!{|label| Hubstats::Label.first_or_create(label) }
+      self.labels = labels
     end
   end
 end

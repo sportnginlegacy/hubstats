@@ -52,18 +52,22 @@ module Hubstats
     #
     # Returns - an array of github repo objects
     def self.get_repos
-      if Hubstats.config.github_config.has_key?("org_name")
-        repos = client.organization_repositories(Hubstats.config.github_config["org_name"])
-      else
+      if Hubstats.config.github_config.has_key?("org_name") == false
+        raise RuntimeError, "COULD NOT COMPLETE RAKE TASK! Organization name in .octokit.yml is required, but was not found."
+      end
+
+      if Hubstats.config.github_config.has_key?("repo_list")
         repos = []
         Hubstats.config.github_config["repo_list"].each do |repo|
           repos << client.repository(repo)
         end
+      elsif Hubstats.config.github_config.has_key?("org_name")
+        repos = client.organization_repositories(Hubstats.config.github_config["org_name"])
       end
       repos
     end
 
-    # Public - Gets extra information on pull requests, e.g size, additions ...
+    # Public - Gets extra information on pull requests, e.g. size, additions ...
     #
     # Returns - nothing
     def self.update_pulls
@@ -71,9 +75,9 @@ module Hubstats
       begin
         while Hubstats::PullRequest.where(deletions: nil).where(additions: nil).count > 0
           client = Hubstats::GithubAPI.client
-          incomplete = Hubstats::PullRequest.where(deletions: nil).where(additions: nil).limit(grab_size)
+          pull_requests = Hubstats::PullRequest.where(deletions: nil).where(additions: nil).limit(grab_size)
 
-          incomplete.each do |pull|
+          pull_requests.each do |pull|
             repo = Hubstats::Repo.where(id: pull.repo_id).first
             pr = client.pull_request(repo.full_name, pull.number)
             Hubstats::PullRequest.create_or_update(HubHelper.pull_setup(pr))
@@ -84,6 +88,37 @@ module Hubstats
       rescue Faraday::ConnectionFailed
         puts "Connection Timeout, restarting pull request updating"
         update_pulls
+      end
+    end
+
+    # Public - Gets information on teams, e.g. name
+    #
+    # Returns - nothing
+    def self.update_teams
+      grab_size = 250
+      begin
+        client = Hubstats::GithubAPI.client
+        all_teams_in_org = client.organization_teams(Hubstats.config.github_config["org_name"])
+        team_list = Hubstats.config.github_config["team_list"] || []
+
+        all_teams_in_org.each do |team|
+          if team_list.include? team[:name]
+            puts "Making a team"
+            Hubstats::Team.create_or_update(team)
+            users = client.team_members(team[:id])
+            users.each do |user|
+              hubstats_team = Hubstats::Team.where(name: team[:name]).first
+              hubstats_user = Hubstats::User.create_or_update(user)
+              puts "Adding a user to a team"
+              Hubstats::Team.update_users_in_team(hubstats_team, hubstats_user, "added")
+            end
+          end
+        end
+        wait_limit(grab_size,client.rate_limit)
+        puts "All teams are up to date"
+      rescue Faraday::ConnectionFailed
+        puts "Connection Timeout, restarting team updating"
+        update_teams
       end
     end
 
@@ -103,14 +138,7 @@ module Hubstats
             :secret => Hubstats.config.webhook_secret
           },
           {
-            :events => [
-              'pull_request',
-              'pull_request_review_comment',
-              'commit_comment',
-              'issues',
-              'issue_comment',
-              'member'
-              ],
+            :events => ['pull_request', 'pull_request_review_comment', 'commit_comment', 'issues', 'issue_comment'],
             :active => true
           }
         )
@@ -119,6 +147,34 @@ module Hubstats
         puts "Hook on #{repo.full_name} already existed"
       rescue Octokit::NotFound
         puts "You don't have sufficient privileges to add an event hook to #{repo.full_name}"
+      end
+    end
+
+    # Public - Makes a new webhook from an organization
+    #
+    # org_name - the name of the organization that is attempting to have a hook made with
+    #
+    # Returns - the hook and a message (or just a message and no hook)
+    def self.create_org_hook(org_name)
+      begin
+        client.create_hook(
+          org_name,
+          'web',
+          {
+            :url => Hubstats.config.webhook_endpoint,
+            :content_type => 'json',
+            :secret => Hubstats.config.webhook_secret
+          },
+          {
+            :events => ['membership'],
+            :active => true
+          }
+        )
+        puts "Hook on #{org_name} successfully created"
+      rescue Octokit::UnprocessableEntity
+        puts "Hook on #{org_name} already existed"
+      rescue Octokit::NotFound
+        puts "You don't have sufficient privileges to add an event hook to #{org_name}"
       end
     end
 
@@ -133,7 +189,7 @@ module Hubstats
         client.hooks(repo.full_name).each do |hook|
           if hook[:config][:url] == old_endpoint
             Hubstats::GithubAPI.client.remove_hook(repo.full_name, hook[:id])
-            puts "successfully deleted hook with id #{hook[:id]} and url #{hook[:config][:url]} from #{repo.full_name}"
+            puts "Successfully deleted hook with id #{hook[:id]} and url #{hook[:config][:url]} from #{repo.full_name}"
           end
         end
       rescue Octokit::NotFound

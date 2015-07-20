@@ -5,6 +5,7 @@
 $(document).ready(function() { 
   usersIDs = queryParameters["users"] ? queryParameters["users"].replace("%2C", ",") : "";
   reposIDs = queryParameters["repos"] ? queryParameters["repos"].replace("%2C", ",") : "";
+  teamsIDs = queryParameters["teams"] ? queryParameters["teams"].replace("%2C", ",") : "";
 
   $("#repos").select2({
     placeholder: "Repositories",
@@ -45,8 +46,48 @@ $(document).ready(function() {
         });
       }
     }
-  }).select2('val', []); 
+  }).select2('val', []);
 
+  $("#teams").select2({
+    placeholder: "Teams",
+    multiple: true,
+    ajax: {
+      url: getPath("team"),
+      dataType: 'json',
+      quietMillis: 100,
+      data: function (term) {
+        return {
+          query: term
+        };
+      },
+      results: function (data) {
+        return {
+          results: $.map(data, function (team) {
+            return {
+              text: team.name,
+              id: team.id
+            }
+          })
+        };
+      }
+    },
+    initSelection: function(element, callback) {
+      if (teamsIDs !== "") {
+        $.ajax(getPath("team"), {
+          data: { id: teamsIDs },
+          dataType: "json"
+        }).done(function (data) { callback(
+            $.map(data, function (team) {
+              return {
+                text: team.name,
+                id: team.id
+              }
+            })
+          ); 
+        });
+      }
+    }
+  }).select2('val', []); 
 
   $("#users").select2({
     placeholder: "Users",
@@ -96,7 +137,9 @@ $(document).ready(function() {
  */
 function getPath (model) {
   if (model == 'user') {
-    return $("#brand").attr('data-user-path');}
-  else if (model == 'repo')
+    return $("#brand").attr('data-user-path');
+  } else if (model == 'repo') {
     return $("#brand").attr('data-repo-path');
+  } else if (model == 'team')
+    return $("#brand").attr('data-team-path');
 };
