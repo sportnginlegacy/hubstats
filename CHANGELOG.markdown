@@ -1,3 +1,7 @@
+* Making the team's user column to be developers/reviewers
+
+  > Emma Sax: Brian Bergstrom: https://github.com/sportngin/hubstats/pull/77
+
 #### v0.5.1
 * adding hubstats; fixing little error in readme
 
