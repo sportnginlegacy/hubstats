@@ -4,6 +4,8 @@ module Hubstats
     # Various checks that can be used to filter and find info about users.
     scope :with_id, lambda {|user_id| where(id: user_id.split(',')) if user_id}
     scope :only_active, having("comment_count > 0 OR pull_request_count > 0 OR deploy_count > 0")
+    scope :is_developer, having("pull_request_count > 0")
+    scope :is_reviewer, having("comment_count > 0")
     scope :with_contributions, lambda {|start_date, end_date, repo_id| with_all_metrics_repos(start_date, end_date, repo_id) if repo_id}
 
     # Public - Counts all of the deploys for selected user that occurred between the start_date and end_date.
@@ -205,7 +207,7 @@ module Hubstats
     end
 
     # Public - Designed so that the list of users can be ordered based on deploys, pulls, comments, net additions, or name.
-    # if none of these are selected, then the default is to order by pull request count in descending order.
+    # If none of these are selected, then the default is to order by pull request count in descending order.
     #
     # order_params - the param of what the users should be sorted by
     #
@@ -230,6 +232,28 @@ module Hubstats
       else 
         order("pull_request_count DESC")
       end
+    end
+
+    # Public - Counts all of the pull requests for the users and sees if the count of PRs is greater than 0 (if they are a developer).
+    # Then counts all of the developers.
+    #
+    # start_date - the starting date that we want to count the PRs from
+    # end_date - the ending date that we want to count the PRs from
+    #
+    # Returns - the count of total users that have PRs > 0
+    def self.count_active_developers(start_date, end_date)
+      self.pull_requests_count(start_date, end_date).is_developer.to_a.count
+    end
+
+    # Public - Counts all of the comments for the users and sees if the count of comments is greater than 0 (if they are a reviewer).
+    # Then counts all of the reviewers.
+    #
+    # start_date - the starting date that we want to count the comments from
+    # end_date - the ending date that we want to count the comments from
+    #
+    # Returns - the count of total users that have comments > 0
+    def self.count_active_reviewers(start_date, end_date)
+      self.comments_count(start_date, end_date).is_reviewer.to_a.count
     end
 
     # Public - Gets the first team where the user is belongs to and where hubstats bool is true.
