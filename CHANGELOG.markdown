@@ -1,3 +1,7 @@
+* Adding PRs per developer and Comments per reviewer to team page
+
+  > Emma Sax: Brian Bergstrom: https://github.com/sportngin/hubstats/pull/78
+
 * Making the team's user column to be developers/reviewers
 
   > Emma Sax: Brian Bergstrom: https://github.com/sportngin/hubstats/pull/77
