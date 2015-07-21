@@ -3,7 +3,8 @@ require_dependency "hubstats/application_controller"
 module Hubstats
   class TeamsController < Hubstats::BaseController
 
-    # Public - Shows all of the teams by filter params lists them with metrics between the start date and end date.
+    # Public - Shows all of the teams in either alphabetical order, by filter params, or that have done things in
+    # github between the selected @start_date and @end_date.
     #
     # Returns - the team data
     def index

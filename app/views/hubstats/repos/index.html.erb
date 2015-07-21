@@ -1,13 +1,14 @@
-<div class="container" id="team"%>
+<div class="container" id="repo">
 
   <%= render partial: 'hubstats/partials/dashboard' %>
-  
+
   <div class="row">
     <div class="col col-lg-12">
-      <%= render 'hubstats/tables/teams' %>
+      <%= render 'hubstats/tables/repos' %>
       <div class="text-center">
-        <%= will_paginate @team, renderer: BootstrapPagination::Rails %>
+        <%= will_paginate @repo, renderer: BootstrapPagination::Rails %>
       </div>
     </div>
   </div>
 </div>
+

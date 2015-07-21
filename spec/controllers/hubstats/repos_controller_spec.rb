@@ -49,7 +49,7 @@ module Hubstats
       end
     end
 
-    describe "#dashboard" do
+    describe "#index" do
       it "should list all of the repos and the basic metrics" do
         repo1 = create(:repo, :id => 101010,
                               :name => "silly",
@@ -64,7 +64,7 @@ module Hubstats
                               :name => "goosey",
                               :full_name => "sportngin/goosey")
         expect(Hubstats::Repo).to receive_message_chain("with_id.custom_order.paginate").and_return([repo1, repo2, repo3, repo4])
-        get :dashboard
+        get :index
         expect(response).to have_http_status(200)
       end
     end

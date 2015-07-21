@@ -3,8 +3,8 @@ require_dependency "hubstats/application_controller"
 module Hubstats
   class ReposController < Hubstats::BaseController
 
-    # Public - Lists all of the repos, either in alphabetical order, by query params, or with activity in between
-    # @start_date and @end_date.
+    # Public - Shows all of the repos, in either alphabetical order, by filter params, or that have done things in
+    # github between the selected @start_date and @end_date.
     #
     # Returns - the repository data
     def index
@@ -13,10 +13,14 @@ module Hubstats
       elsif params[:id]
         @repos = Hubstats::Repo.where(id: params[:id].split(",")).order("name ASC")
       else
-        @repos = Hubstats::Repo.with_recent_activity(@start_date, @end_date)
+        @repos = Hubstats::Repo.with_all_metrics(@start_date, @end_date)
+          .with_id(params[:repos])
+          .custom_order(params[:order])
+          .paginate(:page => params[:page], :per_page => 15)
       end
 
       respond_to do |format|
+        format.html
         format.json { render :json => @repos}
       end
     end
@@ -41,16 +45,10 @@ module Hubstats
       stats
     end
 
-    # Public - Shows all of the repositories with individual stats for each repo. Also shows the stats for all of
-    # the repositories within @start_date and @end_date.
+    # Public - Shows statistics for all of the data Hubstats has within the date range
     #
-    # Returns - the stats for the entirety of Hubstats and all repos
+    # Returns - the stats for the entirety of Hubstats
     def dashboard
-      @repos = Hubstats::Repo.with_all_metrics(@start_date, @end_date)
-        .with_id(params[:repos])
-        .custom_order(params[:order])
-        .paginate(:page => params[:page], :per_page => 15)
-
       @user_count = Hubstats::User.with_pulls_or_comments_or_deploys(@start_date, @end_date).only_active.length
       @deploy_count = Hubstats::Deploy.deployed_in_date_range(@start_date, @end_date).count(:all)
       @pull_count = Hubstats::PullRequest.merged_in_date_range(@start_date, @end_date).count(:all)
@@ -61,11 +59,6 @@ module Hubstats
       @deletions = Hubstats::PullRequest.merged_in_date_range(@start_date, @end_date).average(:deletions)
 
       stats
-
-      respond_to do |format|
-        format.html
-        format.json { render :json => @repos}
-      end
     end
 
     # Public - Will assign all of the stats for both the show page and the dashboard page.
