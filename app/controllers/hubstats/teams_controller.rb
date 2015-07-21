@@ -34,7 +34,7 @@ module Hubstats
       @pull_requests = Hubstats::PullRequest.belonging_to_team(@team.id).merged_in_date_range(@start_date, @end_date).order("updated_at DESC").limit(20)
       @pull_count = Hubstats::PullRequest.belonging_to_team(@team.id).merged_in_date_range(@start_date, @end_date).count(:all)
       @users = @team.users.where("login NOT IN (?)", Hubstats.config.github_config["ignore_users_list"]).order("login ASC")
-      @user_count = @users.length
+      @active_user_count = @users.length
       @comment_count = Hubstats::Comment.belonging_to_team(@users.pluck(:id)).created_in_date_range(@start_date, @end_date).count(:all)
       repos_pr = @pull_requests.pluck(:repo_id)
       repos_comment = Hubstats::Comment.where("user_id IN (?)", @users).created_in_date_range(@start_date, @end_date).pluck(:repo_id)
@@ -53,13 +53,13 @@ module Hubstats
     def stats
       @additions ||= 0
       @deletions ||= 0
-      @stats_basics = {
+      @stats_row_one = {
         pull_count: @pull_count,
-        user_count: @user_count,
+        active_user_count: @active_user_count,
         comment_count: @comment_count,
         repo_count: @repo_count
       }
-      @stats_additions = {
+      @stats_row_two = {
         avg_additions: @additions.round.to_i,
         avg_deletions: @deletions.round.to_i,
         net_additions: @net_additions
