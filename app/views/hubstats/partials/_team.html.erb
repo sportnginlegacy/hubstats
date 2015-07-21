@@ -23,19 +23,28 @@
   </div>
   <div class="col-lg-2 col-md-2 col-sm-2">
     <div class="text-center">
+      <span class="text-large"><% if team.users.count_active_developers(@start_date, @end_date) != 0 %>
+                                 <%= (team.pull_request_count.to_f / team.users.count_active_developers(@start_date, @end_date).to_f).round(2) %>
+                               <% else %>
+                                 <%= 0 %>
+                               <% end %></span>
+      <span class="mega-octicon octicon-git-pull-request"></span>
+    </div>
+  </div>
+  <div class="col-lg-2 col-md-2 col-sm-2">
+    <div class="text-center">
       <span class="text-large"><%= team.comment_count %></span>
       <span class="mega-octicon octicon-comment"></span>
     </div>
   </div>
   <div class="col-lg-2 col-md-2 col-sm-2">
     <div class="text-center">
-      <span class="text-large"><%= team.repo_count %></span>
-      <span class="mega-octicon octicon-repo"></span>
-    </div>
-  </div>
-  <div class="col-lg-2 col-md-2 col-sm-2">
-    <div class="text-center">
-      <span class="text-large"><%= team.additions - team.deletions %></span>
+      <span class="text-large"><% if team.users.count_active_reviewers(@start_date, @end_date) != 0 %>
+                                 <%= (team.comment_count.to_f / team.users.count_active_reviewers(@start_date, @end_date).to_f).round(2) %>
+                               <% else %>
+                                 <%= 0 %>
+                               <% end %></span>
+      <span class="mega-octicon octicon-comment"></span>
     </div>
   </div>
 </div>
