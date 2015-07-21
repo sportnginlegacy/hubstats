@@ -23,12 +23,12 @@ module Hubstats
     # end_date - the end of the data range
     # 
     # Returns - count of repos
-    scope :repos_count, lambda {|start_date, end_date|
-      select("hubstats_teams.id as team_id")
-       .select("IFNULL(COUNT(DISTINCT hubstats_pull_requests.repo_id),0) AS repo_count")
-       .joins(sanitize_sql_array(["LEFT JOIN hubstats_pull_requests ON hubstats_pull_requests.team_id = hubstats_teams.id AND (hubstats_pull_requests.merged_at BETWEEN ? AND ?) AND hubstats_pull_requests.merged = '1'", start_date, end_date]))
-       .group("hubstats_teams.id")
-    }
+    # scope :repos_count, lambda {|start_date, end_date|
+    #   select("hubstats_teams.id as team_id")
+    #    .select("IFNULL(COUNT(DISTINCT hubstats_pull_requests.repo_id),0) AS repo_count")
+    #    .joins(sanitize_sql_array(["LEFT JOIN hubstats_pull_requests ON hubstats_pull_requests.team_id = hubstats_teams.id AND (hubstats_pull_requests.merged_at BETWEEN ? AND ?) AND hubstats_pull_requests.merged = '1'", start_date, end_date]))
+    #    .group("hubstats_teams.id")
+    # }
 
     # Public - Counts all of the merged pull requests for selected team's users that occurred between the start_date and end_date.
     # 
@@ -50,13 +50,13 @@ module Hubstats
     # end_date - the end of the data range
     #
     # Returns - the additions and deletions
-    scope :net_additions_count, lambda {|start_date, end_date|
-      select("hubstats_teams.id as team_id")
-      .select("SUM(IFNULL(hubstats_pull_requests.additions, 0)) AS additions")
-      .select("SUM(IFNULL(hubstats_pull_requests.deletions, 0)) AS deletions")
-      .joins(sanitize_sql_array(["LEFT JOIN hubstats_pull_requests ON hubstats_pull_requests.team_id = hubstats_teams.id AND (hubstats_pull_requests.merged_at BETWEEN ? AND ?) AND hubstats_pull_requests.merged = '1'", start_date, end_date]))
-      .group("hubstats_teams.id")
-    }
+    # scope :net_additions_count, lambda {|start_date, end_date|
+    #   select("hubstats_teams.id as team_id")
+    #   .select("SUM(IFNULL(hubstats_pull_requests.additions, 0)) AS additions")
+    #   .select("SUM(IFNULL(hubstats_pull_requests.deletions, 0)) AS deletions")
+    #   .joins(sanitize_sql_array(["LEFT JOIN hubstats_pull_requests ON hubstats_pull_requests.team_id = hubstats_teams.id AND (hubstats_pull_requests.merged_at BETWEEN ? AND ?) AND hubstats_pull_requests.merged = '1'", start_date, end_date]))
+    #   .group("hubstats_teams.id")
+    # }
 
     # Public - Joins all of the metrics together for selected team: net additions, comments, repos, and pull requests.
     # 
@@ -64,12 +64,25 @@ module Hubstats
     # end_date - the end of the data range
     # 
     # Returns - all of the stats about the team
+    # scope :with_all_metrics, lambda {|start_date, end_date|
+    #   select("hubstats_teams.*, pull_request_count, comment_count, repo_count, additions, deletions")
+    #    .joins("LEFT JOIN (#{net_additions_count(start_date, end_date).to_sql}) AS net_additions ON net_additions.team_id = hubstats_teams.id")
+    #    .joins("LEFT JOIN (#{pull_requests_count(start_date, end_date).to_sql}) AS pull_requests ON pull_requests.team_id = hubstats_teams.id")
+    #    .joins("LEFT JOIN (#{comments_count(start_date, end_date).to_sql}) AS comments ON comments.team_id = hubstats_teams.id")
+    #    .joins("LEFT JOIN (#{repos_count(start_date, end_date).to_sql}) AS repos ON repos.team_id = hubstats_teams.id")
+    #    .group("hubstats_teams.id")
+    # }
+
+    scope :pulls_per_dev, lambda{
+      select("pull_request_count, cast(pull_request_count as FLOAT)/cast(5 as FLOAT) AS pulls_per_dev")
+       .group("hubstats_teams.id")
+    }
+
     scope :with_all_metrics, lambda {|start_date, end_date|
-      select("hubstats_teams.*, pull_request_count, comment_count, repo_count,additions, deletions")
-       .joins("LEFT JOIN (#{net_additions_count(start_date, end_date).to_sql}) AS net_additions ON net_additions.team_id = hubstats_teams.id")
+      select("hubstats_teams.*, pull_request_count, comment_count, pulls_per_dev")
        .joins("LEFT JOIN (#{pull_requests_count(start_date, end_date).to_sql}) AS pull_requests ON pull_requests.team_id = hubstats_teams.id")
        .joins("LEFT JOIN (#{comments_count(start_date, end_date).to_sql}) AS comments ON comments.team_id = hubstats_teams.id")
-       .joins("LEFT JOIN (#{repos_count(start_date, end_date).to_sql}) AS repos ON repos.team_id = hubstats_teams.id")
+       .joins("LEFT JOIN (#{pulls_per_dev.to_sql}")
        .group("hubstats_teams.id")
     }
 
@@ -125,10 +138,10 @@ module Hubstats
           order("pull_request_count #{order}")
         when 'comments'
           order("comment_count #{order}")
-        when 'netadditions'
-          order("additions - deletions #{order}")
-        when 'repocount'
-          order("repo_count #{order}")
+        when 'pulls_per_dev'
+          order("pulls_per_dev #{order}")
+        when 'comments_per_rev'
+          order("comment_count #{order}")
         when 'name'
           order("name #{order}")
         else

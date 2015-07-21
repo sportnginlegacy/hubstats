@@ -38,7 +38,11 @@ $(document).ready(function() {
     toggleOrder(queryParameters,$(this).attr('id'));
   });
 
-  $("#repocount").on("click", function(){
+  $("#pulls_per_dev").on("click", function(){
+    toggleOrder(queryParameters,$(this).attr('id'));
+  });
+
+  $("#comments_per_rev").on("click", function(){
     toggleOrder(queryParameters,$(this).attr('id'));
   });
 });
