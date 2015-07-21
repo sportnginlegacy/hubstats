@@ -1,3 +1,8 @@
+#### v0.5.4
+* updated_at shouldn't change when updating teams for pull requests
+
+  > Emma Sax: Andy Fleener: https://github.com/sportngin/hubstats/pull/81
+
 #### v0.5.3
 * Adding indexes to tables in database
 
