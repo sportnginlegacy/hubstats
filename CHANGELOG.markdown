@@ -1,3 +1,7 @@
+* Adding indexes to tables in database
+
+  > Emma Sax: Brian Bergstrom: https://github.com/sportngin/hubstats/pull/80
+
 #### v0.5.2
 * Change deployments count to comments count on user condensed page
 
