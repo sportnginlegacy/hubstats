@@ -10,7 +10,7 @@ module Hubstats
         team2 = create(:team, :name => "Team Two", :hubstats => false)
         team3 = create(:team, :name => "Team Three", :hubstats => true)
         team4 = create(:team, :name => "Team Four", :hubstats => true)
-        expect(Hubstats::Team).to receive_message_chain("with_id.custom_order.paginate").and_return([team1, team2, team3, team4])
+        expect(Hubstats::Team).to receive_message_chain("with_id.order_by_name.paginate").and_return([team4, team1, team3, team2])
         allow(Hubstats).to receive_message_chain(:config, :github_config, :[]).with("ignore_users_list") { ["user"] }
         get :index
         expect(response).to have_http_status(200)
