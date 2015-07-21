@@ -1,3 +1,8 @@
+#### v0.5.2
+* Change deployments count to comments count on user condensed page
+
+  > Emma Sax: Brian Bergstrom: https://github.com/sportngin/hubstats/pull/79
+
 * Adding PRs per developer and Comments per reviewer to team page
 
   > Emma Sax: Brian Bergstrom: https://github.com/sportngin/hubstats/pull/78
