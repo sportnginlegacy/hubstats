@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150713185100) do
+ActiveRecord::Schema.define(:version => 20150721193128) do
 
   create_table "hubstats_comments", :force => true do |t|
     t.string   "html_url"
@@ -43,6 +43,9 @@ ActiveRecord::Schema.define(:version => 20150713185100) do
     t.integer  "user_id"
   end
 
+  add_index "hubstats_deploys", ["repo_id"], :name => "index_hubstats_deploys_on_repo_id"
+  add_index "hubstats_deploys", ["user_id"], :name => "index_hubstats_deploys_on_user_id"
+
   create_table "hubstats_labels", :force => true do |t|
     t.string "name"
     t.string "color"
@@ -53,6 +56,9 @@ ActiveRecord::Schema.define(:version => 20150713185100) do
     t.integer "pull_request_id"
     t.integer "label_id"
   end
+
+  add_index "hubstats_labels_pull_requests", ["label_id"], :name => "index_hubstats_labels_pull_requests_on_label_id"
+  add_index "hubstats_labels_pull_requests", ["pull_request_id"], :name => "index_hubstats_labels_pull_requests_on_pull_request_id"
 
   create_table "hubstats_pull_requests", :force => true do |t|
     t.string   "url"
@@ -88,7 +94,9 @@ ActiveRecord::Schema.define(:version => 20150713185100) do
     t.integer  "team_id"
   end
 
+  add_index "hubstats_pull_requests", ["deploy_id"], :name => "index_hubstats_pull_requests_on_deploy_id"
   add_index "hubstats_pull_requests", ["repo_id"], :name => "index_hubstats_pull_requests_on_repo_id"
+  add_index "hubstats_pull_requests", ["team_id"], :name => "index_hubstats_pull_requests_on_team_id"
   add_index "hubstats_pull_requests", ["user_id"], :name => "index_hubstats_pull_requests_on_user_id"
 
   create_table "hubstats_repos", :force => true do |t|
@@ -142,6 +150,9 @@ ActiveRecord::Schema.define(:version => 20150713185100) do
     t.integer "user_id"
     t.integer "team_id"
   end
+
+  add_index "hubstats_teams_users", ["team_id"], :name => "index_hubstats_teams_users_on_team_id"
+  add_index "hubstats_teams_users", ["user_id"], :name => "index_hubstats_teams_users_on_user_id"
 
   create_table "hubstats_users", :force => true do |t|
     t.string   "login"

@@ -1,24 +1,24 @@
 <!-- Either say there are no teams to show, or show all of the stat titles along with the stats/teams -->
 <% if @teams.length > 0 %>
   <div class="teams">
-    <div class="row single-user header">
+    <div class="row single-team header">
       <div class="col-lg-2 col-md-2 col-sm-2">
-        <a class="header desc"> Team Name <span class="octicon"></span> </a>
+        <span> Team Name <span class="octicon"></span> </span>
       </div>
       <div class="col-lg-2 col-md-2 col-sm-2">
-        <a class="header desc"> Developers / Reviewers <span class="octicon"></span> </a>
+        <span> Developers / Reviewers <span class="octicon"></span> </span>
       </div>
       <div class="col-lg-2 col-md-2 col-sm-2">
-        <a class="header desc"> Merged Pull Requests <span class="octicon"></span> </a>
+        <span> Merged Pull Requests <span class="octicon"></span> </span>
       </div>
       <div class="col-lg-2 col-md-2 col-sm-2">
-        <a class="header desc"> Pull Requests per Developer <span class="octicon"></span></a>
+        <span> Pull Requests per Developer <span class="octicon"></span></span>
       </div>
       <div class="col-lg-2 col-md-2 col-sm-2">
-        <a class="header desc"> Comments <span class="octicon"></span></a>
+        <span> Comments <span class="octicon"></span></span>
       </div>
       <div class="col-lg-2 col-md-2 col-sm-2">
-        <a class="header desc"> Comments per Reviewer <span class="octicon"></span></a>
+        <span> Comments per Reviewer <span class="octicon"></span></span>
       </div>
     </div>
     <%= render partial: 'hubstats/partials/team', collection: @teams, as: :team %>
