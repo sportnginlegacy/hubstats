@@ -1,3 +1,4 @@
+#### v0.5.3
 * Adding indexes to tables in database
 
   > Emma Sax: Brian Bergstrom: https://github.com/sportngin/hubstats/pull/80
