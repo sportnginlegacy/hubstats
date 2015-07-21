@@ -15,8 +15,8 @@
 <% end %>
 <% if @stats_row_one.has_key? :reviewer_count %>
   <div class="col col-lg-2 col-md-3 col-sm-3 col-xs-3 text-center">
-    <h1> <%= @stats_row_one[:developer_count] %> </h1>
-    <h4> Developers </h4>
+    <h1> <%= @stats_row_one[:reviewer_count] %> </h1>
+    <h4> Reviewers </h4>
   </div>
 <% end %>
 <% if @stats_row_one.has_key? :deploy_count %>
