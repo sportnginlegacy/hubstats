@@ -41,10 +41,6 @@ $(document).ready(function() {
   $("#repocount").on("click", function(){
     toggleOrder(queryParameters,$(this).attr('id'));
   });
-
-  $("#usercount").on("click", function(){
-    toggleOrder(queryParameters,$(this).attr('id'));
-  });
 });
 
 /* toggleOrder

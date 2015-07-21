@@ -3,20 +3,6 @@ module Hubstats
 
     scope :with_id, lambda {|team_id| where(id: team_id.split(',')) if team_id}
 
-    # Public - Counts all of the users that are a part of the selected team.
-    #
-    # start_date - the start of the date range
-    # end_date - the end of the date range
-    #
-    # Returns - the count of users
-    scope :users_count, lambda {|start_date, end_date|
-      select("hubstats_teams.id as team_id")
-       .select("COUNT(DISTINCT hubstats_teams_users.user_id) AS user_count")
-       .where("hubstats_users.login NOT IN (?)", Hubstats.config.github_config["ignore_users_list"])
-       .joins(:users)
-       .group("hubstats_teams.id")
-    }
-
     # Public - Counts all of the comments a selected team's members have written that occurred between the start_date and end_date.
     # 
     # start_date - the start of the date range
@@ -72,19 +58,18 @@ module Hubstats
       .group("hubstats_teams.id")
     }
 
-    # Public - Joins all of the metrics together for selected team: net additions, comments, repos, pull requests, and users.
+    # Public - Joins all of the metrics together for selected team: net additions, comments, repos, and pull requests.
     # 
     # start_date - the start of the date range
     # end_date - the end of the data range
     # 
     # Returns - all of the stats about the team
     scope :with_all_metrics, lambda {|start_date, end_date|
-      select("hubstats_teams.*, user_count, pull_request_count, comment_count, repo_count,additions, deletions")
+      select("hubstats_teams.*, pull_request_count, comment_count, repo_count,additions, deletions")
        .joins("LEFT JOIN (#{net_additions_count(start_date, end_date).to_sql}) AS net_additions ON net_additions.team_id = hubstats_teams.id")
        .joins("LEFT JOIN (#{pull_requests_count(start_date, end_date).to_sql}) AS pull_requests ON pull_requests.team_id = hubstats_teams.id")
        .joins("LEFT JOIN (#{comments_count(start_date, end_date).to_sql}) AS comments ON comments.team_id = hubstats_teams.id")
        .joins("LEFT JOIN (#{repos_count(start_date, end_date).to_sql}) AS repos ON repos.team_id = hubstats_teams.id")
-       .joins("LEFT JOIN (#{users_count(start_date, end_date).to_sql}) AS users ON users.team_id = hubstats_teams.id")
        .group("hubstats_teams.id")
     }
 
@@ -136,8 +121,6 @@ module Hubstats
       if order_params
         order = order_params.include?('asc') ? "ASC" : "DESC"
         case order_params.split('-').first
-        when 'usercount'
-          order("user_count #{order}")
         when 'pulls'
           order("pull_request_count #{order}")
         when 'comments'
