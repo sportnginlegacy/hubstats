@@ -14,7 +14,7 @@ module Hubstats
       else
         @teams = Hubstats::Team.where(hubstats: true).with_all_metrics(@start_date, @end_date)
           .with_id(params[:teams])
-          .custom_order(params[:order])
+          .order_by_name
           .paginate(:page => params[:page], :per_page => 15)
       end
 

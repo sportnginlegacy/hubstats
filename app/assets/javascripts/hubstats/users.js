@@ -37,14 +37,6 @@ $(document).ready(function() {
   $("#deletions").on("click", function(){
     toggleOrder(queryParameters,$(this).attr('id'));
   });
-
-  $("#pulls_per_dev").on("click", function(){
-    toggleOrder(queryParameters,$(this).attr('id'));
-  });
-
-  $("#comments_per_rev").on("click", function(){
-    toggleOrder(queryParameters,$(this).attr('id'));
-  });
 });
 
 /* toggleOrder
