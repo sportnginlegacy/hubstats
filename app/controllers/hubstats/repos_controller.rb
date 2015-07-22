@@ -45,22 +45,6 @@ module Hubstats
       stats
     end
 
-    # Public - Shows statistics for all of the data Hubstats has within the date range
-    #
-    # Returns - the stats for the entirety of Hubstats
-    def dashboard
-      @active_user_count = Hubstats::User.with_pulls_or_comments_or_deploys(@start_date, @end_date).only_active.length
-      @deploy_count = Hubstats::Deploy.deployed_in_date_range(@start_date, @end_date).count(:all)
-      @pull_count = Hubstats::PullRequest.merged_in_date_range(@start_date, @end_date).count(:all)
-      @comment_count = Hubstats::Comment.created_in_date_range(@start_date, @end_date).count(:all)
-      @net_additions = Hubstats::PullRequest.merged_in_date_range(@start_date, @end_date).sum(:additions).to_i - 
-                       Hubstats::PullRequest.merged_in_date_range(@start_date, @end_date).sum(:deletions).to_i
-      @additions = Hubstats::PullRequest.merged_in_date_range(@start_date, @end_date).average(:additions)
-      @deletions = Hubstats::PullRequest.merged_in_date_range(@start_date, @end_date).average(:deletions)
-
-      stats
-    end
-
     # Public - Will assign all of the stats for both the show page and the dashboard page.
     #
     # Returns - the data in two hashes
