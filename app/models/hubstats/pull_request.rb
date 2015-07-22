@@ -149,7 +149,7 @@ module Hubstats
     def assign_team_from_user
       user = Hubstats::User.find(self.user_id)
       if user.team && user.team.id
-        self.update_columns(team_id: user.team.id)
+        self.update_column(:team_id, user.team.id)
       end
     end
 
