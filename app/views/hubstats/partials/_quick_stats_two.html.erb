@@ -1,10 +1,52 @@
 <!-- All of the options for showing any stats -->
 <div class="col-lg-<%= (12-(@stats_row_two.length)*2)/2 %>"></div>
 
+<% if @stats_row_two.has_key? :active_user_count %>
+  <div class="col col-lg-2 col-md-3 col-sm-3 col-xs-3 text-center">
+    <h1> <%= @stats_row_two[:active_user_count] %> </h1>
+    <h4> Active Users </h4>
+  </div>
+<% end %>
+<% if @stats_row_two.has_key? :developer_count %>
+  <div class="col col-lg-2 col-md-3 col-sm-3 col-xs-3 text-center">
+    <h1> <%= @stats_row_two[:developer_count] %> </h1>
+    <h4> Developers </h4>
+  </div>
+<% end %>
+<% if @stats_row_two.has_key? :reviewer_count %>
+  <div class="col col-lg-2 col-md-3 col-sm-3 col-xs-3 text-center">
+    <h1> <%= @stats_row_two[:reviewer_count] %> </h1>
+    <h4> Reviewers </h4>
+  </div>
+<% end %>
+<% if @stats_row_two.has_key? :pull_count %>
+  <div class="col col-lg-2 col-md-3 col-sm-3 col-xs-3 text-center">
+    <h1> <%= @stats_row_two[:pull_count] %> </h1>
+    <h4> Merged Pull Requests </h4>
+  </div>
+<% end %>
 <% if @stats_row_two.has_key? :pulls_per_dev %>
   <div class="col col-lg-2 col-md-4 col-sm-4 col-xs-4 text-center">
     <h1> <%= @stats_row_two[:pulls_per_dev] %> </h1>
     <h4> Pull Requests per Developer </h4>
+  </div>
+<% end %>
+<% if @stats_row_two.has_key? :deploy_count %>
+  <div class="col col-lg-2 col-md-3 col-sm-3 col-xs-3 text-center">
+    <h1> <%= @stats_row_two[:deploy_count] %> </h1>
+    <h4> Deployments </h4>
+  </div>
+<% end %>
+<% if @stats_row_two.has_key? :comment_count %>
+  <div class="col col-lg-2 col-md-3 col-sm-3 col-xs-3 text-center">
+    <h1><%= @stats_row_two[:comment_count] %> </h1>
+    <h4> Comments </h4>
+  </div>
+<% end %>
+<% if @stats_row_two.has_key? :review_count %>
+  <div class="col col-lg-2 col-md-3 col-sm-3 col-xs-3 text-center">
+     <h1> <%= @stats_row_two[:review_count] %> </h1>
+    <h4> Code Reviews </h4>
   </div>
 <% end %>
 <% if @stats_row_two.has_key? :comments_per_rev %>
@@ -13,32 +55,38 @@
     <h4> Comments per Reviewer </h4>
   </div>
 <% end %>
+<% if @stats_row_two.has_key? :repo_count %>
+  <div class="col col-lg-2 col-md-3 col-sm-3 col-xs-3 text-center">
+     <h1> <%= @stats_row_two[:repo_count] %> </h1>
+    <h4> Repositories with Pull Requests or Comments </h4>
+  </div>
+<% end %>
 <% if @stats_row_two.has_key? :net_additions %>
-  <div class="col col-lg-2 col-md-4 col-sm-4 col-xs-4 text-center">
+  <div class="col col-lg-2 col-md-3 col-sm-3 col-xs-3 text-center">
     <h1> <%= @stats_row_two[:net_additions] %> </h1>
     <h4> Net Additions </h4>
   </div>
 <% end %>
 <% if @stats_row_two.has_key? :avg_additions %>
-  <div class="col col-lg-2 col-md-4 col-sm-4 col-xs-4 text-center">
+  <div class="col col-lg-2 col-md-3 col-sm-3 col-xs-3 text-center">
     <h1> <%= @stats_row_two[:avg_additions] %> </h1>
     <h4> Average Additions per Pull Request </h4>
   </div>
 <% end %>
 <% if @stats_row_two.has_key? :avg_deletions%>
-  <div class="col col-lg-2 col-md-4 col-sm-4 col-xs-4 text-center">
+  <div class="col col-lg-2 col-md-3 col-sm-3 col-xs-3 text-center">
     <h1><%= @stats_row_two[:avg_deletions] %> </h1>
     <h4> Average Deletions per Pull Request </h4>
   </div>
 <% end %>
 <% if @stats_row_two.has_key? :additions %>
-  <div class="col col-lg-2 col-md-4 col-sm-4 col-xs-4 text-center">
+  <div class="col col-lg-2 col-md-3 col-sm-3 col-xs-3 text-center">
     <h1> <%= @stats_row_two[:additions] %> </h1>
     <h4> Additions </h4>
   </div>
 <% end %>
 <% if @stats_row_two.has_key? :deletions%>
-  <div class="col col-lg-2 col-md-4 col-sm-4 col-xs-4 text-center">
+  <div class="col col-lg-2 col-md-3 col-sm-3 col-xs-3 text-center">
     <h1><%= @stats_row_two[:deletions] %> </h1>
     <h4> Deletions </h4>
   </div>

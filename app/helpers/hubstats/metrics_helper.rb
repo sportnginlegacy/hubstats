@@ -30,15 +30,15 @@ module Hubstats
 
       @stats_row_one = {
         developer_count: developer_count,
-        reviewer_count: reviewer_count,
-        deploy_count: deploy_count,
         pull_count: pull_count,
-        comment_count: comment_count
+        pulls_per_dev: pulls_per_dev,
+        deploy_count: deploy_count,
+        net_additions: net_additions
       }
       @stats_row_two = {
-        pulls_per_dev: pulls_per_dev,
+        reviewer_count: reviewer_count,
+        comment_count: comment_count,
         comments_per_rev: comments_per_rev,
-        net_additions: net_additions,
         avg_additions: additions.round.to_i,
         avg_deletions: deletions.round.to_i
       }

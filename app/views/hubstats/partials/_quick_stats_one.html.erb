@@ -19,16 +19,22 @@
     <h4> Reviewers </h4>
   </div>
 <% end %>
-<% if @stats_row_one.has_key? :deploy_count %>
-  <div class="col col-lg-2 col-md-3 col-sm-3 col-xs-3 text-center">
-    <h1> <%= @stats_row_one[:deploy_count] %> </h1>
-    <h4> Deployments </h4>
-  </div>
-<% end %>
 <% if @stats_row_one.has_key? :pull_count %>
   <div class="col col-lg-2 col-md-3 col-sm-3 col-xs-3 text-center">
     <h1> <%= @stats_row_one[:pull_count] %> </h1>
     <h4> Merged Pull Requests </h4>
+  </div>
+<% end %>
+<% if @stats_row_one.has_key? :pulls_per_dev %>
+  <div class="col col-lg-2 col-md-4 col-sm-4 col-xs-4 text-center">
+    <h1> <%= @stats_row_one[:pulls_per_dev] %> </h1>
+    <h4> Pull Requests per Developer </h4>
+  </div>
+<% end %>
+<% if @stats_row_one.has_key? :deploy_count %>
+  <div class="col col-lg-2 col-md-3 col-sm-3 col-xs-3 text-center">
+    <h1> <%= @stats_row_one[:deploy_count] %> </h1>
+    <h4> Deployments </h4>
   </div>
 <% end %>
 <% if @stats_row_one.has_key? :comment_count %>
@@ -41,6 +47,12 @@
   <div class="col col-lg-2 col-md-3 col-sm-3 col-xs-3 text-center">
      <h1> <%= @stats_row_one[:review_count] %> </h1>
     <h4> Code Reviews </h4>
+  </div>
+<% end %>
+<% if @stats_row_one.has_key? :comments_per_rev %>
+  <div class="col col-lg-2 col-md-4 col-sm-4 col-xs-4 text-center">
+    <h1> <%= @stats_row_one[:comments_per_rev] %> </h1>
+    <h4> Comments per Reviewer </h4>
   </div>
 <% end %>
 <% if @stats_row_one.has_key? :repo_count %>
