@@ -1,6 +1,8 @@
 module Hubstats
   class User < ActiveRecord::Base
 
+    def self.record_timestamps; false; end
+
     # Various checks that can be used to filter and find info about users.
     scope :with_id, lambda {|user_id| where(id: user_id.split(',')) if user_id}
     scope :only_active, having("comment_count > 0 OR pull_request_count > 0 OR deploy_count > 0")

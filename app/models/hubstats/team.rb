@@ -1,6 +1,8 @@
 module Hubstats
   class Team < ActiveRecord::Base
 
+    def self.record_timestamps; false; end
+
     scope :with_id, lambda {|team_id| where(id: team_id.split(',')) if team_id}
 
     # Public - Counts all of the comments a selected team's members have written that occurred between the start_date and end_date.

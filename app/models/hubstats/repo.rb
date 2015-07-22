@@ -1,6 +1,8 @@
 module Hubstats
   class Repo < ActiveRecord::Base
 
+    def self.record_timestamps; false; end
+
     # Various checks that can be used to filter and find info about repos.
     scope :with_recent_activity, lambda {|start_date, end_date| where("hubstats_repos.updated_at BETWEEN ? AND ?", start_date, end_date).order("updated_at DESC")}
     scope :with_id, lambda {|repo_id| where(id: repo_id.split(',')) if repo_id}
