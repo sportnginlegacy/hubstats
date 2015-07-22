@@ -10,7 +10,7 @@ module Hubstats
     def index
       if params[:teams]
         teams = Hubstats::Team.where(id: params[:teams].split(','))
-        user_list = teams.map {|team| team.users}.flatten.uniq
+        user_list = teams.map {|team| team.users.pluck(:id)}.flatten.uniq
       end
 
       @deploys = Hubstats::Deploy.includes(:repo, :pull_requests, :user)

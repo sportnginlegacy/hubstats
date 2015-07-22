@@ -17,7 +17,7 @@ module Hubstats
     scope :belonging_to_repo, lambda {|repo_id| where(repo_id: repo_id)}
     scope :belonging_to_user, lambda {|user_id| where(user_id: user_id)}
     scope :belonging_to_repos, lambda {|repo_id| where(repo_id: repo_id.split(',')) if repo_id}
-    scope :belonging_to_teams, lambda {|users| where("user_id IN (?)", users) if users}
+    scope :belonging_to_teams, lambda {|user_id| where(user_id: user_id.split(',')) if user_id}
     scope :belonging_to_users, lambda {|user_id| where(user_id: user_id.split(',')) if user_id}
     scope :with_repo_name, select('DISTINCT hubstats_repos.name as repo_name, hubstats_deploys.*').joins("LEFT JOIN hubstats_repos ON hubstats_repos.id = hubstats_deploys.repo_id")
     scope :with_user_name, select('DISTINCT hubstats_users.login as user_name, hubstats_deploys.*').joins("LEFT JOIN hubstats_users ON hubstats_users.id = hubstats_deploys.user_id")
