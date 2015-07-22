@@ -8,8 +8,13 @@ module Hubstats
     #
     # Returns - the deploy data
     def index
+      if params[:teams]
+        teams = Hubstats::Team.where(id: params[:teams].split(','))
+        user_list = teams.map {|team| team.users}.flatten.uniq
+      end
+
       @deploys = Hubstats::Deploy.includes(:repo, :pull_requests, :user)
-        .belonging_to_users(params[:users]).belonging_to_repos(params[:repos])
+        .belonging_to_users(params[:users]).belonging_to_repos(params[:repos]).belonging_to_teams(user_list)
         .group_by(params[:group])
         .order_with_date_range(@start_date, @end_date, params[:order])
         .paginate(:page => params[:page], :per_page => 15)
