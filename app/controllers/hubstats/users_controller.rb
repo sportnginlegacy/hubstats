@@ -12,11 +12,6 @@ module Hubstats
         @users = Hubstats::User.where("login LIKE ?", "%#{params[:query]}%").order("login ASC")
       elsif params[:id]
         @users = Hubstats::User.where(id: params[:id].split(",")).order("login ASC")
-      elsif params[:repos]
-        @users = Hubstats::User.only_active.with_contributions(@start_date, @end_date, params[:repos])
-          .with_id(params[:users])
-          .custom_order(params[:order])
-          .paginate(:page => params[:page], :per_page => 15)
       else
         @users = Hubstats::User.only_active.with_all_metrics(@start_date, @end_date)
           .with_id(params[:users])
@@ -55,7 +50,7 @@ module Hubstats
     def stats
       @additions ||= 0
       @deletions ||= 0
-      @stats_basics = {
+      @stats_row_one = {
         pull_count: @pull_count,
         deploy_count: @deploy_count,
         comment_count: @comment_count,
@@ -64,6 +59,5 @@ module Hubstats
         net_additions: @net_additions
       }
     end
-
   end
 end
