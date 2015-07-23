@@ -11,8 +11,6 @@ FactoryGirl.define do
     login { Faker::Internet.user_name }
     id {|n| "#{n}".to_i}
     role "User"
-    created_at '2015-05-30'
-
     initialize_with { attributes } 
   end
 end

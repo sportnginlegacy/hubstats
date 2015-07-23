@@ -4,6 +4,10 @@ module Hubstats
   describe PullRequest, :type => :model do
     it 'should create and return a pull request with a merge' do
       pull = build(:pull_request_hash)
+      user = create(:user, :created_at => Date.today, :updated_at => Date.today)
+      repo = create(:repo, :created_at => Date.today, :updated_at => Date.today)
+      allow(Hubstats::User).to receive(:create_or_update).and_return(user)
+      allow(Hubstats::Repo).to receive(:create_or_update).and_return(repo)
       pull_request = PullRequest.create_or_update(pull)
       expect(pull_request.id).to eq(pull[:id])
       expect(pull_request.user_id).to eq(pull[:user][:id])
@@ -14,6 +18,10 @@ module Hubstats
 
     it 'should create and return a pull request without a merge' do
       pull = build(:pull_request_hash_no_merge)
+      user = create(:user, :created_at => Date.today, :updated_at => Date.today)
+      repo = create(:repo, :created_at => Date.today, :updated_at => Date.today)
+      allow(Hubstats::User).to receive(:create_or_update).and_return(user)
+      allow(Hubstats::Repo).to receive(:create_or_update).and_return(repo)
       pull_request = PullRequest.create_or_update(pull)
       expect(pull_request.id).to eq(pull[:id])
       expect(pull_request.user_id).to eq(pull[:user][:id])
@@ -23,7 +31,11 @@ module Hubstats
     end
 
     it "should create a pull request and update the deploy's user_id" do
+      user = create(:user, :created_at => Date.today, :updated_at => Date.today)
+      repo = create(:repo, :created_at => Date.today, :updated_at => Date.today)
       pull = build(:pull_request_hash)
+      allow(Hubstats::User).to receive(:create_or_update).and_return(user)
+      allow(Hubstats::Repo).to receive(:create_or_update).and_return(repo)
       pull_request = PullRequest.create_or_update(pull)
       dep_hash = {git_revision: "c1a2b37", 
                   repo_id: 303030,
@@ -44,10 +56,13 @@ module Hubstats
 
     it "should track the team_id when making a pull request" do
       user_hash = {login: 'name', id: '12345'}
-      user = User.create(user_hash)
+      user = create(:user, :created_at => Date.today, :updated_at => Date.today)
+      repo = create(:repo, :created_at => Date.today, :updated_at => Date.today)
       team = create(:team, id: 1010)
       team.users << user
       pull = build(:pull_request_hash, :user => user_hash)
+      allow(Hubstats::User).to receive(:create_or_update).and_return(user)
+      allow(Hubstats::Repo).to receive(:create_or_update).and_return(repo)
       pull_request = PullRequest.create_or_update(pull)
       expect(pull_request.user_id).to eq(user[:id])
       expect(pull_request.team_id).to eq(team[:id])
@@ -55,8 +70,11 @@ module Hubstats
 
     it "should leave the team_id of a pull request blank if user is not part of a team" do
       user_hash = {login: 'name', id: '12345'}
-      user = User.create(user_hash, created_at: '2015-05-30')
+      repo = create(:repo, :created_at => Date.today, :updated_at => Date.today)
+      user = build(:user, :created_at => Date.today, :updated_at => Date.today)
       pull = build(:pull_request_hash, :user => user_hash)
+      allow(Hubstats::User).to receive(:create_or_update).and_return(user)
+      allow(Hubstats::Repo).to receive(:create_or_update).and_return(repo)
       pull_request = PullRequest.create_or_update(pull)
       expect(pull_request.user_id).to eq(user[:id])
       expect(pull_request.team_id).to eq(nil)
@@ -64,12 +82,12 @@ module Hubstats
 
     it 'should update the team_ids in pull requests' do
       team = build(:team)
-      repo = build(:repo)
+      repo = build(:repo, :updated_at => Date.today)
       user1 = build(:user)
       user2 = build(:user, :id => 7)
       team.users << user1
       team.users << user2
-      pull1 = build(:pull_request, :created_at => Date.today - 250, :user => user1)
+      pull1 = build(:pull_request, :created_at => Date.today - 250, :user => user1, :repo => repo)
       pull2 = build(:pull_request, :created_at => Date.today - 3, :repo => repo, :user => user2)
       Hubstats::PullRequest.update_teams_in_pulls(365)
       expect(pull1.team_id).to eq(team.id)
