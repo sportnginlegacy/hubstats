@@ -5,6 +5,7 @@ FactoryGirl.define do
     repo
     id {Faker::Number.number(6).to_i}
     number {|n| "#{n}".to_i}
+    created_at '2015-05-30'
   end
 
   factory :pull_request_hash, class:Hash do
@@ -13,6 +14,7 @@ FactoryGirl.define do
     id {Faker::Number.number(6).to_i}
     number {|n| "#{n}".to_i}
     merged_by(:id => 202020)
+    created_at '2015-05-30'
 
     initialize_with { attributes } 
   end
@@ -23,6 +25,7 @@ FactoryGirl.define do
     id {Faker::Number.number(6).to_i}
     number {|n| "#{n}".to_i}
     merged_by(nil)
+    created_at '2015-05-30'
 
     initialize_with { attributes } 
   end
@@ -33,6 +36,7 @@ FactoryGirl.define do
     association :repository, factory: :repo_hash, strategy: :build
     association :pull_request, factory: :pull_request_hash, strategy: :build
     merged_by(:id => 202020)
+    created_at '2015-05-30'
 
     initialize_with { attributes } 
   end

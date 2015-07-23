@@ -4,13 +4,15 @@ FactoryGirl.define do
     user
     id {Faker::Number.number(6).to_i}
     body {Faker::Lorem.sentence}
+    created_at '2015-05-30'
   end
 
   factory :comment_hash, class:Hash do
     association :user, factory: :user_hash, strategy: :build
     id {Faker::Number.number(6).to_i}
     body {Faker::Lorem.sentence}
-    initialize_with { attributes } 
+    initialize_with { attributes }
+    created_at '2015-05-30' 
   end
 
   factory :comment_payload_hash, class:Hash do 
@@ -19,6 +21,7 @@ FactoryGirl.define do
     association :repository, factory: :repo_hash, strategy: :build
     association :pull_request, factory: :pull_request_hash, strategy: :build
     association :comment, factory: :comment_hash, strategy: :build
+    created_at '2015-05-30'
     initialize_with { attributes } 
   end 
 end

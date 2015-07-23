@@ -9,7 +9,8 @@ module Hubstats
         user = build(:user)
         repo = build(:repo)
         pull3 = create(:pull_request, :user => user,
-                                      :repo => repo)
+                                      :repo => repo,
+                                      :created_at => '2015-05-30')
         pull1 = create(:pull_request, :user => user,
                                       :repo => repo)
         pull4 = create(:pull_request, :user => user,

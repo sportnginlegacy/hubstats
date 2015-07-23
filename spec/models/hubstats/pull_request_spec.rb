@@ -55,7 +55,7 @@ module Hubstats
 
     it "should leave the team_id of a pull request blank if user is not part of a team" do
       user_hash = {login: 'name', id: '12345'}
-      user = User.create(user_hash)
+      user = User.create(user_hash, created_at: '2015-05-30')
       pull = build(:pull_request_hash, :user => user_hash)
       pull_request = PullRequest.create_or_update(pull)
       expect(pull_request.user_id).to eq(user[:id])
