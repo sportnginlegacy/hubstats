@@ -12,7 +12,7 @@ module Hubstats
     end
 
     it 'should add a member to a team' do
-      user = build(:user)
+      user = build(:user, :created_at => Date.today, :updated_at => Date.today)
       action = "added"
       team = build(:team)
       Hubstats::Team.update_users_in_team(team, user, action)

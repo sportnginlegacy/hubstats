@@ -78,6 +78,7 @@ module Hubstats
       let(:user1) {build(:user_hash)}
       let(:user2) {build(:user_hash)}
       let(:user3) {build(:user_hash)}
+      let(:finished_user) {build(:user, :created_at => Date.today, :updated_at => Date.today)}
       let(:hubstats_user) {build(:user)}
       let(:access_token) { "access_token" }
       let(:user) { double }
@@ -94,6 +95,7 @@ module Hubstats
         allow(Hubstats::Team).to receive_message_chain(:where, :name).with("Team One")
         allow(Hubstats::Team.where(name: "Team One")).to receive(:first).and_return(team)
         allow(client).to receive_message_chain(:rate_limit, :remaining).and_return(500)
+        allow(Hubstats::User).to receive(:create_or_update).and_return(finished_user)
         expect(Hubstats::Team).to receive(:create_or_update).at_least(:once)
         subject.update_teams
       end

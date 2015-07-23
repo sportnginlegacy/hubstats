@@ -6,7 +6,7 @@ module Hubstats
     
     describe "#index" do
       it "should correctly order all of the deploys" do
-        repo = create(:repo, :full_name => "sportngin/ngin")
+        repo = create(:repo, :full_name => "sportngin/ngin", :updated_at => Date.today)
         deploy1 = create(:deploy, :git_revision => "c1a2b37",
                                   :repo_id => 101010,
                                   :deployed_at => "2009-02-03 03:00:00 -0500",
@@ -33,12 +33,13 @@ module Hubstats
 
     describe "#show" do
       it "should show the pull requests of the specific deploy" do
-        repo = create(:repo, :full_name => "sportngin/ngin")
+        repo = create(:repo, :full_name => "sportngin/ngin", :updated_at => Date.today)
+        user = build(:user, :updated_at => Date.today)
         deploy = create(:deploy, :git_revision => "c1a2b37",
                                  :repo_id => 101010,
                                  :deployed_at => "2009-02-03 03:00:00 -0500")
-        pull1 = create(:pull_request, :deploy_id => deploy.id, :repo => repo)
-        pull2 = create(:pull_request, :deploy_id => deploy.id, :repo => repo)
+        pull1 = create(:pull_request, :deploy_id => deploy.id, :repo => repo, :updated_at => Date.today, :user_id => user.id)
+        pull2 = create(:pull_request, :deploy_id => deploy.id, :repo => repo, :updated_at => Date.today, :user_id => user.id)
         get :show, id: deploy.id
         expect(assigns(:deploy)).to eq(deploy)
         expect(assigns(:pull_requests)).to contain_exactly(pull1, pull2)
@@ -48,35 +49,37 @@ module Hubstats
 
     describe "#create" do
       before :each do
-        create(:pull_request, :number => 33364992, :merged_by => 202020)
+        user = build(:user, :updated_at => Date.today)
+        repo = create(:repo, :id => 505050, :full_name => "example/name", :updated_at => Date.today)
+        create(:pull_request, :number => 33364992, :merged_by => 202020, :updated_at => Date.today, :user_id => user.id, :repo_id => repo.id)
       end
 
       it 'should create a deploy' do
         post(:create, {"git_revision" => "c1a2b37",
-                       "repo_name" => "hub/hubstats",
+                       "repo_name" => "example/name",
                        "deployed_at" => "2009-02-03 03:00:00 -0500",
                        "pull_request_ids" => "33364992, 5870592, 33691392"})
         expect(assigns(:deploy).git_revision).to eq("c1a2b37")
         expect(assigns(:deploy).deployed_at).to eq("2009-02-03 03:00:00 -0500")
-        expect(assigns(:deploy).repo_id).to eq(101010)
+        expect(assigns(:deploy).repo_id).to eq(505050)
         expect(assigns(:deploy).user_id).to eq(202020)
         expect(response).to have_http_status(200)
       end
 
       it 'should create a deploy without a deployed_at because nil time turns into current time' do
         post(:create, {"git_revision" => "c1a2b37",
-                       "repo_name" => "hub/hubstats",
+                       "repo_name" => "example/name",
                        "deployed_at" => nil,
                        "pull_request_ids" => "33364992, 5870592, 33691392"})
         expect(assigns(:deploy).git_revision).to eq("c1a2b37")
-        expect(assigns(:deploy).repo_id).to eq(101010)
+        expect(assigns(:deploy).repo_id).to eq(505050)
         expect(assigns(:deploy).user_id).to eq(202020)
         expect(response).to have_http_status(200)
       end
 
       it 'should NOT create a deploy without a git_revision' do
         post(:create, {"git_revision" => nil,
-                       "repo_name" => "hub/hubstats",
+                       "repo_name" => "example/name",
                        "deployed_at" => "2009-02-03 03:00:00 -0500",
                        "pull_request_ids" => "33364992, 5870592, 33691392"})
         expect(response).to have_http_status(400)
@@ -84,7 +87,7 @@ module Hubstats
 
       it 'should create a deploy without a user_id' do
         post(:create, {"git_revision" => "c1a2b37",
-                       "repo_name" => "hub/hubstats",
+                       "repo_name" => "example/name",
                        "deployed_at" => "2009-02-03 03:00:00 -0500",
                        "pull_request_ids" => "33364992, 5870592, 33691392"})
         expect(response).to have_http_status(200)
@@ -108,7 +111,7 @@ module Hubstats
 
       it 'should NOT create a deploy without pull request ids' do
         post(:create, {"git_revision" => "c1a2b37",
-                       "repo_name" => "hub/hubstats",
+                       "repo_name" => "example/name",
                        "deployed_at" => "2009-02-03 03:00:00 -0500",
                        "pull_request_ids" => nil})
         expect(response).to have_http_status(400)
@@ -116,7 +119,7 @@ module Hubstats
 
       it 'should NOT create a deploy when given empty pull request ids' do
         post(:create, {"git_revision" => "c1a2b37",
-                       "repo_name" => "hub/hubstats",
+                       "repo_name" => "example/name",
                        "deployed_at" => "2009-02-03 03:00:00 -0500",
                        "pull_request_ids" => ""})
         expect(response).to have_http_status(400)
@@ -124,7 +127,7 @@ module Hubstats
 
       it 'should NOT create a deploy when given something that are not pull request ids' do
         post(:create, {"git_revision" => "c1a2b37",
-                       "repo_name" => "hub/hubstats",
+                       "repo_name" => "example/name",
                        "deployed_at" => "2009-02-03 03:00:00 -0500",
                        "pull_request_ids" => "blah bleh blooh"})
         expect(response).to have_http_status(400)
@@ -132,7 +135,7 @@ module Hubstats
 
       it 'should NOT create a deploy when given invalid pull request ids' do
         post(:create, {"git_revision" => "c1a2b37",
-                       "repo_name" => "hub/hubstats",
+                       "repo_name" => "example/name",
                        "deployed_at" => "2009-02-03 03:00:00 -0500",
                        "pull_request_ids" => "77, 81, 92"})
         expect(response).to have_http_status(400)

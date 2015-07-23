@@ -3,8 +3,9 @@ require 'spec_helper'
 module Hubstats
   describe EventsHandler, :type => :model do
     context "PullRequestEvent" do
-      let(:pull) {build(:pull_request)}
-      let(:repo) {build(:repo)}
+      let(:user) {build(:user, :updated_at => Date.today)}
+      let(:repo) {build(:repo, :updated_at => Date.today)}
+      let(:pull) {build(:pull_request, :updated_at => Date.today, :user => user, :repo => repo)}
       let(:payload) {build(:pull_request_payload_hash)}
 
       subject {Hubstats::EventsHandler.new()}
@@ -23,6 +24,8 @@ module Hubstats
     end
 
     context "CommentEvent" do
+      let(:user) {build(:user, :updated_at => Date.today, :created_at => '2015-01-01', :login => "hermina", :id => 0, :role => "User")}
+
       it 'should successfully route the event' do
         ehandler = EventsHandler.new()
         payload = build(:comment_payload_hash)
@@ -39,7 +42,11 @@ module Hubstats
 
       it 'should successfully creates_or_updates the event' do
         ehandler = Hubstats::EventsHandler.new()
-        payload = build(:comment_payload_hash)
+        payload = build(:comment_payload_hash, :user => {:login=>"hermina", :id=>0, :role=>"User"},
+                                               :comment => {"id"=>194761, "body"=>"Quidem ea minus ut odio optio.",
+                                                            "kind"=>"Issue", "user_id"=>0, "repo_id"=>101010,
+                                                            "created_at" => Date.today, "updated_at" => Date.today})
+        allow(Hubstats::User).to receive_message_chain(:create_or_update).and_return(user)
         expect(ehandler.route(payload, payload[:type]).class).to eq(Hubstats::Comment)
       end
     end

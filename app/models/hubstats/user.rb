@@ -1,6 +1,8 @@
 module Hubstats
   class User < ActiveRecord::Base
 
+    def self.record_timestamps; false; end
+
     # Various checks that can be used to filter and find info about users.
     scope :with_id, lambda {|user_id| where(id: user_id.split(',')) if user_id}
     scope :only_active, having("comment_count > 0 OR pull_request_count > 0 OR deploy_count > 0")
@@ -163,7 +165,7 @@ module Hubstats
 
     attr_accessible :login, :id, :avatar_url, :gravatar_id, :url, :html_url, :followers_url,
       :following_url, :gists_url, :starred_url, :subscriptions_url, :organizations_url,
-      :repos_url, :events_url, :received_events_url, :role, :site_admin
+      :repos_url, :events_url, :received_events_url, :role, :site_admin, :created_at, :updated_at
     
     validates :id, presence: true, uniqueness: true
 

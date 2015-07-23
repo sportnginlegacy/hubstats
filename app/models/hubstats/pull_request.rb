@@ -1,5 +1,7 @@
 module Hubstats
   class PullRequest < ActiveRecord::Base
+
+    def self.record_timestamps; false; end
     
     # Various checks that can be used to filter, sort, and find info about pull requests.
     scope :closed_in_date_range, lambda {|start_date, end_date| where("hubstats_pull_requests.closed_at BETWEEN ? AND ?", start_date, end_date)}
@@ -149,7 +151,7 @@ module Hubstats
     def assign_team_from_user
       user = Hubstats::User.find(self.user_id)
       if user.team && user.team.id
-        self.update_columns(team_id: user.team.id)
+        self.update_column(:team_id, user.team.id)
       end
     end
 
