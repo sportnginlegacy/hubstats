@@ -1,3 +1,7 @@
+* Adding metrics to all metric pages on Hubstats
+
+  > Emma Sax: Brian Bergstrom: https://github.com/sportngin/hubstats/pull/82
+
 #### v0.5.4
 * updated_at shouldn't change when updating teams for pull requests
 
