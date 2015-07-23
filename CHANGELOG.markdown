@@ -1,3 +1,8 @@
+#### v0.5.5
+* Another attempt at fixing bug to correct updated_at timestamp
+
+  > Emma Sax: Andy Fleener: https://github.com/sportngin/hubstats/pull/83
+
 * Adding metrics to all metric pages on Hubstats
 
   > Emma Sax: Brian Bergstrom: https://github.com/sportngin/hubstats/pull/82
