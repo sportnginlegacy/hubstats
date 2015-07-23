@@ -1,7 +1,7 @@
 require_dependency "hubstats/application_controller"
 
 module Hubstats
-  class TeamsController < Hubstats::BaseController
+  class TeamsController < ApplicationController
 
     # Public - Shows all of the teams in either alphabetical order, by filter params, or that have done things in
     # github between the selected @start_date and @end_date.
