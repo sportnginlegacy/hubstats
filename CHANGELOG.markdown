@@ -1,3 +1,8 @@
+#### v0.5.6
+* Fixing bug that makes metrics not show up on teams and repos page
+
+  > Emma Sax: Brian Bergstrom: https://github.com/sportngin/hubstats/pull/84
+
 #### v0.5.5
 * Another attempt at fixing bug to correct updated_at timestamp
 
