@@ -1,3 +1,4 @@
+#### v0.5.7
 #### v0.5.6
 * Fixing bug that makes metrics not show up on teams and repos page
 
