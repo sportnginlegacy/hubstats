@@ -1,3 +1,52 @@
+#### v0.5.9
+#### v0.5.8
+* Fixing bug that resulted in no data being updated from org webhooks
+
+  > Emma Sax: Brian Bergstrom: https://github.com/sportngin/hubstats/pull/85
+
+#### v0.5.7
+#### v0.5.6
+* Fixing bug that makes metrics not show up on teams and repos page
+
+  > Emma Sax: Brian Bergstrom: https://github.com/sportngin/hubstats/pull/84
+
+#### v0.5.5
+* Another attempt at fixing bug to correct updated_at timestamp
+
+  > Emma Sax: Andy Fleener: https://github.com/sportngin/hubstats/pull/83
+
+* Adding metrics to all metric pages on Hubstats
+
+  > Emma Sax: Brian Bergstrom: https://github.com/sportngin/hubstats/pull/82
+
+#### v0.5.4
+* updated_at shouldn't change when updating teams for pull requests
+
+  > Emma Sax: Andy Fleener: https://github.com/sportngin/hubstats/pull/81
+
+#### v0.5.3
+* Adding indexes to tables in database
+
+  > Emma Sax: Brian Bergstrom: https://github.com/sportngin/hubstats/pull/80
+
+#### v0.5.2
+* Change deployments count to comments count on user condensed page
+
+  > Emma Sax: Brian Bergstrom: https://github.com/sportngin/hubstats/pull/79
+
+* Adding PRs per developer and Comments per reviewer to team page
+
+  > Emma Sax: Brian Bergstrom: https://github.com/sportngin/hubstats/pull/78
+
+* Making the team's user column to be developers/reviewers
+
+  > Emma Sax: Brian Bergstrom: https://github.com/sportngin/hubstats/pull/77
+
+#### v0.5.1
+* adding hubstats; fixing little error in readme
+
+  > Emma Sax: Brian Bergstrom: https://github.com/sportngin/hubstats/pull/76
+
 #### v0.5.0
 * Adding teams and team commands, team sorting, and team metrics to Hubstats
 

@@ -1,20 +1,10 @@
 <div class="container" id="user"%>
+
+  <%= render 'hubstats/partials/dashboard', :collection => dashboard %>
+  <br>
+
   <div class="row"%>
-    <div class="col-lg-3">
-
-      <!-- Allow for filtering by repository or user -->
-      <div class="form-group">
-        <input class="select2-control" id="repos">
-        </input>
-      </div>
-      <div class="form-group">
-        <input class="select2-control" id="users">
-        </input>
-      </div>
-    </div>
-
-    <!-- Show all of the users with their individual stats -->
-    <div class="col-lg-9">
+    <div class="col col-lg-12">
       <%= render 'hubstats/tables/users' %>
       <div class="text-center">
         <%= will_paginate @users, renderer: BootstrapPagination::Rails %>

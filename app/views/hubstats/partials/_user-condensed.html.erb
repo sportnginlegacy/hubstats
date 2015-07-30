@@ -20,8 +20,8 @@
   </div>
   <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
     <div class="pull-right">
-      <span class="text-large"><%= Hubstats::Deploy.belonging_to_user(user.id).deployed_in_date_range(@start_date, @end_date).count(:all) %></span>
-      <span class="mega-octicon octicon-rocket"></span>
+      <span class="text-large"><%= Hubstats::Comment.belonging_to_user(user.id).created_in_date_range(@start_date, @end_date).count(:all) %></span>
+      <span class="mega-octicon octicon-comment"></span>
     </div>
   </div>
   <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">

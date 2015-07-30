@@ -1,6 +1,8 @@
 module Hubstats
   class Label < ActiveRecord::Base
 
+    def self.record_timestamps; false; end
+
     # Various checks that can be used to filter and find info about labels.
     scope :with_ids, lambda {|pull_ids| (where("hubstats_labels_pull_requests.pull_request_id" => pull_ids))}
     scope :with_state, lambda {|state| (where(state: state) unless state == 'all') if state}
