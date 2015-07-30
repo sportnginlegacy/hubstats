@@ -11,9 +11,14 @@ module Hubstats
     # Returns - nothing, but makes a new event
     def handler
       verify_signature(request)
-
+      
       kind = request.headers['X-Github-Event']
       event = params.with_indifferent_access
+
+      raw_payload = request.raw_post
+      original_payload = JSON.parse(raw_payload)
+      event[:github_action] = original_payload["action"]
+
       eventsHandler = Hubstats::EventsHandler.new()
       eventsHandler.route(event,kind)
 
