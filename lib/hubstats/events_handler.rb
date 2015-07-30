@@ -55,13 +55,13 @@ module Hubstats
     #
     # Returns - nothing, but updates or makes the team
     def team_processor(payload)
-      team = payload[:event][:team]
+      team = payload[:team]
       team_list = Hubstats.config.github_config["team_list"] || []
       if team_list.include? team[:name]
         Hubstats::Team.create_or_update(team.with_indifferent_access)
         hubstats_team = Hubstats::Team.where(name: team[:name]).first
-        hubstats_user = Hubstats::User.create_or_update(payload[:event][:member])
-        Hubstats::Team.update_users_in_team(hubstats_team, hubstats_user, payload[:event][:action])
+        hubstats_user = Hubstats::User.create_or_update(payload[:member])
+        Hubstats::Team.update_users_in_team(hubstats_team, hubstats_user, payload[:github_action])
       end
     end
 
