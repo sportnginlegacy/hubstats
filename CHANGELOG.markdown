@@ -1,3 +1,4 @@
+#### v0.5.9
 #### v0.5.8
 * Fixing bug that resulted in no data being updated from org webhooks
 
