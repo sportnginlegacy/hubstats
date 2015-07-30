@@ -1,3 +1,8 @@
+#### v0.5.10
+* Trying once more to fix webhook bug by grabbing raw payload
+
+  > Emma Sax: Brian Bergstrom: https://github.com/sportngin/hubstats/pull/86
+
 #### v0.5.9
 #### v0.5.8
 * Fixing bug that resulted in no data being updated from org webhooks
