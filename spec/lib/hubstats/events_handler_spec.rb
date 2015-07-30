@@ -64,10 +64,14 @@ module Hubstats
         payload = build(:team_payload_hash)
         user = build(:user)
         allow(Hubstats).to receive_message_chain(:config, :github_config, :[]).with("team_list") { ["Team One", "Team Two", "Team Three"] }
+        allow(payload).to receive(:[]).with(:event).and_return(payload)
+        allow(payload).to receive(:[]).with(:team).and_return({:name => "Team One"})
+        allow(payload).to receive(:[]).with(:member).and_return(user)
+        allow(payload).to receive(:[]).with(:action).and_return("added")
         allow(Hubstats::User).to receive(:create_or_update).and_return(user)
         expect(Hubstats::Team).to receive(:create_or_update)
         expect(Hubstats::Team).to receive(:update_users_in_team)
-        ehandler.route(payload, payload[:type])
+        ehandler.route(payload, "MembershipEvent")
       end
 
       it 'should successfully create_or_update the team' do
@@ -77,9 +81,13 @@ module Hubstats
         user = build(:user)
         allow(Hubstats).to receive_message_chain(:config, :github_config, :[]).with("team_list") { ["Team One", "Team Two", "Team Three"] }
         allow(Hubstats::User).to receive(:create_or_update).and_return(user)
+        allow(payload).to receive(:[]).with(:event).and_return(payload)
+        allow(payload).to receive(:[]).with(:team).and_return({:name => "Team One"})
+        allow(payload).to receive(:[]).with(:member).and_return(user)
+        allow(payload).to receive(:[]).with(:action).and_return("added")
         expect(Hubstats::Team).to receive(:update_users_in_team)
         expect(Hubstats::Team).to receive(:create_or_update).and_return(team)
-        ehandler.route(payload, payload[:type])
+        ehandler.route(payload, "MembershipEvent")
       end
     end
 
