@@ -1,3 +1,8 @@
+#### v0.5.8
+* Fixing bug that resulted in no data being updated from org webhooks
+
+  > Emma Sax: Brian Bergstrom: https://github.com/sportngin/hubstats/pull/85
+
 #### v0.5.7
 #### v0.5.6
 * Fixing bug that makes metrics not show up on teams and repos page
