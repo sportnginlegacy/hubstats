@@ -15,9 +15,8 @@ module Hubstats
       kind = request.headers['X-Github-Event']
       event = params.with_indifferent_access
 
-      raw_payload = request.raw_post
-      original_payload = JSON.parse(raw_payload)
-      event[:github_action] = original_payload["action"]
+      raw_parameters = request.request_parameters
+      event[:github_action] = raw_parameters["action"]
 
       eventsHandler = Hubstats::EventsHandler.new()
       eventsHandler.route(event,kind)
