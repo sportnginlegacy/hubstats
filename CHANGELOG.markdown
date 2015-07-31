@@ -1,3 +1,8 @@
+#### v0.5.11
+* Yet another attempt at fixing GitHub org webhooks bug
+
+  > Emma Sax: Andy Fleener: https://github.com/sportngin/hubstats/pull/87
+
 #### v0.5.10
 * Trying once more to fix webhook bug by grabbing raw payload
 
