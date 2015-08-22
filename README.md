@@ -1,6 +1,6 @@
 # Hubstats [![Build Status](https://travis-ci.org/sportngin/hubstats.svg?branch=master)](https://travis-ci.org/sportngin/hubstats)
 
-Hubstats is a rails plugin which allows you to search and monitor pull requests made across a collection of repositories. It also gives extra statistics about users and pull requests not found on GitHub.
+Hubstats is a rails plugin which allows you to search and monitor pull requests, teams, and users made across a collection of repositories. It also gives extra statistics about users, teams, and pull requests not found on GitHub. For more information on Hubstats and the development of Hubstats, see the Coding in the Crease [Hubstats blog](http://www.codinginthecrease.com/news_article/show/545869?referrer_id) by Emma Sax. For additional information on the setup process of Hubstats, although you'll find plenty below, go to the [Hubstats wiki](https://github.com/sportngin/hubstats/wiki).
 
 ## Setup
 The following setup is designed to only be used when integrating this plugin into a rails application.
@@ -101,6 +101,10 @@ to serve the plugin. http://guides.rubyonrails.org/plugins.html will give more i
   Run `rake hubstats:setup`.
   
   Add 'mount Hubstats::Engine => "/hubstats"' to your routes file.
+  
+  Read [this blog about Hubstats](http://www.codinginthecrease.com/news_article/show/545869?referrer_id).
+  
+  Go to the [Hubstats wiki](https://github.com/sportngin/hubstats/wiki) for additional information.
 
 <hr>
 
