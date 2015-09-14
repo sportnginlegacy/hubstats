@@ -1,3 +1,8 @@
+#### v0.5.10
+* making sure mysql2 version is within 0.3
+
+  > Emma Sax: : https://github.com/sportngin/hubstats/pull/88
+
 #### v0.5.11
 * Yet another attempt at fixing GitHub org webhooks bug
 
