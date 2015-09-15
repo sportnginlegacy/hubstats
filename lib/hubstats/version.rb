@@ -1,3 +1,3 @@
 module Hubstats
-  VERSION = "0.5.11"
+  VERSION = "2015.02.26.13.51"
 end
