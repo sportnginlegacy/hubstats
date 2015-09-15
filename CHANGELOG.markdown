@@ -1,9 +1,8 @@
-#### v0.5.11
+#### v0.5.12
 * Restrict mysql2 dependency to compatible version
 
   > Brian Bergstrom: Andy Fleener, Emma Sax: https://github.com/sportngin/hubstats/pull/89
 
-#### v0.5.10
 * making sure mysql2 version is within 0.3
 
   > Emma Sax: : https://github.com/sportngin/hubstats/pull/88
