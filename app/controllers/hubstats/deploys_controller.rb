@@ -104,6 +104,9 @@ module Hubstats
       return true
     end
 
+    # Private - Allows only these parameters to be added when creating a deploy
+    #
+    # Returns - nothing
     private
     def deploy_params
       params.permit(:git_revision, :repo_name, :deployed_at, :user_id, :pull_request_ids)
