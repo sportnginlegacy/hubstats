@@ -3,9 +3,9 @@ module Hubstats
 
     # Various checks that can be used to filter and find info about users.
     scope :with_id, lambda {|user_id| where(id: user_id.split(',')) if user_id}
-    scope :only_active, having("comment_count > 0 OR pull_request_count > 0 OR deploy_count > 0")
-    scope :is_developer, having("pull_request_count > 0")
-    scope :is_reviewer, having("comment_count > 0")
+    scope :only_active, -> { having("comment_count > 0 OR pull_request_count > 0 OR deploy_count > 0") }
+    scope :is_developer, -> { having("pull_request_count > 0") }
+    scope :is_reviewer, -> { having("comment_count > 0") }
     scope :with_contributions, lambda {|start_date, end_date, repo_id| with_all_metrics_repos(start_date, end_date, repo_id) if repo_id}
 
     # Public - Counts all of the deploys for selected user that occurred between the start_date and end_date.
@@ -161,9 +161,9 @@ module Hubstats
       .group("hubstats_users.id")
     }
 
-    attr_accessible :login, :id, :avatar_url, :gravatar_id, :url, :html_url, :followers_url,
-      :following_url, :gists_url, :starred_url, :subscriptions_url, :organizations_url,
-      :repos_url, :events_url, :received_events_url, :role, :site_admin, :created_at, :updated_at
+    # attr_accessible :login, :id, :avatar_url, :gravatar_id, :url, :html_url, :followers_url,
+    #   :following_url, :gists_url, :starred_url, :subscriptions_url, :organizations_url,
+    #   :repos_url, :events_url, :received_events_url, :role, :site_admin, :created_at, :updated_at
     
     validates :id, presence: true, uniqueness: true
 

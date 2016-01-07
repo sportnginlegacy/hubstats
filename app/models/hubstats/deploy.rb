@@ -13,13 +13,13 @@ module Hubstats
 
     # Various checks that can be used to filter, sort, and find info about deploys.
     scope :deployed_in_date_range, lambda {|start_date, end_date| where("hubstats_deploys.deployed_at BETWEEN ? AND ?", start_date, end_date)}
-    scope :group, lambda {|group| group_by(:repo_id) if group }
+    scope :grouper, lambda {|group| group_by(:repo_id) if group }
     scope :belonging_to_repo, lambda {|repo_id| where(repo_id: repo_id)}
     scope :belonging_to_user, lambda {|user_id| where(user_id: user_id)}
     scope :belonging_to_repos, lambda {|repo_id| where(repo_id: repo_id.split(',')) if repo_id}
     scope :belonging_to_users, lambda {|user_id| where(user_id: user_id.split(',')) if user_id}
-    scope :with_repo_name, select('DISTINCT hubstats_repos.name as repo_name, hubstats_deploys.*').joins("LEFT JOIN hubstats_repos ON hubstats_repos.id = hubstats_deploys.repo_id")
-    scope :with_user_name, select('DISTINCT hubstats_users.login as user_name, hubstats_deploys.*').joins("LEFT JOIN hubstats_users ON hubstats_users.id = hubstats_deploys.user_id")
+    scope :with_repo_name, -> { select('DISTINCT hubstats_repos.name as repo_name, hubstats_deploys.*').joins("LEFT JOIN hubstats_repos ON hubstats_repos.id = hubstats_deploys.repo_id") }
+    scope :with_user_name, -> { select('DISTINCT hubstats_users.login as user_name, hubstats_deploys.*').joins("LEFT JOIN hubstats_users ON hubstats_users.id = hubstats_deploys.user_id") }
     
     scope :belonging_to_teams, lambda {|teams|
       if teams
@@ -29,7 +29,7 @@ module Hubstats
       end
     }
     
-    attr_accessible :git_revision, :repo_id, :deployed_at, :user_id, :pull_request_ids
+    # attr_accessible :git_revision, :repo_id, :deployed_at, :user_id, :pull_request_ids
 
     belongs_to :user
     belongs_to :repo

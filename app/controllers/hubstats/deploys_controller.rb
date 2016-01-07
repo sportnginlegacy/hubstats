@@ -2,6 +2,7 @@ require_dependency "hubstats/application_controller"
 
 module Hubstats
   class DeploysController < Hubstats::BaseController
+    
 
     # Public - Will list the deploys that correspond with selected repos, users, orders, and groupings. Only shows
     # deploys within the @start_date and @end_date.
@@ -10,11 +11,11 @@ module Hubstats
     def index
       @deploys = Hubstats::Deploy.includes(:repo, :pull_requests, :user)
         .belonging_to_users(params[:users]).belonging_to_repos(params[:repos]).belonging_to_teams(params[:teams])
-        .group_by(params[:group])
+        .group_by(params[:grouper])
         .order_with_date_range(@start_date, @end_date, params[:order])
         .paginate(:page => params[:page], :per_page => 15)
 
-      grouping(params[:group], @deploys)
+      grouping(params[:grouper], @deploys)
     end
 
     # Public - Shows the single deploy and all of the stats and pull requests about that deploy. Stats and PRs only
@@ -40,13 +41,14 @@ module Hubstats
     #
     # Returns - nothing, but makes a new deploy
     def create
-      if params[:git_revision].nil? || params[:repo_name].nil? || params[:pull_request_ids].nil?
+      new_params = deploy_params
+      if new_params[:git_revision].nil? || new_params[:repo_name].nil? || new_params[:pull_request_ids].nil?
         render text: "Missing a necessary parameter: git revision, pull request ids, or repository name.", :status => 400 and return
       else
         @deploy = Deploy.new
-        @deploy.deployed_at = params[:deployed_at]
-        @deploy.git_revision = params[:git_revision]
-        @repo = Hubstats::Repo.where(full_name: params[:repo_name])
+        @deploy.deployed_at = new_params[:deployed_at]
+        @deploy.git_revision = new_params[:git_revision]
+        @repo = Hubstats::Repo.where(full_name: new_params[:repo_name])
 
         if !valid_repo(@repo)
           render text: "Repository name is invalid.", :status => 400 and return
@@ -54,7 +56,7 @@ module Hubstats
           @deploy.repo_id = @repo.first.id.to_i
         end
 
-        pull_request_id_array = params[:pull_request_ids].split(",").map {|i| i.strip.to_i}
+        pull_request_id_array = new_params[:pull_request_ids].split(",").map {|i| i.strip.to_i}
         if !valid_pr_ids(pull_request_id_array)
           render text: "No pull request ids given.", :status => 400 and return
         else
@@ -100,6 +102,11 @@ module Hubstats
       return false if pull.nil? || pull.merged_by.nil?
       @deploy.user_id = pull.merged_by
       return true
+    end
+
+    private
+    def deploy_params
+      params.permit(:git_revision, :repo_name, :deployed_at, :user_id, :pull_request_ids)
     end
   end
  end

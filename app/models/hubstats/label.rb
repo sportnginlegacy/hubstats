@@ -22,7 +22,7 @@ module Hubstats
        .order("pull_request_count DESC")
     end
 
-    attr_accessible :url, :name, :color
+    # attr_accessible :url, :name, :color
 
     has_and_belongs_to_many :pull_requests, :join_table => 'hubstats_labels_pull_requests'
 
