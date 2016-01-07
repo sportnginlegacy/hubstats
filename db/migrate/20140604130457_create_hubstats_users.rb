@@ -2,7 +2,6 @@ class CreateHubstatsUsers < ActiveRecord::Migration
   def change
     create_table :hubstats_users do |t|
       t.string :login
-      t.integer :id
       t.string :role
       t.boolean :site_admin
       t.timestamps

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160106191751) do
+ActiveRecord::Schema.define(version: 20160106191751) do
 
   create_table "hubstats_comments", force: :cascade do |t|
     t.string   "kind",               limit: 255
@@ -158,8 +158,8 @@ ActiveRecord::Schema.define(:version => 20160106191751) do
     t.string   "login",               limit: 255
     t.string   "role",                limit: 255
     t.boolean  "site_admin"
-    t.datetime "created_at",                      null: false
-    t.datetime "updated_at",                      null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.string   "avatar_url",          limit: 255
     t.string   "gravatar_id",         limit: 255
     t.string   "url",                 limit: 255
