@@ -11,11 +11,11 @@ module Hubstats
     def index
       @deploys = Hubstats::Deploy.includes(:repo, :pull_requests, :user)
         .belonging_to_users(params[:users]).belonging_to_repos(params[:repos]).belonging_to_teams(params[:teams])
-        .group_by(params[:grouper])
+        .group_by(params[:group])
         .order_with_date_range(@start_date, @end_date, params[:order])
         .paginate(:page => params[:page], :per_page => 15)
 
-      grouping(params[:grouper], @deploys)
+      grouping(params[:group], @deploys)
     end
 
     # Public - Shows the single deploy and all of the stats and pull requests about that deploy. Stats and PRs only

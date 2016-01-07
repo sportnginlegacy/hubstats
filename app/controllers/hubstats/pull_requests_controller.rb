@@ -16,11 +16,11 @@ module Hubstats
 
       @pull_requests = Hubstats::PullRequest.includes(:user, :repo, :team)
         .belonging_to_users(params[:users]).belonging_to_repos(params[:repos]).belonging_to_teams(params[:teams])
-        .group_by(params[:grouper]).with_label(params[:label])
+        .group_by(params[:group]).with_label(params[:label])
         .state_based_order(@start_date, @end_date, params[:state], params[:order])
         .paginate(:page => params[:page], :per_page => 15)
 
-      grouping(params[:grouper], @pull_requests)
+      grouping(params[:group], @pull_requests)
     end 
 
     # Public - Will show the particular pull request selected, including all of the basic stats, deploy (only if 
