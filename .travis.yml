@@ -4,9 +4,6 @@ branches:
     - master
 language: ruby
 cache: bundler
-env:
-  - RAILS_VERSION=4.0
-  - RAILS_VERSION=3.2
 rvm:
   - 2.1
   - 2.2
