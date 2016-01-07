@@ -1,7 +1,7 @@
 class CreateHubstatsRepos < ActiveRecord::Migration
   def change
     create_table :hubstats_repos do |t|
-      t.integer :id
+
       t.belongs_to :owner
       t.string :name
       t.string :full_name
