@@ -11,7 +11,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< Updated upstream
 ActiveRecord::Schema.define(version: 20160106191751) do
+=======
+ActiveRecord::Schema.define(:version => 20160106191751) do
+>>>>>>> Stashed changes
 
   create_table "hubstats_comments", force: :cascade do |t|
     t.string   "kind",               limit: 255
