@@ -75,14 +75,6 @@ module Hubstats
       .group("hubstats_repos.id")
     }
 
-    # attr_accessible :id, :name, :full_name, :homepage, :language, :description, :default_branch,
-    #   :url, :html_url, :clone_url, :git_url, :ssh_url, :svn_url, :mirror_url,
-    #   :hooks_url, :issue_events_url, :events_url, :contributors_url, :git_commits_url, 
-    #   :issue_comment_url, :merges_url, :issues_url, :pulls_url, :labels_url,
-    #   :forks_count, :stargazers_count, :watchers_count, :size, :open_issues_count,
-    #   :has_issues, :has_wiki, :has_downloads,:fork, :private, 
-    #   :pushed_at, :created_at, :updated_at, :owner_id
-
     has_many :pull_requests
     has_many :deploys
     has_many :comments

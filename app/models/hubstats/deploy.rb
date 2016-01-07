@@ -28,8 +28,6 @@ module Hubstats
         where(user_id: user_list.split(','))
       end
     }
-    
-    # attr_accessible :git_revision, :repo_id, :deployed_at, :user_id, :pull_request_ids
 
     belongs_to :user
     belongs_to :repo

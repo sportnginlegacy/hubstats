@@ -45,7 +45,6 @@ module Hubstats
        .group("hubstats_teams.id")
     }
 
-    # attr_accessible :name, :hubstats
     has_and_belongs_to_many :users, :join_table => 'hubstats_teams_users', :uniq => true
     
     # Public - Checks if the team is currently existing, and if it isn't, then makes a new team with 

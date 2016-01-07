@@ -2,7 +2,6 @@ require_dependency "hubstats/application_controller"
 
 module Hubstats
   class DeploysController < Hubstats::BaseController
-    
 
     # Public - Will list the deploys that correspond with selected repos, users, orders, and groupings. Only shows
     # deploys within the @start_date and @end_date.

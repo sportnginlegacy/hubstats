@@ -20,11 +20,6 @@ module Hubstats
       .where("hubstats_pull_requests.user_id != hubstats_comments.user_id")
       .group("hubstats_comments.user_id")
     }
-
-    # attr_accessible :id, :html_url, :url, :pull_request_url, :diff_hunk, :path,
-    #   :position, :original_position, :line, :commit_id, :original_commit_id,
-    #   :body, :created_at, :updated_at, :user_id, :pull_request_id, :repo_id,
-    #   :kind
   
     belongs_to :user
     belongs_to :pull_request

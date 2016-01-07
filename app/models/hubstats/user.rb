@@ -160,10 +160,6 @@ module Hubstats
       .joins("LEFT JOIN (#{deploys_count(start_date, end_date).to_sql}) AS deploys ON deploys.user_id = hubstats_users.id")
       .group("hubstats_users.id")
     }
-
-    # attr_accessible :login, :id, :avatar_url, :gravatar_id, :url, :html_url, :followers_url,
-    #   :following_url, :gists_url, :starred_url, :subscriptions_url, :organizations_url,
-    #   :repos_url, :events_url, :received_events_url, :role, :site_admin, :created_at, :updated_at
     
     validates :id, presence: true, uniqueness: true
 
