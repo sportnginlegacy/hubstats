@@ -16,7 +16,7 @@ module Hubstats
     scope :belonging_to_repos, lambda {|repo_id| where(repo_id: repo_id.split(',')) if repo_id}
     scope :belonging_to_teams, lambda {|team_id| where(team_id: team_id.split(',')) if team_id}
     scope :belonging_to_users, lambda {|user_id| where(user_id: user_id.split(',')) if user_id}
-    scope :grouper, lambda {|group| group_by(:repo_id) if group }
+    scope :group_by_repo, lambda {|group| group_by(:repo_id) if group }
     scope :with_state, lambda {|state| (where(state: state) unless state == 'all') if state}
     scope :with_label, lambda {|label_name| joins(:labels).where(hubstats_labels: {name: label_name.split(',')}) if label_name}
     scope :distincter, -> { select("DISTINCT hubstats_pull_requests.*") }

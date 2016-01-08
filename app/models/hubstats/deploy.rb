@@ -13,7 +13,7 @@ module Hubstats
 
     # Various checks that can be used to filter, sort, and find info about deploys.
     scope :deployed_in_date_range, lambda {|start_date, end_date| where("hubstats_deploys.deployed_at BETWEEN ? AND ?", start_date, end_date)}
-    scope :grouper, lambda {|group| group_by(:repo_id) if group }
+    scope :group_by_repo, lambda {|group| group_by(:repo_id) if group }
     scope :belonging_to_repo, lambda {|repo_id| where(repo_id: repo_id)}
     scope :belonging_to_user, lambda {|user_id| where(user_id: user_id)}
     scope :belonging_to_repos, lambda {|repo_id| where(repo_id: repo_id.split(',')) if repo_id}
