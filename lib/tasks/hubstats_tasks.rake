@@ -43,6 +43,12 @@ namespace :hubstats do
     Rake::Task['hubstats:populate:update_teams'].invoke
   end
 
+  desc "Updates the teams from octokit.yml"
+  task :update_teams_from_file => :environment do
+    puts "Updating teams based on whitelist in octokit.yml"
+    Rake::Task['hubstats:populate:update_teams_from_file'].invoke
+  end
+
   desc "Creates webhook from github for organization"
   task :make_org_webhook => :environment do
     puts "Making a webhook for an organization in octokit.yml"

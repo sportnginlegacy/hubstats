@@ -36,6 +36,11 @@ namespace :hubstats do
       Rake::Task['hubstats:populate:teams'].execute
     end
 
+    desc "Updates the teams from octokit.yml"
+    task :update_teams_from_file => :environment do
+      Hubstats::GithubAPI.update_teams_from_file
+    end
+
     desc "Creates the webhook for the current org"
     task :setup_teams => :environment do
       Rake::Task['hubstats:populate:create_org_hook'].execute

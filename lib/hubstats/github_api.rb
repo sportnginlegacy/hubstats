@@ -122,6 +122,23 @@ module Hubstats
       end
     end
 
+    # Public - Goes through entire team database and updates the hubstats boolean based on the octokit.yml file
+    #
+    # Returns - nothing
+    def self.update_teams_from_file
+      team_list = Hubstats.config.github_config["team_list"] || []
+
+      Hubstats::Team.find_each do |team|
+        if (!team_list.include? team[:name]) && (team[:hubstats] == true)
+          team.update_column(:hubstats, false)
+          team.save!
+          puts "Updated a team"
+        end
+      end
+
+      puts "All teams are up to date; Run 'rake hubstats:update_teams' or 'rake hubstats:update_teams_in_pulls' to grab more teams from GitHub"
+    end
+
     # Public - Makes a new webhook from a repository
     #
     # repo - the repository that is attempting to have a hook made with
