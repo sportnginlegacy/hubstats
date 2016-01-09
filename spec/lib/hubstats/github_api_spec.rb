@@ -101,6 +101,29 @@ module Hubstats
       end
     end
 
+    context '.update_teams_from_file' do
+      subject {Hubstats::GithubAPI}
+      let(:team1) {build(:team, :name => "Team One")}
+      let(:team2) {build(:team, :name => "Team Two")}
+      let(:team3) {build(:team, :name => "Team Three")}
+      let(:team4) {build(:team, :name => "Team Four")}
+      let(:team5) {build(:team, :name => "Team Five")}
+      let(:false_team5) {build(:team_false, :name => "Team Five")}
+
+      # not sure how to finish writing this test
+      # I want to say that the hubstats boolean of Team Five should go from true to false, but not sure how to test this
+      # using stubbing...
+      it 'should update the teams in the database based on a given whitelist' do
+        allow(Hubstats).to receive_message_chain(:config, :github_config, :[]).with("team_list") { ["Team One", "Team Two", "Team Three", "Team Four"] }
+        allow(Hubstats::Team).to receive(:all).and_return( [team1, team2, team5, team4, team3] )
+        allow(Hubstats::Team).to receive(:update_column).and_return(false_team5)
+        allow(Hubstats::Team).to receive(:save!).and_return(true)
+        # expect(Hubstats::Team.where(hubstats: false).first).to eq(team5)
+        # expect{ subject }.to change{ Hubstats::Team.where(name: "Team Five").hubstats }.from(true).to(false)
+        # subject.update_teams_from_file
+      end
+    end
+
     context ".update_hook" do
       subject {Hubstats::GithubAPI}
       let(:repo) {'hubstats'}

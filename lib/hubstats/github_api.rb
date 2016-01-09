@@ -127,8 +127,9 @@ module Hubstats
     # Returns - nothing
     def self.update_teams_from_file
       team_list = Hubstats.config.github_config["team_list"] || []
+      teams = Hubstats::Team.all
 
-      Hubstats::Team.find_each do |team|
+      teams.each do |team|
         if (!team_list.include? team[:name]) && (team[:hubstats] == true)
           team.update_column(:hubstats, false)
           team.save!
@@ -136,7 +137,8 @@ module Hubstats
         end
       end
 
-      puts "All teams are up to date; Run 'rake hubstats:update_teams' or 'rake hubstats:update_teams_in_pulls' to grab more teams from GitHub"
+      puts "All teams are up to date"
+      puts "Run 'rake hubstats:update_teams' or 'rake hubstats:update_teams_in_pulls' to grab more teams from GitHub"
     end
 
     # Public - Makes a new webhook from a repository
