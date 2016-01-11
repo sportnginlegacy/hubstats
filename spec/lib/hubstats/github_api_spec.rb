@@ -103,24 +103,18 @@ module Hubstats
 
     context '.update_teams_from_file' do
       subject {Hubstats::GithubAPI}
-      let(:team1) {build(:team, :name => "Team One")}
-      let(:team2) {build(:team, :name => "Team Two")}
-      let(:team3) {build(:team, :name => "Team Three")}
-      let(:team4) {build(:team, :name => "Team Four")}
-      let(:team5) {build(:team, :name => "Team Five")}
-      let(:false_team5) {build(:team_false, :name => "Team Five")}
+      let(:team1) {create(:team, :name => "Team One", :hubstats => true)}
+      let(:team2) {create(:team, :name => "Team Two")}
+      let(:team3) {create(:team, :name => "Team Three")}
+      let(:team4) {create(:team, :name => "Team Four")}
+      let(:team5) {create(:team, :name => "Team Five")}
+      let(:false_team5) {create(:team_false, :name => "Team Five")}
 
-      # not sure how to finish writing this test
-      # I want to say that the hubstats boolean of Team Five should go from true to false, but not sure how to test this
-      # using stubbing...
       it 'should update the teams in the database based on a given whitelist' do
         allow(Hubstats).to receive_message_chain(:config, :github_config, :[]).with("team_list") { ["Team One", "Team Two", "Team Three", "Team Four"] }
-        allow(Hubstats::Team).to receive(:all).and_return( [team1, team2, team5, team4, team3] )
-        allow(Hubstats::Team).to receive(:update_column).and_return(false_team5)
-        allow(Hubstats::Team).to receive(:save!).and_return(true)
-        # expect(Hubstats::Team.where(hubstats: false).first).to eq(team5)
-        # expect{ subject }.to change{ Hubstats::Team.where(name: "Team Five").hubstats }.from(true).to(false)
-        # subject.update_teams_from_file
+        allow(Hubstats::Team).to receive(:all).and_return( [team1, team2, team3, team4, team5] )
+        subject.update_teams_from_file
+        expect(Hubstats::Team.where(name: "Team Five").first.hubstats).to eq(false)
       end
     end
 
