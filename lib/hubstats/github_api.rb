@@ -133,7 +133,7 @@ module Hubstats
         if (!team_list.include? team[:name]) && (team[:hubstats] == true)
           team.update_column(:hubstats, false)
           team.save!
-          puts "Updated a team"
+          puts "Changed #{team[:name]} from true to false"
         end
       end
 
