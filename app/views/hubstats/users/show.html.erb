@@ -9,21 +9,7 @@
       <% if @user.team == nil %>
           No Assigned Team
       <% else %>
-        <% teams_array = @user.teams.where(hubstats: true) %>
-        <% size = teams_array.size %>
-
-        <% if size == 1 %>
-          Assigned Team:
-        <% else %>
-          Assigned Teams:
-        <% end %>
-
-        <% teams_array.each_with_index do |team, index| %>
-          <%= team.name %>
-          <% if !(index == size-1) %>
-            <%= "," %>
-          <% end %>
-        <% end %>
+        Assigned Team: <%= @user.team.name %>
       <% end %>
     </h4>
 
