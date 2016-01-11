@@ -4,12 +4,26 @@
     <!-- Title with the user's GitHub username -->
     <h1 class="title text-center"><a href=<%=@user.html_url%>> <%= @user.login %></a> </h1>
 
-    <!-- Show what team the user is on -->
+    <!-- Show what team(s) the user is on -->
     <h4 class="text-center">
       <% if @user.team == nil %>
           No Assigned Team
       <% else %>
-          Assigned Team: <%= @user.team.name %>
+        <% teams_array = @user.teams.where(hubstats: true) %>
+        <% size = teams_array.size %>
+
+        <% if size == 1 %>
+          Assigned Team:
+        <% else %>
+          Assigned Teams:
+        <% end %>
+
+        <% teams_array.each_with_index do |team, index| %>
+          <%= team.name %>
+          <% if !(index == size-1) %>
+            <%= "," %>
+          <% end %>
+        <% end %>
       <% end %>
     </h4>
 
