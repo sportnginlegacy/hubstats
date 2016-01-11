@@ -103,7 +103,7 @@ module Hubstats
 
     context '.update_teams_from_file' do
       subject {Hubstats::GithubAPI}
-      let(:team1) {create(:team, :name => "Team One", :hubstats => true)}
+      let(:team1) {create(:team, :name => "Team One")}
       let(:team2) {create(:team, :name => "Team Two")}
       let(:team3) {create(:team, :name => "Team Three")}
       let(:team4) {create(:team, :name => "Team Four")}
