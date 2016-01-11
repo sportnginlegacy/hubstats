@@ -175,7 +175,7 @@ module Hubstats
     #
     # Returns - the user 
     def self.create_or_update(github_user)
-      github_user[:role] = github_user.delete :type  ##changing :type in to :role
+      github_user[:role] = github_user.delete :type  ##changing :type into :role
       github_user = github_user.to_h.with_indifferent_access unless github_user.is_a? Hash
 
       user_data = github_user.slice(*Hubstats::User.column_names.map(&:to_sym))
