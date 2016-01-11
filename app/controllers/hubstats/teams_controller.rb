@@ -9,7 +9,7 @@ module Hubstats
     # Returns - the team data
     def index
       if params[:query] ## For select 2
-        @teams = Hubstats::Team.where(hubstats: true).where("name LIKE ?", "%#{params[:query]}%").order("name ASC")
+        @teams = Hubstats::Team.where("name LIKE ?", "%#{params[:query]}%").order("name ASC")
       elsif params[:id]
         @teams = Hubstats::Team.where(id: params[:id].split(",")).order("name ASC")
       else
