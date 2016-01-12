@@ -1,3 +1,8 @@
+#### v0.6.0
+* Deleting unused columns from Hubstats database
+
+  > Emma Sax: Brian Bergstrom: https://github.com/sportngin/hubstats/pull/97
+
 #### v0.5.12
 * Restrict mysql2 dependency to compatible version
 

@@ -4,7 +4,7 @@
     <!-- Title with the repo name and git revision sha -->
     <h1 class="title text-center">
       <%= link_to @deploy.repo.name.titleize, repo_path(@deploy.repo.name) %> /
-      <%= @deploy.git_revision.titleize %>
+      <%= @deploy.git_revision %>
     </h1>
 
     <!-- Show the date/time that the deploy was deployed -->
