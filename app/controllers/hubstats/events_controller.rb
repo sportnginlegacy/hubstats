@@ -39,6 +39,9 @@ module Hubstats
       return 500, "Signatures didn't match!" unless Rack::Utils.secure_compare(signature, request.env['HTTP_X_HUB_SIGNATURE'])
     end
 
+    # Private - Allows only these parameters to be added when creating a deploy
+    #
+    # Returns - hash of parameters
     private
     def event_params
       params.permit!
