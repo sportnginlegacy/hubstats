@@ -5,6 +5,11 @@ FactoryGirl.define do
     hubstats true
   end
 
+  factory :team_false, :class => Hubstats::Team do
+    name "Team One"
+    hubstats false
+  end
+
   factory :team_hash, class:Hash do
     association :user, factory: :user_hash, strategy: :build
     id {Faker::Number.number(6).to_i}
