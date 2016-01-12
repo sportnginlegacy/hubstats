@@ -259,9 +259,7 @@ module Hubstats
     # repo - the particular repository, you want to add labels to
     def self.add_labels(repo)
       get_labels(repo).each do |label|
-        puts label
-        puts label.name
-        # inline(repo.full_name,'issues', labels: label.name, state: 'all')
+        inline(repo.full_name,'issues', labels: label.name, state: 'all')
       end
     end
 
