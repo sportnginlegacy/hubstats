@@ -301,7 +301,7 @@ module Hubstats
         if object[:pull_request]
           repo = Hubstats::Repo.where(full_name: repo_name).first
           pull_request = Hubstats::PullRequest.where(repo_id: repo.id).where(number: object[:number]).first
-          # pull_request.add_labels(object[:labels])
+          pull_request.add_labels(object[:labels])
         end
       end
     end
