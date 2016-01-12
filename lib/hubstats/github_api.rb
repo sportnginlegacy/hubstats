@@ -125,7 +125,7 @@ module Hubstats
     # Public - Goes through entire team database and updates the hubstats boolean based on the octokit.yml file
     #
     # Returns - nothing
-    def self.update_teams_from_file
+    def self.deprecate_teams_from_file
       team_list = Hubstats.config.github_config["team_list"] || []
       teams = Hubstats::Team.all
 

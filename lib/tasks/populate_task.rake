@@ -37,8 +37,8 @@ namespace :hubstats do
     end
 
     desc "Updates the teams from octokit.yml"
-    task :update_teams_from_file => :environment do
-      Hubstats::GithubAPI.update_teams_from_file
+    task :deprecate_teams_from_file => :environment do
+      Hubstats::GithubAPI.deprecate_teams_from_file
     end
 
     desc "Creates the webhook for the current org"
