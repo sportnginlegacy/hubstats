@@ -36,7 +36,7 @@ namespace :hubstats do
       Rake::Task['hubstats:populate:teams'].execute
     end
 
-    desc "Updates the teams from octokit.yml"
+    desc "Deprecates teams based on the octokit.yml file"
     task :deprecate_teams_from_file => :environment do
       Hubstats::GithubAPI.deprecate_teams_from_file
     end
