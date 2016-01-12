@@ -36,6 +36,11 @@ namespace :hubstats do
       Rake::Task['hubstats:populate:teams'].execute
     end
 
+    desc "Deprecates teams based on the octokit.yml file"
+    task :deprecate_teams_from_file => :environment do
+      Hubstats::GithubAPI.deprecate_teams_from_file
+    end
+
     desc "Creates the webhook for the current org"
     task :setup_teams => :environment do
       Rake::Task['hubstats:populate:create_org_hook'].execute
