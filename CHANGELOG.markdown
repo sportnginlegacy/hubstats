@@ -1,3 +1,4 @@
+#### v0.6.0
 * Deleting unused columns from Hubstats database
 
   > Emma Sax: Brian Bergstrom: https://github.com/sportngin/hubstats/pull/97
