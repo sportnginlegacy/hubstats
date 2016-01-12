@@ -4,6 +4,15 @@
     <!-- Title with the user's GitHub username -->
     <h1 class="title text-center"><a href=<%=@user.html_url%>> <%= @user.login %></a> </h1>
 
+    <!-- Show what team(s) the user is on -->
+    <h4 class="text-center">
+      <% if @user.team %>
+        Assigned Team: <%= @user.team.name %>
+      <% else %>
+        No Assigned Team
+      <% end %>
+    </h4>
+
     <!-- Show all of the stats about the user -->
     <%= render 'hubstats/partials/quick_stats_one' %>
   </div>
