@@ -108,7 +108,6 @@ module Hubstats
       let(:team3) {create(:team, :name => "Team Three")}
       let(:team4) {create(:team, :name => "Team Four")}
       let(:team5) {create(:team, :name => "Team Five")}
-      let(:false_team5) {create(:team_false, :name => "Team Five")}
 
       it 'should update the teams in the database based on a given whitelist' do
         allow(Hubstats).to receive_message_chain(:config, :github_config, :[]).with("team_list") { ["Team One", "Team Two", "Team Three", "Team Four"] }
