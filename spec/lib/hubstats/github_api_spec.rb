@@ -112,8 +112,8 @@ module Hubstats
       it 'should update the teams in the database based on a given whitelist' do
         allow(Hubstats).to receive_message_chain(:config, :github_config, :[]).with("team_list") { ["Team One", "Team Two", "Team Three", "Team Four"] }
         allow(Hubstats::Team).to receive(:all).and_return( [team1, team2, team3, team4, team5] )
+        expect(team5).to receive(:update_column).with(:hubstats, false)
         subject.deprecate_teams_from_file
-        expect(Hubstats::Team.where(name: "Team Five").first.hubstats).to eq(false)
       end
     end
 
