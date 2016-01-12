@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160112155348) do
+ActiveRecord::Schema.define(:version => 20160112162918) do
 
   create_table "hubstats_comments", :force => true do |t|
     t.string   "kind"
@@ -90,6 +90,7 @@ ActiveRecord::Schema.define(:version => 20160112155348) do
     t.datetime "updated_at"
     t.string   "url"
     t.string   "html_url"
+    t.string   "labels_url"
   end
 
   add_index "hubstats_repos", ["owner_id"], :name => "index_hubstats_repos_on_owner_id"

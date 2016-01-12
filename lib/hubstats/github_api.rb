@@ -240,7 +240,9 @@ module Hubstats
     # repo - the particular repository, you want to add labels to
     def self.add_labels(repo)
       get_labels(repo).each do |label|
-        inline(repo.full_name,'issues', labels: label.name, state: 'all')
+        puts label
+        puts label.name
+        # inline(repo.full_name,'issues', labels: label.name, state: 'all')
       end
     end
 
@@ -280,7 +282,7 @@ module Hubstats
         if object[:pull_request]
           repo = Hubstats::Repo.where(full_name: repo_name).first
           pull_request = Hubstats::PullRequest.where(repo_id: repo.id).where(number: object[:number]).first
-          pull_request.add_labels(object[:labels])
+          # pull_request.add_labels(object[:labels])
         end
       end
     end

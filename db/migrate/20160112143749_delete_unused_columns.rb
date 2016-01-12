@@ -48,7 +48,6 @@ class DeleteUnusedColumns < ActiveRecord::Migration
   	remove_column :hubstats_repos, :merges_url
   	remove_column :hubstats_repos, :issues_url
   	remove_column :hubstats_repos, :pulls_url
-  	remove_column :hubstats_repos, :labels_url
 
   	remove_column :hubstats_users, :site_admin
   	remove_column :hubstats_users, :gravatar_id
