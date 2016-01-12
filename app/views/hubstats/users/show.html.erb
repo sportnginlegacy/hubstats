@@ -6,11 +6,10 @@
 
     <!-- Show what team(s) the user is on -->
     <h4 class="text-center">
-      <% if @user.teams.where(hubstats: true).first == nil %> <!-- first because user is only part of one valid team -->
-        No Assigned Team
+      <% if @user.team %>
+        Assigned Team: <%= @user.team.name %>
       <% else %>
-        <% team = @user.teams.where(hubstats: true).first %>
-        Assigned Team: <%= team.name %>
+        No Assigned Team
       <% end %>
     </h4>
 
