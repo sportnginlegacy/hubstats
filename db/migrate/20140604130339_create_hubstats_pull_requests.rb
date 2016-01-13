@@ -1,7 +1,6 @@
 class CreateHubstatsPullRequests < ActiveRecord::Migration
   def change
     create_table :hubstats_pull_requests do |t|
-      t.integer :id
       t.integer :number
       t.belongs_to :user
       t.belongs_to :repo

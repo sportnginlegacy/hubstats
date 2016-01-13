@@ -13,13 +13,13 @@ module Hubstats
       verify_signature(request)
       
       kind = request.headers['X-Github-Event']
-      event = params.with_indifferent_access
+      event = event_params.with_indifferent_access
 
       raw_parameters = request.request_parameters
       event[:github_action] = raw_parameters["action"]
 
       eventsHandler = Hubstats::EventsHandler.new()
-      eventsHandler.route(event,kind)
+      eventsHandler.route(event, kind)
 
       render :nothing => true
     end
@@ -35,6 +35,14 @@ module Hubstats
       payload_body = request.body.read
       signature = 'sha1=' + OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new('sha1'), Hubstats.config.webhook_endpoint, payload_body)
       return 500, "Signatures didn't match!" unless Rack::Utils.secure_compare(signature, request.env['HTTP_X_HUB_SIGNATURE'])
+    end
+
+    # Private - Allows only these parameters to be added when creating an event
+    #
+    # Returns - hash of parameters
+    private
+    def event_params
+      params.permit!
     end
   end
 end

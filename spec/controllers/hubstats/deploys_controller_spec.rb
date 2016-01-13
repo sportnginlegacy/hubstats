@@ -59,11 +59,11 @@ module Hubstats
                        "repo_name" => "example/name",
                        "deployed_at" => "2009-02-03 03:00:00 -0500",
                        "pull_request_ids" => "33364992, 5870592, 33691392"})
+        expect(response).to have_http_status(200)
         expect(assigns(:deploy).git_revision).to eq("c1a2b37")
         expect(assigns(:deploy).deployed_at).to eq("2009-02-03 03:00:00 -0500")
         expect(assigns(:deploy).repo_id).to eq(505050)
         expect(assigns(:deploy).user_id).to eq(202020)
-        expect(response).to have_http_status(200)
       end
 
       it 'should create a deploy without a deployed_at because nil time turns into current time' do

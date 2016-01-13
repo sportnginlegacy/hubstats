@@ -1,5 +1,5 @@
 module Hubstats
-  class ApplicationController < ApplicationController
+  class ApplicationController < ::ApplicationController
     before_filter :set_time
 
     # Private - Reads the cookie, and then either sets @start_date and @end_date to be the cookie's values

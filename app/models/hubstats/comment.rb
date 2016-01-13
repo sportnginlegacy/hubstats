@@ -7,7 +7,7 @@ module Hubstats
     scope :created_in_date_range, lambda {|start_date, end_date| where("hubstats_comments.created_at BETWEEN ? AND ?", start_date, end_date)}
     scope :belonging_to_pull_request, lambda {|pull_request_id| where(pull_request_id: pull_request_id)}
     scope :belonging_to_user, lambda {|user_id| where(user_id: user_id)}
-    scope :belonging_to_team, lambda {|user_id| where(user_id: user_id.split(',')) if user_id}
+    scope :belonging_to_team, lambda {|user_ids| where(user_id: user_ids) if user_ids}
     scope :belonging_to_repo, lambda {|repo_id| where(repo_id: repo_id)}
 
     # Public - Gets the number of PRs that a user commented on that were not their own PR.
@@ -20,11 +20,6 @@ module Hubstats
       .where("hubstats_pull_requests.user_id != hubstats_comments.user_id")
       .group("hubstats_comments.user_id")
     }
-
-    attr_accessible :id, :html_url, :url, :pull_request_url, :diff_hunk, :path,
-      :position, :original_position, :line, :commit_id, :original_commit_id,
-      :body, :created_at, :updated_at, :user_id, :pull_request_id, :repo_id,
-      :kind
   
     belongs_to :user
     belongs_to :pull_request

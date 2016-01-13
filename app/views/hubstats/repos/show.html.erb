@@ -20,7 +20,7 @@
     <!-- Show all of the merged pull requests in a "condensed" view -->
     <div class="col col-lg-6">
       <h3> Merged Pull Requests</h3>
-      <%= render 'hubstats/tables/pulls-condensed'%>
+      <%= render 'hubstats/tables/pulls_condensed'%>
       <% if @pull_count > 20 %>
         <p class="pull-right"><%= link_to "View All", pulls_path(:repos => @repo.id) %></p>
       <% end %>
@@ -29,7 +29,7 @@
     <!-- Show all of the deploys in a "condensed" view -->
     <div class="col col-lg-6">
       <h3> Deployments </h3>
-      <%= render "hubstats/tables/deploys-condensed" %>
+      <%= render "hubstats/tables/deploys_condensed" %>
       <% if @deploy_count > 20 %>
         <p class="pull-right"><%= link_to "View All", deploys_path(:repos => @repo.id) %></p>
       <% end %>

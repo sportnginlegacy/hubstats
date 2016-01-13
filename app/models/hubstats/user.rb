@@ -3,9 +3,9 @@ module Hubstats
 
     # Various checks that can be used to filter and find info about users.
     scope :with_id, lambda {|user_id| where(id: user_id.split(',')) if user_id}
-    scope :only_active, having("comment_count > 0 OR pull_request_count > 0 OR deploy_count > 0")
-    scope :is_developer, having("pull_request_count > 0")
-    scope :is_reviewer, having("comment_count > 0")
+    scope :only_active, -> { having("comment_count > 0 OR pull_request_count > 0 OR deploy_count > 0") }
+    scope :is_developer, -> { having("pull_request_count > 0") }
+    scope :is_reviewer, -> { having("comment_count > 0") }
     scope :with_contributions, lambda {|start_date, end_date, repo_id| with_all_metrics_repos(start_date, end_date, repo_id) if repo_id}
 
     # Public - Counts all of the deploys for selected user that occurred between the start_date and end_date.
@@ -160,10 +160,6 @@ module Hubstats
       .joins("LEFT JOIN (#{deploys_count(start_date, end_date).to_sql}) AS deploys ON deploys.user_id = hubstats_users.id")
       .group("hubstats_users.id")
     }
-
-    attr_accessible :login, :id, :avatar_url, :gravatar_id, :url, :html_url, :followers_url,
-      :following_url, :gists_url, :starred_url, :subscriptions_url, :organizations_url,
-      :repos_url, :events_url, :received_events_url, :role, :site_admin, :created_at, :updated_at
     
     validates :id, presence: true, uniqueness: true
 
@@ -179,7 +175,7 @@ module Hubstats
     #
     # Returns - the user 
     def self.create_or_update(github_user)
-      github_user[:role] = github_user.delete :type  ##changing :type in to :role
+      github_user[:role] = github_user.delete :type  ##changing :type into :role
       github_user = github_user.to_h.with_indifferent_access unless github_user.is_a? Hash
 
       user_data = github_user.slice(*Hubstats::User.column_names.map(&:to_sym))

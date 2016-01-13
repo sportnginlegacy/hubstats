@@ -13,7 +13,7 @@ module Hubstats
       elsif params[:id]
         @users = Hubstats::User.where(id: params[:id].split(",")).order("login ASC")
       else
-        @users = Hubstats::User.only_active.with_all_metrics(@start_date, @end_date)
+        @users = Hubstats::User.with_all_metrics(@start_date, @end_date)
           .with_id(params[:users])
           .custom_order(params[:order])
           .paginate(:page => params[:page], :per_page => 15)

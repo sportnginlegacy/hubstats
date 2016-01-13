@@ -1,7 +1,6 @@
 class CreateHubstatsComments < ActiveRecord::Migration
   def change
     create_table :hubstats_comments do |t|
-      t.integer :id
       t.string :kind
       t.belongs_to :user
       t.belongs_to :pull_request
