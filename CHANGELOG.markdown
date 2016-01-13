@@ -1,7 +1,16 @@
+#### v0.7.0
+* Upgrading Hubstats to Rails 4.2.5
+
+  > Brian Bergstrom, Emma Sax: Andy Fleener: https://github.com/sportngin/hubstats/pull/93
+
 #### v0.6.0
 * Deleting unused columns from Hubstats database
 
   > Emma Sax: Brian Bergstrom: https://github.com/sportngin/hubstats/pull/97
+
+* Rake task should update teams based on whitelist; users show page should show team
+
+  > Emma Sax: Brian Bergstrom: https://github.com/sportngin/hubstats/pull/95
 
 #### v0.5.12
 * Restrict mysql2 dependency to compatible version
