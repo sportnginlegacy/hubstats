@@ -1,3 +1,8 @@
+#### v0.7.1
+* Change comment body to be text instead of string
+
+  > Emma Sax: Andy Fleener: https://github.com/sportngin/hubstats/pull/100
+
 #### v0.7.0
 * Upgrading Hubstats to Rails 4.2.5
 
