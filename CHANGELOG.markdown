@@ -1,3 +1,8 @@
+#### v0.7.2
+* Upgrading Hubstats to Ruby-2.3.0
+
+  > Emma Sax: Brian Bergstrom: https://github.com/sportngin/hubstats/pull/101
+
 #### v0.7.1
 * Change comment body to be text instead of string
 
