@@ -23,6 +23,7 @@ module Hubstats
         team = create(:team, :name => "Team Tests Passing", :hubstats => true, :id => 1)
         user1 = create(:user, :id => 101010, :login => "examplePerson1", :updated_at => Date.today)
         user2 = create(:user, :id => 202020, :login => "examplePerson2", :updated_at => Date.today)
+        user22 = create(:user, :id => 202021, :login => "examplePerson2", :updated_at => Date.today)
         repo = create(:repo, :updated_at => Date.today)
         team.users << user1
         team.users << user2
