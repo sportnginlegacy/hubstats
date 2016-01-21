@@ -26,6 +26,7 @@ module Hubstats
         repo = create(:repo, :updated_at => Date.today)
         team.users << user1
         team.users << user2
+        team.users << user2
         pull1 = create(:pull_request, :user => user1, :id => 303030, :team => team, :repo_id => repo.id, :updated_at => Date.today)
         pull2 = create(:pull_request, :user => user2, :id => 404040, :team => team, :repo => pull1.repo, :updated_at => Date.today)
         allow(Hubstats).to receive_message_chain(:config, :github_config, :[]).with("ignore_users_list") { ["user"] }
@@ -33,7 +34,9 @@ module Hubstats
         expect(assigns(:team)).to eq(team)
         expect(pull1.team_id).to eq(team.id)
         expect(pull2.team_id).to eq(team.id)
-        expect(assigns(:team).users).to contain_exactly(user1, user2)
+        expect(assigns(:team).users).to contain_exactly(user1, user2, user2)
+        expect(assigns(:users)).to contain_exactly(user1, user2)
+        expect(assigns(:active_user_count)).to eq(2)
         expect(response).to have_http_status(200)
       end
     end
