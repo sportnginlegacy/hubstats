@@ -1,3 +1,8 @@
+#### v0.7.3
+* Fixing bug that allowed users to be shown multiple times on teams show page
+
+  > Emma Sax: Brian Bergstrom: https://github.com/sportngin/hubstats/pull/102
+
 #### v0.7.2
 * Upgrading Hubstats to Ruby-2.3.0
 
