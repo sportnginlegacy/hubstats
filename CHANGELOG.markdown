@@ -1,3 +1,8 @@
+#### v0.7.4
+* Sort decorators for consistent behavior
+
+  > Brian Bergstrom: Emma Sax: https://github.com/sportngin/hubstats/pull/103
+
 #### v0.7.3
 * Fixing bug that allowed users to be shown multiple times on teams show page
 
