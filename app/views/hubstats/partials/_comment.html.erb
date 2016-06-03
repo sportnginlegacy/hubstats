@@ -9,9 +9,6 @@
   <div class="comment-info col-lg-10 col-md-10 col-sm-10">
     <%= link_to comment.user.login, user_path(comment.user) %> commented
     <%= "#{time_ago_in_words(comment.created_at)} ago "%> <br>
-    <div class="well">
-      <%= comment.body %>
-    </div>
   </div>
 
  <!-- Show the github octcat sign with a link to the comment on github -->
