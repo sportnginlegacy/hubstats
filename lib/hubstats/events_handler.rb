@@ -35,6 +35,7 @@ module Hubstats
       labels = Hubstats::GithubAPI.get_labels_for_pull(repo_name, new_pull.number)
       process_label_change(labels, payload) if payload[:action].include?('labeled') # When a new label is added/removed
       new_pull.add_labels(labels)
+      new_pull.save!
     end
 
     # Public - Gets the information for the new comment and updates it

@@ -17,8 +17,28 @@ module Hubstats
       it 'should add labels to pull request' do
         allow(PullRequest).to receive(:create_or_update) {pull}
         allow(Repo).to receive(:where) {[repo,repo]}
-        allow(GithubAPI).to receive(:get_labels_for_pull) {['low','high']}
-        expect(pull).to receive(:add_labels).with(['low','high'])
+        allow(GithubAPI).to receive(:get_labels_for_pull) {[{name: 'low'}, {name: 'high'}]}
+        expect(pull).to receive(:add_labels).with([{name: 'low'}, {name: 'high'}])
+        subject.route(payload, payload[:type])
+      end
+
+      it 'should add new labels to pull requests' do
+        payload[:action] = 'labeled'
+        payload[:label] = {name: 'new_label'}
+        allow(PullRequest).to receive(:create_or_update) {pull}
+        allow(Repo).to receive(:where) {[repo,repo]}
+        allow(GithubAPI).to receive(:get_labels_for_pull) {[{name: 'low'}, {name: 'high'}]}
+        expect(pull).to receive(:add_labels).with([{name: 'low'}, {name: 'high'}, {name: 'new_label'}])
+        subject.route(payload, payload[:type])
+      end
+
+      it 'should remove old labels from pull requests' do
+        payload[:action] = 'unlabeled'
+        payload[:label] = {name: 'old_label'}
+        allow(PullRequest).to receive(:create_or_update) {pull}
+        allow(Repo).to receive(:where) {[repo,repo]}
+        allow(GithubAPI).to receive(:get_labels_for_pull) {[{name: 'low'}, {name: 'high'}, {name: 'old_label'}]}
+        expect(pull).to receive(:add_labels).with([{name: 'low'}, {name: 'high'}])
         subject.route(payload, payload[:type])
       end
     end

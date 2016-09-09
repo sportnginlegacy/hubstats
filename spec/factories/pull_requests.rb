@@ -33,9 +33,21 @@ FactoryGirl.define do
   factory :pull_request_payload_hash, class:Hash do 
     id {Faker::Number.number(6).to_i}
     type "PullRequestEvent"
+    action 'opened'
     association :repository, factory: :repo_hash, strategy: :build
     association :pull_request, factory: :pull_request_hash, strategy: :build
     merged_by(:id => 202020)
     initialize_with { attributes } 
+  end
+
+  factory :pull_request_labeled_payload_hash, class:Hash do
+    id {Faker::Number.number(6).to_i}
+    type "PullRequestEvent"
+    action 'labeled'
+    label {{name: 'new_label'}}
+    association :repository, factory: :repo_hash, strategy: :build
+    association :pull_request, factory: :pull_request_hash, strategy: :build
+    merged_by(:id => 202020)
+    initialize_with { attributes }
   end
 end
