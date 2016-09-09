@@ -27,7 +27,7 @@ module Hubstats
     belongs_to :repo
     belongs_to :deploy
     belongs_to :team
-    has_and_belongs_to_many :labels, :join_table => "hubstats_labels_pull_requests"
+    has_and_belongs_to_many :labels, ->{ uniq }, :join_table => "hubstats_labels_pull_requests"
 
     # Public - Makes a new pull request from a GitHub webhook. Finds user_id and repo_id based on users and repos 
     # that are already in the Hubstats database. Updates the user_id of a deploy if the pull request has been merged in a deploy.
@@ -167,7 +167,7 @@ module Hubstats
       label = Hubstats::Label.first_or_create(payload[:label])
       if payload[:action] == 'labeled'
         labels << label
-      elsif
+      elsif payload[:action] == 'unlabeled'
         labels.delete(label)
       end
       labels
