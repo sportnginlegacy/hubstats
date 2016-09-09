@@ -1,3 +1,7 @@
+* Improved handling of labeling/unlabeling a PR
+
+  > Arvind Menon: Andy Fleener: https://github.com/sportngin/hubstats/pull/106
+
 #### v0.7.4
 * Sort decorators for consistent behavior
 
