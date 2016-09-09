@@ -28,7 +28,7 @@ module Hubstats
         allow(PullRequest).to receive(:create_or_update) {pull}
         allow(Repo).to receive(:where) {[repo,repo]}
         allow(GithubAPI).to receive(:get_labels_for_pull) {[{name: 'low'}, {name: 'high'}]}
-        expect(pull).to receive(:add_labels).with([{name: 'low'}, {name: 'high'}, {name: 'new_label'}])
+        expect(pull).to receive(:update_label).with(payload)
         subject.route(payload, payload[:type])
       end
 
@@ -38,7 +38,7 @@ module Hubstats
         allow(PullRequest).to receive(:create_or_update) {pull}
         allow(Repo).to receive(:where) {[repo,repo]}
         allow(GithubAPI).to receive(:get_labels_for_pull) {[{name: 'low'}, {name: 'high'}, {name: 'old_label'}]}
-        expect(pull).to receive(:add_labels).with([{name: 'low'}, {name: 'high'}])
+        expect(pull).to receive(:update_label).with(payload)
         subject.route(payload, payload[:type])
       end
     end

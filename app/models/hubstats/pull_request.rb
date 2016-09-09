@@ -54,10 +54,10 @@ module Hubstats
       if github_pull[:merged_by] && github_pull[:merged_by][:id]
         pull_data[:merged_by] = github_pull[:merged_by][:id]
         deploy = Hubstats::Deploy.where(id: pull.deploy_id, user_id: nil).first
-          if deploy
-            deploy.user_id = pull_data[:merged_by]
-            deploy.save!
-          end
+        if deploy
+          deploy.user_id = pull_data[:merged_by]
+          deploy.save!
+        end
       end
 
       if user.team && user.team.id
@@ -155,8 +155,22 @@ module Hubstats
     #
     # Returns - the new labels
     def add_labels(labels)
-      labels.map!{|label| Hubstats::Label.first_or_create(label) }
+      labels.map! { |label| Hubstats::Label.first_or_create(label) }
       self.labels = labels
+    end
+
+    # Public - Adds/remove a label based on the the webhook action
+    # @param payload Webhook payload#
+    # @return The list of labels after the update
+    def update_label(payload)
+      return unless payload[:label]
+      label = Hubstats::Label.first_or_create(payload[:label])
+      if payload[:action] == 'labeled'
+        labels << label
+      elsif
+        labels.delete(label)
+      end
+      labels
     end
   end
 end

@@ -276,7 +276,7 @@ module Hubstats
       end
     end
 
-    # Public - Routes to the correst setup methods to be used to update or create comments or PRs
+    # Public - Routes to the correct setup methods to be used to update or create comments or PRs
     #
     # object - the new thing to be updated or created
     # kind - the type of thing (pull comment, issue comment, normal comment, pull, or issue)
