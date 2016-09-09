@@ -22,17 +22,18 @@ module Hubstats
       end
     end
 
-    # Public - Gets the information for the new PR, makes the new PR, grabs the labels, and makes new labels
+    # Public - Gets the information for the PR, creates/updates the new PR, grabs the labels, and makes new labels
     #
     # payload - the information that we will use to get data off of
     #
-    # Returns - nothing, but makes the new PR and adds appropriate labels
+    # Returns - nothing, but creates/updates the PR and adds appropriate labels
     def pull_processor(payload)
       pull_request = payload[:pull_request]
       pull_request[:repository] = payload[:repository]
       new_pull = Hubstats::PullRequest.create_or_update(pull_request.with_indifferent_access)
       repo_name = Hubstats::Repo.where(id: new_pull.repo_id).first.full_name
-      labels = Hubstats::GithubAPI.get_labels_for_pull(repo_name, new_pull.number )
+      labels = Hubstats::GithubAPI.get_labels_for_pull(repo_name, new_pull.number)
+      process_label_change(labels, payload) if payload[:action].include?('labeled') # When a new label is added/removed
       new_pull.add_labels(labels)
     end
 
@@ -81,5 +82,25 @@ module Hubstats
         return nil
       end
     end
+
+    # Private - Processes a label change for a PR. This will either add or remove a label to the PR based on the payload
+    #
+    # labels - List of know labels for the PR
+    # payload - The webhook payload
+    #
+    # Returns - the list of labels for the PR
+    private
+    def process_label_change(labels, payload)
+      return unless payload[:label]
+      label = payload[:label].symbolize_keys
+      case (payload[:action])
+        when 'labeled'
+          labels.push(label).uniq! { |l| l[:name] }
+        when 'unlabeled'
+          labels.delete_if { |l| l[:name] == label[:name]}
+      end
+
+    end
+
   end
 end
