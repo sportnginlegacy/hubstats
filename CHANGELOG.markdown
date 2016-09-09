@@ -1,3 +1,4 @@
+#### v0.7.5
 * Improved handling of labeling/unlabeling a PR
 
   > Arvind Menon: Andy Fleener: https://github.com/sportngin/hubstats/pull/106
