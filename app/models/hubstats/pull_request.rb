@@ -27,7 +27,7 @@ module Hubstats
     belongs_to :repo
     belongs_to :deploy
     belongs_to :team
-    has_and_belongs_to_many :labels, :join_table => "hubstats_labels_pull_requests"
+    has_and_belongs_to_many :labels, ->{ uniq }, :join_table => "hubstats_labels_pull_requests"
 
     # Public - Makes a new pull request from a GitHub webhook. Finds user_id and repo_id based on users and repos 
     # that are already in the Hubstats database. Updates the user_id of a deploy if the pull request has been merged in a deploy.
@@ -54,10 +54,10 @@ module Hubstats
       if github_pull[:merged_by] && github_pull[:merged_by][:id]
         pull_data[:merged_by] = github_pull[:merged_by][:id]
         deploy = Hubstats::Deploy.where(id: pull.deploy_id, user_id: nil).first
-          if deploy
-            deploy.user_id = pull_data[:merged_by]
-            deploy.save!
-          end
+        if deploy
+          deploy.user_id = pull_data[:merged_by]
+          deploy.save!
+        end
       end
 
       if user.team && user.team.id
@@ -155,8 +155,22 @@ module Hubstats
     #
     # Returns - the new labels
     def add_labels(labels)
-      labels.map!{|label| Hubstats::Label.first_or_create(label) }
+      labels.map! { |label| Hubstats::Label.first_or_create(label) }
       self.labels = labels
+    end
+
+    # Public - Adds/remove a label based on the the webhook action
+    # @param payload Webhook payload#
+    # @return The list of labels after the update
+    def update_label(payload)
+      return unless payload[:label]
+      label = Hubstats::Label.first_or_create(payload[:label])
+      if payload[:action] == 'labeled'
+        labels << label
+      elsif payload[:action] == 'unlabeled'
+        labels.delete(label)
+      end
+      labels
     end
   end
 end

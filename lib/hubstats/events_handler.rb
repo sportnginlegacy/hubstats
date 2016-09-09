@@ -22,18 +22,23 @@ module Hubstats
       end
     end
 
-    # Public - Gets the information for the new PR, makes the new PR, grabs the labels, and makes new labels
+    # Public - Gets the information for the PR, creates/updates the new PR, grabs the labels, and makes new labels
     #
     # payload - the information that we will use to get data off of
     #
-    # Returns - nothing, but makes the new PR and adds appropriate labels
+    # Returns - nothing, but creates/updates the PR and adds appropriate labels
     def pull_processor(payload)
       pull_request = payload[:pull_request]
       pull_request[:repository] = payload[:repository]
       new_pull = Hubstats::PullRequest.create_or_update(pull_request.with_indifferent_access)
-      repo_name = Hubstats::Repo.where(id: new_pull.repo_id).first.full_name
-      labels = Hubstats::GithubAPI.get_labels_for_pull(repo_name, new_pull.number )
-      new_pull.add_labels(labels)
+      if payload[:action].include?('labeled')
+        new_pull.update_label(payload)
+      else
+        repo_name = Hubstats::Repo.where(id: new_pull.repo_id).first.full_name
+        labels = Hubstats::GithubAPI.get_labels_for_pull(repo_name, new_pull.number)
+        new_pull.add_labels(labels)
+      end
+      new_pull.save!
     end
 
     # Public - Gets the information for the new comment and updates it
