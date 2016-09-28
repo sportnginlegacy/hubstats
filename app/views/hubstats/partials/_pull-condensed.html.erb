@@ -7,7 +7,7 @@
   <div class="pull-info col-lg-9 col-md-9 col-sm-9 col-xs-8">
     <h4> 
       <%= link_to pull.repo.name, repo_path(pull.repo.name) %> /
-      <%= link_to pull.title, repo_pull_path({:repo => pull.repo.name, :id => pull.id}) %> 
+      <%= link_to pull.title, pull.html_url %> 
     </h4>
     by <%= link_to pull.user.login, user_path(pull.user) %>
     <% if pull.merged == '1'%>
@@ -22,10 +22,8 @@
   <!-- Show the pull request number and a link to the github PR -->
   <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2" >
     <div class="pull-right">
-      <%= pull.number %> 
-      <a class="subtle" href=<%= pull.html_url %> > 
-        <span class="octicon octicon-mark-github"></span>
-      </a>
+      <%= pull.number %>
+      <span class="octicon octicon-mark-github"></span>
       </span>
     </div>
   </div>
