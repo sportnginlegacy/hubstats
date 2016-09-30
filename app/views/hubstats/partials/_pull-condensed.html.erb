@@ -7,7 +7,7 @@
   <div class="pull-info col-lg-9 col-md-9 col-sm-9 col-xs-8">
     <h4> 
       <%= link_to pull.repo.name, repo_path(pull.repo.name) %> /
-      <%= link_to pull.title, pull.html_url %> 
+      <%= link_to pull.title, pull.html_url, :target => '_blank' %>
     </h4>
     by <%= link_to pull.user.login, user_path(pull.user) %>
     <% if pull.merged == '1'%>
