@@ -1,3 +1,8 @@
+#### v0.7.6
+* Links to the PR show page should instead route to GitHub
+
+  > Emma Sax: Olson3R: https://github.com/sportngin/hubstats/pull/107
+
 #### v0.7.5
 * Improved handling of labeling/unlabeling a PR
 
