@@ -98,7 +98,8 @@ module Hubstats
       grab_size = 250
       begin
         client = Hubstats::GithubAPI.client
-        all_teams_in_org = client.organization_teams(Hubstats.config.github_config["org_name"])
+        Octokit.auto_paginate = true
+        all_teams_in_org = Hubstats::GithubAPI.client.organization_teams(Hubstats.config.github_config["org_name"])
         team_list = Hubstats.config.github_config["team_list"] || []
 
         all_teams_in_org.each do |team|
