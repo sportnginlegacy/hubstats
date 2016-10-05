@@ -97,6 +97,7 @@ module Hubstats
     def self.update_teams
       grab_size = 250
       begin
+        Octokit.auto_paginate = true
         client = Hubstats::GithubAPI.client
         all_teams_in_org = client.organization_teams(Hubstats.config.github_config["org_name"])
         team_list = Hubstats.config.github_config["team_list"] || []
