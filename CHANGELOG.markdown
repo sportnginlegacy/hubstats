@@ -1,3 +1,8 @@
+#### v0.7.7
+* Fixing error where updating teams does not grab all of organization's teams
+
+  > Emma Sax: : https://github.com/sportngin/hubstats/pull/108
+
 #### v0.7.6
 * Links to the PR show page should instead route to GitHub
 
