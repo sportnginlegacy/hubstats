@@ -26,6 +26,10 @@ $(document).ready(function() {
     toggleOrder(queryParameters,$(this).attr('id'));
   });
 
+  $("#signoffs").on("click", function(){
+    toggleOrder(queryParameters,$(this).attr('id'));
+  });
+
   $("#netadditions").on("click", function(){
     toggleOrder(queryParameters,$(this).attr('id'));
   });

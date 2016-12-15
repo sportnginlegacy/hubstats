@@ -236,6 +236,8 @@ module Hubstats
           order("pull_request_count #{order}")
         when 'comments'
           order("comment_count #{order}")
+        when 'signoffs'
+          order("qa_signoff_count #{order}")
         when 'netadditions'
           order("additions - deletions #{order}")
         when 'name'
