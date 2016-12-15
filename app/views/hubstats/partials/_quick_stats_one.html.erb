@@ -43,6 +43,12 @@
     <h4> Comments </h4>
   </div>
 <% end %>
+<% if @stats_row_one.has_key? :qa_signoff_count %>
+  <div class="col col-lg-2 col-md-3 col-sm-3 col-xs-3 text-center">
+    <h1><%= @stats_row_one[:qa_signoff_count] %> </h1>
+    <h4> QA Signoffs </h4>
+  </div>
+<% end %>
 <% if @stats_row_one.has_key? :review_count %>
   <div class="col col-lg-2 col-md-3 col-sm-3 col-xs-3 text-center">
      <h1> <%= @stats_row_one[:review_count] %> </h1>

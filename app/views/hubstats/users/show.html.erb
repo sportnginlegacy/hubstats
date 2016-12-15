@@ -14,8 +14,18 @@
     </h4>
 
     <!-- Show all of the stats about the user -->
-    <%= render 'hubstats/partials/quick_stats_one' %>
+
+    <%= render 'hubstats/partials/quick_stats_one' %>    
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <%= render 'hubstats/partials/quick_stats_two' %>
   </div>
+
+  QA Signoffs: <% Hubstats::QaSignoff.belonging_to_user(@user.id).first.label_name %>
 
   <div class="row">
 
