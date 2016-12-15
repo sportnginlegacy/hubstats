@@ -123,7 +123,7 @@ module Hubstats
     #
     # Returns - the count of deploys, pull requests, QA Signoffs, and comments
     scope :pull_comment_deploy_count_by_repo, lambda {|start_date, end_date, repo_id|
-      select("hubstats_users.*, pull_request_count, comment_count, deploy_count")
+      select("hubstats_users.*, pull_request_count, comment_count, qa_signoff_count, deploy_count")
       .joins("LEFT JOIN (#{pull_requests_count_by_repo(start_date, end_date, repo_id).to_sql}) AS pull_requests ON pull_requests.user_id = hubstats_users.id")
       .joins("LEFT JOIN (#{comments_count_by_repo(start_date, end_date, repo_id).to_sql}) AS comments ON comments.user_id = hubstats_users.id")
       .joins("LEFT JOIN (#{qa_signoffs_count_by_repo(start_date, end_date, repo_id).to_sql}) AS qa_signoffs ON qa_signoffs.user_id = hubstats_users.id")
@@ -170,7 +170,7 @@ module Hubstats
     # 
     # Returns - all of the stats about the user
     scope :with_all_metrics, lambda {|start_date, end_date|
-      select("hubstats_users.*, deploy_count, pull_request_count, comment_count, additions, deletions")
+      select("hubstats_users.*, deploy_count, pull_request_count, comment_count, qa_signoff_count, additions, deletions")
       .joins("LEFT JOIN (#{net_additions_count(start_date, end_date).to_sql}) AS net_additions ON net_additions.user_id = hubstats_users.id")
       .joins("LEFT JOIN (#{pull_requests_count(start_date, end_date).to_sql}) AS pull_requests ON pull_requests.user_id = hubstats_users.id")
       .joins("LEFT JOIN (#{comments_count(start_date, end_date).to_sql}) AS comments ON comments.user_id = hubstats_users.id")
