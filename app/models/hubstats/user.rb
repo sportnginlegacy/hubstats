@@ -33,6 +33,13 @@ module Hubstats
        .joins(sanitize_sql_array(["LEFT JOIN hubstats_comments ON hubstats_comments.user_id = hubstats_users.id AND (hubstats_comments.created_at BETWEEN ? AND ?)", start_date, end_date]))
        .group("hubstats_users.id")
     }
+
+    scope :qa_signoffs_count, lambda {|start_date, end_date|
+      select("hubstats_users.id as user_id")
+       .select("IFNULL(COUNT(DISTINCT hubstats_qa_signoffs.id),0) AS qa_signoff_count")
+       .joins(sanitize_sql_array(["LEFT JOIN hubstats_qa_signoffs ON hubstats_qa_signoffs.user_id = hubstats_users.id AND (hubstats_qa_signoffs.signed_at BETWEEN ? AND ?)", start_date, end_date]))
+       .group("hubstats_users.id")
+    }
  
     # Public - Counts all of the merged pull requests for selected user that occurred between the start_date and end_date.
     # 
@@ -52,11 +59,12 @@ module Hubstats
     # start_date - the start of the date range
     # end_date - the end of the data range
     #
-    # Returns - the count of deploys, pull requests, and comments
+    # Returns - the count of deploys, pull requests, QA Signoffs, and comments
     scope :pull_comment_deploy_count, lambda {|start_date, end_date|
-      select("hubstats_users.*, pull_request_count, comment_count, deploy_count")
+      select("hubstats_users.*, pull_request_count, comment_count, qa_signoff_count, deploy_count")
       .joins("LEFT JOIN (#{pull_requests_count(start_date, end_date).to_sql}) AS pull_requests ON pull_requests.user_id = hubstats_users.id")
       .joins("LEFT JOIN (#{comments_count(start_date, end_date).to_sql}) AS comments ON comments.user_id = hubstats_users.id")
+      .joins("LEFT JOIN (#{qa_signoffs_count(start_date, end_date).to_sql}) AS qa_signoffs ON qa_signoffs.user_id = hubstats_users.id")
       .joins("LEFT JOIN (#{deploys_count(start_date, end_date).to_sql}) AS deploys ON deploys.user_id = hubstats_users.id")
       .group("hubstats_users.id")
     }
@@ -87,6 +95,13 @@ module Hubstats
       .group("hubstats_users.id")
     }
 
+    scope :qa_signoffs_count_by_repo, lambda {|start_date, end_date, repo_id|
+      select("hubstats_users.id as user_id")
+      .select("COUNT(DISTINCT hubstats_qa_signoffs.id) AS qa_signoff_count")
+      .joins(sanitize_sql_array(["LEFT JOIN hubstats_qa_signoffs ON hubstats_qa_signoffs.user_id = hubstats_users.id AND (hubstats_qa_signoffs.signed_at BETWEEN ? AND ?) AND (hubstats_qa_signoffs.repo_id LIKE ?)", start_date, end_date, repo_id]))
+      .group("hubstats_users.id")
+    }
+
     # Public - Counts all of the pull requests for selected user that occurred between the start_date and end_date and belong to the repos.
     # 
     # start_date - the start of the date range
@@ -106,11 +121,12 @@ module Hubstats
     # start_date - the start of the date range
     # end_date - the end of the data range
     #
-    # Returns - the count of deploys, pull requests, and comments
+    # Returns - the count of deploys, pull requests, QA Signoffs, and comments
     scope :pull_comment_deploy_count_by_repo, lambda {|start_date, end_date, repo_id|
       select("hubstats_users.*, pull_request_count, comment_count, deploy_count")
       .joins("LEFT JOIN (#{pull_requests_count_by_repo(start_date, end_date, repo_id).to_sql}) AS pull_requests ON pull_requests.user_id = hubstats_users.id")
       .joins("LEFT JOIN (#{comments_count_by_repo(start_date, end_date, repo_id).to_sql}) AS comments ON comments.user_id = hubstats_users.id")
+      .joins("LEFT JOIN (#{qa_signoffs_count_by_repo(start_date, end_date, repo_id).to_sql}) AS qa_signoffs ON qa_signoffs.user_id = hubstats_users.id")
       .joins("LEFT JOIN (#{deploys_count_by_repo(start_date, end_date, repo_id).to_sql}) AS deploys ON deploys.user_id = hubstats_users.id")
       .group("hubstats_users.id")
     }
@@ -138,10 +154,11 @@ module Hubstats
     # 
     # Returns - all of the stats about the user
     scope :with_all_metrics_repos, lambda {|start_date, end_date, repos|
-      select("hubstats_users.*, deploy_count, pull_request_count, comment_count, additions, deletions")
+      select("hubstats_users.*, deploy_count, pull_request_count, comment_count, qa_signoff_count, additions, deletions")
       .joins("LEFT JOIN (#{net_additions_count(start_date, end_date).to_sql}) AS net_additions ON net_additions.user_id = hubstats_users.id")
       .joins("LEFT JOIN (#{pull_requests_count_by_repo(start_date, end_date, repos).to_sql}) AS pull_requests ON pull_requests.user_id = hubstats_users.id")
       .joins("LEFT JOIN (#{comments_count_by_repo(start_date, end_date, repos).to_sql}) AS comments ON comments.user_id = hubstats_users.id")
+      .joins("LEFT JOIN (#{qa_signoffs_count_by_repo(start_date, end_date, repos).to_sql} AS qa_signoffs ON qa_signoffs.user_id = hubstats_users.id")
       .joins("LEFT JOIN (#{deploys_count_by_repo(start_date, end_date, repos).to_sql}) AS deploys ON deploys.user_id = hubstats_users.id")
       .group("hubstats_users.id")
     }
@@ -157,6 +174,7 @@ module Hubstats
       .joins("LEFT JOIN (#{net_additions_count(start_date, end_date).to_sql}) AS net_additions ON net_additions.user_id = hubstats_users.id")
       .joins("LEFT JOIN (#{pull_requests_count(start_date, end_date).to_sql}) AS pull_requests ON pull_requests.user_id = hubstats_users.id")
       .joins("LEFT JOIN (#{comments_count(start_date, end_date).to_sql}) AS comments ON comments.user_id = hubstats_users.id")
+      .joins("LEFT JOIN (#{qa_signoffs_count(start_date, end_date).to_sql}) AS qa_signoffs ON qa_signoffs.user_id = hubstats_users.id")
       .joins("LEFT JOIN (#{deploys_count(start_date, end_date).to_sql}) AS deploys ON deploys.user_id = hubstats_users.id")
       .group("hubstats_users.id")
     }

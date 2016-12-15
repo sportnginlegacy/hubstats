@@ -32,6 +32,9 @@ module Hubstats
       pull_request[:repository] = payload[:repository]
       new_pull = Hubstats::PullRequest.create_or_update(pull_request.with_indifferent_access)
       if payload[:action].include?('labeled')
+        if payload[:label][:name].include?('qa-approved')
+          Hubstats::QaSignoff.first_or_create(payload[:repository][:id], payload[:pull_request][:id], payload[:sender][:id])
+        end
         new_pull.update_label(payload)
       else
         repo_name = Hubstats::Repo.where(id: new_pull.repo_id).first.full_name

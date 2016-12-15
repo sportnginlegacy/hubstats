@@ -11,14 +11,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160113182419) do
+ActiveRecord::Schema.define(version: 20161215193314) do
 
   create_table "hubstats_comments", force: :cascade do |t|
     t.string   "html_url",         limit: 255
     t.string   "url",              limit: 255
     t.string   "pull_request_url", limit: 255
     t.integer  "path",             limit: 4
-    t.string   "body_string",      limit: 255
     t.string   "kind",             limit: 255
     t.integer  "user_id",          limit: 4
     t.integer  "pull_request_id",  limit: 4
@@ -81,6 +80,18 @@ ActiveRecord::Schema.define(version: 20160113182419) do
   add_index "hubstats_pull_requests", ["repo_id"], name: "index_hubstats_pull_requests_on_repo_id", using: :btree
   add_index "hubstats_pull_requests", ["team_id"], name: "index_hubstats_pull_requests_on_team_id", using: :btree
   add_index "hubstats_pull_requests", ["user_id"], name: "index_hubstats_pull_requests_on_user_id", using: :btree
+
+  create_table "hubstats_qa_signoffs", force: :cascade do |t|
+    t.integer  "user_id",         limit: 4
+    t.integer  "repo_id",         limit: 4
+    t.integer  "pull_request_id", limit: 4
+    t.string   "label_name",      limit: 255
+    t.datetime "signed_at"
+  end
+
+  add_index "hubstats_qa_signoffs", ["pull_request_id"], name: "index_hubstats_qa_signoffs_on_pull_request_id", using: :btree
+  add_index "hubstats_qa_signoffs", ["repo_id"], name: "index_hubstats_qa_signoffs_on_repo_id", using: :btree
+  add_index "hubstats_qa_signoffs", ["user_id"], name: "index_hubstats_qa_signoffs_on_user_id", using: :btree
 
   create_table "hubstats_repos", force: :cascade do |t|
     t.string   "name",       limit: 255
