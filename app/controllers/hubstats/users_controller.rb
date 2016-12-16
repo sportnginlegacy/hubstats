@@ -14,6 +14,7 @@ module Hubstats
         @users = Hubstats::User.where(id: params[:id].split(",")).order("login ASC")
       else
         @users = Hubstats::User.with_all_metrics(@start_date, @end_date)
+          .where("login NOT IN (?)", Hubstats.config.github_config["ignore_users_list"])
           .with_id(params[:users])
           .custom_order(params[:order])
           .paginate(:page => params[:page], :per_page => 15)
