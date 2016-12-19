@@ -11,6 +11,7 @@ module Hubstats
         user3 = create(:user, :id => 303030, :login => "examplePerson3", :updated_at => Date.today)
         user4 = create(:user, :id => 404040, :login => "examplePerson4", :updated_at => Date.today)
         expect(Hubstats::User).to receive_message_chain("with_id.custom_order.paginate").and_return([user2, user3, user1, user4])
+        allow(Hubstats).to receive_message_chain(:config, :github_config, :[]).with("ignore_users_list") { ["user"] }
         get :index
         expect(response).to have_http_status(200)
       end
@@ -26,6 +27,7 @@ module Hubstats
         deploy2 = create(:deploy, :user_id => 101010)
         comment1 = create(:comment, :user => user, :updated_at => Date.today)
         comment2 = create(:comment, :user => user, :updated_at => Date.today)
+        allow(Hubstats).to receive_message_chain(:config, :github_config, :[]).with("ignore_users_list") { ["user"] }
         get :show, id: "examplePerson"
         expect(assigns(:user)).to eq(user)
         expect(assigns(:user).pull_requests).to contain_exactly(pull1, pull2)
