@@ -25,8 +25,6 @@
     <%= render 'hubstats/partials/quick_stats_two' %>
   </div>
 
-  QA Signoffs: <% Hubstats::QaSignoff.belonging_to_user(@user.id).first.label_name %>
-
   <div class="row">
 
     <!-- Show all of this user's merged pull requests in a "condensed" view -->
