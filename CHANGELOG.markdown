@@ -1,3 +1,8 @@
+#### v0.8.0
+* Do not show ignored users on lists, in stats, etc
+
+  > Emma Sax: Unknown User: https://github.com/sportngin/hubstats/pull/111
+
 #### v0.7.7
 * Fixing error where updating teams does not grab all of organization's teams
 
