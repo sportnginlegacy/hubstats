@@ -5,6 +5,7 @@ module Hubstats
 
     # Various checks that can be used to filter and find info about comments.
     scope :created_in_date_range, lambda {|start_date, end_date| where("hubstats_comments.created_at BETWEEN ? AND ?", start_date, end_date)}
+    scope :ignore_comments_by, lambda {|user_ids| where("user_id NOT IN (?)", user_ids) if user_ids}
     scope :belonging_to_pull_request, lambda {|pull_request_id| where(pull_request_id: pull_request_id)}
     scope :belonging_to_user, lambda {|user_id| where(user_id: user_id)}
     scope :belonging_to_team, lambda {|user_ids| where(user_id: user_ids) if user_ids}

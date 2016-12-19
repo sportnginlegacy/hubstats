@@ -3,10 +3,11 @@ module Hubstats
 
     # Various checks that can be used to filter and find info about users.
     scope :with_id, lambda {|user_id| where(id: user_id.split(',')) if user_id}
-    scope :only_active, -> { having("comment_count > 0 OR pull_request_count > 0 OR deploy_count > 0") }
-    scope :is_developer, -> { having("pull_request_count > 0") }
-    scope :is_reviewer, -> { having("comment_count > 0") }
+    scope :only_active, -> { where("login NOT IN (?)", Hubstats.config.github_config["ignore_users_list"]).having("comment_count > 0 OR pull_request_count > 0 OR deploy_count > 0") }
+    scope :is_developer, -> { where("login NOT IN (?)", Hubstats.config.github_config["ignore_users_list"]).having("pull_request_count > 0") }
+    scope :is_reviewer, -> { where("login NOT IN (?)", Hubstats.config.github_config["ignore_users_list"]).having("comment_count > 0") }
     scope :with_contributions, lambda {|start_date, end_date, repo_id| with_all_metrics_repos(start_date, end_date, repo_id) if repo_id}
+    scope :ignore_users_ids, -> { where("login IN (?)", Hubstats.config.github_config["ignore_users_list"]).pluck(:id) }
 
     # Public - Counts all of the deploys for selected user that occurred between the start_date and end_date.
     # 

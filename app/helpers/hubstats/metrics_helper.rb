@@ -26,14 +26,14 @@ module Hubstats
     #
     # Returns - the number of pull requests
     def get_pull_count
-      Hubstats::PullRequest.merged_in_date_range(@start_date, @end_date).count(:all)
+      Hubstats::PullRequest.merged_in_date_range(@start_date, @end_date).ignore_pulls_by(Hubstats::User.ignore_users_ids).count(:all)
     end
 
     # Public - Gets the number of comments within the start date and end date
     #
     # Returns - the number of comments
     def get_comment_count
-      Hubstats::Comment.created_in_date_range(@start_date, @end_date).count(:all)
+      Hubstats::Comment.created_in_date_range(@start_date, @end_date).ignore_comments_by(Hubstats::User.ignore_users_ids).count(:all)
     end
 
     # Public - Gets the number of comments per reviewer within the start date and end date
