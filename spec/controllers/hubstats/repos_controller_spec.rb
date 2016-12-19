@@ -22,6 +22,7 @@ module Hubstats
                               :name => "goosey",
                               :full_name => "sportngin/goosey",
                               :updated_at => Date.today)
+        allow(Hubstats).to receive_message_chain(:config, :github_config, :[]).with("ignore_users_list") { ["user"] }
         get :index
         expect(assigns(:repos)).to contain_exactly(repo2, repo1, repo3, repo4)
       end
@@ -43,6 +44,7 @@ module Hubstats
                                       :user => user)
         deploy1 = create(:deploy, :repo_id => 101010)
         deploy2 = create(:deploy, :repo_id => 101010)
+        allow(Hubstats).to receive_message_chain(:config, :github_config, :[]).with("ignore_users_list") { ["user"] }
         get :show, repo: repo.name
         expect(assigns(:repo)).to eq(repo)
         expect(assigns(:repo).pull_requests).to contain_exactly(pull1, pull2)
@@ -71,6 +73,7 @@ module Hubstats
                               :full_name => "sportngin/goosey",
                               :updated_at => Date.today)
         expect(Hubstats::Repo).to receive_message_chain("with_id.custom_order.paginate").and_return([repo1, repo2, repo3, repo4])
+        allow(Hubstats).to receive_message_chain(:config, :github_config, :[]).with("ignore_users_list") { ["user"] }
         get :index
         expect(response).to have_http_status(200)
       end
