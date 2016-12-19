@@ -28,11 +28,11 @@ module Hubstats
     #
     # Returns - the QA Signoff
     def self.first_or_create(repo_id, pr_id, user_id)
-      QaSignoff.new(user_id: user_id,
-                    repo_id: repo_id,
-                    pull_request_id: pr_id,
-                    label_name: 'qa-approved',
-                    signed_at: Time.now.getutc)
+      QaSignoff.create(user_id: user_id,
+                       repo_id: repo_id,
+                       pull_request_id: pr_id,
+                       label_name: 'qa-approved',
+                       signed_at: Time.now.getutc)
     end
 
     # Public - Deletes the QA Signoff of the PR that is passed in.
@@ -42,7 +42,8 @@ module Hubstats
     #
     # Returns - the deleted QA Signoff
     def self.remove_signoff(repo_id, pr_id)
-      Hubstats::QaSignoff.where(repo_id: repo_id).where(pull_request_id: pr_id).first.destroy
+      signoff = Hubstats::QaSignoff.where(repo_id: repo_id).where(pull_request_id: pr_id).first.destroy
+      signoff.save!
     end
   end
 end
