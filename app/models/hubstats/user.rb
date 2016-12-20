@@ -35,6 +35,12 @@ module Hubstats
        .group("hubstats_users.id")
     }
 
+    # Public - Counts all of the QA Signoffs for selected user that were signed between the start_date and end_date.
+    # 
+    # start_date - the start of the date range
+    # end_date - the end of the data range
+    # 
+    # Returns - count of QA Signoffs
     scope :qa_signoffs_count, lambda {|start_date, end_date|
       select("hubstats_users.id as user_id")
        .select("IFNULL(COUNT(DISTINCT hubstats_qa_signoffs.id),0) AS qa_signoff_count")
@@ -55,7 +61,7 @@ module Hubstats
       .group("hubstats_users.id")
     }
 
-    # Public - Counts all of the merged pull requests, deploys, and comments that occurred between the start_date and end_date that belong to a user.
+    # Public - Counts all of the merged pull requests, deploys, QA Signoffs, and comments that occurred between the start_date and end_date that belong to a user.
     #
     # start_date - the start of the date range
     # end_date - the end of the data range
@@ -96,6 +102,12 @@ module Hubstats
       .group("hubstats_users.id")
     }
 
+    # Public - Counts all of the QA Signoffs for selected user that were signed between the start_date and end_date and belong to the repos.
+    # 
+    # start_date - the start of the date range
+    # end_date - the end of the data range
+    # 
+    # Returns - count of QA Signoffs
     scope :qa_signoffs_count_by_repo, lambda {|start_date, end_date, repo_id|
       select("hubstats_users.id as user_id")
       .select("COUNT(DISTINCT hubstats_qa_signoffs.id) AS qa_signoff_count")
@@ -116,7 +128,7 @@ module Hubstats
       .group("hubstats_users.id")
     }
 
-    # Public - Counts all of the merged pull requests, deploys, and comments that belong to a repository and belong to a user and occurred between 
+    # Public - Counts all of the merged pull requests, deploys, QA Signoffs and comments that belong to a repository and belong to a user and occurred between 
     # the start_date and end_date.
     #
     # start_date - the start of the date range
@@ -147,7 +159,7 @@ module Hubstats
       .group("hubstats_users.id")
     }
 
-    # Public - Joins all of the metrics together for selected repository: average additions and deletions, comments, pull requests, and deploys.
+    # Public - Joins all of the metrics together for selected repository: average additions and deletions, comments, pull requests, QA Signoffs and deploys.
     # However, will only count those that also have something to do with the repos passed in.
     # 
     # start_date - the start of the date range
@@ -164,7 +176,7 @@ module Hubstats
       .group("hubstats_users.id")
     }
 
-    # Public - Joins all of the metrics together for selected user: average additions and deletions, comments, pull requests, and deploys.
+    # Public - Joins all of the metrics together for selected user: average additions and deletions, comments, pull requests, QA Signoffs and deploys.
     # 
     # start_date - the start of the date range
     # end_date - the end of the data range
