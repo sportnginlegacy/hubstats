@@ -9,6 +9,7 @@ module Hubstats
     def index
       @qa_signoffs = Hubstats::QaSignoff.includes(:repo, :pull_request, :user)
         .belonging_to_users(params[:users])
+        .belonging_to_repos(params[:repos])
         .group_by(params[:group])
         .paginate(:page => params[:page], :per_page => 15)
 
