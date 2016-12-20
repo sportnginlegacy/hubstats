@@ -15,6 +15,7 @@ module Hubstats
       end
 
       it 'should add labels to pull request' do
+        payload[:github_action] = 'created'
         allow(PullRequest).to receive(:create_or_update) {pull}
         allow(Repo).to receive(:where) {[repo,repo]}
         allow(GithubAPI).to receive(:get_labels_for_pull) {[{name: 'low'}, {name: 'high'}]}
@@ -23,7 +24,7 @@ module Hubstats
       end
 
       it 'should add new labels to pull requests' do
-        payload[:action] = 'labeled'
+        payload[:github_action] = 'labeled'
         payload[:label] = {name: 'new_label'}
         allow(PullRequest).to receive(:create_or_update) {pull}
         allow(Repo).to receive(:where) {[repo,repo]}
@@ -33,7 +34,7 @@ module Hubstats
       end
 
       it 'should remove old labels from pull requests' do
-        payload[:action] = 'unlabeled'
+        payload[:github_action] = 'unlabeled'
         payload[:label] = {name: 'old_label'}
         allow(PullRequest).to receive(:create_or_update) {pull}
         allow(Repo).to receive(:where) {[repo,repo]}
