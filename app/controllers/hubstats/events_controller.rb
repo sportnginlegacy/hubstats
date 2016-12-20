@@ -17,7 +17,6 @@ module Hubstats
 
       raw_parameters = request.request_parameters
       event[:github_action] = raw_parameters["action"]
-      Rails.logger.warn "\n\n\n\n\n ---------------- \n #{event.inspect} \n\n\n -----------"
 
       eventsHandler = Hubstats::EventsHandler.new()
       eventsHandler.route(event, kind)

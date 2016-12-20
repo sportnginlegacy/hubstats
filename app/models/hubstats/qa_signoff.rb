@@ -42,7 +42,8 @@ module Hubstats
     #
     # Returns - the deleted QA Signoff
     def self.remove_signoff(repo_id, pr_id)
-      signoff = Hubstats::QaSignoff.where(repo_id: repo_id).where(pull_request_id: pr_id).first.destroy
+      signoff = Hubstats::QaSignoff.where(repo_id: repo_id).where(pull_request_id: pr_id).first
+      signoff.destroy if signoff
       signoff.save!
     end
   end
