@@ -1,3 +1,8 @@
+#### v0.9.1
+* The index between PR_ID and QA Signoff should be unique
+
+  > Emma Sax: Unknown User, Luke Ludwig: https://github.com/sportngin/hubstats/pull/112
+
 #### v0.9.0
 * Add a way to show a QA Signoff count on Users list page
 
