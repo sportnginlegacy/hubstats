@@ -161,7 +161,7 @@ module Hubstats
     end
 
     # Public - Adds/remove a label based on the the webhook action
-    # @param payload Webhook payload#
+    # @param payload Webhook
     # @return The list of labels after the update
     def update_label(payload)
       return unless payload[:label]

@@ -22,7 +22,8 @@ module Hubstats
       end
     end
 
-    # Public - Gets the information for the PR, creates/updates the new PR, grabs the labels, and makes new labels
+    # Public - Gets the information for the PR, creates/updates the new PR, grabs the labels, and makes new labels;
+    #  if the label qa-approved is added or removed, a new QA Signoff record will be made
     #
     # payload - the information that we will use to get data off of
     #
@@ -31,7 +32,12 @@ module Hubstats
       pull_request = payload[:pull_request]
       pull_request[:repository] = payload[:repository]
       new_pull = Hubstats::PullRequest.create_or_update(pull_request.with_indifferent_access)
-      if payload[:action].include?('labeled')
+      if payload[:github_action].include?('labeled')
+        if payload[:github_action].include?('unlabeled') && payload[:label][:name].include?('qa-approved')
+          Hubstats::QaSignoff.remove_signoff(payload[:repository][:id], payload[:pull_request][:id])
+        elsif payload[:label][:name].include?('qa-approved')
+          Hubstats::QaSignoff.first_or_create(payload[:repository][:id], payload[:pull_request][:id], payload[:sender][:id])
+        end
         new_pull.update_label(payload)
       else
         repo_name = Hubstats::Repo.where(id: new_pull.repo_id).first.full_name

@@ -36,6 +36,7 @@ module Hubstats
       @pull_count = Hubstats::PullRequest.belonging_to_user(@user.id).merged_in_date_range(@start_date, @end_date).count(:all)
       @deploys = Hubstats::Deploy.belonging_to_user(@user.id).deployed_in_date_range(@start_date, @end_date).order("deployed_at DESC").limit(20)
       @deploy_count = Hubstats::Deploy.belonging_to_user(@user.id).deployed_in_date_range(@start_date, @end_date).count(:all)
+      @qa_signoff_count = Hubstats::QaSignoff.belonging_to_user(@user.id).signed_within_date_range(@start_date, @end_date).count(:all)
       @comment_count = Hubstats::Comment.belonging_to_user(@user.id).created_in_date_range(@start_date, @end_date).count(:all)
       @net_additions = Hubstats::PullRequest.merged_in_date_range(@start_date, @end_date).belonging_to_user(@user.id).sum(:additions).to_i -
                        Hubstats::PullRequest.merged_in_date_range(@start_date, @end_date).belonging_to_user(@user.id).sum(:deletions).to_i
@@ -55,6 +56,9 @@ module Hubstats
         pull_count: @pull_count,
         deploy_count: @deploy_count,
         comment_count: @comment_count,
+        qa_signoff_count: @qa_signoff_count
+      }
+      @stats_row_two = {
         avg_additions: @additions.round.to_i,
         avg_deletions: @deletions.round.to_i,
         net_additions: @net_additions
