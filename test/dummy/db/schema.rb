@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161215193314) do
+ActiveRecord::Schema.define(version: 20161222173633) do
 
   create_table "hubstats_comments", force: :cascade do |t|
     t.string   "html_url",         limit: 255
@@ -89,7 +89,7 @@ ActiveRecord::Schema.define(version: 20161215193314) do
     t.datetime "signed_at"
   end
 
-  add_index "hubstats_qa_signoffs", ["pull_request_id"], name: "index_hubstats_qa_signoffs_on_pull_request_id", using: :btree
+  add_index "hubstats_qa_signoffs", ["pull_request_id"], name: "index_hubstats_qa_signoffs_on_pull_request_id", unique: true, using: :btree
   add_index "hubstats_qa_signoffs", ["repo_id"], name: "index_hubstats_qa_signoffs_on_repo_id", using: :btree
   add_index "hubstats_qa_signoffs", ["user_id"], name: "index_hubstats_qa_signoffs_on_user_id", using: :btree
 
