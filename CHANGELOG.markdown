@@ -1,3 +1,8 @@
+#### v0.9.0
+* Add a way to show a QA Signoff count on Users list page
+
+  > Emma Sax: Unknown User: https://github.com/sportngin/hubstats/pull/110
+
 #### v0.8.0
 * Do not show ignored users on lists, in stats, etc
 
