@@ -171,10 +171,10 @@ module Hubstats
       Rails.logger.warn "payload PR: #{payload[:pull_request][:title]}"
       Rails.logger.warn "payload label: #{payload[:label][:name]}"
       label = Hubstats::Label.first_or_create(payload[:label])
-      if payload[:action] == 'labeled'
+      if payload[:github_action] == 'labeled'
         Rails.logger.warn "We're adding the label to the list of labels"
         labels << label
-      elsif payload[:action] == 'unlabeled'
+      elsif payload[:github_action] == 'unlabeled'
         labels.delete(label)
       end
       puts "Labels: #{labels}"
