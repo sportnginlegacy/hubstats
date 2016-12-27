@@ -156,6 +156,7 @@ module Hubstats
     #
     # Returns - the new labels
     def add_labels(labels)
+      Rails.logger.warn "We are adding some labels"
       labels.map! { |label| Hubstats::Label.first_or_create(label) }
       self.labels = labels
     end
@@ -164,7 +165,9 @@ module Hubstats
     # @param payload Webhook
     # @return The list of labels after the update
     def update_label(payload)
+      Rails.logger.warn "We are updating some labels"
       return unless payload[:label]
+      Rails.logger.warn "We did not return; proceeding"
       label = Hubstats::Label.first_or_create(payload[:label])
       if payload[:action] == 'labeled'
         labels << label
