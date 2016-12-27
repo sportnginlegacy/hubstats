@@ -168,12 +168,16 @@ module Hubstats
       Rails.logger.warn "We are updating some labels"
       return unless payload[:label]
       Rails.logger.warn "We did not return; proceeding"
+      Rails.logger.warn "payload PR: #{payload[:pull_request][:title]}"
+      Rails.logger.warn "payload label: #{payload[:label][:name]}"
       label = Hubstats::Label.first_or_create(payload[:label])
       if payload[:action] == 'labeled'
+        Rails.logger.warn "We're adding the label to the list of labels"
         labels << label
       elsif payload[:action] == 'unlabeled'
         labels.delete(label)
       end
+      puts "Labels: #{labels}"
       labels
     end
   end
