@@ -27,9 +27,13 @@ module Hubstats
     # user_id - the id of the user who added the label
     #
     # Returns - the QA Signoff
-    def self.first_or_create(repo_id, pr_id, user_id)
+    def self.first_or_create(repo_id, pr_id, user_id, paylaod)
       existing = Hubstats::QaSignoff.where(repo_id: repo_id).where(pull_request_id: pr_id)
       if existing.empty?
+        Rails.logger.warn "!!!!!!!! We will make a new QA Signoff"
+        Rails.logger.warn "Payload action: #{paylaod[:github_action]}"
+        Rails.logger.warn "Payload PR #: #{payload[:number]}"
+        Rails.logger.warn "Time: #{Time.now.getutc}"
         QaSignoff.create(user_id: user_id,
                          repo_id: repo_id,
                          pull_request_id: pr_id,

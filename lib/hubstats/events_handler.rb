@@ -36,7 +36,7 @@ module Hubstats
         if payload[:github_action].include?('unlabeled') && payload[:label][:name].include?('qa-approved')
           Hubstats::QaSignoff.remove_signoff(payload[:repository][:id], payload[:pull_request][:id])
         elsif payload[:label][:name].include?('qa-approved')
-          Hubstats::QaSignoff.first_or_create(payload[:repository][:id], payload[:pull_request][:id], payload[:sender][:id])
+          Hubstats::QaSignoff.first_or_create(payload[:repository][:id], payload[:pull_request][:id], payload[:sender][:id], payload)
         end
         new_pull.update_label(payload)
       else
