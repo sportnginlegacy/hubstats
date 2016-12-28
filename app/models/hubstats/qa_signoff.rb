@@ -2,6 +2,7 @@ module Hubstats
   class QaSignoff < ActiveRecord::Base
 
     def self.record_timestamps; false; end
+    validates_uniqueness_of :pull_request_id
     
     # Various checks that can be used to filter, sort, and find info about QA Signoffs.
     scope :signed_within_date_range, lambda {|start_date, end_date| where("hubstats_qa_signoffs.signed_at BETWEEN ? AND ?", start_date, end_date)}
