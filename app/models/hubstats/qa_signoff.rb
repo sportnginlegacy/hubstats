@@ -18,7 +18,7 @@ module Hubstats
 
     belongs_to :user
     belongs_to :repo
-    belongs_to :pull_request
+    belongs_to :pull_request, :uniq => true
 
     # Public - Makes a new QA Signoff with the data that is passed in.
     #
@@ -28,11 +28,14 @@ module Hubstats
     #
     # Returns - the QA Signoff
     def self.first_or_create(repo_id, pr_id, user_id)
-      QaSignoff.create(user_id: user_id,
-                       repo_id: repo_id,
-                       pull_request_id: pr_id,
-                       label_name: 'qa-approved',
-                       signed_at: Time.now.getutc)
+      existing = Hubstats::QaSignoff.where(repo_id: repo_id).where(pull_request_id: pr_id)
+      if existing.empty?
+        QaSignoff.create(user_id: user_id,
+                         repo_id: repo_id,
+                         pull_request_id: pr_id,
+                         label_name: 'qa-approved',
+                         signed_at: Time.now.getutc)
+      end
     end
 
     # Public - Deletes the QA Signoff of the PR that is passed in.
@@ -42,8 +45,10 @@ module Hubstats
     #
     # Returns - the deleted QA Signoff
     def self.remove_signoff(repo_id, pr_id)
-      signoff = Hubstats::QaSignoff.where(repo_id: repo_id).where(pull_request_id: pr_id).first
-      signoff.destroy if signoff
+      signoffs = Hubstats::QaSignoff.where(repo_id: repo_id).where(pull_request_id: pr_id)
+      signoffs.each do |signoff|
+        signoff.destroy if signoff
+      end
     end
   end
 end
