@@ -166,9 +166,9 @@ module Hubstats
     def update_label(payload)
       return unless payload[:label]
       label = Hubstats::Label.first_or_create(payload[:label])
-      if payload[:action] == 'labeled'
+      if payload[:github_action] == 'labeled'
         labels << label
-      elsif payload[:action] == 'unlabeled'
+      elsif payload[:github_action] == 'unlabeled'
         labels.delete(label)
       end
       labels
