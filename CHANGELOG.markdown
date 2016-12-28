@@ -1,3 +1,8 @@
+#### v0.9.2
+* Fixing bugs where newly added labels are not appearing
+
+  > Emma Sax: Unknown User: https://github.com/sportngin/hubstats/pull/113
+
 #### v0.9.1
 * The index between PR_ID and QA Signoff should be unique
 
