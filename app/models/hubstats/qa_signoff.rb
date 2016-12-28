@@ -18,7 +18,7 @@ module Hubstats
 
     belongs_to :user
     belongs_to :repo
-    belongs_to :pull_request, :uniq => true
+    belongs_to :pull_request
 
     # Public - Makes a new QA Signoff with the data that is passed in.
     #
