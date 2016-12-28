@@ -31,21 +31,34 @@ module Hubstats
     def self.first_or_create(repo_id, pr_id, user_id, payload)
       existing = Hubstats::QaSignoff.where(repo_id: repo_id).where(pull_request_id: pr_id)
       if existing.empty?
-        Rails.logger.warn "!!!!!!!! We will make a new QA Signoff"
-        Rails.logger.warn "Payload action: #{payload[:github_action]}"
-        Rails.logger.warn "Payload PR #: #{payload[:number]}"
-        Rails.logger.warn "Time: #{Time.now.getutc}"
         QaSignoff.create(user_id: user_id,
                          repo_id: repo_id,
                          pull_request_id: pr_id,
                          label_name: 'qa-approved',
                          signed_at: Time.now.getutc)
       end
+      remove_duplicate_signoffs(repo_id, pr_id)
+    end
+
+    # Public - Removes duplicate signoffs
+    #
+    # repo_id - the id the repository the signoff belongs to
+    # pr_id - the id of the PR the signoff belogns to
+    #
+    # Return - nil
+    def self.remove_duplicate_signoffs(repo_id, pr_id)
+      signoffs = Hubstats::QaSignoff.where(repo_id: repo_id).where(pull_request_id: pr_id)
+      if signoffs.length >= 2
+        signoffs.shift
+        signoffs.each do |signoff|
+          signoff.destroy if signoff
+        end
+      end
     end
 
     # Public - Deletes the QA Signoff of the PR that is passed in.
     #
-    # repo_id - the id of the repository the PR belongs to
+    # repo_id - the id of the repository the signoff belongs to
     # pr_id - the id of the PR the signoff was deleted from
     #
     # Returns - the deleted QA Signoff
