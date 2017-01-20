@@ -1,3 +1,4 @@
+#### v0.9.3
 #### v0.9.2
 * Fixing bugs where newly added labels are not appearing
 
