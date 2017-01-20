@@ -10,7 +10,7 @@ module Hubstats
       Dir.glob(Rails.root + "app/decorators/**/*_decorator*.rb").sort.each do |c|
         require_dependency(c)
       end
-      ApplicationController.helper(MetricsHelper)
+      ApplicationController.helper(::Hubstats::MetricsHelper)
     end
 
     require 'octokit'
