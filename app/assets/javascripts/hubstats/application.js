@@ -25,7 +25,7 @@ $(document).ready(function() {
   $('.input-daterange').datepicker({
     "todayHighlight": true,
     "endDate": "Today",
-    "todayBtn": true
+    "todayBtn": "linked"
   });
   setDateRange();
 });
