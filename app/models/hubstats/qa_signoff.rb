@@ -2,6 +2,7 @@ module Hubstats
   class QaSignoff < ActiveRecord::Base
 
     def self.record_timestamps; false; end
+    validates_uniqueness_of :pull_request_id
     
     # Various checks that can be used to filter, sort, and find info about QA Signoffs.
     scope :signed_within_date_range, lambda {|start_date, end_date| where("hubstats_qa_signoffs.signed_at BETWEEN ? AND ?", start_date, end_date)}
@@ -27,23 +28,45 @@ module Hubstats
     # user_id - the id of the user who added the label
     #
     # Returns - the QA Signoff
-    def self.first_or_create(repo_id, pr_id, user_id)
-      QaSignoff.create(user_id: user_id,
-                       repo_id: repo_id,
-                       pull_request_id: pr_id,
-                       label_name: 'qa-approved',
-                       signed_at: Time.now.getutc)
+    def self.first_or_create(repo_id, pr_id, user_id, payload)
+      existing = Hubstats::QaSignoff.where(repo_id: repo_id).where(pull_request_id: pr_id)
+      if existing.empty?
+        QaSignoff.create(user_id: user_id,
+                         repo_id: repo_id,
+                         pull_request_id: pr_id,
+                         label_name: 'qa-approved',
+                         signed_at: Time.now.getutc)
+      end
+      remove_duplicate_signoffs(repo_id, pr_id)
+    end
+
+    # Public - Removes duplicate signoffs
+    #
+    # repo_id - the id the repository the signoff belongs to
+    # pr_id - the id of the PR the signoff belogns to
+    #
+    # Return - nil
+    def self.remove_duplicate_signoffs(repo_id, pr_id)
+      signoffs = Hubstats::QaSignoff.where(repo_id: repo_id).where(pull_request_id: pr_id)
+      if signoffs.length >= 2
+        signoffs.shift
+        signoffs.each do |signoff|
+          signoff.destroy if signoff
+        end
+      end
     end
 
     # Public - Deletes the QA Signoff of the PR that is passed in.
     #
-    # repo_id - the id of the repository the PR belongs to
+    # repo_id - the id of the repository the signoff belongs to
     # pr_id - the id of the PR the signoff was deleted from
     #
     # Returns - the deleted QA Signoff
     def self.remove_signoff(repo_id, pr_id)
-      signoff = Hubstats::QaSignoff.where(repo_id: repo_id).where(pull_request_id: pr_id).first
-      signoff.destroy if signoff
+      signoffs = Hubstats::QaSignoff.where(repo_id: repo_id).where(pull_request_id: pr_id)
+      signoffs.each do |signoff|
+        signoff.destroy if signoff
+      end
     end
   end
 end
