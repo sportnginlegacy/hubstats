@@ -55,4 +55,10 @@ namespace :hubstats do
     Rake::Task['hubstats:populate:setup_teams'].invoke
   end
 
+  desc "Updates webhooks from github for repositories"
+  task :update_repo_webhooks => :environment do
+    puts "Updating webhooks for repositories in octokit.yml"
+    Rake::Task['hubstats:populate:update_hooks'].invoke
+  end
+
 end
