@@ -4,6 +4,7 @@ Hubstats::Engine.routes.draw do
   root to: "pull_requests#index" # sets default root to be the pulls page
   get "/pulls" => "pull_requests#index", :as => :pulls # routes to list of pulls
   resources :deploys, :only => [:create, :index, :show] # routes to index, show, and to create method
+  resources :qa_signoffs, :only => [:index, :show]
   resources :teams, :only => [:index, :show]
   get "/users" => "users#index", :as => :users # routes to list of users
   get "/user/:id" => "users#show", :as => :user # routes to specific user's contributions
