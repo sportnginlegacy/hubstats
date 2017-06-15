@@ -1,6 +1,6 @@
 <div class="row single-pull">
   <div class="user-image-small col-lg-1 col-md-1 col-sm-1 col-xs-2" >
-    <img src= <%= qa_signoff.user.avatar_url%> alt= <%= qa_signoff.user.login %> >
+    <img src= <%= qa_signoff.pull_request.user.avatar_url%> alt= <%= qa_signoff.pull_request.user.login %> >
   </div>
 
   <!-- Show the repo name and the specific qa_signoff request name and who made it when -->
@@ -9,7 +9,7 @@
       <%= link_to qa_signoff.repo.name, repo_path(qa_signoff.repo.name) %> /
       <%= link_to qa_signoff.pull_request.title, qa_signoff.pull_request.html_url, :target => '_blank' %>
     </h4>
-    by <%= link_to qa_signoff.user.login, user_path(qa_signoff.user) %>
+    by <%= link_to qa_signoff.pull_request.user.login, user_path(qa_signoff.pull_request.user) %>
     <% if qa_signoff.pull_request.merged == '1'%>
       <%= "merged #{time_ago_in_words(qa_signoff.pull_request.merged_at)} ago "%>
     <% elsif qa_signoff.pull_request.state == 'closed' %>
