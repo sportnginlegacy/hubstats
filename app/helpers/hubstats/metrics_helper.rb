@@ -97,7 +97,6 @@ module Hubstats
         developer_count: get_developer_count,
         pull_count: get_pull_count,
         pulls_per_dev: get_pulls_per_dev,
-        # deploy_count: get_deploy_count,
         qa_signoff_count: get_qa_signoff_count,
         net_additions: get_net_additions
       }

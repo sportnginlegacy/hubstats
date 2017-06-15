@@ -55,7 +55,6 @@ module Hubstats
       @deletions ||= 0
       @stats_row_one = {
         pull_count: @pull_count,
-        # deploy_count: @deploy_count,
         comment_count: @comment_count,
         qa_signoff_count: @qa_signoff_count
       }
