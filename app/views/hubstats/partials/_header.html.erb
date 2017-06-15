@@ -23,8 +23,6 @@
             <%= link_to "Teams", teams_path%></li>
           <li class="<%='navbar-active' if params[:controller] == 'hubstats/users'%>">
             <%= link_to "Users", users_path%></li>
-          <li class="<%='navbar-active' if params[:controller] == 'hubstats/deploys'%>">
-            <%= link_to "Deployments", deploys_path%></li>
           <li class="<%='navbar-active' if params[:controller] == 'hubstats/pull_requests'%>">
             <%= link_to "Pull Requests", root_path%></li>
           <li>
