@@ -36,21 +36,12 @@
       <% end %>
     </div>
 
-    <!-- Show all of this user's deploys in a "condensed" view -->
-    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-      <h3> Deployments </h3>
-      <%= render 'hubstats/tables/deploys_condensed' %>
-      <% if @deploy_count > 20 %>
-        <p class="pull-right"><%= link_to "View All", deploys_path(:users => @user.id) %></p>
-      <% end %>
-    </div>
-
     <!-- Show all of this user's QA Signoffs in a "condensed" view -->
     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
       <h3> QA Signoffs </h3>
       <%= render 'hubstats/tables/qa_signoffs_condensed' %>
       <% if @qa_signoff_count > 20 %>
-        <p class="pull-right">Hubstats is currently not set up to View All QA signoffs</p>
+        <p class="pull-right">Hubstats is currently not set up to view all QA signoffs for this user</p>
       <% end %>
     </div>
   </div>

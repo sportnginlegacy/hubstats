@@ -31,12 +31,6 @@
     <h4> Pull Requests per Developer </h4>
   </div>
 <% end %>
-<% if @stats_row_two.has_key? :deploy_count %>
-  <div class="col col-lg-2 col-md-3 col-sm-3 col-xs-3 text-center">
-    <h1> <%= @stats_row_two[:deploy_count] %> </h1>
-    <h4> Deployments </h4>
-  </div>
-<% end %>
 <% if @stats_row_two.has_key? :comment_count %>
   <div class="col col-lg-2 col-md-3 col-sm-3 col-xs-3 text-center">
     <h1><%= @stats_row_two[:comment_count] %> </h1>
@@ -45,7 +39,7 @@
 <% end %>
 <% if @stats_row_two.has_key? :qa_signoff_count %>
   <div class="col col-lg-2 col-md-3 col-sm-3 col-xs-3 text-center">
-    <h1><%= @stats_row_one[:qa_signoff_count] %> </h1>
+    <h1><%= @stats_row_two[:qa_signoff_count] %> </h1>
     <h4> QA Signoffs </h4>
   </div>
 <% end %>

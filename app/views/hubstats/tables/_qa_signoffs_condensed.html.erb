@@ -1,7 +1,7 @@
 <!-- Show the QA Signoffs or say there are no signoffs available -->
 <% if @qa_signoffs.length > 0 %>
-  <div class="qa_signoffs">
-    <%= render partial: 'hubstats/partials/qa-signoffs-condensed', collection: @qa_signoffs, as: :qa_signoff %>
+  <div class="pulls">
+    <%= render partial: 'hubstats/partials/qa-signoff-condensed', collection: @qa_signoffs, as: :qa_signoff %>
   </div>
 <% else %>
   <p> No QA signoff information available</p>

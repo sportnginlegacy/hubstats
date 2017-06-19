@@ -31,12 +31,6 @@
     <h4> Pull Requests per Developer </h4>
   </div>
 <% end %>
-<% if @stats_row_one.has_key? :deploy_count %>
-  <div class="col col-lg-2 col-md-3 col-sm-3 col-xs-3 text-center">
-    <h1> <%= @stats_row_one[:deploy_count] %> </h1>
-    <h4> Deployments </h4>
-  </div>
-<% end %>
 <% if @stats_row_one.has_key? :comment_count %>
   <div class="col col-lg-2 col-md-3 col-sm-3 col-xs-3 text-center">
     <h1><%= @stats_row_one[:comment_count] %> </h1>
