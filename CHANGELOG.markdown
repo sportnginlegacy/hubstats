@@ -1,3 +1,8 @@
+#### v0.11.0
+* Hubstats does not need to show data for deployments
+
+  > Emma Sax: Unknown User: https://github.com/sportngin/hubstats/pull/121
+
 #### v0.10.0
 * Show list of QA Signoffs on User's show page
 
