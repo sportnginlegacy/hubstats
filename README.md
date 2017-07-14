@@ -20,10 +20,10 @@ The following setup is designed to only be used when integrating this plugin int
 Hubstats needs GitHub credentials to access your repositories, these can be setup in one of two ways:
 
 #### GitHub API Tokens
-Add your GitHub API token (called `access_token`) or ClientID and Secret to `octokit.yml`.
+Add your GitHub API token (called `access_token`) to `octokit.yml`.
 
 #### Environment Variables
-Hubstats can also use OAUTH access tokens stored in ENV["GITHUB_API_TOKEN"] or for Application Authentication in ENV["CLIENT_ID"] and ENV["CLIENT_SECRET"], if for some reason you don't want to store them in `octokit.yml`.
+Hubstats can also use OAUTH access tokens stored in ENV["GITHUB_API_TOKEN"] if for some reason you don't want to store them in `octokit.yml`.
 
 ### Configuring Data to be Received from GitHub
 #### Organizations to Follow
