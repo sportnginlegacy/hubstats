@@ -1,3 +1,8 @@
+#### v0.11.1
+* Removing places for Client IDs and Client secrets
+
+  > Emma Sax: Unknown User: https://github.com/sportngin/hubstats/pull/123
+
 #### v0.11.0
 * Hubstats does not need to show data for deployments
 
