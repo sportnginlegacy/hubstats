@@ -1,7 +1,5 @@
-github_auth: # Must include either access_token || (client_id && client_secret)
+github_auth: # Must include either access_token
   # access_token: <40 CHARACTER ACCESS TOKEN >
-  # client_id: <CLIENT ID>
-  # client_secret: <CLIENT SECRET>
 
 github_config: # Must include org_name. The repo_list, team_list, and ignore_users_list are optional.
   # org_name: <ORGANIZATION NAME>
