@@ -70,6 +70,16 @@ module Hubstats
         allow(Hubstats::User).to receive_message_chain(:create_or_update).and_return(user)
         expect(ehandler.route(payload, payload[:type]).class).to eq(Hubstats::Comment)
       end
+
+      it 'should successfully creates_or_updates the event even if the user_id is missing' do
+        ehandler = Hubstats::EventsHandler.new()
+        payload = build(:comment_payload_hash, :user => {:login=>"hermina", :id=>0, :role=>"User"},
+                        :comment => {"id"=>194761, "body"=>"Quidem ea minus ut odio optio.",
+                                     "kind"=>"Issue", "repo_id"=>101010,
+                                     "created_at" => Date.today, "updated_at" => Date.today})
+        allow(Hubstats::User).to receive_message_chain(:create_or_update).and_return(user)
+        expect(ehandler.route(payload, payload[:type])).to be_nil
+      end
     end
 
     context "TeamEvent" do
