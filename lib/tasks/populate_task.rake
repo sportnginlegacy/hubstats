@@ -15,7 +15,7 @@ namespace :hubstats do
 
     desc "Updates which repos hubstats tracks" 
     task :update_repos => :environment do
-      Hubstats::GithubAPI.get_repos.each_with_index do |repo_chunk, index|
+      Hubstats::GithubAPI.get_repos.each_with_index do |repo, index|
         unless Hubstats::Repo.where(full_name: repo.full_name).first
           Rake::Task["hubstats:populate:setup_repo"].execute({repo: repo})
         end
