@@ -25,7 +25,7 @@ namespace :hubstats do
           end
         end
         wait_count = (chunks_count - (index + 1)) * 20
-        Hubstats::GithubAPI.wait_limit(wait_count)
+        Hubstats::GithubAPI.wait_limit(wait_count, true)
       end
 
       puts "Finished with initial updating, grabbing extra info about pull requests"
