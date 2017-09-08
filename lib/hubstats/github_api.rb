@@ -270,7 +270,8 @@ module Hubstats
     # rate_limit - the amount of time to wait to grab data
     #
     # Returns - nothing
-    def self.wait_limit(grab_size, rate_limit)
+    def self.wait_limit(grab_size, rate_limit=nil)
+      rate_limit = client.rate_limit unless rate_limit
       if rate_limit.remaining < grab_size
         puts "Hit Github rate limit, waiting #{Time.at(rate_limit.resets_in).utc.strftime("%H:%M:%S")} to get more"
         sleep(rate_limit.resets_in)
