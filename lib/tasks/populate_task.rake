@@ -15,17 +15,14 @@ namespace :hubstats do
 
     desc "Updates which repos hubstats tracks" 
     task :update_repos => :environment do
-      repos_in_chunks_of_10 = Hubstats::GithubAPI.get_repos.each_slice(10).to_a
-      chunks_count = repos_in_chunks_of_10.count
-
-      repos_in_chunks_of_10.each_with_index do |repo_chunk, index|
-        repo_chunk.each do |repo|
-          unless Hubstats::Repo.where(full_name: repo.full_name).first
-            Rake::Task["hubstats:populate:setup_repo"].execute({repo: repo})
-          end
+      Hubstats::GithubAPI.get_repos.each_with_index do |repo_chunk, index|
+        unless Hubstats::Repo.where(full_name: repo.full_name).first
+          Rake::Task["hubstats:populate:setup_repo"].execute({repo: repo})
         end
-        wait_count = (chunks_count - (index + 1)) * 20
-        Hubstats::GithubAPI.wait_limit(wait_count, true)
+
+        if index % 10 == 0
+          Hubstats::GithubAPI.wait_limit(true)
+        end
       end
 
       puts "Finished with initial updating, grabbing extra info about pull requests"
