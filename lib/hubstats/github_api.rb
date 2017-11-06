@@ -44,7 +44,7 @@ module Hubstats
       octo = client({:auto_paginate => true})
       octo.paginate(path, options) do |data, last_response|
         last_response.data.each{|v| route(v,kind,repo_name)}.clear
-        wait_limit(1,octo.rate_limit)
+        wait_limit(false, 1, octo.rate_limit)
       end.each{|v| route(v,kind,repo_name)}.clear
     end
 
@@ -82,7 +82,7 @@ module Hubstats
             pr = client.pull_request(repo.full_name, pull.number)
             Hubstats::PullRequest.create_or_update(HubHelper.pull_setup(pr))
           end
-          wait_limit(grab_size,client.rate_limit)
+          wait_limit(false, grab_size, client.rate_limit)
         end
         puts "All Pull Requests are up to date"
       rescue Faraday::ConnectionFailed
@@ -115,7 +115,7 @@ module Hubstats
             end
           end
         end
-        wait_limit(grab_size,client.rate_limit)
+        wait_limit(false, grab_size, client.rate_limit)
         puts "All teams are up to date"
       rescue Faraday::ConnectionFailed
         puts "Connection Timeout, restarting team updating"
@@ -270,9 +270,12 @@ module Hubstats
     # rate_limit - the amount of time to wait to grab data
     #
     # Returns - nothing
-    def self.wait_limit(grab_size, rate_limit)
-      if rate_limit.remaining < grab_size
-        puts "Hit Github rate limit, waiting #{Time.at(rate_limit.resets_in).utc.strftime("%H:%M:%S")} to get more"
+    def self.wait_limit(force, grab_size=nil, rate_limit=nil)
+      rate_limit = client.rate_limit unless rate_limit
+      grab_size = 250 unless grab_size
+
+      if force || rate_limit.remaining < grab_size
+        puts "We don't want to hit the GitHub wait limit; waiting #{Time.at(rate_limit.resets_in).utc.strftime("%H:%M:%S")} to get more"
         sleep(rate_limit.resets_in)
       end
     end
