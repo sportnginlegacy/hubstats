@@ -7,9 +7,9 @@ module Hubstats
     scope :closed_in_date_range, lambda {|start_date, end_date| where("hubstats_pull_requests.closed_at BETWEEN ? AND ?", start_date, end_date)}
     scope :updated_in_date_range, lambda {|start_date, end_date| where("hubstats_pull_requests.updated_at BETWEEN ? AND ?", start_date, end_date)}
     scope :created_in_date_range, lambda {|start_date, end_date| where("hubstats_pull_requests.created_at BETWEEN ? AND ?", start_date, end_date)}
-    scope :merged_in_date_range, lambda {|start_date, end_date| where("hubstats_pull_requests.merged").where("hubstats_pull_requests.merged_at BETWEEN ? AND ?", start_date, end_date)}
+    scope :merged_in_date_range, lambda {|start_date, end_date| where("hubstats_pull_requests.merged = ?", true).where("hubstats_pull_requests.merged_at BETWEEN ? AND ?", start_date, end_date)}
     scope :created_since, lambda {|days| where("hubstats_pull_requests.created_at > ?", Date.today - days)}
-    scope :ignore_pulls_by, lambda {|user_ids| where("user_id NOT IN (?)", user_ids) if user_ids}
+    scope :ignore_pulls_by, lambda {|user_ids| where.not(user_id: user_ids || []) if user_ids}
     scope :belonging_to_repo, lambda {|repo_id| where(repo_id: repo_id)}
     scope :belonging_to_team, lambda {|team_id| where(team_id: team_id)}
     scope :belonging_to_user, lambda {|user_id| where(user_id: user_id)}
