@@ -3,11 +3,12 @@ module Hubstats
 
     # Various checks that can be used to filter and find info about users.
     scope :with_id, lambda {|user_id| where(id: user_id.split(',')) if user_id}
-    scope :only_active, -> { where("login NOT IN (?)", Hubstats.config.github_config["ignore_users_list"]).having("comment_count > 0 OR pull_request_count > 0 OR deploy_count > 0") }
-    scope :is_developer, -> { where("login NOT IN (?)", Hubstats.config.github_config["ignore_users_list"]).having("pull_request_count > 0") }
-    scope :is_reviewer, -> { where("login NOT IN (?)", Hubstats.config.github_config["ignore_users_list"]).having("comment_count > 0") }
+    scope :only_active, -> { not_ignored.having("comment_count > 0 OR pull_request_count > 0 OR deploy_count > 0") }
+    scope :is_developer, -> { not_ignored.having("pull_request_count > 0") }
+    scope :is_reviewer, -> { not_ignored.having("comment_count > 0") }
     scope :with_contributions, lambda {|start_date, end_date, repo_id| with_all_metrics_repos(start_date, end_date, repo_id) if repo_id}
-    scope :ignore_users_ids, -> { where("login IN (?)", Hubstats.config.github_config["ignore_users_list"]).pluck(:id) }
+    scope :ignore_users_ids, -> { where(login: Hubstats.config.github_config["ignore_users_list"] || []).pluck(:id) }
+    scope :not_ignored, -> { where.not(login: Hubstats.config.github_config["ignore_users_list"] || []) }
 
     # Public - Counts all of the deploys for selected user that occurred between the start_date and end_date.
     # 
@@ -57,7 +58,7 @@ module Hubstats
     scope :pull_requests_count, lambda {|start_date, end_date|
       select("hubstats_users.id as user_id")
       .select("IFNULL(COUNT(DISTINCT hubstats_pull_requests.id),0) AS pull_request_count")
-      .joins(sanitize_sql_array(["LEFT JOIN hubstats_pull_requests ON hubstats_pull_requests.user_id = hubstats_users.id AND (hubstats_pull_requests.merged_at BETWEEN ? AND ?) AND hubstats_pull_requests.merged = '1'", start_date, end_date]))
+      .joins(sanitize_sql_array(["LEFT JOIN hubstats_pull_requests ON hubstats_pull_requests.user_id = hubstats_users.id AND (hubstats_pull_requests.merged_at BETWEEN ? AND ?) AND hubstats_pull_requests.merged = ?", start_date, end_date, true]))
       .group("hubstats_users.id")
     }
 
@@ -124,7 +125,7 @@ module Hubstats
     scope :pull_requests_count_by_repo, lambda {|start_date, end_date, repo_id|
       select("hubstats_users.id as user_id")
       .select("IFNULL(COUNT(DISTINCT hubstats_pull_requests.id),0) AS pull_request_count")
-      .joins(sanitize_sql_array(["LEFT JOIN hubstats_pull_requests ON hubstats_pull_requests.user_id = hubstats_users.id AND (hubstats_pull_requests.merged_at BETWEEN ? AND ?) AND (hubstats_pull_requests.repo_id LIKE ?) AND hubstats_pull_requests.merged = '1'", start_date, end_date, repo_id]))
+      .joins(sanitize_sql_array(["LEFT JOIN hubstats_pull_requests ON hubstats_pull_requests.user_id = hubstats_users.id AND (hubstats_pull_requests.merged_at BETWEEN ? AND ?) AND (hubstats_pull_requests.repo_id LIKE ?) AND hubstats_pull_requests.merged = ?", start_date, end_date, repo_id, true]))
       .group("hubstats_users.id")
     }
 
@@ -155,7 +156,7 @@ module Hubstats
       select("hubstats_users.id as user_id")
       .select("SUM(IFNULL(hubstats_pull_requests.additions, 0)) AS additions")
       .select("SUM(IFNULL(hubstats_pull_requests.deletions, 0)) AS deletions")
-      .joins(sanitize_sql_array(["LEFT JOIN hubstats_pull_requests ON hubstats_pull_requests.user_id = hubstats_users.id AND (hubstats_pull_requests.merged_at BETWEEN ? AND ?) AND hubstats_pull_requests.merged = '1'", start_date, end_date]))
+      .joins(sanitize_sql_array(["LEFT JOIN hubstats_pull_requests ON hubstats_pull_requests.user_id = hubstats_users.id AND (hubstats_pull_requests.merged_at BETWEEN ? AND ?) AND hubstats_pull_requests.merged = ?", start_date, end_date, true]))
       .group("hubstats_users.id")
     }
 
