@@ -71,8 +71,11 @@ namespace :hubstats do
       repo = repo_checker(args[:repo])
       puts "Adding contributors to " + repo.full_name
 
-      Hubstats::GithubAPI.client({:auto_paginate => true}).contribs(repo.full_name).each do |contributor|
-        cont = Hubstats::User.create_or_update(contributor)
+      users = Hubstats::GithubAPI.client({:auto_paginate => true}).contribs(repo.full_name)
+      unless users == "" # there are no contributors because there are no commits yet
+        .each do |contributor|
+          cont = Hubstats::User.create_or_update(contributor)
+        end
       end
     end
 
