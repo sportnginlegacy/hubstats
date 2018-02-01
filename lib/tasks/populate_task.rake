@@ -72,11 +72,9 @@ namespace :hubstats do
       puts "Adding contributors to " + repo.full_name
 
       users = Hubstats::GithubAPI.client({:auto_paginate => true}).contribs(repo.full_name)
-      unless users == "" # there are no contributors because there are no commits yet
-        users.each do |contributor|
-          cont = Hubstats::User.create_or_update(contributor)
-        end
-      end
+      users.each do |contributor|
+        cont = Hubstats::User.create_or_update(contributor)
+      end unless users == "" # there are no contributors because there are no commits yet
     end
 
     desc "Pull comments from Github saves in database"
