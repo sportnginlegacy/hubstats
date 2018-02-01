@@ -73,7 +73,7 @@ namespace :hubstats do
 
       users = Hubstats::GithubAPI.client({:auto_paginate => true}).contribs(repo.full_name)
       unless users == "" # there are no contributors because there are no commits yet
-        .each do |contributor|
+        users.each do |contributor|
           cont = Hubstats::User.create_or_update(contributor)
         end
       end
