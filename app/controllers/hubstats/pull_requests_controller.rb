@@ -30,7 +30,7 @@ module Hubstats
     def show
       @repo = Hubstats::Repo.where(name: params[:repo]).first
       @pull_request = Hubstats::PullRequest.belonging_to_repo(@repo.id).where(id: params[:id]).first
-      @comments = Hubstats::Comment.belonging_to_pull_request(params[:id]).created_in_date_range(@start_date, @end_date).limit(20)
+      @comments = Hubstats::Comment.belonging_to_pull_request(params[:id]).created_in_date_range(@start_date, @end_date).limit(50)
       comment_count = Hubstats::Comment.belonging_to_pull_request(params[:id]).created_in_date_range(@start_date, @end_date).count(:all)
       @deploys = Hubstats::Deploy.where(id: @pull_request.deploy_id).order("deployed_at DESC")
       @stats_row_one = {
