@@ -1,3 +1,4 @@
+#### v0.12.0
 #### v0.11.5
 * Fix bug where adding repositories will break if there are no commits
 
