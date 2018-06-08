@@ -24,7 +24,7 @@ module Hubstats
     def show
       @deploy = Hubstats::Deploy.includes(:repo, :pull_requests).find(params[:id])
       repo = @deploy.repo
-      @pull_requests = @deploy.pull_requests.limit(20)
+      @pull_requests = @deploy.pull_requests.limit(50)
       @pull_request_count = @pull_requests.length
       @stats_row_one = {
         pull_count: @pull_request_count,

@@ -31,12 +31,12 @@ module Hubstats
     # Returns - the specific repository data
     def show
       @repo = Hubstats::Repo.where(name: params[:repo]).first
-      @pull_requests = Hubstats::PullRequest.belonging_to_repo(@repo.id).merged_in_date_range(@start_date, @end_date).order("updated_at DESC").limit(20)
+      @pull_requests = Hubstats::PullRequest.belonging_to_repo(@repo.id).merged_in_date_range(@start_date, @end_date).order("updated_at DESC").limit(50)
       @pull_count = Hubstats::PullRequest.belonging_to_repo(@repo.id).merged_in_date_range(@start_date, @end_date).count(:all)
-      @deploys = Hubstats::Deploy.belonging_to_repo(@repo.id).deployed_in_date_range(@start_date, @end_date).order("deployed_at DESC").limit(20)
+      @deploys = Hubstats::Deploy.belonging_to_repo(@repo.id).deployed_in_date_range(@start_date, @end_date).order("deployed_at DESC").limit(50)
       @deploy_count = Hubstats::Deploy.belonging_to_repo(@repo.id).deployed_in_date_range(@start_date, @end_date).count(:all)
       @comment_count = Hubstats::Comment.belonging_to_repo(@repo.id).created_in_date_range(@start_date, @end_date).count(:all)
-      @users = Hubstats::User.with_pulls_or_comments_or_deploys(@start_date, @end_date, @repo.id).only_active.order("login ASC").limit(20)
+      @users = Hubstats::User.with_pulls_or_comments_or_deploys(@start_date, @end_date, @repo.id).only_active.order("login ASC").limit(50)
       @active_user_count = Hubstats::User.with_pulls_or_comments_or_deploys(@start_date, @end_date, @repo.id).only_active.length
       @qa_signoff_count = Hubstats::QaSignoff.belonging_to_repo(@repo.id).signed_within_date_range(@start_date, @end_date).count(:all)
       @net_additions = Hubstats::PullRequest.merged_in_date_range(@start_date, @end_date).belonging_to_repo(@repo.id).sum(:additions).to_i -

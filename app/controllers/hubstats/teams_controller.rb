@@ -31,7 +31,7 @@ module Hubstats
     # Returns - the data of the specific team
     def show
       @team = Hubstats::Team.where(id: params[:id]).first
-      @pull_requests = Hubstats::PullRequest.belonging_to_team(@team.id).merged_in_date_range(@start_date, @end_date).order("updated_at DESC").limit(20)
+      @pull_requests = Hubstats::PullRequest.belonging_to_team(@team.id).merged_in_date_range(@start_date, @end_date).order("updated_at DESC").limit(50)
       @pull_count = Hubstats::PullRequest.belonging_to_team(@team.id).merged_in_date_range(@start_date, @end_date).count(:all)
       @users = @team.users.where.not(login: Hubstats.config.github_config["ignore_users_list"] || []).order("login ASC").distinct
       @active_user_count = @users.length

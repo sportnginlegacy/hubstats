@@ -31,7 +31,7 @@
     <div class="col-lg-6 col-md-5 col-sm-5 col-xs-5">
       <h3> Merged Pull Requests</h3> 
       <%= render 'hubstats/tables/pulls_condensed' %>
-      <% if @pull_count > 20 %>
+      <% if @pull_count > 50 %>
         <p class="pull-right"><%= link_to "View All", pulls_path(:users => @user.id) %></p>
       <% end %>
     </div>

@@ -21,7 +21,7 @@
     <div class="row">
       <h4> Merged Pull Requests </h4>
       <%= render 'hubstats/tables/pulls_condensed' %>
-      <% if @pull_request_count > 20 %>
+      <% if @pull_request_count > 50 %>
         <p class="pull-right"><%= link_to "View All", pulls_path(:deploys => @deploy.id) %></p>
       <% end %>
     </div>
