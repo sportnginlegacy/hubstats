@@ -88,7 +88,8 @@ module Hubstats
             "kind"=>"Issue", "user"=>{},
             "created_at" => Date.today, "updated_at" => Date.today
           }
-        )        allow(Hubstats::User).to receive_message_chain(:create_or_update).and_return(user)
+        )
+        allow(Hubstats::User).to receive_message_chain(:create_or_update).and_return(user)
         expect(ehandler.route(payload, payload[:type])).to be_nil
       end
     end
