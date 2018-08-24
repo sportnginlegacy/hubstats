@@ -68,7 +68,9 @@ module Hubstats
                                                             "kind"=>"Issue", "user_id"=>0, "repo_id"=>101010,
                                                             "created_at" => Date.today, "updated_at" => Date.today})
         allow(Hubstats::User).to receive_message_chain(:create_or_update).and_return(user)
-        expect(ehandler.route(payload, payload[:type]).class).to eq(Hubstats::Comment)
+        item = ehandler.route(payload, payload[:type])
+        puts "item: #{item}"
+        expect(item.class).to eq(Hubstats::Comment)
       end
 
       it 'should successfully creates_or_updates the event even if the user_id is missing' do
