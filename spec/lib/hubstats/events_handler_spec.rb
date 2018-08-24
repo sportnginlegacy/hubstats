@@ -68,25 +68,27 @@ module Hubstats
           :comment => {
             "id"=>194761, 
             "body"=>"Quidem ea minus ut odio optio.",
-            "kind"=>"Issue", "user"=>{},
-            "created_at" => Date.today, "updated_at" => Date.today
+            "kind"=>"Issue",
+            "user"=>{},
+            "created_at" => Date.today,
+            "updated_at" => Date.today
           }
         )
         allow(Hubstats::User).to receive_message_chain(:create_or_update).and_return(user)
-        item = ehandler.route(payload, payload[:type])
-        puts "item: #{item}"
-        expect(item.class).to eq(Hubstats::Comment)
+        expect(ehandler.route(payload, payload[:type]).class).to eq(Hubstats::Comment)
       end
 
-      it 'should successfully creates_or_updates the event even if the user_id is missing' do
+      it 'should successfully creates_or_updates the event even if the user is missing' do
         ehandler = Hubstats::EventsHandler.new()
         payload = build(:comment_payload_hash,
           :user => {:login=>"hermina", :id=>0, :role=>"User"},
           :comment => {
             "id"=>194761, 
             "body"=>"Quidem ea minus ut odio optio.",
-            "kind"=>"Issue", "user"=>{},
-            "created_at" => Date.today, "updated_at" => Date.today
+            "kind"=>"Issue", 
+            "user"=>nil,
+            "created_at" => Date.today, 
+            "updated_at" => Date.today
           }
         )
         allow(Hubstats::User).to receive_message_chain(:create_or_update).and_return(user)
