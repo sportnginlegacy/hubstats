@@ -1,3 +1,8 @@
+#### v0.12.2
+* Fix bug that results in comments never being saved
+
+  > Emma Sax: production-status-check[bot]: https://github.com/sportngin/hubstats/pull/134
+
 #### v0.12.1
 * Show 50 items in detailed show pages
 
