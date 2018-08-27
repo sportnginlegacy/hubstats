@@ -32,7 +32,7 @@ module Hubstats
     def self.create_or_update(github_comment)
       github_comment = github_comment.to_h.with_indifferent_access if github_comment.respond_to? :to_h
 
-      unless github_comment[:user_id]
+      unless github_comment[:user]
         Rails.logger.warn "Found comment with no user, ignoring. GitHub comment ID: #{github_comment[:id]}"
         return nil
       end
