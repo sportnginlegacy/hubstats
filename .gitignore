@@ -11,3 +11,4 @@ test/dummy/db/migrate/*
 .gitkeep
 Gemfile.lock
 .idea
+octokit.yml
