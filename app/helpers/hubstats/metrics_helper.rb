@@ -88,7 +88,14 @@ module Hubstats
       num = Hubstats::PullRequest.merged_in_date_range(@start_date, @end_date).average(:deletions) || 0
       return num.round.to_i
     end
-
+    
+    # Public - Gets the number of QA catches made during Manual testing of a pull request
+    #
+    # Returns - the number of QA catches
+    def get_qa_catches_count
+      Hubstats::QaCatches.signed_within_date_range(@start_date, @end_date).count(:all)
+    end
+    
     # Public - Formats statistics for all repos/users/teams of Hubstats
     #
     # Returns - all of the stats in a corresponding hash
@@ -98,6 +105,7 @@ module Hubstats
         pull_count: get_pull_count,
         pulls_per_dev: get_pulls_per_dev,
         qa_signoff_count: get_qa_signoff_count,
+        qa_catches_count: get_qa_catches_count,
         net_additions: get_net_additions
       }
       @stats_row_two = {

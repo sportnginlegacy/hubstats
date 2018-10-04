@@ -1,8 +1,8 @@
 <!-- Either say there are no users to show, or show all of the stat titles along with the stats/users -->
-<% if @users.length > 0 %>
+<% if @users.length == 0 %>
   <div class="users">
     <div class="row single-user header">
-      <div class="col-lg-4 col-md-4 col-sm-4">
+      <div class="col-lg-2 col-md-2 col-sm-2">
         <a class="header desc" id="name"> GitHub Username <span class="octicon"></span> </a>
       </div>
       <div class="col-lg-2 col-md-2 col-sm-2">
@@ -13,6 +13,9 @@
       </div>
       <div class="col-lg-2 col-md-2 col-sm-2">
         <a class="header desc" id="signoffs"> QA Signoffs <span class="octicon"></span></a>
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2">
+        <a class="header desc" id="catches"> QA Catches <span class="octicon"></span></a>
       </div>
       <div class="col-lg-2 col-md-2 col-sm-2">
         <a class="header desc" id="netadditions"> Net Additions <span class="octicon"></span></a>

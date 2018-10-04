@@ -39,6 +39,7 @@ module Hubstats
       @users = Hubstats::User.with_pulls_or_comments_or_deploys(@start_date, @end_date, @repo.id).only_active.order("login ASC").limit(50)
       @active_user_count = Hubstats::User.with_pulls_or_comments_or_deploys(@start_date, @end_date, @repo.id).only_active.length
       @qa_signoff_count = Hubstats::QaSignoff.belonging_to_repo(@repo.id).signed_within_date_range(@start_date, @end_date).count(:all)
+      @qa_catches_count = Hubstats::QaCatches.belonging_to_repo(@repo.id).signed_within_date_range(@start_date, @end_date).count(:all)
       @net_additions = Hubstats::PullRequest.merged_in_date_range(@start_date, @end_date).belonging_to_repo(@repo.id).sum(:additions).to_i -
                        Hubstats::PullRequest.merged_in_date_range(@start_date, @end_date).belonging_to_repo(@repo.id).sum(:deletions).to_i
       @additions = Hubstats::PullRequest.merged_in_date_range(@start_date, @end_date).belonging_to_repo(@repo.id).average(:additions)
@@ -57,7 +58,8 @@ module Hubstats
         active_user_count: @active_user_count,
         pull_count: @pull_count,
         comment_count: @comment_count,
-        qa_signoff_count: @qa_signoff_count
+        qa_signoff_count: @qa_signoff_count,
+        qa_catches_count: @qa_catches_count
       }
       @stats_row_two = {
         avg_additions: @additions.round.to_i,

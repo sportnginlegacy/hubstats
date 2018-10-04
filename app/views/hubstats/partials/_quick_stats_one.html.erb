@@ -91,3 +91,9 @@
     <h4> Deletions </h4>
   </div>
 <% end %>
+<% if @stats_row_one.has_key? :qa_catches_count %>
+  <div class="col col-lg-2 col-md-3 col-sm-3 col-xs-3 text-center">
+    <h1><%= @stats_row_one[:qa_catches_count] %> </h1>
+    <h4> QA Catches </h4>
+  </div>
+<% end %>
