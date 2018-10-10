@@ -105,7 +105,7 @@ module Hubstats
         pull_count: get_pull_count,
         pulls_per_dev: get_pulls_per_dev,
         qa_signoff_count: get_qa_signoff_count,
-        qa_catches_count: get_qa_catches_count,
+        #qa_catches_count: get_qa_catches_count,
         net_additions: get_net_additions
       }
       @stats_row_two = {
