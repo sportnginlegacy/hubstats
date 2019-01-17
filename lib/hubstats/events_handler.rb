@@ -69,13 +69,6 @@ module Hubstats
     # Returns - nothing, but updates or makes the team
     def team_processor(payload)
       team = payload[:team]
-      team_list = Hubstats.config.github_config["team_list"] || []
-      if team_list.include? team[:name]
-        Hubstats::Team.create_or_update(team.with_indifferent_access)
-        hubstats_team = Hubstats::Team.where(name: team[:name]).first
-        hubstats_user = Hubstats::User.create_or_update(payload[:member])
-        Hubstats::Team.update_users_in_team(hubstats_team, hubstats_user, payload[:github_action])
-      end
 
       if payload[:scope] == "team" && payload[:action] == "added"
         if Hubstats::Team.designed_for_hubstats?(team[:description])
@@ -86,7 +79,7 @@ module Hubstats
         end
       end
 
-      if payload[:action] == "edited"
+      if payload[:action] == "edited" && Hubstats::Team.designed_for_hubstats?(team[:description])
         Hubstats::Team.create_or_update(team.with_indifferent_access)
         hubstats_team = Hubstats::Team.where(name: team[:name]).first
         hubstats_user = Hubstats::User.create_or_update(payload[:member])
