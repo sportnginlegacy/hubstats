@@ -85,10 +85,6 @@ module Hubstats
       let(:octokit_team) {double(:octokit_team)}
       let(:client) {double(:octokit_client, team: octokit_team, user: user)}
 
-      before do
-        allow(octokit_team).to receive(:[]).with(:description).and_return("Description for Hubstats")
-      end
-
       it 'should successfully update all teams' do
         allow_message_expectations_on_nil
         allow(client).to receive(:organization_teams).with("sportngin").and_return([team1, team2, team3, team4])
