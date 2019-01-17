@@ -1,5 +1,5 @@
 # Generates fake deploy data we can use to test with
-FactoryBot.define do
+FactoryGirl.define do
   factory :deploy, :class => Hubstats::Deploy do
     git_revision "3dis01"
     repo_id 101010

@@ -1,5 +1,5 @@
 # Generates fake repo data we can use to test with
-FactoryBot.define do
+FactoryGirl.define do
   factory :repo, :class => Hubstats::Repo do
     id 101010
     name "hubstats"
@@ -11,6 +11,6 @@ FactoryBot.define do
     id 101010
     name "Hubstats"
     full_name "hub/hubstats"
-    initialize_with { attributes }
+    initialize_with { attributes } 
   end
 end

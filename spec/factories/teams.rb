@@ -1,5 +1,5 @@
 # Generates fake team data we can use to test with
-FactoryBot.define do
+FactoryGirl.define do
   factory :team, :class => Hubstats::Team do
     name "Team One"
     hubstats true
