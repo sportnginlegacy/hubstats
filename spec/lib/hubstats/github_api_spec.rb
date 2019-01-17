@@ -116,6 +116,7 @@ module Hubstats
       it 'should update the teams in the database based on a given whitelist' do
         allow(Hubstats::Team).to receive(:all).and_return( [team1, team2, team3, team4, team5] )
         allow(client).to receive(:team).and_return(octokit_team)
+        allow(subject).to receive(client).and_return(client)
         expect(team5).to receive(:update_column).with(:hubstats, false)
         subject.deprecate_teams
       end
