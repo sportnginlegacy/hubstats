@@ -17,7 +17,7 @@ module Hubstats
         pull_processor(payload)
       when "pull_request_review_comment", "PullRequestReviewCommentEvent"
         comment_processor(payload, "PullRequest")
-      when "membership", "MembershipEvent"
+      when "membership", "MembershipEvent", "team", "TeamEvent"
         team_processor(payload)
       when "repository", "RepositoryEvent"
         repository_processor(payload)
@@ -88,6 +88,13 @@ module Hubstats
            hubstats_user = Hubstats::User.create_or_update(payload[:member])
            Hubstats::Team.update_users_in_team(hubstats_team, hubstats_user, payload[:github_action])
         end
+      end
+
+      if payload[:action] == "edited"
+        Hubstats::Team.create_or_update(team.with_indifferent_access)
+        hubstats_team = Hubstats::Team.where(name: team[:name]).first
+        hubstats_user = Hubstats::User.create_or_update(payload[:member])
+        Hubstats::Team.update_users_in_team(hubstats_team, hubstats_user, payload[:github_action])
       end
     end
 
