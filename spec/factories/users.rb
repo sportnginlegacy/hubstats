@@ -1,5 +1,5 @@
 # Generates fake user data we can use to test with
-FactoryGirl.define do
+FactoryBot.define do
   factory :user, :class => Hubstats::User do
     login { Faker::Internet.user_name }
     id {|n| "#{n}".to_i}
@@ -11,6 +11,6 @@ FactoryGirl.define do
     login { Faker::Internet.user_name }
     id {|n| "#{n}".to_i}
     role "User"
-    initialize_with { attributes } 
+    initialize_with { attributes }
   end
 end
