@@ -102,7 +102,7 @@ module Hubstats
         all_teams_in_org = client.organization_teams(Hubstats.config.github_config["org_name"])
 
         all_teams_in_org.each do |team|
-          if designed_for_hubstats?(team[:description])
+          if Hubstats::Team.designed_for_hubstats?(team[:description])
             puts "Making a team"
             Hubstats::Team.create_or_update(team)
             users = client.team_members(team[:id])
@@ -130,7 +130,7 @@ module Hubstats
 
       teams.each do |team|
         desc = client.team(team.id)[:description]
-        if designed_for_hubstats?(desc) && (team[:hubstats] == true)
+        if Hubstats::Team.designed_for_hubstats?(desc) && (team[:hubstats] == true)
           team.update_column(:hubstats, false)
           team.save!
           puts "Changed #{team[:name]} from true to false"

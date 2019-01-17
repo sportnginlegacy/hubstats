@@ -78,7 +78,7 @@ module Hubstats
       end
 
       if payload[:scope] == "team" && payload[:action] == "added"
-        if designed_for_hubstats?(team[:description])
+        if Hubstats::Team.designed_for_hubstats?(team[:description])
            Hubstats::Team.create_or_update(team.with_indifferent_access)
            hubstats_team = Hubstats::Team.where(name: team[:name]).first
            hubstats_user = Hubstats::User.create_or_update(payload[:member])

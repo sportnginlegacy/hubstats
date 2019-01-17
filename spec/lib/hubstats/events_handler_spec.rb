@@ -66,7 +66,7 @@ module Hubstats
         payload = build(:comment_payload_hash,
           :user => {:login=>"hermina", :id=>0, :role=>"User"},
           :comment => {
-            "id"=>194761, 
+            "id"=>194761,
             "body"=>"Quidem ea minus ut odio optio.",
             "kind"=>"Issue",
             "user"=>{},
@@ -83,11 +83,11 @@ module Hubstats
         payload = build(:comment_payload_hash,
           :user => {:login=>"hermina", :id=>0, :role=>"User"},
           :comment => {
-            "id"=>194761, 
+            "id"=>194761,
             "body"=>"Quidem ea minus ut odio optio.",
-            "kind"=>"Issue", 
+            "kind"=>"Issue",
             "user"=>nil,
-            "created_at" => Date.today, 
+            "created_at" => Date.today,
             "updated_at" => Date.today
           }
         )
@@ -113,6 +113,7 @@ module Hubstats
         allow(payload).to receive(:[]).with(:team).and_return({:name => "Team One"})
         allow(payload).to receive(:[]).with(:member).and_return(user)
         allow(payload).to receive(:[]).with(:github_action).and_return("added")
+        allow(payload).to receive(:[]).with(:scope).and_return("team")
         allow(Hubstats::User).to receive(:create_or_update).and_return(user)
         expect(Hubstats::Team).to receive(:create_or_update)
         expect(Hubstats::Team).to receive(:update_users_in_team)
@@ -130,6 +131,7 @@ module Hubstats
         allow(payload).to receive(:[]).with(:team).and_return({:name => "Team One"})
         allow(payload).to receive(:[]).with(:member).and_return(user)
         allow(payload).to receive(:[]).with(:github_action).and_return("added")
+        allow(payload).to receive(:[]).with(:scope).and_return("team")
         expect(Hubstats::Team).to receive(:update_users_in_team)
         expect(Hubstats::Team).to receive(:create_or_update).and_return(team)
         ehandler.route(payload, "MembershipEvent")

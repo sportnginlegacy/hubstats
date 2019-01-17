@@ -101,19 +101,20 @@ module Hubstats
       end
     end
 
-    context '.deprecate_teams_from_file' do
+    context '.deprecate_teams' do
       subject {Hubstats::GithubAPI}
-      let(:team1) {create(:team, :name => "Team One")}
-      let(:team2) {create(:team, :name => "Team Two")}
-      let(:team3) {create(:team, :name => "Team Three")}
-      let(:team4) {create(:team, :name => "Team Four")}
-      let(:team5) {create(:team, :name => "Team Five")}
+      let(:team1) {create(:team, :name => "Team One", :description => "Description for Hubstats")}
+      let(:team2) {create(:team, :name => "Team Two", :description => "Description for Hubstats")}
+      let(:team3) {create(:team, :name => "Team Three", :description => "Description for Hubstats")}
+      let(:team4) {create(:team, :name => "Team Four", :description => "Description for Hubstats")}
+      let(:team5) {create(:team, :name => "Team Five", :description => "Description for Hubstats")}
+      let(:client) {double}
 
       it 'should update the teams in the database based on a given whitelist' do
-        allow(Hubstats).to receive_message_chain(:config, :github_config, :[]).with("team_list") { ["Team One", "Team Two", "Team Three", "Team Four"] }
         allow(Hubstats::Team).to receive(:all).and_return( [team1, team2, team3, team4, team5] )
+        allow(client).to receive(:team).and_return(team1)
         expect(team5).to receive(:update_column).with(:hubstats, false)
-        subject.deprecate_teams_from_file
+        subject.deprecate_teams
       end
     end
 
