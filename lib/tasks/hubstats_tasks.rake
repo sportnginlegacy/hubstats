@@ -8,8 +8,7 @@ namespace :hubstats do
     puts "Running rake db:migrate"
     Rake::Task['db:migrate'].invoke
     puts "Pulling data from Github. This may take a while..."
-    Rake::Task['hubstats:populate:setup_repos'].invoke
-    Rake::Task['hubstats:populate:setup_teams'].invoke
+    Rake::Task['hubstats:populate:setup'].invoke
   end
 
   desc "Drops the database, then runs rake hubstats:setup"
@@ -21,8 +20,8 @@ namespace :hubstats do
 
   desc "Updates changes to the config file"
   task :update => :environment do
-    puts "Updating repos"
-    Rake::Task['hubstats:populate:update_repos'].invoke
+    puts "Updating repos and teams"
+    Rake::Task['hubstats:populate:update'].invoke
   end
 
   desc "Updates the seed"
@@ -37,7 +36,7 @@ namespace :hubstats do
     Rake::Task['hubstats:populate:update_teams_in_pulls'].invoke
   end
 
-  desc "Updates the teams"
+  desc "Updates the teams from the octokit.yml"
   task :update_teams => :environment do
     puts "Updating teams"
     Rake::Task['hubstats:populate:update_teams'].invoke
@@ -52,7 +51,6 @@ namespace :hubstats do
   desc "Creates webhook from github for organization"
   task :make_org_webhook => :environment do
     puts "Making a webhook for an organization in octokit.yml"
-    Rake::Task['hubstats:populate:setup_teams'].invoke
+    Rake::Task['hubstats:populate:create_organization_hook'].invoke
   end
-
 end

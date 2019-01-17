@@ -185,7 +185,7 @@ module Hubstats
             :secret => Hubstats.config.webhook_secret
           },
           {
-            :events => ['membership'],
+            :events => ['membership', 'repository', 'team'],
             :active => true
           }
         )

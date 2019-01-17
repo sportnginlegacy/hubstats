@@ -19,6 +19,8 @@ module Hubstats
         comment_processor(payload, "PullRequest")
       when "membership", "MembershipEvent"
         team_processor(payload)
+      when "repository"
+        repository_processor(payload)
       end
     end
 
@@ -86,6 +88,16 @@ module Hubstats
            hubstats_user = Hubstats::User.create_or_update(payload[:member])
            Hubstats::Team.update_users_in_team(hubstats_team, hubstats_user, payload[:github_action])
         end
+      end
+    end
+
+    def repository_processor(payload)
+      repo = payload[:repository]
+
+      if payload[:action] == "created" # it's a new repository
+        Hubstats::Repo.create_or_update
+        Hubstats::GithubAPI.create_hook(repo) # The hook was probably already made when we made the repository,
+                                              # but we'll put this here just in case
       end
     end
 
