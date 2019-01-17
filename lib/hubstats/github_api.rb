@@ -130,7 +130,7 @@ module Hubstats
 
       teams.each do |team|
         desc = client.team(team.id)[:description]
-        if (designed_for_hubstats?(desc) && (team[:hubstats] == true)
+        if designed_for_hubstats?(desc) && (team[:hubstats] == true)
           team.update_column(:hubstats, false)
           team.save!
           puts "Changed #{team[:name]} from true to false"
