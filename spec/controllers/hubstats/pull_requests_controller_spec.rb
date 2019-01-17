@@ -3,11 +3,11 @@ require 'spec_helper'
 module Hubstats
   describe PullRequestsController, :type => :controller do
     routes { Hubstats::Engine.routes }
-    
+
     describe "#index" do
       it "should correctly order all of the pull requests" do
-        user = build(:user, :updated_at => '2015-12-01')
-        repo = build(:repo, :updated_at => '2015-12-01')
+        user = create(:user, :updated_at => '2015-12-01')
+        repo = create(:repo, :updated_at => '2015-12-01')
         pull3 = create(:pull_request, :user => user,
                                       :repo => repo,
                                       :updated_at => '2015-05-30')
@@ -30,8 +30,8 @@ module Hubstats
 
     describe "#show" do
       it "should show the comments and deploy of specific pull request" do
-        user = build(:user, :updated_at => '2015-12-01')
-        repo = build(:repo, :updated_at => '2015-12-01')
+        user = create(:user, :updated_at => '2015-12-01')
+        repo = create(:repo, :updated_at => '2015-12-01')
         pull = create(:pull_request, :user => user,
                                      :repo => repo,
                                      :deploy_id => 404040,

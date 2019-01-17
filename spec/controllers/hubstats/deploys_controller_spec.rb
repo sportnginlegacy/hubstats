@@ -3,7 +3,7 @@ require 'spec_helper'
 module Hubstats
   describe DeploysController, :type => :controller do
     routes { Hubstats::Engine.routes }
-    
+
     describe "#index" do
       it "should correctly order all of the deploys" do
         repo = create(:repo, :full_name => "sportngin/ngin", :updated_at => Date.today)
@@ -34,7 +34,7 @@ module Hubstats
     describe "#show" do
       it "should show the pull requests of the specific deploy" do
         repo = create(:repo, :full_name => "sportngin/ngin", :updated_at => Date.today)
-        user = build(:user, :updated_at => Date.today)
+        user = create(:user, :updated_at => Date.today)
         deploy = create(:deploy, :git_revision => "c1a2b37",
                                  :repo_id => 101010,
                                  :deployed_at => "2009-02-03 03:00:00 -0500")
@@ -49,7 +49,7 @@ module Hubstats
 
     describe "#create" do
       before :each do
-        user = build(:user, :updated_at => Date.today)
+        user = create(:user, :updated_at => Date.today)
         repo = create(:repo, :id => 505050, :full_name => "example/name", :updated_at => Date.today)
         create(:pull_request, :number => 33364992, :merged_by => 202020, :updated_at => Date.today, :user_id => user.id, :repo_id => repo.id)
       end

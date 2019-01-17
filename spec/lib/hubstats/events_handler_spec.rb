@@ -3,10 +3,10 @@ require 'spec_helper'
 module Hubstats
   describe EventsHandler, :type => :model do
     context "PullRequestEvent" do
-      let(:user) {build(:user, :updated_at => Date.today)}
-      let(:repo) {build(:repo, :updated_at => Date.today)}
-      let(:pull) {build(:pull_request, :updated_at => Date.today, :user => user, :repo => repo)}
-      let(:payload) {build(:pull_request_payload_hash)}
+      let(:user) {create(:user, :updated_at => Date.today)}
+      let(:repo) {create(:repo, :updated_at => Date.today)}
+      let(:pull) {create(:pull_request, :updated_at => Date.today, :user => user, :repo => repo)}
+      let(:payload) {create(:pull_request_payload_hash)}
 
       subject {Hubstats::EventsHandler.new()}
       it 'should successfully route the event' do
@@ -45,25 +45,25 @@ module Hubstats
     end
 
     context "CommentEvent" do
-      let(:user) {build(:user, :updated_at => Date.today, :created_at => '2015-01-01', :login => "hermina", :id => 0, :role => "User")}
+      let(:user) {create(:user, :updated_at => Date.today, :created_at => '2015-01-01', :login => "hermina", :id => 0, :role => "User")}
 
       it 'should successfully route the event' do
         ehandler = EventsHandler.new()
-        payload = build(:comment_payload_hash)
+        payload = create(:comment_payload_hash)
         expect(ehandler).to receive(:comment_processor)
         ehandler.route(payload, payload[:type])
       end
 
       it 'should successfully process the event' do
         ehandler = Hubstats::EventsHandler.new()
-        payload = build(:comment_payload_hash)
+        payload = create(:comment_payload_hash)
         expect(Hubstats::Comment).to receive(:create_or_update)
         ehandler.route(payload, payload[:type])
       end
 
       it 'should successfully creates_or_updates the event' do
         ehandler = Hubstats::EventsHandler.new()
-        payload = build(:comment_payload_hash,
+        payload = create(:comment_payload_hash,
           :user => {:login=>"hermina", :id=>0, :role=>"User"},
           :comment => {
             "id"=>194761,
@@ -80,7 +80,7 @@ module Hubstats
 
       it 'should successfully creates_or_updates the event even if the user is missing' do
         ehandler = Hubstats::EventsHandler.new()
-        payload = build(:comment_payload_hash,
+        payload = create(:comment_payload_hash,
           :user => {:login=>"hermina", :id=>0, :role=>"User"},
           :comment => {
             "id"=>194761,
@@ -99,15 +99,15 @@ module Hubstats
     context "TeamEvent" do
       it 'should successfully route the team' do
         ehandler = EventsHandler.new()
-        payload = build(:team_payload_hash)
+        payload = create(:team_payload_hash)
         expect(ehandler).to receive(:team_processor)
         ehandler.route(payload, payload[:type])
       end
 
       it 'should successfully process the team' do
         ehandler = Hubstats::EventsHandler.new()
-        payload = build(:team_payload_hash)
-        user = build(:user)
+        payload = create(:team_payload_hash)
+        user = create(:user)
         allow(Hubstats).to receive_message_chain(:config, :github_config, :[]).with("team_list") { ["Team One", "Team Two", "Team Three"] }
         allow(payload).to receive(:[]).with(:event).and_return(payload)
         allow(payload).to receive(:[]).with(:team).and_return({:name => "Team One"})
@@ -123,9 +123,9 @@ module Hubstats
 
       it 'should successfully create_or_update the team' do
         ehandler = Hubstats::EventsHandler.new()
-        payload = build(:team_payload_hash)
-        team = build(:team)
-        user = build(:user)
+        payload = create(:team_payload_hash)
+        team = create(:team)
+        user = create(:user)
         allow(Hubstats).to receive_message_chain(:config, :github_config, :[]).with("team_list") { ["Team One", "Team Two", "Team Three"] }
         allow(Hubstats::User).to receive(:create_or_update).and_return(user)
         allow(payload).to receive(:[]).with(:event).and_return(payload)
