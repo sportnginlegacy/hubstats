@@ -70,16 +70,16 @@ module Hubstats
     context '.update_teams' do
       subject {Hubstats::GithubAPI}
       let(:org) {'sportngin'}
-      let(:team1) {create(:team_hash, :name => "Team One")}
-      let(:team2) {create(:team_hash, :name => "Team Four")}
-      let(:team3) {create(:team_hash, :name => "Team Five")}
-      let(:team4) {create(:team_hash, :name => "Team Six")}
-      let(:team) {create(:team)}
-      let(:user1) {create(:user_hash)}
-      let(:user2) {create(:user_hash)}
-      let(:user3) {create(:user_hash)}
-      let(:finished_user) {create(:user, :created_at => Date.today, :updated_at => Date.today)}
-      let(:hubstats_user) {create(:user)}
+      let(:team1) {build(:team_hash, :name => "Team One")}
+      let(:team2) {build(:team_hash, :name => "Team Four")}
+      let(:team3) {build(:team_hash, :name => "Team Five")}
+      let(:team4) {build(:team_hash, :name => "Team Six")}
+      let(:team) {build(:team)}
+      let(:user1) {build(:user_hash)}
+      let(:user2) {build(:user_hash)}
+      let(:user3) {build(:user_hash)}
+      let(:finished_user) {build(:user, :created_at => Date.today, :updated_at => Date.today)}
+      let(:hubstats_user) {build(:user)}
       let(:access_token) { "access_token" }
       let(:user) { double }
       let(:octokit_team) {double(:octokit_team, description: "Description for Hubstats")}
