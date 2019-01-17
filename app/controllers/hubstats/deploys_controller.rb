@@ -78,7 +78,7 @@ module Hubstats
     #
     # repo - the repository
     #
-    # Returns - true if the repo is valid 
+    # Returns - true if the repo is valid
     def valid_repo(repo)
       return !repo.empty?
     end
@@ -106,8 +106,7 @@ module Hubstats
     # Private - Allows only these parameters to be added when creating a deploy
     #
     # Returns - hash of parameters
-    private
-    def deploy_params
+    private def deploy_params
       params.permit(:git_revision, :repo_name, :deployed_at, :user_id, :pull_request_ids)
     end
   end

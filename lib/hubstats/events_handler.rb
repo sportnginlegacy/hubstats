@@ -74,6 +74,19 @@ module Hubstats
         hubstats_user = Hubstats::User.create_or_update(payload[:member])
         Hubstats::Team.update_users_in_team(hubstats_team, hubstats_user, payload[:github_action])
       end
+
+      if payload[:scope] == "team" && payload[:action] == "added"
+        # this is a new team with the word 'hubstats', 'Hubstats', 'hub', or 'Hub' in the description
+        if team[:description].include?("hubstats") ||
+           team[:description].include?("Hubstats") ||
+           team[:description].include?("hub") ||
+           team[:description].include?("Hub")
+           Hubstats::Team.create_or_update(team.with_indifferent_access)
+           hubstats_team = Hubstats::Team.where(name: team[:name]).first
+           hubstats_user = Hubstats::User.create_or_update(payload[:member])
+           Hubstats::Team.update_users_in_team(hubstats_team, hubstats_user, payload[:github_action])
+        end
+      end
     end
 
     # Public - Grabs the PR number off of any of the various places it can be
