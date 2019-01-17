@@ -70,7 +70,7 @@ module Hubstats
     context '.update_teams' do
       subject {Hubstats::GithubAPI}
       let(:org) {'sportngin'}
-      let(:team1) {build(:team_hash, :name => "Team One")}
+      let(:team1) {build(:team_hash, :name => "Team One", description: "hubstats")}
       let(:team2) {build(:team_hash, :name => "Team Four")}
       let(:team3) {build(:team_hash, :name => "Team Five")}
       let(:team4) {build(:team_hash, :name => "Team Six")}
