@@ -108,7 +108,6 @@ module Hubstats
         ehandler = Hubstats::EventsHandler.new()
         payload = build(:team_payload_hash)
         user = build(:user)
-        allow(Hubstats).to receive_message_chain(:config, :github_config, :[]).with("team_list") { ["Team One", "Team Two", "Team Three"] }
         allow(payload).to receive(:[]).with(:event).and_return(payload)
         allow(payload).to receive(:[]).with(:team).and_return({:name => "Team One", :description => "Hubstats"})
         allow(payload).to receive(:[]).with(:member).and_return(user)
@@ -126,7 +125,6 @@ module Hubstats
         payload = build(:team_payload_hash)
         team = build(:team)
         user = build(:user)
-        allow(Hubstats).to receive_message_chain(:config, :github_config, :[]).with("team_list") { ["Team One", "Team Two", "Team Three"] }
         allow(Hubstats::User).to receive(:create_or_update).and_return(user)
         allow(payload).to receive(:[]).with(:event).and_return(payload)
         allow(payload).to receive(:[]).with(:team).and_return({:name => "Team One", :description => "Hubstats"})
