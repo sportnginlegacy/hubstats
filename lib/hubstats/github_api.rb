@@ -100,10 +100,9 @@ module Hubstats
         Octokit.auto_paginate = true
         client = Hubstats::GithubAPI.client
         all_teams_in_org = client.organization_teams(Hubstats.config.github_config["org_name"])
-        team_list = Hubstats.config.github_config["team_list"] || []
 
         all_teams_in_org.each do |team|
-          if team_list.include? team[:name]
+          if designed_for_hubstats?(team[:description])
             puts "Making a team"
             Hubstats::Team.create_or_update(team)
             users = client.team_members(team[:id])
@@ -126,12 +125,12 @@ module Hubstats
     # Public - Goes through entire team database and updates the hubstats boolean based on the octokit.yml file
     #
     # Returns - nothing
-    def self.deprecate_teams_from_file
-      team_list = Hubstats.config.github_config["team_list"] || []
+    def self.deprecate_teams
       teams = Hubstats::Team.all
 
       teams.each do |team|
-        if (!team_list.include? team[:name]) && (team[:hubstats] == true)
+        desc = client.team(team.id)[:description]
+        if (designed_for_hubstats?(desc) && (team[:hubstats] == true)
           team.update_column(:hubstats, false)
           team.save!
           puts "Changed #{team[:name]} from true to false"

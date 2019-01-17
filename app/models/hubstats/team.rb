@@ -47,6 +47,13 @@ module Hubstats
 
     has_and_belongs_to_many :users, :join_table => 'hubstats_teams_users', :uniq => true
 
+    def designed_for_hubstats?(description)
+      description.include?("hubstats") ||
+      description.include?("Hubstats") ||
+      description.include?("hub") ||
+      description.include?("Hub")
+    end
+
     # Public - Checks if the team is currently existing, and if it isn't, then makes a new team with
     # the specifications that are passed in. We are assuming that if it is not already existent,
     # then we probably don't really care about the team, so our hubstats boolean will be set to false.

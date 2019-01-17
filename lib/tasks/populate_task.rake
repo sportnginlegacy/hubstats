@@ -41,9 +41,9 @@ namespace :hubstats do
       update_teams
     end
 
-    desc "Deprecates teams based on the octokit.yml file"
-    task :deprecate_teams_from_file => :environment do
-      Hubstats::GithubAPI.deprecate_teams_from_file
+    desc "Deprecates teams"
+    task :deprecate_teams => :environment do
+      Hubstats::GithubAPI.deprecate_teams
     end
 
     desc "Creates the webhook for the current org"
