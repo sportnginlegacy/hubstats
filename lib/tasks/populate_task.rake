@@ -61,7 +61,7 @@ namespace :hubstats do
 
     private def setup_repo(repo)
       Hubstats::Repo.create_or_update(repo)
-      Hubstats::GithubAPI.create_hook(repo)
+      Hubstats::GithubAPI.create_repo_hook(repo)
       # These are the pieces that take forever when we run the command. Let's not do this, and just make
       # hubstats accurate from this time on out.
       # populate_users(repo)

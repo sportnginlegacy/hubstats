@@ -146,7 +146,7 @@ module Hubstats
     # repo - the repository that is attempting to have a hook made with
     #
     # Returns - the hook and a message (or just a message and no hook)
-    def self.create_hook(repo)
+    def self.create_repo_hook(repo)
       begin
         client.create_hook(
           repo.full_name,
@@ -194,36 +194,6 @@ module Hubstats
       rescue Octokit::NotFound
         puts "You don't have sufficient privileges to add an event hook to #{org_name}"
       end
-    end
-
-    # Public - Delete webhook from github repository
-    #
-    # repo - a repo github object
-    # old_endpoint - A string of the previous endpoint
-    #
-    # Return - nothing
-    def self.delete_hook(repo, old_endpoint)
-      begin
-        client.hooks(repo.full_name).each do |hook|
-          if hook[:config][:url] == old_endpoint
-            Hubstats::GithubAPI.client.remove_hook(repo.full_name, hook[:id])
-            puts "Successfully deleted hook with id #{hook[:id]} and url #{hook[:config][:url]} from #{repo.full_name}"
-          end
-        end
-      rescue Octokit::NotFound
-        puts "You don't have sufficient privileges to remove an event hook to #{repo.full_name}"
-      end
-    end
-
-    # Public - updates a hook if it exists, otherwise creates one
-    #
-    # repo - a repo github object
-    # old_endpoint - A string of the previous endpoint
-    #
-    # Returns - the new hook
-    def self.update_hook(repo, old_endpoint = nil)
-      delete_hook(repo, old_endpoint) unless old_endpoint == nil
-      create_hook(repo)
     end
 
     # Public - gets labels for a particular label
