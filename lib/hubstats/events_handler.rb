@@ -19,7 +19,7 @@ module Hubstats
         comment_processor(payload, "PullRequest")
       when "membership", "MembershipEvent"
         team_processor(payload)
-      when "repository"
+      when "repository", "RepositoryEvent"
         repository_processor(payload)
       end
     end
