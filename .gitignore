@@ -1,6 +1,5 @@
 test/dummy/log/*
 test/dummy/tmp/*
-test/dummy/config/octokit.yml
 lib/tasks/test_tasks.rake
 test/dummy/db/migrate/*
 *.gem
