@@ -82,7 +82,7 @@ module Hubstats
       let(:hubstats_user) {build(:user)}
       let(:access_token) { "access_token" }
       let(:user) { double }
-      let(:octokit_team) {double(:octokit_team, description: "Description for Hubstats")}
+      let(:octokit_team) {double(:octokit_team)}
       let(:client) {double(:octokit_client, team: octokit_team, user: user)}
 
       it 'should successfully update all teams' do
@@ -112,6 +112,10 @@ module Hubstats
       let(:team5) {create(:team, :name => "Team Five")}
       let(:octokit_team) {double(:octokit_team, description: "Description for Hubstats")}
       let(:client) {double(:octokit_client, team: octokit_team)}
+
+      before do
+        allow(octokit_team).to receive(:[]).with(:description).and_return("Description for Hubstats")
+      end
 
       it 'should update the teams in the database based on a given whitelist' do
         allow(Hubstats::Team).to receive(:all).and_return( [team1, team2, team3, team4, team5] )
