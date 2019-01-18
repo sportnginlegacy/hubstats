@@ -139,7 +139,7 @@ module Hubstats
     # Returns - nothing
     private def deprecate_team(payload)
       hubstats_team = Hubstats::Team.where(name: payload[:team][:name]).first
-      hubstats_team.deprecate_team if (hubstats_team && hubstats_team[:team][:hubstats])
+      hubstats_team.deprecate_team if (hubstats_team && hubstats_team[:hubstats])
     end
   end
 end
