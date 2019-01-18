@@ -180,6 +180,7 @@ module Hubstats
         allow(payload).to receive(:[]).with(:event).and_return(payload)
         allow(payload).to receive(:[]).with(:team).and_return({:name => "Team One", :description => "Hubstats"})
         allow(payload).to receive(:[]).with(:sender).and_return(user)
+        allow(payload).to receive(:[]).with(:member).and_return(nil)
         allow(payload).to receive(:[]).with(:scope).and_return(nil)
         allow(payload).to receive(:[]).with(:github_action).and_return("edited")
         allow(payload).to receive(:[]).with(:action).and_return("edited")

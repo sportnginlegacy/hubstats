@@ -14,9 +14,10 @@ module Hubstats
       puts "Webhook received from Github."
 
       kind = request.headers['X-Github-Event']
+      event = event_params.with_indifferent_access
+
       raw_parameters = request.request_parameters
       event[:github_action] = raw_parameters["action"]
-      event = event_params.with_indifferent_access
 
       puts "Kind of webhook: #{kind}"
       puts "Event: #{event}"

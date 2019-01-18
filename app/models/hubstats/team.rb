@@ -47,6 +47,14 @@ module Hubstats
 
     has_and_belongs_to_many :users, :join_table => 'hubstats_teams_users', :uniq => true
 
+    # Public - Will change the team's hubstats column to false
+    #
+    # Returns - the team
+    def deprecate_team
+      self.update_column(:hubstats, false)
+      self.save!
+    end
+
     # Public - Checks if the team is currently existing, and if it isn't, then makes a new team with
     # the specifications that are passed in. We are assuming that if it is not already existent,
     # then we probably don't really care about the team, so our hubstats boolean will be set to false.
