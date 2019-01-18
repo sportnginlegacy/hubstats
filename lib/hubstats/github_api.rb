@@ -100,10 +100,9 @@ module Hubstats
         Octokit.auto_paginate = true
         client = Hubstats::GithubAPI.client
         all_teams_in_org = client.organization_teams(Hubstats.config.github_config["org_name"])
-        team_list = Hubstats.config.github_config["team_list"] || []
 
         all_teams_in_org.each do |team|
-          if team_list.include? team[:name]
+          if Hubstats::Team.designed_for_hubstats?(team[:description])
             puts "Making a team"
             Hubstats::Team.create_or_update(team)
             users = client.team_members(team[:id])
@@ -123,34 +122,17 @@ module Hubstats
       end
     end
 
-    # Public - Goes through entire team database and updates the hubstats boolean based on the octokit.yml file
-    #
-    # Returns - nothing
-    def self.deprecate_teams_from_file
-      team_list = Hubstats.config.github_config["team_list"] || []
-      teams = Hubstats::Team.all
-
-      teams.each do |team|
-        if (!team_list.include? team[:name]) && (team[:hubstats] == true)
-          team.update_column(:hubstats, false)
-          team.save!
-          puts "Changed #{team[:name]} from true to false"
-        end
-      end
-
-      puts "All teams are up to date"
-      puts "Run 'rake hubstats:update_teams' or 'rake hubstats:update_teams_in_pulls' to grab more teams from GitHub"
-    end
-
     # Public - Makes a new webhook from a repository
     #
     # repo - the repository that is attempting to have a hook made with
     #
     # Returns - the hook and a message (or just a message and no hook)
-    def self.create_hook(repo)
+    def self.create_repo_hook(repo)
+      repo_name = repo[:full_name] ? repo[:full_name] : repo.full_name
+      puts "Repo that we're going to make a hook on: #{repo_name}"
       begin
         client.create_hook(
-          repo.full_name,
+          repo_name,
           'web',
           {
             :url => Hubstats.config.webhook_endpoint,
@@ -162,11 +144,11 @@ module Hubstats
             :active => true
           }
         )
-        puts "Hook on #{repo.full_name} successfully created"
+        puts "Hook on #{repo_name} successfully created"
       rescue Octokit::UnprocessableEntity
-        puts "Hook on #{repo.full_name} already existed"
+        puts "Hook on #{repo_name} already existed"
       rescue Octokit::NotFound
-        puts "You don't have sufficient privileges to add an event hook to #{repo.full_name}"
+        puts "You don't have sufficient privileges to add an event hook to #{repo_name}"
       end
     end
 
@@ -185,7 +167,7 @@ module Hubstats
             :secret => Hubstats.config.webhook_secret
           },
           {
-            :events => ['membership'],
+            :events => ['membership', 'repository', 'team'],
             :active => true
           }
         )
@@ -195,36 +177,6 @@ module Hubstats
       rescue Octokit::NotFound
         puts "You don't have sufficient privileges to add an event hook to #{org_name}"
       end
-    end
-
-    # Public - Delete webhook from github repository
-    #
-    # repo - a repo github object
-    # old_endpoint - A string of the previous endpoint
-    #
-    # Return - nothing
-    def self.delete_hook(repo, old_endpoint)
-      begin
-        client.hooks(repo.full_name).each do |hook|
-          if hook[:config][:url] == old_endpoint
-            Hubstats::GithubAPI.client.remove_hook(repo.full_name, hook[:id])
-            puts "Successfully deleted hook with id #{hook[:id]} and url #{hook[:config][:url]} from #{repo.full_name}"
-          end
-        end
-      rescue Octokit::NotFound
-        puts "You don't have sufficient privileges to remove an event hook to #{repo.full_name}"
-      end
-    end
-
-    # Public - updates a hook if it exists, otherwise creates one
-    #
-    # repo - a repo github object
-    # old_endpoint - A string of the previous endpoint
-    #
-    # Returns - the new hook
-    def self.update_hook(repo, old_endpoint = nil)
-      delete_hook(repo, old_endpoint) unless old_endpoint == nil
-      create_hook(repo)
     end
 
     # Public - gets labels for a particular label

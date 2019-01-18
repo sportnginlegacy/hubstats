@@ -1,9 +1,11 @@
 sudo: false
+dist: trusty
+language: ruby
+cache: bundler
+
 branches:
   only:
     - master
-language: ruby
-cache: bundler
 rvm:
   - 2.1
   - 2.2

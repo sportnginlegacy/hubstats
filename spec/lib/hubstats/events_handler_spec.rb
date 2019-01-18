@@ -66,7 +66,7 @@ module Hubstats
         payload = build(:comment_payload_hash,
           :user => {:login=>"hermina", :id=>0, :role=>"User"},
           :comment => {
-            "id"=>194761, 
+            "id"=>194761,
             "body"=>"Quidem ea minus ut odio optio.",
             "kind"=>"Issue",
             "user"=>{},
@@ -83,11 +83,11 @@ module Hubstats
         payload = build(:comment_payload_hash,
           :user => {:login=>"hermina", :id=>0, :role=>"User"},
           :comment => {
-            "id"=>194761, 
+            "id"=>194761,
             "body"=>"Quidem ea minus ut odio optio.",
-            "kind"=>"Issue", 
+            "kind"=>"Issue",
             "user"=>nil,
-            "created_at" => Date.today, 
+            "created_at" => Date.today,
             "updated_at" => Date.today
           }
         )
@@ -108,11 +108,12 @@ module Hubstats
         ehandler = Hubstats::EventsHandler.new()
         payload = build(:team_payload_hash)
         user = build(:user)
-        allow(Hubstats).to receive_message_chain(:config, :github_config, :[]).with("team_list") { ["Team One", "Team Two", "Team Three"] }
         allow(payload).to receive(:[]).with(:event).and_return(payload)
-        allow(payload).to receive(:[]).with(:team).and_return({:name => "Team One"})
+        allow(payload).to receive(:[]).with(:team).and_return({:name => "Team One", :description => "Hubstats"})
         allow(payload).to receive(:[]).with(:member).and_return(user)
         allow(payload).to receive(:[]).with(:github_action).and_return("added")
+        allow(payload).to receive(:[]).with(:scope).and_return("team")
+        allow(payload).to receive(:[]).with(:action).and_return("added")
         allow(Hubstats::User).to receive(:create_or_update).and_return(user)
         expect(Hubstats::Team).to receive(:create_or_update)
         expect(Hubstats::Team).to receive(:update_users_in_team)
@@ -124,17 +125,90 @@ module Hubstats
         payload = build(:team_payload_hash)
         team = build(:team)
         user = build(:user)
-        allow(Hubstats).to receive_message_chain(:config, :github_config, :[]).with("team_list") { ["Team One", "Team Two", "Team Three"] }
         allow(Hubstats::User).to receive(:create_or_update).and_return(user)
         allow(payload).to receive(:[]).with(:event).and_return(payload)
-        allow(payload).to receive(:[]).with(:team).and_return({:name => "Team One"})
+        allow(payload).to receive(:[]).with(:team).and_return({:name => "Team One", :description => "Hubstats"})
         allow(payload).to receive(:[]).with(:member).and_return(user)
         allow(payload).to receive(:[]).with(:github_action).and_return("added")
+        allow(payload).to receive(:[]).with(:scope).and_return("team")
+        allow(payload).to receive(:[]).with(:action).and_return("added")
+        expect(Hubstats::Team).to receive(:update_users_in_team)
+        expect(Hubstats::Team).to receive(:create_or_update).and_return(team)
+        ehandler.route(payload, "MembershipEvent")
+      end
+
+      it 'should successfully remove a member from a team' do
+        ehandler = Hubstats::EventsHandler.new()
+        payload = build(:team_payload_hash)
+        team = build(:team)
+        user = build(:user)
+        allow(Hubstats::User).to receive(:create_or_update).and_return(user)
+        allow(payload).to receive(:[]).with(:event).and_return(payload)
+        allow(payload).to receive(:[]).with(:team).and_return({:name => "Team One", :description => "Hubstats"})
+        allow(payload).to receive(:[]).with(:member).and_return(user)
+        allow(payload).to receive(:[]).with(:github_action).and_return("removed")
+        allow(payload).to receive(:[]).with(:scope).and_return("team")
+        allow(payload).to receive(:[]).with(:action).and_return("removed")
+        expect(Hubstats::Team).to receive(:update_users_in_team)
+        expect(Hubstats::Team).to receive(:create_or_update).and_return(team)
+        ehandler.route(payload, "MembershipEvent")
+      end
+
+      it 'should successfully delete a team' do
+        ehandler = Hubstats::EventsHandler.new()
+        payload = build(:team_payload_hash)
+        team = build(:team)
+        user = build(:user)
+        allow(Hubstats::User).to receive(:create_or_update).and_return(user)
+        allow(payload).to receive(:[]).with(:event).and_return(payload)
+        allow(payload).to receive(:[]).with(:team).and_return({:name => "Team One", :description => "Hubstats"})
+        allow(payload).to receive(:[]).with(:member).and_return(user)
+        allow(payload).to receive(:[]).with(:github_action).and_return("removed")
+        allow(payload).to receive(:[]).with(:scope).and_return("organization")
+        allow(payload).to receive(:[]).with(:action).and_return("removed")
+        expect(Hubstats::Team).not_to receive(:update_users_in_team)
+        expect(Hubstats::Team).not_to receive(:create_or_update)
+        ehandler.route(payload, "MembershipEvent")
+      end
+
+      it 'should successfully rename a team' do
+        ehandler = Hubstats::EventsHandler.new()
+        payload = build(:team_payload_hash)
+        team = build(:team)
+        user = build(:user)
+        allow(Hubstats::User).to receive(:create_or_update).and_return(user)
+        allow(payload).to receive(:[]).with(:event).and_return(payload)
+        allow(payload).to receive(:[]).with(:team).and_return({:name => "Team One", :description => "Hubstats"})
+        allow(payload).to receive(:[]).with(:sender).and_return(user)
+        allow(payload).to receive(:[]).with(:member).and_return(nil)
+        allow(payload).to receive(:[]).with(:scope).and_return(nil)
+        allow(payload).to receive(:[]).with(:github_action).and_return("edited")
+        allow(payload).to receive(:[]).with(:action).and_return("edited")
         expect(Hubstats::Team).to receive(:update_users_in_team)
         expect(Hubstats::Team).to receive(:create_or_update).and_return(team)
         ehandler.route(payload, "MembershipEvent")
       end
     end
 
+    context "RepositoryEvent" do
+      it 'should successfully route the repository' do
+        ehandler = EventsHandler.new()
+        payload = build(:repo_payload_hash)
+        expect(ehandler).to receive(:repository_processor)
+        ehandler.route(payload, payload[:type])
+      end
+
+      it 'should successfully process the repository' do
+        ehandler = Hubstats::EventsHandler.new()
+        payload = build(:repo_payload_hash)
+        allow(payload).to receive(:[]).with(:event).and_return(payload)
+        allow(payload).to receive(:[]).with(:repository).and_return({:full_name => "sportngin/test"})
+        allow(payload).to receive(:[]).with(:github_action).and_return("created")
+        allow(payload).to receive(:[]).with(:action).and_return("created")
+        expect(Hubstats::Repo).to receive(:create_or_update)
+        expect(Hubstats::GithubAPI).to receive(:create_repo_hook).and_return(true)
+        ehandler.route(payload, "RepositoryEvent")
+      end
+    end
   end
 end

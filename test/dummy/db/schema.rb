@@ -11,19 +11,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161222173633) do
+ActiveRecord::Schema.define(version: 20161222173310) do
 
   create_table "hubstats_comments", force: :cascade do |t|
-    t.string   "html_url",         limit: 255
-    t.string   "url",              limit: 255
-    t.string   "pull_request_url", limit: 255
-    t.integer  "path",             limit: 4
     t.string   "kind",             limit: 255
     t.integer  "user_id",          limit: 4
     t.integer  "pull_request_id",  limit: 4
     t.integer  "repo_id",          limit: 4
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "body_string",      limit: 255
+    t.integer  "path",             limit: 4
+    t.string   "html_url",         limit: 255
+    t.string   "url",              limit: 255
+    t.string   "pull_request_url", limit: 255
     t.text     "body",             limit: 65535
   end
 
@@ -55,21 +56,21 @@ ActiveRecord::Schema.define(version: 20161222173633) do
   add_index "hubstats_labels_pull_requests", ["pull_request_id"], name: "index_hubstats_labels_pull_requests_on_pull_request_id", using: :btree
 
   create_table "hubstats_pull_requests", force: :cascade do |t|
+    t.integer  "number",     limit: 4
+    t.integer  "user_id",    limit: 4
+    t.integer  "repo_id",    limit: 4
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.datetime "closed_at"
+    t.integer  "additions",  limit: 4
+    t.integer  "deletions",  limit: 4
+    t.integer  "comments",   limit: 4
     t.string   "url",        limit: 255
     t.string   "html_url",   limit: 255
     t.string   "issue_url",  limit: 255
-    t.integer  "number",     limit: 4
     t.string   "state",      limit: 255
     t.string   "title",      limit: 255
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
-    t.datetime "closed_at"
     t.string   "merged",     limit: 255
-    t.integer  "comments",   limit: 4
-    t.integer  "additions",  limit: 4
-    t.integer  "deletions",  limit: 4
-    t.integer  "user_id",    limit: 4
-    t.integer  "repo_id",    limit: 4
     t.integer  "deploy_id",  limit: 4
     t.integer  "merged_by",  limit: 4
     t.datetime "merged_at"
@@ -94,15 +95,15 @@ ActiveRecord::Schema.define(version: 20161222173633) do
   add_index "hubstats_qa_signoffs", ["user_id"], name: "index_hubstats_qa_signoffs_on_user_id", using: :btree
 
   create_table "hubstats_repos", force: :cascade do |t|
+    t.integer  "owner_id",   limit: 4
     t.string   "name",       limit: 255
     t.string   "full_name",  limit: 255
+    t.datetime "pushed_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.string   "url",        limit: 255
     t.string   "html_url",   limit: 255
     t.string   "labels_url", limit: 255
-    t.datetime "pushed_at"
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
-    t.integer  "owner_id",   limit: 4
   end
 
   add_index "hubstats_repos", ["owner_id"], name: "index_hubstats_repos_on_owner_id", using: :btree
@@ -122,12 +123,12 @@ ActiveRecord::Schema.define(version: 20161222173633) do
 
   create_table "hubstats_users", force: :cascade do |t|
     t.string   "login",      limit: 255
+    t.string   "role",       limit: 255
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.string   "avatar_url", limit: 255
     t.string   "url",        limit: 255
     t.string   "html_url",   limit: 255
-    t.string   "role",       limit: 255
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
   end
 
 end

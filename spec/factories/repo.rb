@@ -11,6 +11,14 @@ FactoryGirl.define do
     id 101010
     name "Hubstats"
     full_name "hub/hubstats"
-    initialize_with { attributes } 
+    initialize_with { attributes }
+  end
+
+  factory :repo_payload_hash, class:Hash do
+    id {Faker::Number.number(6).to_i}
+    type "RepositoryEvent"
+    association :user, factory: :user_hash, strategy: :build
+    association :repo, factory: :repo_hash, strategy: :build
+    initialize_with { attributes }
   end
 end

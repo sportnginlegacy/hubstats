@@ -70,7 +70,7 @@ module Hubstats
     context '.update_teams' do
       subject {Hubstats::GithubAPI}
       let(:org) {'sportngin'}
-      let(:team1) {build(:team_hash, :name => "Team One")}
+      let(:team1) {build(:team_hash, :name => "Team One", description: "hubstats")}
       let(:team2) {build(:team_hash, :name => "Team Four")}
       let(:team3) {build(:team_hash, :name => "Team Five")}
       let(:team4) {build(:team_hash, :name => "Team Six")}
@@ -82,12 +82,14 @@ module Hubstats
       let(:hubstats_user) {build(:user)}
       let(:access_token) { "access_token" }
       let(:user) { double }
-      let(:client) { double(:user => user) }
+      let(:octokit_team) {double(:octokit_team)}
+      let(:client) {double(:octokit_client, team: octokit_team, user: user)}
 
       it 'should successfully update all teams' do
         allow_message_expectations_on_nil
         allow(client).to receive(:organization_teams).with("sportngin").and_return([team1, team2, team3, team4])
         allow(client).to receive(:team_members).with(team1[:id]).and_return([user1, user2, user3])
+        allow(client).to receive(:team).and_return(octokit_team)
         allow(Hubstats).to receive_message_chain(:config, :github_config, :[]).with("team_list") { ["Team One", "Team Two", "Team Three"] }
         allow(Hubstats).to receive_message_chain(:config, :github_config, :[]).with("org_name") {"sportngin"}
         allow(Hubstats::GithubAPI).to receive(:client).and_return(client)
@@ -101,44 +103,7 @@ module Hubstats
       end
     end
 
-    context '.deprecate_teams_from_file' do
-      subject {Hubstats::GithubAPI}
-      let(:team1) {create(:team, :name => "Team One")}
-      let(:team2) {create(:team, :name => "Team Two")}
-      let(:team3) {create(:team, :name => "Team Three")}
-      let(:team4) {create(:team, :name => "Team Four")}
-      let(:team5) {create(:team, :name => "Team Five")}
-
-      it 'should update the teams in the database based on a given whitelist' do
-        allow(Hubstats).to receive_message_chain(:config, :github_config, :[]).with("team_list") { ["Team One", "Team Two", "Team Three", "Team Four"] }
-        allow(Hubstats::Team).to receive(:all).and_return( [team1, team2, team3, team4, team5] )
-        expect(team5).to receive(:update_column).with(:hubstats, false)
-        subject.deprecate_teams_from_file
-      end
-    end
-
-    context ".update_hook" do
-      subject {Hubstats::GithubAPI}
-      let(:repo) {'hubstats'}
-      context "with old_endpoint" do
-        let(:old_endpoint) {'www.hubstats.com'}
-        it 'should call delete_hook' do
-          allow(subject).to receive(:create_hook)
-          expect(subject).to receive(:delete_hook).with(repo,old_endpoint)
-          subject.update_hook('hubstats','www.hubstats.com')
-        end
-      end
-
-      context "without old_point" do
-        it 'should not call delete_hook' do
-          allow(subject).to receive(:create_hook)
-          expect(subject).to_not receive(:delete_hook).with(repo)
-          subject.update_hook('hubstats')
-        end
-      end
-    end
-
-    context ".create_hook" do
+    context ".create_repo_hook" do
       subject {Hubstats::GithubAPI}
       let(:config) {double(:webhook_secret => 'a1b2c3d4', :webhook_endpoint => "hubstats.com")}
       let(:client) {double}
@@ -146,16 +111,17 @@ module Hubstats
       before do
         allow(Hubstats).to receive(:config) {config}
         allow(subject).to receive(:client) {client}
+        allow(repo).to receive(:[]).with(:full_name)
       end
 
       it "should call octokit create_hook for repositories" do
         expect(client).to receive(:create_hook)
-        subject.create_hook(repo)
+        subject.create_repo_hook(repo)
       end
 
       it "should rescue unprocessable entity from repo hook" do
         allow(client).to receive(:create_hook) { raise Octokit::UnprocessableEntity }
-        subject.create_hook(repo)
+        subject.create_repo_hook(repo)
       end
     end
 
@@ -169,16 +135,15 @@ module Hubstats
         allow(subject).to receive(:client) {client}
       end
 
-      it "should call octokit create_hook for organizations" do
-        expect(client).to receive(:create_hook)
-        subject.create_hook(org)
+      it "should call octokit create_org_hook for organizations" do
+        expect(client).to receive(:create_org_hook)
+        subject.create_org_hook(org)
       end
 
       it "should rescue unprocessable entity from organization hook" do
-        allow(client).to receive(:create_hook) { raise Octokit::UnprocessableEntity }
-        subject.create_hook(org)
+        allow(client).to receive(:create_org_hook) { raise Octokit::UnprocessableEntity }
+        subject.create_org_hook(org)
       end
     end
-
   end
 end
