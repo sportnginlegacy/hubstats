@@ -91,8 +91,8 @@ module Hubstats
       repo = payload[:repository]
 
       if payload[:github_action] == "created" # it's a new repository
-        Hubstats::Repo.create_or_update
-        Hubstats::GithubAPI.create_repo_hook(repo)
+        Hubstats::Repo.create_or_update(repo.with_indifferent_access)
+        Hubstats::GithubAPI.create_repo_hook(repo.with_indifferent_access)
         # The hook was probably already made when we made the repository,
         # but we'll put this here just in case
       end
