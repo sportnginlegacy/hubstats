@@ -1,3 +1,8 @@
+#### v1.0.0
+* Be able to load repositories and teams from webhooks
+
+  > Emma Sax, Carl Allen: production-status-check[bot]: https://github.com/sportngin/hubstats/pull/138
+
 #### v0.12.2
 * Fix bug that results in comments never being saved
 
