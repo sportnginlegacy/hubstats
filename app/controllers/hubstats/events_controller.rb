@@ -10,13 +10,19 @@ module Hubstats
     #
     # Returns - nothing, but makes a new event
     def handler
-      verify_signature(request)
+      # verify_signature(request)
+
+      Rails.logger.warn("Webhook received from Github.")
 
       kind = request.headers['X-Github-Event']
+      Rails.logger.warn("Kind of webhook: #{kind}")
+
       event = event_params.with_indifferent_access
+      Rails.logger.warn("Event: #{event}")
 
       raw_parameters = request.request_parameters
       event[:github_action] = raw_parameters["action"]
+      Rails.logger.warn("Github action: #{event[:github_action]}")
 
       eventsHandler = Hubstats::EventsHandler.new()
       eventsHandler.route(event, kind)
@@ -29,12 +35,12 @@ module Hubstats
     # request - the signature to be checked
     #
     # Returns - an error if the signatures don't match
-    private def verify_signature(request)
-      request.body.rewind
-      payload_body = request.body.read
-      signature = 'sha1=' + OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new('sha1'), Hubstats.config.webhook_endpoint, payload_body)
-      return 500, "Signatures didn't match!" unless Rack::Utils.secure_compare(signature, request.env['HTTP_X_HUB_SIGNATURE'])
-    end
+    # private def verify_signature(request)
+    #   request.body.rewind
+    #   payload_body = request.body.read
+    #   signature = 'sha1=' + OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new('sha1'), Hubstats.config.webhook_endpoint, payload_body)
+    #   return 500, "Signatures didn't match!" unless Rack::Utils.secure_compare(signature, request.env['HTTP_X_HUB_SIGNATURE'])
+    # end
 
     # Private - Allows only these parameters to be added when creating an event
     #

@@ -70,7 +70,7 @@ module Hubstats
     def team_processor(payload)
       team = payload[:team]
 
-      if payload[:scope] == "team" && payload[:action] == "added"
+      if payload[:scope] == "team" && payload[:github_action] == "added"
         if Hubstats::Team.designed_for_hubstats?(team[:description])
            Hubstats::Team.create_or_update(team.with_indifferent_access)
            hubstats_team = Hubstats::Team.where(name: team[:name]).first
@@ -79,7 +79,7 @@ module Hubstats
         end
       end
 
-      if payload[:action] == "edited" && Hubstats::Team.designed_for_hubstats?(team[:description])
+      if payload[:github_action] == "edited" && Hubstats::Team.designed_for_hubstats?(team[:description])
         Hubstats::Team.create_or_update(team.with_indifferent_access)
         hubstats_team = Hubstats::Team.where(name: team[:name]).first
         hubstats_user = Hubstats::User.create_or_update(payload[:member])
@@ -90,7 +90,7 @@ module Hubstats
     def repository_processor(payload)
       repo = payload[:repository]
 
-      if payload[:action] == "created" # it's a new repository
+      if payload[:github_action] == "created" # it's a new repository
         Hubstats::Repo.create_or_update
         Hubstats::GithubAPI.create_repo_hook(repo)
         # The hook was probably already made when we made the repository,
