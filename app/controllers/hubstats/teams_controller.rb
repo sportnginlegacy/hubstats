@@ -9,7 +9,7 @@ module Hubstats
     # Returns - the team data
     def index
       if params[:query] ## For select 2
-        @teams = Hubstats::Team.where("name LIKE ?", "%#{params[:query]}%").order("name ASC")
+        @teams = Hubstats::Team.where(hubstats: true).where("name LIKE ?", "%#{params[:query]}%").order("name ASC")
       elsif params[:id]
         @teams = Hubstats::Team.where(id: params[:id].split(",")).order("name ASC")
       else
@@ -42,7 +42,7 @@ module Hubstats
       @net_additions = Hubstats::PullRequest.merged_in_date_range(@start_date, @end_date).belonging_to_team(@team.id).sum(:additions).to_i -
                        Hubstats::PullRequest.merged_in_date_range(@start_date, @end_date).belonging_to_team(@team.id).sum(:deletions).to_i
       @additions = Hubstats::PullRequest.merged_in_date_range(@start_date, @end_date).belonging_to_team(@team.id).average(:additions)
-      @deletions = Hubstats::PullRequest.merged_in_date_range(@start_date, @end_date).belonging_to_team(@team.id).average(:deletions)      
+      @deletions = Hubstats::PullRequest.merged_in_date_range(@start_date, @end_date).belonging_to_team(@team.id).average(:deletions)
 
       stats
     end

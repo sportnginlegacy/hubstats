@@ -62,7 +62,7 @@ module Hubstats
     #
     # Returns - nothing, but updates or makes the team
     private def team_processor(payload)
-      # Adding a new hubstats team or adding/removing a person to/from a team
+      # Adding a new hubstats team, adding/removing a person to/from a team, or renaming a team
       if (payload[:scope] == "team" || payload[:github_action] == "edited") &&
           Hubstats::Team.designed_for_hubstats?(payload[:team][:description])
         Hubstats::Team.create_or_update(payload[:team].with_indifferent_access)
