@@ -10,17 +10,17 @@ module Hubstats
     def route(payload, type)
       case type
       when "issue_comment", "IssueCommentEvent"
-        comment_processor(payload, "Issue")
+        comment_processor(payload, "Issue") # comment on a pull request
       when "commit_comment", "CommitCommentEvent"
-        comment_processor(payload, "Commit")
-      when "pull_request", "PullRequestEvent"
-        pull_processor(payload)
+        comment_processor(payload, "Commit") # comment on a pull request commit
       when "pull_request_review_comment", "PullRequestReviewCommentEvent"
-        comment_processor(payload, "PullRequest")
+        comment_processor(payload, "PullRequest") # comment on a pull request review
+      when "pull_request", "PullRequestEvent"
+        pull_processor(payload) # new pull request
       when "membership", "MembershipEvent", "team", "TeamEvent"
-        team_processor(payload)
+        team_processor(payload) # adding/editing/deleting/modifying teams
       when "repository", "RepositoryEvent"
-        repository_processor(payload)
+        repository_processor(payload) # adding repositories
       end
     end
 
@@ -70,20 +70,37 @@ module Hubstats
     def team_processor(payload)
       team = payload[:team]
 
-      if payload[:scope] == "team" && payload[:github_action] == "added"
-        if Hubstats::Team.designed_for_hubstats?(team[:description])
-           Hubstats::Team.create_or_update(team.with_indifferent_access)
-           hubstats_team = Hubstats::Team.where(name: team[:name]).first
-           hubstats_user = Hubstats::User.create_or_update(payload[:member])
-           Hubstats::Team.update_users_in_team(hubstats_team, hubstats_user, payload[:github_action])
-        end
-      end
-
-      if payload[:github_action] == "edited" && Hubstats::Team.designed_for_hubstats?(team[:description])
+      # Adding a new hubstats team or adding a person to a team
+      if payload[:scope] == "team" && payload[:github_action] == "added" && Hubstats::Team.designed_for_hubstats?(team[:description])
         Hubstats::Team.create_or_update(team.with_indifferent_access)
         hubstats_team = Hubstats::Team.where(name: team[:name]).first
         hubstats_user = Hubstats::User.create_or_update(payload[:member])
         Hubstats::Team.update_users_in_team(hubstats_team, hubstats_user, payload[:github_action])
+      end
+
+      # Removing a person from a team
+      if payload[:scope] == "team" && payload[:github_action] == "removed" && Hubstats::Team.designed_for_hubstats?(team[:description])
+        Hubstats::Team.create_or_update(team.with_indifferent_access)
+        hubstats_team = Hubstats::Team.where(name: team[:name]).first
+        hubstats_user = Hubstats::User.create_or_update(payload[:member])
+        Hubstats::Team.update_users_in_team(hubstats_team, hubstats_user, payload[:github_action])
+      end
+
+      # Renaming a hubstats team
+      if payload[:github_action] == "edited" && Hubstats::Team.designed_for_hubstats?(team[:description])
+        Hubstats::Team.create_or_update(team.with_indifferent_access)
+        hubstats_team = Hubstats::Team.where(name: team[:name]).first
+        hubstats_user = Hubstats::User.create_or_update(payload[:sender])
+        Hubstats::Team.update_users_in_team(hubstats_team, hubstats_user, payload[:github_action])
+      end
+
+      # Deleting a hubstats team
+      if payload[:scope] == "organization" && payload[:github_action] == "removed"
+        hubstats_team = Hubstats::Team.where(name: team[:name]).first
+        if hubstats_team && hubstats_team[:hubstats]
+          hubstats_team.update_column(:hubstats, false)
+          hubstats_team.save!
+        end
       end
     end
 

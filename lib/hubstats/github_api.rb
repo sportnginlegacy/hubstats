@@ -122,34 +122,17 @@ module Hubstats
       end
     end
 
-    # Public - Goes through entire team database and updates the hubstats boolean based on the octokit.yml file
-    #
-    # Returns - nothing
-    def self.deprecate_teams
-      teams = Hubstats::Team.all
-
-      teams.each do |team|
-        desc = client.team(team.id)[:description]
-        if Hubstats::Team.designed_for_hubstats?(desc) && (team[:hubstats] == true)
-          team.update_column(:hubstats, false)
-          team.save!
-          puts "Changed #{team[:name]} from true to false"
-        end
-      end
-
-      puts "All teams are up to date"
-      puts "Run 'rake hubstats:update_teams' or 'rake hubstats:update_teams_in_pulls' to grab more teams from GitHub"
-    end
-
     # Public - Makes a new webhook from a repository
     #
     # repo - the repository that is attempting to have a hook made with
     #
     # Returns - the hook and a message (or just a message and no hook)
     def self.create_repo_hook(repo)
+      repo_name = repo[:full_name] ? repo[:full_name] : repo.full_name
+      puts "Repo that we're going to make a hook on: #{repo_name}"
       begin
         client.create_hook(
-          repo.full_name,
+          repo_name,
           'web',
           {
             :url => Hubstats.config.webhook_endpoint,
@@ -161,11 +144,11 @@ module Hubstats
             :active => true
           }
         )
-        puts "Hook on #{repo.full_name} successfully created"
+        puts "Hook on #{repo_name} successfully created"
       rescue Octokit::UnprocessableEntity
-        puts "Hook on #{repo.full_name} already existed"
+        puts "Hook on #{repo_name} already existed"
       rescue Octokit::NotFound
-        puts "You don't have sufficient privileges to add an event hook to #{repo.full_name}"
+        puts "You don't have sufficient privileges to add an event hook to #{repo_name}"
       end
     end
 

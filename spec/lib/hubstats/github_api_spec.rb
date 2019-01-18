@@ -103,29 +103,6 @@ module Hubstats
       end
     end
 
-    context '.deprecate_teams' do
-      subject {Hubstats::GithubAPI}
-      let(:team1) {create(:team, :name => "Team One")}
-      let(:team2) {create(:team, :name => "Team Two")}
-      let(:team3) {create(:team, :name => "Team Three")}
-      let(:team4) {create(:team, :name => "Team Four")}
-      let(:team5) {create(:team, :name => "Team Five")}
-      let(:octokit_team) {double(:octokit_team, description: "Description for Hubstats")}
-      let(:client) {double(:octokit_client, team: octokit_team)}
-
-      before do
-        allow(octokit_team).to receive(:[]).with(:description).and_return("Description for Hubstats")
-      end
-
-      it 'should update the teams in the database based on a given whitelist' do
-        allow(Hubstats::Team).to receive(:all).and_return( [team1, team2, team3, team4, team5] )
-        allow(client).to receive(:team).and_return(octokit_team)
-        allow(subject).to receive(:client).and_return(client)
-        expect(team5).to receive(:update_column).with(:hubstats, false)
-        subject.deprecate_teams
-      end
-    end
-
     context ".create_repo_hook" do
       subject {Hubstats::GithubAPI}
       let(:config) {double(:webhook_secret => 'a1b2c3d4', :webhook_endpoint => "hubstats.com")}
@@ -134,6 +111,7 @@ module Hubstats
       before do
         allow(Hubstats).to receive(:config) {config}
         allow(subject).to receive(:client) {client}
+        allow(repo).to receive(:[]).with(:full_name)
       end
 
       it "should call octokit create_hook for repositories" do
@@ -167,6 +145,5 @@ module Hubstats
         subject.create_org_hook(org)
       end
     end
-
   end
 end

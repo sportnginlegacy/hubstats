@@ -18,16 +18,16 @@ namespace :hubstats do
     Rake::Task['hubstats:setup'].invoke
   end
 
-  desc "Updates changes to the config file"
-  task :update => :environment do
-    puts "Updating repos and teams"
-    Rake::Task['hubstats:populate:update'].invoke
-  end
-
   desc "Updates the seed"
   task :seed => :environment do
     puts "Updating seed"
     Rake::Task['db:seed'].invoke
+  end
+
+  desc "Updates changes to the config file"
+  task :update => :environment do
+    puts "Updating repos and teams"
+    Rake::Task['hubstats:populate:update'].invoke
   end
 
   desc "Updates the teams for past pull requests"
@@ -40,12 +40,6 @@ namespace :hubstats do
   task :update_teams => :environment do
     puts "Updating teams"
     Rake::Task['hubstats:populate:update_teams'].invoke
-  end
-
-  desc "Deprecates teams"
-  task :deprecate_teams => :environment do
-    puts "Deprecating teams"
-    Rake::Task['hubstats:populate:deprecate_teams'].invoke
   end
 
   desc "Creates webhook from github for organization"

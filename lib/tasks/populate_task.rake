@@ -33,7 +33,7 @@ namespace :hubstats do
 
     desc "Updates teams for past pull requests"
     task :update_teams_in_pulls => :environment do
-      update_teams_in_prs
+      Hubstats::PullRequest.update_teams_in_pulls(365)
     end
 
     desc "Updates the teams"
@@ -41,21 +41,8 @@ namespace :hubstats do
       update_teams
     end
 
-    desc "Deprecates teams"
-    task :deprecate_teams => :environment do
-      Hubstats::GithubAPI.deprecate_teams
-    end
-
     desc "Creates the webhook for the current org"
     task :create_organization_hook => :environment do
-      create_org_hook
-    end
-
-    task :create_org_hook => :environment do
-      create_org_hook
-    end
-
-    private def create_org_hook
       Hubstats::GithubAPI.create_org_hook(Hubstats.config.github_config["org_name"])
     end
 
@@ -68,6 +55,14 @@ namespace :hubstats do
       # populate_pulls(repo)
       # populate_comments(repo)
       # populate_labels(repo)
+    end
+
+    private def update_pulls
+      Hubstats::GithubAPI.update_pulls
+    end
+
+    private def update_teams
+      Hubstats::GithubAPI.update_teams
     end
 
     private def populate_users(repo)
@@ -100,18 +95,6 @@ namespace :hubstats do
       repo = repo_checker(repo)
       puts "Getting labels for " + repo.full_name
       Hubstats::GithubAPI.add_labels(repo)
-    end
-
-    private def update_pulls
-      Hubstats::GithubAPI.update_pulls
-    end
-
-    private def update_teams
-      Hubstats::GithubAPI.update_teams
-    end
-
-    private def update_teams_in_prs
-      Hubstats::PullRequest.update_teams_in_pulls(365)
     end
 
     private def repo_checker(args)
