@@ -13,16 +13,20 @@ module Hubstats
       # verify_signature(request)
 
       Rails.logger.warn("Webhook received from Github.")
+      puts "Webhook received from Github."
 
       kind = request.headers['X-Github-Event']
       Rails.logger.warn("Kind of webhook: #{kind}")
+      puts "Kind of webhook: #{kind}"
 
       event = event_params.with_indifferent_access
       Rails.logger.warn("Event: #{event}")
+      puts "Event: #{event}"
 
       raw_parameters = request.request_parameters
       event[:github_action] = raw_parameters["action"]
       Rails.logger.warn("Github action: #{event[:github_action]}")
+      puts "Github action: #{event[:github_action]}"
 
       eventsHandler = Hubstats::EventsHandler.new()
       eventsHandler.route(event, kind)
