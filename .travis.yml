@@ -6,14 +6,15 @@ cache: bundler
 branches:
   only:
     - master
+
 rvm:
   - 2.1
   - 2.2
   - 2.3.0
 
-script: bundle exec rspec
 before_script:
   - bundle exec rake app:db:create
   - bundle exec rake app:db:migrate
   - bundle exec rake app:db:test:prepare
 
+script: bundle exec rspec
