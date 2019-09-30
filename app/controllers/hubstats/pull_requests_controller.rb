@@ -14,9 +14,8 @@ module Hubstats
 
       pull_requests = PullRequest.all_filtered(params, @start_date, @end_date)
       @labels = Hubstats::Label.count_by_pull_requests(pull_requests).order("pull_request_count DESC")
-      @pull_requests = Hubstats::PullRequest.includes(:user, :repo, :team).belonging_to_users(params[:users])
-        .belonging_to_repos(params[:repos])
-        .belonging_to_teams(params[:teams])
+      @pull_requests = Hubstats::PullRequest.includes(:user, :repo, :team)
+        .belonging_to_users(params[:users]).belonging_to_repos(params[:repos]).belonging_to_teams(params[:teams])
         .group(params[:group]).with_label(params[:label])
         .state_based_order(@start_date, @end_date, params[:state], params[:order])
         .paginate(:page => params[:page], :per_page => 15)
