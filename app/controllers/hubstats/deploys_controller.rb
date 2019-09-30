@@ -24,7 +24,8 @@ module Hubstats
     #
     # Returns - the stats and data of the deploy
     def show
-      @deploy = Hubstats::Deploy.includes(:repo, :pull_requests).find(params[:id].try(:permit!).to_h)
+      show_params = params.permit(:id).to_h
+      @deploy = Hubstats::Deploy.includes(:repo, :pull_requests).find(show_params[:id])
       repo = @deploy.repo
       @pull_requests = @deploy.pull_requests.limit(50)
       @pull_request_count = @pull_requests.length

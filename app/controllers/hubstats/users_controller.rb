@@ -33,9 +33,8 @@ module Hubstats
     #
     # Returns - the data of the specific user
     def show
-      params = params.try(:permit!).to_h
-
-      @user = Hubstats::User.where(login: params[:id]).first
+      show_params = params.permit(:id).to_h
+      @user = Hubstats::User.where(login: show_params[:id]).first
       @pull_requests = Hubstats::PullRequest.belonging_to_user(@user.id).merged_in_date_range(@start_date, @end_date).order("updated_at DESC").limit(50)
       @pull_count = Hubstats::PullRequest.belonging_to_user(@user.id).merged_in_date_range(@start_date, @end_date).count(:all)
       @deploys = Hubstats::Deploy.belonging_to_user(@user.id).deployed_in_date_range(@start_date, @end_date).order("deployed_at DESC").limit(50)

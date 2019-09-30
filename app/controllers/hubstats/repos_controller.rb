@@ -32,9 +32,8 @@ module Hubstats
     #
     # Returns - the specific repository data
     def show
-      params = params.try(:permit!).to_h
-
-      @repo = Hubstats::Repo.where(name: params[:repo]).first
+      show_params = params.permit(:id, :repo).to_h
+      @repo = Hubstats::Repo.where(name: show_params[:repo]).first
       @pull_requests = Hubstats::PullRequest.belonging_to_repo(@repo.id).merged_in_date_range(@start_date, @end_date).order("updated_at DESC").limit(50)
       @pull_count = Hubstats::PullRequest.belonging_to_repo(@repo.id).merged_in_date_range(@start_date, @end_date).count(:all)
       @deploys = Hubstats::Deploy.belonging_to_repo(@repo.id).deployed_in_date_range(@start_date, @end_date).order("deployed_at DESC").limit(50)

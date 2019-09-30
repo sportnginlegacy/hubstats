@@ -1,5 +1,5 @@
 require_dependency "hubstats/application_controller"
-
+require 'pry'
 module Hubstats
   class TeamsController < ApplicationController
 
@@ -32,9 +32,8 @@ module Hubstats
     #
     # Returns - the data of the specific team
     def show
-      params = params.try(:permit!).to_h
-
-      @team = Hubstats::Team.where(id: params[:id]).first
+      show_params = params.permit(:id).to_h
+      @team = Hubstats::Team.where(id: show_params[:id]).first
       @pull_requests = Hubstats::PullRequest.belonging_to_team(@team.id).merged_in_date_range(@start_date, @end_date).order("updated_at DESC").limit(50)
       @pull_count = Hubstats::PullRequest.belonging_to_team(@team.id).merged_in_date_range(@start_date, @end_date).count(:all)
       @users = @team.users.where.not(login: Hubstats.config.github_config["ignore_users_list"] || []).order("login ASC").distinct
