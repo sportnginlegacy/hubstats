@@ -20,11 +20,12 @@ module Hubstats
     scope :belonging_to_users, lambda {|user_id| where(user_id: user_id.split(',')) if user_id}
     scope :with_repo_name, -> { select('DISTINCT hubstats_repos.name as repo_name, hubstats_deploys.*').joins("LEFT JOIN hubstats_repos ON hubstats_repos.id = hubstats_deploys.repo_id") }
     scope :with_user_name, -> { select('DISTINCT hubstats_users.login as user_name, hubstats_deploys.*').joins("LEFT JOIN hubstats_users ON hubstats_users.id = hubstats_deploys.user_id") }
-    
+
     scope :belonging_to_teams, lambda {|teams|
       if teams
         team_list = Hubstats::Team.where(id: teams.split(','))
-        user_list = team_list.map {|team| team.users.pluck(:id)}.flatten.uniq
+        user_list = team_list.map {|team| team.users.pluck(:id)}.flatten.
+        user_list = user_list == [] ? [] : user_list.distinct
         where(user_id: user_list.split(','))
       end
     }
@@ -34,10 +35,10 @@ module Hubstats
     has_many :pull_requests
 
     # Public - Orders the deploys within the start_date and end_date with by a given order.
-    # 
+    #
     # start_date - the start of the date range
     # end_date - the end of the data range
-    # order - the designated order to sort the data 
+    # order - the designated order to sort the data
     #
     # Returns - the deploy data ordered
     def self.order_with_date_range(start_date, end_date, order)
@@ -46,7 +47,7 @@ module Hubstats
     end
 
     # Public - Groups the deploys based on the string passed in: 'user' or 'repo'.
-    # 
+    #
     # group - string that is the designated grouping
     #
     # Returns - the data grouped
@@ -60,12 +61,12 @@ module Hubstats
        end
     end
 
-    # Public - Gathers all PRs for a deploy, and then either finds all of the additions or all of the 
+    # Public - Gathers all PRs for a deploy, and then either finds all of the additions or all of the
     # deletions, depending on the symbol passed in.
     #
     # add - symbol that reflects the type of data we want to add up
     #
-    # Returns - the total amount that has been added; either deletions or additions 
+    # Returns - the total amount that has been added; either deletions or additions
     def total_changes(add)
       pull_requests = self.pull_requests
       total = 0
@@ -105,11 +106,5 @@ module Hubstats
       end
       return total_comments
     end
-
-    # def belonging_to_teams(teams)
-    #   team_list = Hubstats::Team.where(id: teams.split(','))
-    #   user_list = team_list.map {|team| team.users.pluck(:id)}.flatten.uniq
-    #   return in_teams(user_list)
-    # end
   end
 end

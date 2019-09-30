@@ -38,7 +38,8 @@ module Hubstats
       @comment_count = Hubstats::Comment.belonging_to_team(@users.pluck(:id)).created_in_date_range(@start_date, @end_date).count(:all)
       repos_pr = @pull_requests.pluck(:repo_id)
       repos_comment = Hubstats::Comment.belonging_to_team(@users.pluck(:id)).created_in_date_range(@start_date, @end_date).pluck(:repo_id)
-      @repo_count = repos_pr.concat(repos_comment).uniq.count
+      repos = repos_pr.concat(repos_comment)
+      @repo_count = repos == [] ? 0 : repos.distinct.count
       @net_additions = Hubstats::PullRequest.merged_in_date_range(@start_date, @end_date).belonging_to_team(@team.id).sum(:additions).to_i -
                        Hubstats::PullRequest.merged_in_date_range(@start_date, @end_date).belonging_to_team(@team.id).sum(:deletions).to_i
       @additions = Hubstats::PullRequest.merged_in_date_range(@start_date, @end_date).belonging_to_team(@team.id).average(:additions)
