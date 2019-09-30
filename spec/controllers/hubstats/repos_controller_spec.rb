@@ -5,7 +5,7 @@ module Hubstats
     routes { Hubstats::Engine.routes }
 
     describe "#index" do
-      it "should list all of the repos" do        
+      it "should list all of the repos" do
         repo1 = create(:repo, :id => 101010,
                               :name => "silly",
                               :full_name => "sportngin/silly",
@@ -45,7 +45,7 @@ module Hubstats
         deploy1 = create(:deploy, :repo_id => 101010)
         deploy2 = create(:deploy, :repo_id => 101010)
         allow(Hubstats).to receive_message_chain(:config, :github_config, :[]).with("ignore_users_list") { ["user"] }
-        get :show, repo: repo.name
+        get :show, params: { repo: repo.name}
         expect(assigns(:repo)).to eq(repo)
         expect(assigns(:repo).pull_requests).to contain_exactly(pull1, pull2)
         expect(assigns(:repo).deploys).to contain_exactly(deploy1, deploy2)
