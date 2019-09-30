@@ -1,4 +1,5 @@
 require_dependency "hubstats/application_controller"
+require_dependency 'pry'
 
 module Hubstats
   class PullRequestsController < Hubstats::BaseController
@@ -13,17 +14,13 @@ module Hubstats
 
       pull_requests = PullRequest.all_filtered(params, @start_date, @end_date)
       @labels = Hubstats::Label.count_by_pull_requests(pull_requests).order("pull_request_count DESC")
-
-      @pull_requests = Hubstats::PullRequest.includes(:user, :repo, :team)
-        .belonging_to_users(params[:users]).belonging_to_repos(params[:repos]).belonging_to_teams(params[:teams])
-        .group_by(params[:group]).with_label(params[:label])
-        .state_based_order(@start_date, @end_date, params[:state], params[:order])
-        .paginate(:page => params[:page], :per_page => 15)
+      # binding.pry
+      @pull_requests = Hubstats::PullRequest.includes(:user, :repo, :team).belonging_to_users(params[:users]).belonging_to_repos(params[:repos]).belonging_to_teams(params[:teams]).group_by(params[:group]).with_label(params[:label]).state_based_order(@start_date, @end_date, params[:state], params[:order]).paginate(:page => params[:page], :per_page => 15)
 
       grouping(params[:group], @pull_requests)
-    end 
+    end
 
-    # Public - Will show the particular pull request selected, including all of the basic stats, deploy (only if 
+    # Public - Will show the particular pull request selected, including all of the basic stats, deploy (only if
     # PR is closed), and comments associated with that PR within the @start_date and @end_date.
     #
     # Returns - the specific details of the pull request

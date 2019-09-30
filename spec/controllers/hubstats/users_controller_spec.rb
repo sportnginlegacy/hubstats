@@ -28,7 +28,7 @@ module Hubstats
         comment1 = create(:comment, :user => user, :updated_at => Date.today)
         comment2 = create(:comment, :user => user, :updated_at => Date.today)
         allow(Hubstats).to receive_message_chain(:config, :github_config, :[]).with("ignore_users_list") { ["user"] }
-        get :show, id: "examplePerson"
+        post :show, params: { id: "examplePerson" }
         expect(assigns(:user)).to eq(user)
         expect(assigns(:user).pull_requests).to contain_exactly(pull1, pull2)
         expect(assigns(:user).deploys).to contain_exactly(deploy1, deploy2)

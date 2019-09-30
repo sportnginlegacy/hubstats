@@ -3,7 +3,7 @@ require 'spec_helper'
 module Hubstats
   describe PullRequestsController, :type => :controller do
     routes { Hubstats::Engine.routes }
-    
+
     describe "#index" do
       it "should correctly order all of the pull requests" do
         user = build(:user, :updated_at => '2015-12-01')
@@ -39,7 +39,7 @@ module Hubstats
         comment1 = create(:comment, :pull_request_id => pull.id, :created_at => Date.today, :updated_at => '2015-12-01', user: user)
         comment2 = create(:comment, :pull_request_id => pull.id, :created_at => Date.today, :updated_at => '2015-12-01', user: user)
         comment3 = create(:comment, :pull_request_id => pull.id, :created_at => Date.today, :updated_at => '2015-12-01', user: user)
-        get :show, repo: repo, id: pull.id
+        get :show, params: { repo: repo, id: pull.id }
         expect(assigns(:pull_request)).to eq(pull)
         expect(assigns(:pull_request).repo_id).to eq(101010)
         expect(assigns(:pull_request).deploy_id).to eq(404040)

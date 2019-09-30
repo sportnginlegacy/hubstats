@@ -10,7 +10,7 @@ module Hubstats
     def index
       @deploys = Hubstats::Deploy.includes(:repo, :pull_requests, :user)
         .belonging_to_users(params[:users]).belonging_to_repos(params[:repos]).belonging_to_teams(params[:teams])
-        .group_by(params[:group])
+        .group(params[:group])
         .order_with_date_range(@start_date, @end_date, params[:order])
         .paginate(:page => params[:page], :per_page => 15)
 
@@ -42,7 +42,7 @@ module Hubstats
     def create
       new_params = deploy_params
       if new_params[:git_revision].nil? || new_params[:repo_name].nil? || new_params[:pull_request_ids].nil?
-        render text: "Missing a necessary parameter: git revision, pull request ids, or repository name.", :status => 400 and return
+        render plain: "Missing a necessary parameter: git revision, pull request ids, or repository name.", :status => 400 and return
       else
         @deploy = Deploy.new
         @deploy.deployed_at = new_params[:deployed_at]
@@ -50,26 +50,28 @@ module Hubstats
         @repo = Hubstats::Repo.where(full_name: new_params[:repo_name])
 
         if !valid_repo(@repo)
-          render text: "Repository name is invalid.", :status => 400 and return
+          render plain: "Repository name is invalid.", :status => 400 and return
         else
           @deploy.repo_id = @repo.first.id.to_i
         end
 
         pull_request_id_array = new_params[:pull_request_ids].split(",").map {|i| i.strip.to_i}
         if !valid_pr_ids(pull_request_id_array)
-          render text: "No pull request ids given.", :status => 400 and return
+          render plain: "No pull request ids given.", :status => 400 and return
         else
           @deploy.pull_requests = Hubstats::PullRequest.where(repo_id: @deploy.repo_id).where(number: pull_request_id_array)
         end
 
         if !valid_pulls
-          render text: "Pull requests not valid", :status => 400 and return
+          render plain: "Pull requests not valid", :status => 400 and return
         end
 
         if @deploy.save
-          render :nothing => true, :status => 200 and return
+          head :ok
+          return
         else
-          render :nothing => true, :status => 400 and return
+          head :bad_request
+          return
         end
       end
     end

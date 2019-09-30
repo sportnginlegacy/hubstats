@@ -30,7 +30,7 @@ module Hubstats
         pull1 = create(:pull_request, :user => user1, :id => 303030, :team => team, :repo_id => repo.id, :updated_at => Date.today)
         pull2 = create(:pull_request, :user => user2, :id => 404040, :team => team, :repo => pull1.repo, :updated_at => Date.today)
         allow(Hubstats).to receive_message_chain(:config, :github_config, :[]).with("ignore_users_list") { ["user"] }
-        get :show, id: 1
+        get :show, params: { id: 1 }
         expect(assigns(:team)).to eq(team)
         expect(pull1.team_id).to eq(team.id)
         expect(pull2.team_id).to eq(team.id)
