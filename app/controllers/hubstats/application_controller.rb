@@ -17,4 +17,8 @@ module Hubstats
       end
     end
   end
+
+  class ActionController::Parameters
+    delegate :merge, :merge!, :except!, :reverse_merge, :map, :reduce, :inject, :to_hash, :with_indifferent_access, to: :to_h
+  end
 end
