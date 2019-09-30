@@ -21,7 +21,7 @@ module Hubstats
                                       :repo => repo,
                                       :updated_at => '2015-05-30')
         pulls_ordered = [pull3, pull1, pull4, pull2]
-        expect(Hubstats::PullRequest).to receive_message_chain("group_by.with_label.state_based_order.paginate").and_return(pulls_ordered)
+        expect(Hubstats::PullRequest).to receive_message_chain("with_label.state_based_order.paginate").and_return(pulls_ordered)
         get :index
         expect(response).to have_http_status(200)
         expect(response).to render_template(:index)

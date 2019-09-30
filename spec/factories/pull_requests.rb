@@ -24,7 +24,7 @@ FactoryBot.define do
     association :repository, factory: :repo_hash, strategy: :build
     id {Faker::Number.number(6).to_i}
     number {|n| "#{n}".to_i}
-    merged_by(nil)
+    merged_by { nil }
     created_at { Date.today }
     updated_at { Date.today }
     initialize_with { attributes }
