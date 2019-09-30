@@ -25,7 +25,7 @@ Gem::Specification.new do |s|
   s.add_dependency "sass-rails"
   s.add_dependency "bootstrap-datepicker-rails", "~> 1.5"
 
-  s.add_development_dependency "mysql2",'~> 0.3.2'
+  s.add_development_dependency "mysql2",'~> 0.4.4'
   s.add_development_dependency "rspec-rails",'~> 3.4'
   s.add_development_dependency "shoulda-matchers", "~> 2.8"
   s.add_development_dependency "factory_girl_rails", "~> 4.5"
