@@ -1,4 +1,4 @@
-class CreateHubstatsRepos < ActiveRecord::Migration['4.2.10']
+class CreateHubstatsRepos < ActiveRecord::Migration[4.2]
   def change
     create_table :hubstats_repos do |t|
       t.belongs_to :owner

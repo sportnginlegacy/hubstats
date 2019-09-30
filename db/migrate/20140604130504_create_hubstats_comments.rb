@@ -1,4 +1,4 @@
-class CreateHubstatsComments < ActiveRecord::Migration['4.2.10']
+class CreateHubstatsComments < ActiveRecord::Migration[4.2]
   def change
     create_table :hubstats_comments do |t|
       t.string :kind

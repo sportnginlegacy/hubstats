@@ -1,4 +1,4 @@
-class DeleteUnusedColumns < ActiveRecord::Migration['4.2.10']
+class DeleteUnusedColumns < ActiveRecord::Migration[4.2]
   def change
   	remove_column :hubstats_comments, :line
   	remove_column :hubstats_comments, :diff_hunk
