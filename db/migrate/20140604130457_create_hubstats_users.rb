@@ -1,11 +1,11 @@
-class CreateHubstatsUsers < ActiveRecord::Migration
+class CreateHubstatsUsers < ActiveRecord::Migration[4.2.10]
   def change
     create_table :hubstats_users do |t|
       t.string :login
       t.string :role
       t.boolean :site_admin
       t.timestamps
-      
+
       t.string :avatar_url
       t.string :gravatar_id
       t.string :url

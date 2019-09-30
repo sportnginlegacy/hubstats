@@ -1,4 +1,4 @@
-class CreateHubstatsRepos < ActiveRecord::Migration
+class CreateHubstatsRepos < ActiveRecord::Migration[4.2.10]
   def change
     create_table :hubstats_repos do |t|
       t.belongs_to :owner
@@ -13,7 +13,7 @@ class CreateHubstatsRepos < ActiveRecord::Migration
       t.integer :forks_count
       t.integer :stargazers_count
       t.integer :watches_count
-      t.integer :size 
+      t.integer :size
       t.integer :open_issues_count
       t.boolean :has_issues
       t.boolean :has_wiki
