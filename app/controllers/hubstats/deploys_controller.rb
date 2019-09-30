@@ -8,15 +8,14 @@ module Hubstats
     #
     # Returns - the deploy data
     def index
-      params = params.try(:permit!).to_h
-
+      index_params = params.try(:permit!).to_h
       @deploys = Hubstats::Deploy.includes(:repo, :pull_requests, :user)
-        .belonging_to_users(params[:users]).belonging_to_repos(params[:repos]).belonging_to_teams(params[:teams])
-        .group(params[:group])
-        .order_with_date_range(@start_date, @end_date, params[:order])
-        .paginate(:page => params[:page], :per_page => 15)
+        .belonging_to_users(index_params[:users]).belonging_to_repos(index_params[:repos]).belonging_to_teams(index_params[:teams])
+        .group(index_params[:group])
+        .order_with_date_range(@start_date, @end_date, index_params[:order])
+        .paginate(:page => index_params[:page], :per_page => 15)
 
-      grouping(params[:group], @deploys)
+      grouping(index_params[:group], @deploys)
     end
 
     # Public - Shows the single deploy and all of the stats and pull requests about that deploy. Stats and PRs only

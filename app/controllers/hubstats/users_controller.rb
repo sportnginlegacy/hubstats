@@ -8,18 +8,17 @@ module Hubstats
     #
     # Returns - the user data
     def index
-      params = params.try(:permit!).to_h
-
-      if params[:query] ## For select 2
-        @users = Hubstats::User.where("login LIKE ?", "%#{params[:query]}%").order("login ASC")
-      elsif params[:id]
-        @users = Hubstats::User.where(id: params[:id].split(",")).order("login ASC")
+      index_params = params.try(:permit!).to_h
+      if index_params[:query] ## For select 2
+        @users = Hubstats::User.where("login LIKE ?", "%#{index_params[:query]}%").order("login ASC")
+      elsif index_params[:id]
+        @users = Hubstats::User.where(id: index_params[:id].split(",")).order("login ASC")
       else
         @users = Hubstats::User.with_all_metrics(@start_date, @end_date)
           .where.not(login: Hubstats.config.github_config["ignore_users_list"] || [])
-          .with_id(params[:users])
-          .custom_order(params[:order])
-          .paginate(:page => params[:page], :per_page => 15)
+          .with_id(index_params[:users])
+          .custom_order(index_params[:order])
+          .paginate(:page => index_params[:page], :per_page => 15)
       end
 
       respond_to do |format|

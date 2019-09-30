@@ -12,17 +12,17 @@ module Hubstats
     def index
       URI.decode(params[:label].try(:permit!).to_h) if params[:label]
 
-      params = params.try(:permit!).to_h
+      index_params = params.try(:permit!).to_h
 
-      pull_requests = PullRequest.all_filtered(params, @start_date, @end_date)
+      pull_requests = PullRequest.all_filtered(index_params, @start_date, @end_date)
       @labels = Hubstats::Label.count_by_pull_requests(pull_requests).order("pull_request_count DESC")
       @pull_requests = Hubstats::PullRequest.includes(:user, :repo, :team)
-        .belonging_to_users(params[:users]).belonging_to_repos(params[:repos]).belonging_to_teams(params[:teams])
-        .group(params[:group]).with_label(params[:label])
-        .state_based_order(@start_date, @end_date, params[:state], params[:order])
-        .paginate(:page => params[:page], :per_page => 15)
+        .belonging_to_users(index_params[:users]).belonging_to_repos(index_params[:repos]).belonging_to_teams(index_params[:teams])
+        .group(index_params[:group]).with_label(index_params[:label])
+        .state_based_order(@start_date, @end_date, index_params[:state], index_params[:order])
+        .paginate(:page => index_params[:page], :per_page => 15)
 
-      grouping(params[:group], @pull_requests)
+      grouping(index_params[:group], @pull_requests)
     end
 
     # Public - Will show the particular pull request selected, including all of the basic stats, deploy (only if

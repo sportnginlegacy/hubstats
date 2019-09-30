@@ -8,17 +8,16 @@ module Hubstats
     #
     # Returns - the team data
     def index
-      params = params.try(:permit!).to_h
-
-      if params[:query] ## For select 2
-        @teams = Hubstats::Team.where(hubstats: true).where("name LIKE ?", "%#{params[:query]}%").order("name ASC")
-      elsif params[:id]
-        @teams = Hubstats::Team.where(id: params[:id].split(",")).order("name ASC")
+      index_params = params.try(:permit!).to_h
+      if index_params[:query] ## For select 2
+        @teams = Hubstats::Team.where(hubstats: true).where("name LIKE ?", "%#{index_params[:query]}%").order("name ASC")
+      elsif index_params[:id]
+        @teams = Hubstats::Team.where(id: index_params[:id].split(",")).order("name ASC")
       else
         @teams = Hubstats::Team.where(hubstats: true).with_all_metrics(@start_date, @end_date)
-          .with_id(params[:teams])
+          .with_id(index_params[:teams])
           .order_by_name
-          .paginate(:page => params[:page], :per_page => 15)
+          .paginate(:page => index_params[:page], :per_page => 15)
       end
 
       respond_to do |format|

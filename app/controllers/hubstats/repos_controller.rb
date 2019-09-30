@@ -8,17 +8,16 @@ module Hubstats
     #
     # Returns - the repository data
     def index
-      params = params.try(:permit!).to_h
-
-      if params[:query] ## For select 2
-        @repos = Hubstats::Repo.where("name LIKE ?", "%#{params[:query]}%").order("name ASC")
-      elsif params[:id]
-        @repos = Hubstats::Repo.where(id: params[:id].split(",")).order("name ASC")
+      index_params = params.try(:permit!).to_h
+      if index_params[:query] ## For select 2
+        @repos = Hubstats::Repo.where("name LIKE ?", "%#{index_params[:query]}%").order("name ASC")
+      elsif index_params[:id]
+        @repos = Hubstats::Repo.where(id: index_params[:id].split(",")).order("name ASC")
       else
         @repos = Hubstats::Repo.with_all_metrics(@start_date, @end_date)
-          .with_id(params[:repos])
-          .custom_order(params[:order])
-          .paginate(:page => params[:page], :per_page => 15)
+          .with_id(index_params[:repos])
+          .custom_order(index_params[:order])
+          .paginate(:page => index_params[:page], :per_page => 15)
       end
 
       respond_to do |format|
