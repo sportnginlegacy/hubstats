@@ -1,4 +1,4 @@
-class CreateHubstatsLabels < ActiveRecord::Migration[4.2.10]
+class CreateHubstatsLabels < ActiveRecord::Migration['4.2.10']
   def change
     create_table :hubstats_labels do |t|
       t.string :name

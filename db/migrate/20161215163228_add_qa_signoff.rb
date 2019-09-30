@@ -1,4 +1,4 @@
-class AddQaSignoff < ActiveRecord::Migration[4.2.10]
+class AddQaSignoff < ActiveRecord::Migration['4.2.10']
   def change
     create_table :hubstats_qa_signoffs do |t|
       t.belongs_to :user

@@ -1,4 +1,4 @@
-class CreateHubstatsUsers < ActiveRecord::Migration[4.2.10]
+class CreateHubstatsUsers < ActiveRecord::Migration['4.2.10']
   def change
     create_table :hubstats_users do |t|
       t.string :login

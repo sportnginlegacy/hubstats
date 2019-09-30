@@ -1,4 +1,4 @@
-class AddIndexesToTables < ActiveRecord::Migration[4.2.10]
+class AddIndexesToTables < ActiveRecord::Migration['4.2.10']
   def change
     add_index :hubstats_deploys, :repo_id
     add_index :hubstats_deploys, :user_id

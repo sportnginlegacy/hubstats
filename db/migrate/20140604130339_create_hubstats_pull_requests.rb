@@ -1,4 +1,4 @@
-class CreateHubstatsPullRequests < ActiveRecord::Migration[4.2.10]
+class CreateHubstatsPullRequests < ActiveRecord::Migration['4.2.10']
   def change
     create_table :hubstats_pull_requests do |t|
       t.integer :number
