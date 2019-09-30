@@ -8,6 +8,8 @@ module Hubstats
     #
     # Returns - the repository data
     def index
+      params = params.try(:permit!).to_h
+
       if params[:query] ## For select 2
         @repos = Hubstats::Repo.where("name LIKE ?", "%#{params[:query]}%").order("name ASC")
       elsif params[:id]
@@ -30,6 +32,8 @@ module Hubstats
     #
     # Returns - the specific repository data
     def show
+      params = params.try(:permit!).to_h
+
       @repo = Hubstats::Repo.where(name: params[:repo]).first
       @pull_requests = Hubstats::PullRequest.belonging_to_repo(@repo.id).merged_in_date_range(@start_date, @end_date).order("updated_at DESC").limit(50)
       @pull_count = Hubstats::PullRequest.belonging_to_repo(@repo.id).merged_in_date_range(@start_date, @end_date).count(:all)
@@ -42,7 +46,7 @@ module Hubstats
       @net_additions = Hubstats::PullRequest.merged_in_date_range(@start_date, @end_date).belonging_to_repo(@repo.id).sum(:additions).to_i -
                        Hubstats::PullRequest.merged_in_date_range(@start_date, @end_date).belonging_to_repo(@repo.id).sum(:deletions).to_i
       @additions = Hubstats::PullRequest.merged_in_date_range(@start_date, @end_date).belonging_to_repo(@repo.id).average(:additions)
-      @deletions = Hubstats::PullRequest.merged_in_date_range(@start_date, @end_date).belonging_to_repo(@repo.id).average(:deletions)      
+      @deletions = Hubstats::PullRequest.merged_in_date_range(@start_date, @end_date).belonging_to_repo(@repo.id).average(:deletions)
 
       stats
     end

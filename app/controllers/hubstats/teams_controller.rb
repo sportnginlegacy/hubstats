@@ -8,6 +8,8 @@ module Hubstats
     #
     # Returns - the team data
     def index
+      params = params.try(:permit!).to_h
+
       if params[:query] ## For select 2
         @teams = Hubstats::Team.where(hubstats: true).where("name LIKE ?", "%#{params[:query]}%").order("name ASC")
       elsif params[:id]
@@ -30,6 +32,8 @@ module Hubstats
     #
     # Returns - the data of the specific team
     def show
+      params = params.try(:permit!).to_h
+
       @team = Hubstats::Team.where(id: params[:id]).first
       @pull_requests = Hubstats::PullRequest.belonging_to_team(@team.id).merged_in_date_range(@start_date, @end_date).order("updated_at DESC").limit(50)
       @pull_count = Hubstats::PullRequest.belonging_to_team(@team.id).merged_in_date_range(@start_date, @end_date).count(:all)

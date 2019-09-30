@@ -10,7 +10,9 @@ module Hubstats
     #
     # Returns - the pull request data
     def index
-      URI.decode(params[:label]) if params[:label]
+      URI.decode(params[:label].try(:permit!).to_h) if params[:label]
+
+      params = params.try(:permit!).to_h
 
       pull_requests = PullRequest.all_filtered(params, @start_date, @end_date)
       @labels = Hubstats::Label.count_by_pull_requests(pull_requests).order("pull_request_count DESC")
@@ -28,6 +30,8 @@ module Hubstats
     #
     # Returns - the specific details of the pull request
     def show
+      params = params.try(:permit!).to_h
+
       @repo = Hubstats::Repo.where(name: params[:repo]).first
       @pull_request = Hubstats::PullRequest.belonging_to_repo(@repo.id).where(id: params[:id]).first
       @comments = Hubstats::Comment.belonging_to_pull_request(params[:id]).created_in_date_range(@start_date, @end_date).limit(50)

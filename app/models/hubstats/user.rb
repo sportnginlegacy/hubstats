@@ -11,10 +11,10 @@ module Hubstats
     scope :not_ignored, -> { where.not(login: Hubstats.config.github_config["ignore_users_list"] || []) }
 
     # Public - Counts all of the deploys for selected user that occurred between the start_date and end_date.
-    # 
+    #
     # start_date - the start of the date range
     # end_date - the end of the data range
-    # 
+    #
     # Returns - count of deploys
     scope :deploys_count, lambda {|start_date, end_date|
       select("hubstats_users.id as user_id")
@@ -24,10 +24,10 @@ module Hubstats
     }
 
     # Public - Counts all of the comments for selected user that occurred between the start_date and end_date.
-    # 
+    #
     # start_date - the start of the date range
     # end_date - the end of the data range
-    # 
+    #
     # Returns - count of comments
     scope :comments_count, lambda {|start_date, end_date|
       select("hubstats_users.id as user_id")
@@ -37,10 +37,10 @@ module Hubstats
     }
 
     # Public - Counts all of the QA Signoffs for selected user that were signed between the start_date and end_date.
-    # 
+    #
     # start_date - the start of the date range
     # end_date - the end of the data range
-    # 
+    #
     # Returns - count of QA Signoffs
     scope :qa_signoffs_count, lambda {|start_date, end_date|
       select("hubstats_users.id as user_id")
@@ -48,12 +48,12 @@ module Hubstats
        .joins(sanitize_sql_array(["LEFT JOIN hubstats_qa_signoffs ON hubstats_qa_signoffs.user_id = hubstats_users.id AND (hubstats_qa_signoffs.signed_at BETWEEN ? AND ?)", start_date, end_date]))
        .group("hubstats_users.id")
     }
- 
+
     # Public - Counts all of the merged pull requests for selected user that occurred between the start_date and end_date.
-    # 
+    #
     # start_date - the start of the date range
     # end_date - the end of the data range
-    # 
+    #
     # Returns - count of pull requests
     scope :pull_requests_count, lambda {|start_date, end_date|
       select("hubstats_users.id as user_id")
@@ -78,10 +78,10 @@ module Hubstats
     }
 
     # Public - Counts all of the deploys for selected user that occurred between the start_date and end_date and belong to the repos.
-    # 
+    #
     # start_date - the start of the date range
     # end_date - the end of the data range
-    # 
+    #
     # Returns - count of deploys
     scope :deploys_count_by_repo, lambda {|start_date, end_date, repo_id|
       select("hubstats_users.id as user_id")
@@ -91,10 +91,10 @@ module Hubstats
     }
 
     # Public - Counts all of the comments for selected user that occurred between the start_date and end_date and belong to the repos.
-    # 
+    #
     # start_date - the start of the date range
     # end_date - the end of the data range
-    # 
+    #
     # Returns - count of comments
     scope :comments_count_by_repo, lambda {|start_date, end_date, repo_id|
       select("hubstats_users.id as user_id")
@@ -104,10 +104,10 @@ module Hubstats
     }
 
     # Public - Counts all of the QA Signoffs for selected user that were signed between the start_date and end_date and belong to the repos.
-    # 
+    #
     # start_date - the start of the date range
     # end_date - the end of the data range
-    # 
+    #
     # Returns - count of QA Signoffs
     scope :qa_signoffs_count_by_repo, lambda {|start_date, end_date, repo_id|
       select("hubstats_users.id as user_id")
@@ -117,10 +117,10 @@ module Hubstats
     }
 
     # Public - Counts all of the pull requests for selected user that occurred between the start_date and end_date and belong to the repos.
-    # 
+    #
     # start_date - the start of the date range
     # end_date - the end of the data range
-    # 
+    #
     # Returns - count of pull requests
     scope :pull_requests_count_by_repo, lambda {|start_date, end_date, repo_id|
       select("hubstats_users.id as user_id")
@@ -129,7 +129,7 @@ module Hubstats
       .group("hubstats_users.id")
     }
 
-    # Public - Counts all of the merged pull requests, deploys, QA Signoffs and comments that belong to a repository and belong to a user and occurred between 
+    # Public - Counts all of the merged pull requests, deploys, QA Signoffs and comments that belong to a repository and belong to a user and occurred between
     # the start_date and end_date.
     #
     # start_date - the start of the date range
@@ -144,7 +144,7 @@ module Hubstats
       .joins("LEFT JOIN (#{deploys_count_by_repo(start_date, end_date, repo_id).to_sql}) AS deploys ON deploys.user_id = hubstats_users.id")
       .group("hubstats_users.id")
     }
-    
+
     # Public - Counts all of the addtiions and deletions made from PRs by the selected user that have been merged between the start_date
     # and the end_date.
     #
@@ -162,10 +162,10 @@ module Hubstats
 
     # Public - Joins all of the metrics together for selected repository: average additions and deletions, comments, pull requests, QA Signoffs and deploys.
     # However, will only count those that also have something to do with the repos passed in.
-    # 
+    #
     # start_date - the start of the date range
     # end_date - the end of the data range
-    # 
+    #
     # Returns - all of the stats about the user
     scope :with_all_metrics_repos, lambda {|start_date, end_date, repos|
       select("hubstats_users.*, deploy_count, pull_request_count, comment_count, qa_signoff_count, additions, deletions")
@@ -178,10 +178,10 @@ module Hubstats
     }
 
     # Public - Joins all of the metrics together for selected user: average additions and deletions, comments, pull requests, QA Signoffs and deploys.
-    # 
+    #
     # start_date - the start of the date range
     # end_date - the end of the data range
-    # 
+    #
     # Returns - all of the stats about the user
     scope :with_all_metrics, lambda {|start_date, end_date|
       select("hubstats_users.*, deploy_count, pull_request_count, comment_count, qa_signoff_count, additions, deletions")
@@ -192,7 +192,7 @@ module Hubstats
       .joins("LEFT JOIN (#{deploys_count(start_date, end_date).to_sql}) AS deploys ON deploys.user_id = hubstats_users.id")
       .group("hubstats_users.id")
     }
-    
+
     validates :id, presence: true, uniqueness: true
 
     has_many :comments
@@ -205,27 +205,27 @@ module Hubstats
     #
     # github_user - the info from Github about the new or updated user
     #
-    # Returns - the user 
+    # Returns - the user
     def self.create_or_update(github_user)
       github_user[:role] = github_user.delete :type  ##changing :type into :role
       github_user = github_user.to_h.with_indifferent_access unless github_user.is_a? Hash
 
       user_data = github_user.slice(*Hubstats::User.column_names.map(&:to_sym))
-      
+
       user = Hubstats::User.where(:id => user_data[:id]).first_or_create(user_data)
       return user if user.update_attributes(user_data)
       Rails.logger.warn user.errors.inspect
     end
 
     # Public - If a repo_id is provided, will sort/filter the users based on the number of comments, deploys, and pull requests
-    # on that repo within the start_date and end_date. If no repo_id is provided, will still sort, just considering all PRs and comments 
+    # on that repo within the start_date and end_date. If no repo_id is provided, will still sort, just considering all PRs and comments
     # within the two dates.
     #
     # start_date - the start of the date range
     # end_date - the end of the data range
     # repo_id - the id of the repository (optional)
     #
-    # Returns - the count of data that fulfills the sql queries 
+    # Returns - the count of data that fulfills the sql queries
     def self.with_pulls_or_comments_or_deploys(start_date, end_date, repo_id = nil)
       if repo_id
         pull_comment_deploy_count_by_repo(start_date, end_date, repo_id)
@@ -241,6 +241,8 @@ module Hubstats
     #
     # Returns - the user data ordered
     def self.custom_order(order_params)
+      order_params = order_params.try(:permit!).to_h
+
       if order_params
         order = order_params.include?('asc') ? "ASC" : "DESC"
         case order_params.split('-').first
@@ -259,7 +261,7 @@ module Hubstats
         else
           order("pull_request_count #{order}")
         end
-      else 
+      else
         order("pull_request_count DESC")
       end
     end

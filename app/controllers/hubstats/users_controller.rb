@@ -7,7 +7,9 @@ module Hubstats
     # github between the selected @start_date and @end_date.
     #
     # Returns - the user data
-    def index 
+    def index
+      params = params.try(:permit!).to_h
+
       if params[:query] ## For select 2
         @users = Hubstats::User.where("login LIKE ?", "%#{params[:query]}%").order("login ASC")
       elsif params[:id]
@@ -19,7 +21,7 @@ module Hubstats
           .custom_order(params[:order])
           .paginate(:page => params[:page], :per_page => 15)
       end
-      
+
       respond_to do |format|
         format.html # index.html.erb
         format.json { render :json => @users}
@@ -31,6 +33,8 @@ module Hubstats
     #
     # Returns - the data of the specific user
     def show
+      params = params.try(:permit!).to_h
+
       @user = Hubstats::User.where(login: params[:id]).first
       @pull_requests = Hubstats::PullRequest.belonging_to_user(@user.id).merged_in_date_range(@start_date, @end_date).order("updated_at DESC").limit(50)
       @pull_count = Hubstats::PullRequest.belonging_to_user(@user.id).merged_in_date_range(@start_date, @end_date).count(:all)

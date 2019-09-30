@@ -2,7 +2,7 @@ module Hubstats
   class PullRequest < ActiveRecord::Base
 
     def self.record_timestamps; false; end
-    
+
     # Various checks that can be used to filter, sort, and find info about pull requests.
     scope :closed_in_date_range, lambda {|start_date, end_date| where("hubstats_pull_requests.closed_at BETWEEN ? AND ?", start_date, end_date)}
     scope :updated_in_date_range, lambda {|start_date, end_date| where("hubstats_pull_requests.updated_at BETWEEN ? AND ?", start_date, end_date)}
@@ -30,14 +30,14 @@ module Hubstats
     belongs_to :team
     has_and_belongs_to_many :labels, ->{ uniq }, :join_table => "hubstats_labels_pull_requests"
 
-    # Public - Makes a new pull request from a GitHub webhook. Finds user_id and repo_id based on users and repos 
+    # Public - Makes a new pull request from a GitHub webhook. Finds user_id and repo_id based on users and repos
     # that are already in the Hubstats database. Updates the user_id of a deploy if the pull request has been merged in a deploy.
     # If the user who makes the PR has a team, then it will update the team_id of the PR to match the team the user
     # belongs to.
     #
     # github_pull - the info that is from Github about the new or updated pull request
     #
-    # Returns - the pull request 
+    # Returns - the pull request
     def self.create_or_update(github_pull)
       github_pull = github_pull.to_h.with_indifferent_access if github_pull.respond_to? :to_h
 
@@ -89,6 +89,8 @@ module Hubstats
     #
     # Returns - the PRs that fit all of the below sql queries
     def self.all_filtered(params, start_date, end_date)
+      params = params.try(:permit!).to_h
+
       filter_based_on_date_range(start_date, end_date, params[:state])
        .belonging_to_users(params[:users])
        .belonging_to_repos(params[:repos])
@@ -109,13 +111,13 @@ module Hubstats
 
     # Public - Finds all of the PRs that have the current state, then filters to PRs that were updated within the
     # start_date and end_date. Lastly, it orders all of them based on the given order.
-    # 
+    #
     # start_date - the start of the date range
     # end_date - the end of the data range
     # state - the current state (open, closed, or all) of the PRs
     # order - the order (descending or ascending) that the PRs should be ordered in
     #
-    # Returns - the PRs that are within the date range and that are the state ordered 
+    # Returns - the PRs that are within the date range and that are the state ordered
     def self.state_based_order(start_date, end_date, state, order)
       order = ["ASC","DESC"].detect{|order_type| order_type.to_s == order.to_s.upcase } || "DESC"
       if state == "closed"

@@ -8,10 +8,10 @@ module Hubstats
     scope :with_id, lambda {|repo_id| where(id: repo_id.split(',')) if repo_id}
 
     # Public - Counts all of the deploys for selected repo that occurred between the start_date and end_date.
-    # 
+    #
     # start_date - the start of the date range
     # end_date - the end of the data range
-    # 
+    #
     # Returns - count of deploys
     scope :deploys_count, lambda {|start_date, end_date|
       select("hubstats_repos.id as repo_id")
@@ -21,10 +21,10 @@ module Hubstats
     }
 
     # Public - Counts all of the comments for selected repo that occurred between the start_date and end_date.
-    # 
+    #
     # start_date - the start of the date range
     # end_date - the end of the data range
-    # 
+    #
     # Returns - count of comments
     scope :comments_count, lambda {|start_date, end_date|
       select("hubstats_repos.id as repo_id")
@@ -32,12 +32,12 @@ module Hubstats
        .joins(sanitize_sql_array(["LEFT JOIN hubstats_comments ON hubstats_comments.repo_id = hubstats_repos.id AND (hubstats_comments.created_at BETWEEN ? AND ?)", start_date, end_date]))
        .group("hubstats_repos.id")
     }
- 
+
     # Public - Counts all of the merged pull requests for selected repo that occurred between the start_date and end_date.
-    # 
+    #
     # start_date - the start of the date range
     # end_date - the end of the data range
-    # 
+    #
     # Returns - count of pull requests
     scope :pull_requests_count, lambda {|start_date, end_date|
       select("hubstats_repos.id as repo_id")
@@ -47,10 +47,10 @@ module Hubstats
     }
 
     # Public - Averages all of the additions and deletions of the merged PRs for selected repo.
-    # 
+    #
     # start_date - the start of the date range
     # end_date - the end of the data range
-    # 
+    #
     # Returns - the average additions and deletions
     scope :averages, lambda {|start_date, end_date|
       select("hubstats_repos.id as repo_id")
@@ -61,10 +61,10 @@ module Hubstats
     }
 
     # Public - Joins all of the metrics together for selected repository: average additions and deletions, comments, pull requests, and deploys.
-    # 
+    #
     # start_date - the start of the date range
     # end_date - the end of the data range
-    # 
+    #
     # Returns - all of the stats about the repo
     scope :with_all_metrics, lambda {|start_date, end_date|
       select("hubstats_repos.*, deploy_count, pull_request_count, comment_count, average_additions, average_deletions")
@@ -106,6 +106,8 @@ module Hubstats
     #
     # Returns - the repo data ordered
     def self.custom_order(order_params)
+      order_params = order_params.try(:permit!).to_h
+
       if order_params
         order = order_params.include?('asc') ? "ASC" : "DESC"
         case order_params.split('-').first
@@ -124,7 +126,7 @@ module Hubstats
         else
           order("pull_request_count #{order}")
         end
-      else 
+      else
         order("pull_request_count DESC")
       end
     end
