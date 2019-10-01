@@ -1,5 +1,5 @@
 module Hubstats
-  class Repo < ActiveRecord::Base
+  class Repo < ApplicationRecord
 
     def self.record_timestamps; false; end
 
@@ -78,7 +78,7 @@ module Hubstats
     has_many :pull_requests
     has_many :deploys
     has_many :comments
-    belongs_to :owner, :class_name => "User", :foreign_key => "id"
+    belongs_to :owner, :class_name => "User", :foreign_key => "id", optional: true
 
     # Public - Makes a new repository based on a GitHub webhook. Sets a user (owner) based on users that are already in the database.
     #

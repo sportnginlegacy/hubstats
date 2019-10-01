@@ -1,5 +1,5 @@
 module Hubstats
-  class Team < ActiveRecord::Base
+  class Team < ApplicationRecord
 
     def self.record_timestamps; false; end
 

@@ -1,5 +1,5 @@
 module Hubstats
-  class Deploy < ActiveRecord::Base
+  class Deploy < ApplicationRecord
 
     before_validation :check_time, on: :create
     validates :git_revision, :deployed_at, :repo_id, presence: true
@@ -30,8 +30,8 @@ module Hubstats
       end
     }
 
-    belongs_to :user
-    belongs_to :repo
+    belongs_to :user, optional: true
+    belongs_to :repo, optional: true
     has_many :pull_requests
 
     # Public - Orders the deploys within the start_date and end_date with by a given order.

@@ -1,5 +1,5 @@
 module Hubstats
-  class Comment < ActiveRecord::Base
+  class Comment < ApplicationRecord
 
     def self.record_timestamps; false; end
 
@@ -21,11 +21,11 @@ module Hubstats
       .where("hubstats_pull_requests.user_id != hubstats_comments.user_id")
       .group("hubstats_comments.user_id")
     }
-  
-    belongs_to :user
-    belongs_to :pull_request
-    belongs_to :repo
-   
+
+    belongs_to :user, optional: true
+    belongs_to :pull_request, optional: true
+    belongs_to :repo, optional: true
+
     # Public - Makes a new comment based on a GitHub webhook occurrence. Assigns the user and the PR.
     #
     # github_comment - the information from Github about the comment
@@ -39,7 +39,7 @@ module Hubstats
 
       user = Hubstats::User.create_or_update(github_comment[:user])
       github_comment[:user_id] = user.id
-      
+
       if github_comment[:pull_number]
         pull_request = Hubstats::PullRequest.belonging_to_repo(github_comment[:repo_id]).where(number: github_comment[:pull_number]).first
         if pull_request

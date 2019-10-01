@@ -1,5 +1,5 @@
 module Hubstats
-  class PullRequest < ActiveRecord::Base
+  class PullRequest < ApplicationRecord
 
     def self.record_timestamps; false; end
 
@@ -24,10 +24,10 @@ module Hubstats
     scope :with_repo_name, -> { select('DISTINCT hubstats_repos.name as repo_name, hubstats_pull_requests.*').joins("LEFT JOIN hubstats_repos ON hubstats_repos.id = hubstats_pull_requests.repo_id") }
     scope :with_user_name, -> { select('DISTINCT hubstats_users.login as user_name, hubstats_pull_requests.*').joins("LEFT JOIN hubstats_users ON hubstats_users.id = hubstats_pull_requests.user_id") }
 
-    belongs_to :user
-    belongs_to :repo
-    belongs_to :deploy
-    belongs_to :team
+    belongs_to :user, optional: true
+    belongs_to :repo, optional: true
+    belongs_to :deploy, optional: true
+    belongs_to :team, optional: true
     has_and_belongs_to_many :labels, ->{ uniq }, :join_table => "hubstats_labels_pull_requests"
 
     # Public - Makes a new pull request from a GitHub webhook. Finds user_id and repo_id based on users and repos

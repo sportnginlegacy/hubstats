@@ -1,5 +1,5 @@
 module Hubstats
-  class User < ActiveRecord::Base
+  class User < ApplicationRecord
 
     # Various checks that can be used to filter and find info about users.
     scope :with_id, lambda {|user_id| where(id: user_id.split(',')) if user_id}

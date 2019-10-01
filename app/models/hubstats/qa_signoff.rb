@@ -1,8 +1,8 @@
 module Hubstats
-  class QaSignoff < ActiveRecord::Base
+  class QaSignoff < ApplicationRecord
 
     def self.record_timestamps; false; end
-    
+
     # Various checks that can be used to filter, sort, and find info about QA Signoffs.
     scope :signed_within_date_range, lambda {|start_date, end_date| where("hubstats_qa_signoffs.signed_at BETWEEN ? AND ?", start_date, end_date)}
     scope :belonging_to_repo, lambda {|repo_id| where(repo_id: repo_id)}
@@ -16,9 +16,9 @@ module Hubstats
     scope :with_user_name, -> { select('DISTINCT hubstats_users.login as user_name, hubstats_qa_signoffs.*').joins("LEFT JOIN hubstats_users ON hubstats_users.id = hubstats_qa_signoffs.user_id") }
     scope :with_pull_request_name, -> { select('DISTINCT hubstats_pull_requests.title as pr_name, hubstats_qa_signoffs.*').joins("LEFT JOIN hubstats_pull_requests ON hubstats_pull_requests.id = hubstats_qa_signoffs.pull_request_id") }
 
-    belongs_to :user
-    belongs_to :repo
-    belongs_to :pull_request
+    belongs_to :user, optional: true
+    belongs_to :repo, optional: true
+    belongs_to :pull_request, optional: true
 
     # Public - Makes a new QA Signoff with the data that is passed in.
     #
