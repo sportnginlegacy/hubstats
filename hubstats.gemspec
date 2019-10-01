@@ -30,6 +30,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency "faker", "~> 1"
   s.add_development_dependency "mysql2"
   s.add_development_dependency "pry"
-  s.add_development_dependency "rspec-rails"
   s.add_development_dependency "rails-controller-testing"
+  s.add_development_dependency "rspec-rails"
 end
