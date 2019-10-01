@@ -7,8 +7,7 @@ module Hubstats
     #
     # Returns - the QA Signoff data
     def index
-      index_params = params.try(:permit!).to_h
-
+      index_params = params.permit(:users, :repos, :group, :page)
       @qa_signoffs = Hubstats::QaSignoff.includes(:repo, :pull_request, :user)
         .belonging_to_users(index_params[:users])
         .belonging_to_repos(index_params[:repos])
@@ -22,7 +21,7 @@ module Hubstats
     #
     # Returns - the specific details of the QA Signoff
     def show
-      show_params = params.try(:permit!).to_h
+      show_params = params.permit(:repo_id, :user_id, :pull_request_id)
       @repo = Hubstats::Repo.where(id: show_params[:repo_id]).first
       @pull_request = Hubstats::PullRequest.where(id: show_params[:pull_request_id]).first
       @user = Hubstats::User.where(id: show_params[:user_id]).first

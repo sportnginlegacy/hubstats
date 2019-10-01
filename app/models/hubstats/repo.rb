@@ -106,11 +106,9 @@ module Hubstats
     #
     # Returns - the repo data ordered
     def self.custom_order(order_params)
-      permitted_order_params = order_params.try(:permit!)
-
-      if permitted_order_params
-        order = permitted_order_params.include?('asc') ? "ASC" : "DESC"
-        case permitted_order_params.split('-').first
+      if order_params
+        order = order_params.include?('asc') ? "ASC" : "DESC"
+        case order_params.split('-').first
         when 'deploys'
           order("deploy_count #{order}")
         when 'pulls'

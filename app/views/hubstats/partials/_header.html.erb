@@ -17,13 +17,13 @@
       <!-- Show all of the pages (Repositories, Teams, Users, Deployments, Pull Requests) in tab form -->
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav navbar-right">
-          <li class="<%='navbar-active' if params[:controller].try(:permit!).to_h == 'hubstats/repos'%>">
+          <li class="<%='navbar-active' if params.permit(:controller)[:controller] == 'hubstats/repos'%>">
             <%= link_to "Repositories", repos_path%></li>
-          <li class="<%='navbar-active' if params[:controller].try(:permit!).to_h == 'hubstats/teams'%>">
+          <li class="<%='navbar-active' if params.permit(:controller)[:controller] == 'hubstats/teams'%>">
             <%= link_to "Teams", teams_path%></li>
-          <li class="<%='navbar-active' if params[:controller].try(:permit!).to_h == 'hubstats/users'%>">
+          <li class="<%='navbar-active' if params.permit(:controller)[:controller] == 'hubstats/users'%>">
             <%= link_to "Users", users_path%></li>
-          <li class="<%='navbar-active' if params[:controller].try(:permit!).to_h == 'hubstats/pull_requests'%>">
+          <li class="<%='navbar-active' if params.permit(:controller)[:controller] == 'hubstats/pull_requests'%>">
             <%= link_to "Pull Requests", root_path%></li>
           <li>
             <!-- Show the datepicker -->

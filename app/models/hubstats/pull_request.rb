@@ -89,11 +89,10 @@ module Hubstats
     #
     # Returns - the PRs that fit all of the below sql queries
     def self.all_filtered(params, start_date, end_date)
-      to_filter_params = params.try(:permit!).to_h
-      filter_based_on_date_range(start_date, end_date, to_filter_params[:state])
-       .belonging_to_users(to_filter_params[:users])
-       .belonging_to_repos(to_filter_params[:repos])
-       .belonging_to_teams(to_filter_params[:teams])
+      filter_based_on_date_range(start_date, end_date, params[:state])
+       .belonging_to_users(params[:users])
+       .belonging_to_repos(params[:repos])
+       .belonging_to_teams(params[:teams])
     end
 
     # Public - Finds all of the PRs with the current state, and then filters to ones that have been updated in

@@ -8,7 +8,7 @@ module Hubstats
     #
     # Returns - the deploy data
     def index
-      index_params = params.try(:permit!).to_h
+      index_params = params.permit(:users, :repos, :teams, :group, :order, :page)
       @deploys = Hubstats::Deploy.includes(:repo, :pull_requests, :user)
         .belonging_to_users(index_params[:users]).belonging_to_repos(index_params[:repos]).belonging_to_teams(index_params[:teams])
         .group(index_params[:group])
@@ -23,7 +23,7 @@ module Hubstats
     #
     # Returns - the stats and data of the deploy
     def show
-      show_params = params.permit(:id).to_h
+      show_params = params.permit(:id)
       @deploy = Hubstats::Deploy.includes(:repo, :pull_requests).find(show_params[:id])
       repo = @deploy.repo
       @pull_requests = @deploy.pull_requests.limit(50)

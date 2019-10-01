@@ -8,7 +8,7 @@ module Hubstats
     #
     # Returns - the user data
     def index
-      index_params = params.try(:permit!).to_h
+      index_params = params.permit(:query, :id, :users, :order, :page)
       if index_params[:query] ## For select 2
         @users = Hubstats::User.where("login LIKE ?", "%#{index_params[:query]}%").order("login ASC")
       elsif index_params[:id]

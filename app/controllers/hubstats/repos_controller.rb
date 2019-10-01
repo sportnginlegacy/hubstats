@@ -8,7 +8,7 @@ module Hubstats
     #
     # Returns - the repository data
     def index
-      index_params = params.try(:permit!).to_h
+      index_params = params.permit(:query, :id, :repos, :page, :order)
       if index_params[:query] ## For select 2
         @repos = Hubstats::Repo.where("name LIKE ?", "%#{index_params[:query]}%").order("name ASC")
       elsif index_params[:id]
@@ -31,7 +31,7 @@ module Hubstats
     #
     # Returns - the specific repository data
     def show
-      show_params = params.permit(:id, :repo).to_h
+      show_params = params.permit(:id, :repo)
       @repo = Hubstats::Repo.where(name: show_params[:repo]).first
       @pull_requests = Hubstats::PullRequest.belonging_to_repo(@repo.id).merged_in_date_range(@start_date, @end_date).order("updated_at DESC").limit(50)
       @pull_count = Hubstats::PullRequest.belonging_to_repo(@repo.id).merged_in_date_range(@start_date, @end_date).count(:all)

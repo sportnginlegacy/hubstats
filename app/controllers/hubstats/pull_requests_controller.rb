@@ -1,5 +1,4 @@
 require_dependency "hubstats/application_controller"
-require_dependency 'pry'
 
 module Hubstats
   class PullRequestsController < Hubstats::BaseController
@@ -12,8 +11,7 @@ module Hubstats
     def index
       URI.decode(params[:label].try(:permit!).to_h) if params[:label]
 
-      index_params = params.try(:permit!).to_h
-
+      index_params = params.permit(:users, :repos, :teams, :label, :group, :order, :page, :state)
       pull_requests = PullRequest.all_filtered(index_params, @start_date, @end_date)
       @labels = Hubstats::Label.count_by_pull_requests(pull_requests).order("pull_request_count DESC")
       @pull_requests = Hubstats::PullRequest.includes(:user, :repo, :team)
@@ -30,7 +28,7 @@ module Hubstats
     #
     # Returns - the specific details of the pull request
     def show
-      show_params = params.permit(:id, :repo).to_h
+      show_params = params.permit(:id, :repo)
       @repo = Hubstats::Repo.where(name: show_params[:repo]).first
       @pull_request = Hubstats::PullRequest.belonging_to_repo(@repo.id).where(id: show_params[:id]).first
       @comments = Hubstats::Comment.belonging_to_pull_request(show_params[:id]).created_in_date_range(@start_date, @end_date).limit(50)

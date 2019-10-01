@@ -1,5 +1,5 @@
 require_dependency "hubstats/application_controller"
-require 'pry'
+
 module Hubstats
   class TeamsController < ApplicationController
 
@@ -8,7 +8,7 @@ module Hubstats
     #
     # Returns - the team data
     def index
-      index_params = params.try(:permit!).to_h
+      index_params = params.permit(:query, :id, :teams, :page)
       if index_params[:query] ## For select 2
         @teams = Hubstats::Team.where(hubstats: true).where("name LIKE ?", "%#{index_params[:query]}%").order("name ASC")
       elsif index_params[:id]
@@ -31,7 +31,7 @@ module Hubstats
     #
     # Returns - the data of the specific team
     def show
-      show_params = params.permit(:id).to_h
+      show_params = params.permit(:id)
       @team = Hubstats::Team.where(id: show_params[:id]).first
       @pull_requests = Hubstats::PullRequest.belonging_to_team(@team.id).merged_in_date_range(@start_date, @end_date).order("updated_at DESC").limit(50)
       @pull_count = Hubstats::PullRequest.belonging_to_team(@team.id).merged_in_date_range(@start_date, @end_date).count(:all)
