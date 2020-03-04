@@ -17,11 +17,13 @@ Gem::Specification.new do |s|
   s.test_files    = s.files.grep(%r{^(test|spec|features)/})
 
   s.add_dependency "rails", "~> 4.2.10"
-  s.add_dependency "rake", "= 12.3.2"
+  s.add_dependency "rake", ">= 12.3.3"
   s.add_dependency "octokit", "~> 4.2"
   s.add_dependency "will_paginate-bootstrap", "~> 1.0"
   s.add_dependency "select2-rails", "~> 3.0"
   s.add_dependency "sass-rails"
+  s.add_dependency "railties", "~> 4.2.11.1"
+  s.add_dependency "jquery-rails", "= 4.3.3"
   s.add_dependency "bootstrap-datepicker-rails", "~> 1.5"
 
   s.add_development_dependency "mysql2",'~> 0.3.2'
