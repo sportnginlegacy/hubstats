@@ -1,3 +1,8 @@
+#### v1.1.0
+* Resolve gem vulnerabilities
+
+  > Emma Sax: production-status-check[bot]: https://github.com/sportngin/hubstats/pull/141
+
 #### v1.0.0
 * Be able to load repositories and teams from webhooks
 
