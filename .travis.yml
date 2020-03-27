@@ -1,4 +1,4 @@
-sudo: false
+os: linux
 dist: trusty
 language: ruby
 cache: bundler
@@ -15,6 +15,7 @@ rvm:
   - 2.2
   - 2.3.0
   - 2.3.3
+  - 2.6.1
 
 script: bundle exec rspec
 before_script:

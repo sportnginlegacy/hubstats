@@ -24,6 +24,8 @@ Gem::Specification.new do |s|
   s.add_dependency "sass-rails"
   s.add_dependency "railties", "~> 4.2.11.1"
   s.add_dependency "jquery-rails", "= 4.3.3"
+  s.add_dependency "sprockets", "~> 3.7.2"
+  s.add_dependency "sprockets-rails", "~> 2.3.3"
   s.add_dependency "bootstrap-datepicker-rails", "~> 1.5"
 
   s.add_development_dependency "mysql2",'~> 0.3.2'
