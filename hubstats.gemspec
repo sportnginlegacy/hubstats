@@ -18,7 +18,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency "rails", "~> 4.2.10"
   s.add_dependency "rake", ">= 12.3.3"
-  s.add_dependency "octokit", "~> 4.2"
+  s.add_dependency "octokit", "~> 4.18"
   s.add_dependency "will_paginate-bootstrap", "~> 1.0"
   s.add_dependency "select2-rails", "~> 3.0"
   s.add_dependency "sass-rails"
