@@ -7,8 +7,8 @@ require "hubstats/version"
 Gem::Specification.new do |s|
   s.name        = "hubstats"
   s.version     = Hubstats::VERSION
-  s.authors     = ["Elliot Hursh", "Emma Sax"]
-  s.email       = ["elliothursh@gmail.com", "emma.sax4@gmail.com"]
+  s.authors     = ["SportsEngine's Infrastructure Engineers"]
+  s.email       = ["infrastructure@sportngin.com"]
   s.homepage    = ""
   s.summary     = "Github Statistics"
   s.description = "Github Statistics"
